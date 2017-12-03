@@ -1,0 +1,23 @@
+# vim: set filetype=zsh :
+
+# {{{ Options
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+# }}}
+
+# Expand ... to ../..
+
+case $LBUFFER in
+
+	(,,)
+		LBUFFER[-2,-1]='..'
+		LBUFFER+='/../'
+		;;
+
+	(*) LBUFFER+=',' ;;
+esac

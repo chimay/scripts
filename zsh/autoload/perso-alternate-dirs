@@ -1,0 +1,15 @@
+# vim: set filetype=zsh :
+
+# {{{ Options
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+# }}}
+
+LBUFFER="cd -"
+
+zle accept-line
