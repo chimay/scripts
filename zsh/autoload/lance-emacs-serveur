@@ -1,0 +1,43 @@
+# vim: set filetype=zsh :
+
+# {{{ Options
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+# }}}
+
+# Déjà lancé ? {{{1
+
+pgrep emacs && {
+
+	echo
+	echo 'Emacs tourne déjà'
+
+	return 0
+}
+
+# }}}1
+
+# Choix de la version d’emacs {{{1
+
+if [[ /usr/bin/emacs -nt /usr/local/bin/emacs  ]]
+then
+	executable=/usr/bin/emacs
+else
+	executable=/usr/local/bin/emacs
+fi
+
+echo Exécutable : $executable
+echo
+
+# }}}1
+
+# Démarrage du serveur {{{1
+
+$executable --daemon
+
+# }}}1

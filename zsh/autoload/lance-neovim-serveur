@@ -1,0 +1,49 @@
+# vim: set filetype=zsh :
+
+# {{{ Options
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+# }}}
+
+# Déjà lancé ? {{{1
+
+pgrep nvim && {
+
+	echo
+	echo 'Neovim tourne déjà'
+
+	return 0
+}
+
+# }}}1
+
+# Choix de la version de nvim {{{1
+
+if [[ /usr/bin/nvim -nt /usr/local/bin/nvim  ]]
+then
+	executable=/usr/bin/nvim
+else
+	executable=/usr/local/bin/nvim
+fi
+
+echo Exécutable : $executable
+echo
+
+# }}}1
+
+# Démarrage du serveur {{{1
+
+# Remarque : NVIM_LISTEN_ADDR n’est pas pris en compte
+
+#NVIM_LISTEN_ADDR=/tmp/neovim-serveur nvim --headless \
+
+$executable --headless \
+	-u ~/racine/config/edit/neovim/init.vim \
+	-c "cd ~/racine/plain" &
+
+# }}}1
