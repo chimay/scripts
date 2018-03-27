@@ -1,0 +1,59 @@
+# vim: set filetype=zsh :
+
+# Options {{{1
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+setopt extended_glob
+
+# }}}1
+
+local fichiers=()
+local volume=10
+
+while true
+do
+	case $1 in
+
+		[0-9]##)
+			volume=$1
+			shift
+			;;
+
+		?*)
+			fichiers+=$1
+			shift
+			;;
+		*)
+			break
+	esac
+done
+
+(( $#fichiers == 0 )) && fichiers=(~/audio/Sonnerie/notification/generique.ogg)
+
+echo "Fichiers : "
+echo
+print -l $fichiers
+echo
+echo Volume : $volume
+echo
+
+alias psgrep="ps auxww | grep -v grep | grep --color=never"
+
+psgrep 'mplayer -idle -slave' &> /dev/null && {
+
+	for elt in $fichiers
+	do
+		echo "loadfile $elt 1" > ~/racine/run/fifo/mplayer
+	done
+
+	echo "set volume $volume" > ~/racine/run/fifo/mplayer
+
+	return 0
+}
+
+mplayer -noconsolecontrols -volume $volume $fichier &> /dev/null
