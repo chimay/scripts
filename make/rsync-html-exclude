@@ -1,0 +1,12 @@
+*~
+*.log
+*.org
+*.epub
+*.el
+*.ancien
+Makefile*
+Grenier
+README*
+rsync-html-exclude
+rsync-epub-exclude
+tar-exclude
