@@ -1,0 +1,33 @@
+# vim: set filetype=zsh :
+
+alias psgrep='ps auxww | /bin/grep -v grep | /bin/grep --color=auto'
+
+while read ligne
+do
+	eval $ligne
+
+done < $fichier
+
+# Tableaux {{{1
+
+# remove the ith element with
+#
+# foo[$i] =()
+#
+# instead.
+
+# To remove element with content "b" from array:
+#
+# foo=(a b c)
+# foo=(${foo#b})
+
+# To remove element number $i: a=("${(@)a[1,$i-1]}" "${(@)a[$i+1,$#a]}")
+#
+# (The simpler construct a=($a[1,$i-1] $a[$i+1,$#a]) also removes empty elements.)
+#
+# ADDED:
+#
+# To remove any occurence of b: a=("${(@)a:#b}")
+# :# is the hieroglyph to remove matching elements; "" and (@) is to operate correctly on arrays even if they contain empty elements.
+
+# }}}1
