@@ -19,6 +19,16 @@ echo 1>&2
 
 } | sort | uniq >! $localdir/history.dmenu
 
+sed -i '/duckduckgo.com/d' $localdir/history.dmenu
+sed -i '/google.com/d' $localdir/history.dmenu
+sed -i '/google.be/d' $localdir/history.dmenu
+sed -i '/google.fr/d' $localdir/history.dmenu
+sed -i '/youtube.com/d' $localdir/history.dmenu
+
+cp -v $localdir/history.dmenu $indexdir/history.dmenu 1>&2
+echo 1>&2
+
 echo Nombre de lignes : `wc -l $localdir/history.dmenu` 1>&2
+echo 1>&2
 echo Nombre de lignes : `wc -l $indexdir/history.dmenu` 1>&2
 echo 1>&2
