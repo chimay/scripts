@@ -4,9 +4,15 @@ alias psgrep='ps auxww | /bin/grep -v grep | /bin/grep --color=auto'
 
 local fichier=$HOME/racine/run/ssh/agent
 
-if ! psgrep ssh-agent
+if ! psgrep ssh-agent &> /dev/null
 then
+	echo "On lance ssh-agent"
+	echo
+
 	ssh-agent >| $fichier
+else
+	echo "ssh-agent tourne déjà"
+	echo
 fi
 
 local ligne
