@@ -1,0 +1,23 @@
+# vim: set filetype=zsh :
+
+alias psgrep='ps auxww | /bin/grep -v grep | /bin/grep --color=auto'
+
+local fichier=$HOME/racine/run/ssh/agent
+
+if ! psgrep ssh-agent
+then
+	ssh-agent >| $fichier
+fi
+
+local ligne
+
+while read ligne
+do
+	eval $ligne
+
+done < $fichier
+
+echo
+echo "SSH_AUTH_SOCK = $SSH_AUTH_SOCK"
+echo
+echo "SSH_AGENT_PID = $SSH_AGENT_PID"
