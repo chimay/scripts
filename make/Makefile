@@ -2,6 +2,8 @@
 
 include Makefile.inc
 
+.DEFAULT_GOAL := install
+
 #  {{{  Phony
 
 .PHONY: all install
@@ -108,35 +110,67 @@ sync: sync-html sync-epub
 #  {{{  Subdirs
 
 $(SUBDIRS):
+	@$(ECHO) "============ [$@] ============"
+	@$(ECHO)
 	$(MAKE) -C $@
+	@$(ECHO)
+	@$(ECHO) "============ <$@> ============"
 	@$(ECHO)
 
 $(INSTALL_SUBDIRS):
+	@$(ECHO) "============ [$@] ============"
+	@$(ECHO)
 	$(MAKE) -C ${@:install-%=%} install
+	@$(ECHO)
+	@$(ECHO) "============ <$@> ============"
 	@$(ECHO)
 
 $(CLEAN_SUBDIRS):
+	@$(ECHO) "============ [$@] ============"
+	@$(ECHO)
 	$(MAKE) -C ${@:clean-%=%} clean
+	@$(ECHO)
+	@$(ECHO) "============ <$@> ============"
 	@$(ECHO)
 
 $(CLEAN_HTML_SUBDIRS):
+	@$(ECHO) "============ [$@] ============"
+	@$(ECHO)
 	$(MAKE) -C ${@:clean-html-%=%} clean-html
+	@$(ECHO)
+	@$(ECHO) "============ <$@> ============"
 	@$(ECHO)
 
 $(CLEAN_EPUB_SUBDIRS):
+	@$(ECHO) "============ [$@] ============"
+	@$(ECHO)
 	$(MAKE) -C ${@:clean-epub-%=%} clean-epub
+	@$(ECHO)
+	@$(ECHO) "============ <$@> ============"
 	@$(ECHO)
 
 $(WIPE_SUBDIRS):
+	@$(ECHO) "============ [$@] ============"
+	@$(ECHO)
 	$(MAKE) -C ${@:wipe-%=%} wipe
+	@$(ECHO)
+	@$(ECHO) "============ <$@> ============"
 	@$(ECHO)
 
 $(HTML_SUBDIRS):
+	@$(ECHO) "============ [$@] ============"
+	@$(ECHO)
 	$(MAKE) -C ${@:html-%=%} html
+	@$(ECHO)
+	@$(ECHO) "============ <$@> ============"
 	@$(ECHO)
 
 $(EPUB_SUBDIRS):
+	@$(ECHO) "============ [$@] ============"
+	@$(ECHO)
 	$(MAKE) -C ${@:epub-%=%} epub
+	@$(ECHO)
+	@$(ECHO) "============ <$@> ============"
 	@$(ECHO)
 
 #  }}}
