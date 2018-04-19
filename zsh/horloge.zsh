@@ -40,8 +40,6 @@ tictac=$HOME/audio/Sonnerie/horloge/tictac.ogg
 bol=$HOME/audio/Sonnerie/horloge/bol-tibetain.ogg
 yinyang=$HOME/audio/Sonnerie/horloge/yinyang.ogg
 
-chercher=$HOME/audio/Sonnerie/notification/ecole.ogg
-
 carillon_simple=$HOME/audio/Sonnerie/horloge/coucou-1.ogg
 
 #  }}}
