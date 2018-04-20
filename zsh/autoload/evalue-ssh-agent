@@ -1,0 +1,44 @@
+# vim: set filetype=zsh :
+
+# Options {{{1
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+# }}}1
+
+typeset -gx SSH_AUTH_SOCK SSH_AGENT_PID
+
+local psgrep='/bin/ps auxww | /bin/grep -v grep | /bin/grep --color=never'
+
+local repertoire=$HOME/racine/run/ssh
+local fichier=$repertoire/agent
+
+[[ -d $repertoire ]] || mkdir -p $repertoire
+
+if ! eval $=psgrep ssh-agent &>>| ~/log/psgrep.log
+then
+	echo "On lance ssh-agent"
+	echo
+
+	ssh-agent >| $fichier
+else
+	echo "ssh-agent tourne déjà"
+	echo
+fi
+
+local ligne
+
+while read ligne
+do
+	eval $ligne
+
+done < $fichier
+
+echo
+echo "SSH_AUTH_SOCK = $SSH_AUTH_SOCK"
+echo
+echo "SSH_AGENT_PID = $SSH_AGENT_PID"
