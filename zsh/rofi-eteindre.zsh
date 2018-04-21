@@ -1,18 +1,13 @@
 #! /usr/bin/env zsh
 
-# Ajouter des NOPASSWD dans /etc/sudoers pour :
-#
-# pm-suspend
-# pm-hibernate
-# poweroff
-
-menu=(Veille Hibernation Eteindre)
+menu=("Préparer le café" Veille Hibernation Eteindre)
 
 confirmation=(Non \
 	"J’hésite" \
 	"Y a du pour et du contre" \
 	"Aujourd’hui non, on verra demain" \
-	Oui)
+	Oui \
+	"Quoique")
 
 # Rofi dmenu {{{1
 
@@ -20,7 +15,7 @@ choix=$(for element in $menu
 do
 	echo $element
 
-done | rofi -dmenu -i -theme ~/racine/config/terminal/rofi/theme.rasi)
+done | rofi -dmenu -p "choix ? " -i -theme ~/racine/config/terminal/rofi/theme.rasi)
 
 # }}}1
 
@@ -33,20 +28,28 @@ echo
 
 sync
 
+[[ $choix = *café* ]] && {
+
+	echo "Non implémenté"
+	echo
+
+	zenity --info --no-wrap --text "Dis tout de suite que j’ai une tête de cafetière ?"
+}
+
 [[ $choix = Veille ]] && {
 
 	certain=$(for element in $confirmation
 	do
 		echo $element
 
-	done | rofi -dmenu -i -theme ~/racine/config/terminal/rofi/theme.rasi)
+	done | rofi -dmenu -i -p "$choix ? " -theme ~/racine/config/terminal/rofi/theme.rasi)
 
 	[[ $certain = Oui ]] && {
 
-		echo "sudo pm-suspend"
+		echo "systemctl suspend"
 		echo
 
-		sudo pm-suspend
+		systemctl suspend
 	}
 }
 
@@ -54,6 +57,8 @@ sync
 
 	echo "Non implémenté"
 	echo
+
+	zenity --info --no-wrap --text "Il fait trop chaud pour hiberner."
 }
 
 [[ $choix = Eteindre ]] && {
@@ -62,14 +67,14 @@ sync
 	do
 		echo $element
 
-	done | rofi -dmenu -i -theme ~/racine/config/terminal/rofi/theme.rasi)
+	done | rofi -dmenu -i -p "$choix ? " -theme ~/racine/config/terminal/rofi/theme.rasi)
 
 	[[ $certain = Oui ]] && {
 
-		echo "sudo poweroff"
+		echo "systemctl poweroff"
 		echo
 
-		sudo poweroff
+		systemctl poweroff
 	}
 }
 
