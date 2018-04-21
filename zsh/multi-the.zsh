@@ -29,8 +29,12 @@ do
 			min=$tableau[1]
 			sec=$tableau[2]
 
+			heu=0
 		else
 			min=$tableau[1]
+
+			heu=0
+			sec=0
 		fi
 	fi
 
