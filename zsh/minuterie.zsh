@@ -4,6 +4,7 @@ setopt extended_glob
 
 #{
 
+heures=0
 minutes=0
 secondes=0
 
@@ -17,15 +18,16 @@ do
 			minutes=$1
 			shift
 			;;
-
-		-[0-9]##)
-			secondes=${1#-}
-			shift
-			;;
-
 		[0-9]##:[0-9]##)
 			minutes=${1%:*}
 			secondes=${1#*:}
+			shift
+			;;
+		[0-9]##:[0-9]##:[0-9]##)
+			temps=(${(s/:/)1})
+			heures=$temps[1]
+			minutes=$temps[2]
+			secondes=$temps[3]
 			shift
 			;;
 		?*)
@@ -37,12 +39,55 @@ do
 	esac
 done
 
-total=`expr $minutes '*' 60 + $secondes`
+total=$(expr $heures '*' 3600 + $minutes '*' 60 + $secondes)
 
-echo "$minutes minutes $secondes secondes =  $total secondes"
-echo
+if (( heures > 0 && minutes > 0 && secondes > 0 ))
+then
+	echo "$heures heures $minutes minutes $secondes secondes =  $total secondes"
+	echo
+	notify-send -t 10000 "Minuterie : $heures heu $minutes min $secondes sec" &
 
-notify-send -t 10000 "Minuterie : $minutes minutes et $secondes secondes." &
+elif (( heures > 0 && minutes > 0 && secondes == 0 ))
+then
+	echo "$heures heures $minutes minutes =  $total secondes"
+	echo
+	notify-send -t 10000 "Minuterie : $heures heu $minutes min" &
+
+elif (( heures > 0 && minutes == 0 && secondes > 0 ))
+then
+	echo "$heures heures $secondes secondes =  $total secondes"
+	echo
+	notify-send -t 10000 "Minuterie : $heures heu $secondes sec" &
+
+elif (( heures > 0 && minutes == 0 && secondes == 0 ))
+then
+	echo "$heures heures =  $total secondes"
+	echo
+	notify-send -t 10000 "Minuterie : $heures heu" &
+
+elif (( heures == 0 && minutes > 0 && secondes > 0 ))
+then
+	echo "$minutes minutes $secondes secondes =  $total secondes"
+	echo
+	notify-send -t 10000 "Minuterie : $minutes min $secondes sec" &
+
+elif (( heures == 0 && minutes > 0 && secondes == 0 ))
+then
+	echo "$minutes minutes =  $total secondes"
+	echo
+	notify-send -t 10000 "Minuterie : $minutes min" &
+
+elif (( heures == 0 && minutes == 0 && secondes > 0 ))
+then
+	echo "$secondes secondes =  $total secondes"
+	echo
+	notify-send -t 10000 "Minuterie : $secondes sec" &
+
+else
+	echo "Minuterie instantanée"
+	echo
+	notify-send -t 10000 "Minuterie instantanée" &
+fi
 
 sleep $total
 

@@ -6,6 +6,7 @@
 
 integer min sec suivant
 
+heu=0
 min=0
 sec=0
 
@@ -19,25 +20,65 @@ do
 	then
 		(( min += 1 ))
 	else
-		minsec=(${(s/:/)temps})
+		tableau=(${(s/:/)temps})
 
-		min=$minsec[1]
+		if (( $#tableau == 3 ))
+		then
+			heu=$tableau[1]
+			min=$tableau[2]
+			sec=$tableau[3]
 
-		sec=$minsec[2]
+		elif (( $#tableau == 2 ))
+		then
+			min=$tableau[1]
+			sec=$tableau[2]
+
+		else
+			min=$tableau[1]
+		fi
 	fi
 
-	temps=$min:$sec
+	if (( heu > 0 && min > 0 && sec > 0 ))
+	then
+		echo
+		echo "	[$(date +%H:%M)] Ding dong dans $heu heu $min min $sec sec"
 
-	if (( sec > 0 ))
+	elif (( heu > 0 && min > 0 && sec == 0 ))
+	then
+		echo
+		echo "	[$(date +%H:%M)] Ding dong dans $heu heu $min min"
+
+	elif (( heu > 0 && min == 0 && sec > 0 ))
+	then
+		echo
+		echo "	[$(date +%H:%M)] Ding dong dans $heu heu $sec sec"
+
+	elif (( heu > 0 && min == 0 && sec == 0 ))
+	then
+		echo
+		echo "	[$(date +%H:%M)] Ding dong dans $heu heu"
+
+	elif (( heu == 0 && min > 0 && sec > 0 ))
 	then
 		echo
 		echo "	[$(date +%H:%M)] Ding dong dans $min min $sec sec"
-	else
+
+	elif (( heu == 0 && min > 0 && sec == 0 ))
+	then
 		echo
 		echo "	[$(date +%H:%M)] Ding dong dans $min min"
+
+	elif (( heu == 0 && min == 0 && sec > 0 ))
+	then
+		echo
+		echo "	[$(date +%H:%M)] Ding dong dans $sec sec"
+
+	else
+		echo
+		echo "	[$(date +%H:%M)] Ding dong maintenant"
 	fi
 
-	the.zsh $temps &> /dev/null
+	the.zsh $heu:$min:$sec &> /dev/null
 
 	(( suivant = min + 1 ))
 
