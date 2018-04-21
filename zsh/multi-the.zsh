@@ -4,15 +4,13 @@
 #
 # Ctrl-D ou Ctrl-C pour interrompre la boucle
 
-integer min sec suivant
+integer heu min sec
 
 heu=0
-min=0
+min=1
 sec=0
 
-suivant=1
-
-echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$suivant min] "
+echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$min min] "
 
 while read temps
 do
@@ -80,14 +78,45 @@ do
 
 	the.zsh $heu:$min:$sec &> /dev/null
 
-	(( suivant = min + 1 ))
+	(( min += 1 ))
 
-	if (( sec > 0 ))
+	if (( heu > 0 && min > 0 && sec > 0 ))
 	then
 		echo
-		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$suivant min $sec sec] "
+		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$heu heu $min min $sec sec] "
+
+	elif (( heu > 0 && min > 0 && sec == 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$heu heu $min min] "
+
+	elif (( heu > 0 && min == 0 && sec > 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$heu heu $sec sec] "
+
+	elif (( heu > 0 && min == 0 && sec == 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$heu heu] "
+
+	elif (( heu == 0 && min > 0 && sec > 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$min min $sec sec] "
+
+	elif (( heu == 0 && min > 0 && sec == 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$min min] "
+
+	elif (( heu == 0 && min == 0 && sec > 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$sec sec] "
+
 	else
 		echo
-		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$suivant min] "
+		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$min min] "
 	fi
 done
