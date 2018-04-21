@@ -1,4 +1,28 @@
 
 #+STARTUP: showall
 
-* Scripts
+* Repo contents
+
+Some scripts of mine, I hope you will find some of them useful.
+
+
+* Licence
+
+BSD
+
+
+* Documentation (English)
+
+Dependances :
+
+  - multi-the.zsh -> the.zsh -> minuterie.zsh -> sonnerie.zsh -> audio files
+
+  - My "speaking" audio files are generated with pico2wave (svox-pico-git on AUR)
+
+
+* Documentation (Français)
+
+Les variables des scripts sont généralement en français, pour éviter
+la confusion avec les mots-clefs anglophones du langage. Cela peut
+vous aider à les déchiffrer. Si vous avec besoin de plus de détails,
+n’hésitez pas à me le faire savoir.
