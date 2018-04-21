@@ -14,10 +14,8 @@ echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$min min] "
 
 while read temps
 do
-	if (( $#temps == 0 ))
+	if (( $#temps > 0 ))
 	then
-		(( min += 1 ))
-	else
 		tableau=(${(s/:/)temps})
 
 		if (( $#tableau == 3 ))
