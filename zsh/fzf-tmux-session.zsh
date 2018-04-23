@@ -5,7 +5,7 @@ cd ~/racine/config/multiplex/tmux/session
 fichier=$( \
 	print -l * | \
 	grep -v Grenier | \
-	fzf --cycle --hscroll-off=100 --color=bw \
+	fzf --cycle --reverse --hscroll-off=100 --color=bw \
 )
 
 (( $#fichier == 0 )) && exit 0
