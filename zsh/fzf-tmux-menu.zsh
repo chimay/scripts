@@ -1,5 +1,13 @@
 #!/usr/bin/env /bin/zsh
 
+[[ $TERM = tmux* ]] || {
+
+	echo "Not in tmux session"
+	echo
+
+	exit 0
+}
+
 menu=( \
 	"Exécuter une commande tmux" \
 	"Historique des commandes tmux" \
@@ -9,7 +17,7 @@ menu=( \
 
 choix=$( \
 	print -l $menu | \
-	fzf --cycle --reverse --hscroll-off=100 --color=bw \
+	fzf --cycle --hscroll-off=100 --color=bw --prompt='tmux> ' \
 )
 
 case $choix in

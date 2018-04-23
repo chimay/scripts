@@ -1,11 +1,20 @@
 #!/usr/bin/env /bin/zsh
 
+[[ $TERM = tmux* ]] || {
+
+	echo "Not in tmux session"
+	echo
+
+	exit 0
+}
+
 choix=$( \
 	tmux list-commands | \
 	fzf \
 	--history=$HOME/racine/hist/fzf/tmux-command \
 	--history-size=3000 \
-	--cycle --reverse --hscroll-off=100 --color=bw \
+	--cycle --hscroll-off=100 --color=bw \
+	--prompt='tmux> ' \
 )
 
 commande=$( \
@@ -17,5 +26,4 @@ commande=$( \
 
 echo "tmux $commande" >>! ~/racine/hist/fzf/tmux-history
 
-tmux split-window -p 90
-tmux send-keys -t .3 "tmux $commande"
+tmux send-keys "tmux $commande "

@@ -1,11 +1,19 @@
 #!/usr/bin/env /bin/zsh
 
+[[ $TERM = tmux* ]] || {
+
+	echo "Not in tmux session"
+	echo
+
+	exit 0
+}
+
 cd ~/racine/config/multiplex/tmux/session
 
 fichier=$( \
 	print -l * | \
 	grep -v Grenier | \
-	fzf --cycle --reverse --hscroll-off=100 --color=bw \
+	fzf --cycle --hscroll-off=100 --color=bw --prompt='tmux> ' \
 )
 
 (( $#fichier == 0 )) && exit 0
