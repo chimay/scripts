@@ -12,7 +12,7 @@
 
 # cd ~/racine
 #
-# syncron -R dir/**/*...
+# syncron -R dir/**/*(.m-$delai)
 
 # }}}2
 
@@ -20,7 +20,7 @@
 
 # Noter le ./ au milieu du chemin source :
 #
-# syncron -R ~/racine/./dir/**/*...
+# syncron -R ~/racine/./dir/**/*(.m-$delai)
 
 # }}}2
 
