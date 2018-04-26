@@ -132,6 +132,8 @@ do
 
 		(( reste = duree - somme ))
 
+		echo Temps : $temps
+		echo
 		echo Somme : $somme
 		echo
 		echo Reste : $reste
@@ -145,6 +147,9 @@ do
 			exit 1
 		}
 
+		echo "sleep $reste"
+		echo
+
 		sleep $reste
 
 		(( somme += reste ))
@@ -154,6 +159,9 @@ do
 
 		break
 	}
+
+	echo Temps : $temps
+	echo
 
 	echo "sleep $temps"
 	echo
