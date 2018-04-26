@@ -1,6 +1,10 @@
 
 #+STARTUP: showall
 
+* Warning
+
+I try to be mindful when I code, but some bugs might remain, so be careful.
+
 * Repo contents
 
 Some scripts of mine, I hope you will find some of them useful.
