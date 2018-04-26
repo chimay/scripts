@@ -1,10 +1,6 @@
 
 #+STARTUP: showall
 
-* Warning
-
-I try to be mindful when I code, but some bugs might remain, so be careful.
-
 * Repo contents
 
 Some scripts of mine, I hope you will find some of them useful.
@@ -32,3 +28,8 @@ Les variables des scripts sont généralement en français, pour éviter
 la confusion avec les mots-clefs anglophones du langage. Cela peut
 vous aider à les déchiffrer. Si vous avec besoin de plus de détails,
 n’hésitez pas à me le faire savoir.
+
+
+* Warning
+
+I try to be mindful when I code, but some bugs might remain, so be careful.
