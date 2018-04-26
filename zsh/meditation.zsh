@@ -2,12 +2,27 @@
 
 setopt extended_glob
 
+# Valeurs par défaut {{{1
+
+minimum=10
+maximum=60
+duree=900
+volume=10
+
+# }}}1
+
 # Aide {{{1
 
 [[ $1 == help ]] && {
 
 	echo Usage : ${0##*/} -minimum +maximum duree vol=volume
 	echo
+	echo "Par défaut :"
+	echo
+	echo "    Minimum = $minimum"
+	echo "    Maximum = $maximum"
+	echo "    Durée   = $duree"
+	echo "    Volume  = $volume"
 
 	exit
 }
@@ -33,11 +48,6 @@ fin=$HOME/audio/Sonnerie/notification/fin-meditation.ogg
 # }}}1
 
 # {{{ Arguments
-
-minimum=10
-maximum=60
-duree=900
-volume=10
 
 while true
 do
@@ -78,13 +88,13 @@ done
 echo "  Prélude"
 echo "=============================="
 echo
-echo Minimum : $minimum
-echo Maximum : $maximum
-echo Durée : $duree
-echo Volume : $volume
+echo "Minimum : $minimum"
+echo "Maximum : $maximum"
+echo "Durée   : $duree  "
+echo "Volume  : $volume "
 echo
-echo Moyenne : $moyenne
-echo Dispersion : $dispersion
+echo "Moyenne    : $moyenne   "
+echo "Dispersion : $dispersion"
 echo
 
 # }}}
