@@ -13,7 +13,7 @@ volume=10
 
 # Aide {{{1
 
-[[ $1 == help ]] && {
+[ $# -gt 0 ] && [ $1 = help -o $1 = -h -o $1 = --help ] && {
 
 	echo Usage : ${0##*/} -minimum +maximum duree vol=volume
 	echo
