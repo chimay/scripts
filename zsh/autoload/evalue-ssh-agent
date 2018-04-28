@@ -1,5 +1,9 @@
 # vim: set filetype=zsh :
 
+# À placer dans le ~/.zlogin
+# ou autre fichier d’init de votre shell,
+# pour qu’il puisse se connecter à ssh-agent
+
 # Options {{{1
 
 emulate -R zsh
