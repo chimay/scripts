@@ -1,0 +1,34 @@
+# vim: set filetype=zsh :
+
+# {{{ Options de zsh
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+setopt extended_glob
+
+setopt pushd_ignore_dups
+setopt pushd_minus
+
+unsetopt chase_links
+
+# }}}
+
+local choix repertoires
+
+repertoires=( ${(f)"$(dirs -v)"} )
+
+choix=$(print -l $repertoires | \
+	awk '{print $2}' | \
+	sed 's:~/:'$HOME'/:g' | \
+	uniq | \
+	fzf --cycle --color=bw --prompt='folder> '
+)
+
+echo "builtin pushd $~choix >& /dev/null"
+echo
+
+builtin pushd $~choix >& /dev/null
