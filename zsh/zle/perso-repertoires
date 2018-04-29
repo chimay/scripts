@@ -28,6 +28,8 @@ choix=$(print -l $repertoires | \
 	fzf --cycle --color=bw --prompt='folder> '
 )
 
+(( $#choix == 0 )) && return 0
+
 LBUFFER="builtin pushd $~choix >& /dev/null"
 
 zle accept-line
