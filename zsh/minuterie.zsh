@@ -50,24 +50,46 @@ done
 
 # }}}1
 
+# Total {{{1
+
 total=$(expr $heures '*' 3600 + $minutes '*' 60 + $secondes)
 
-# Fichier témoin {{{1
+# }}}1
+
+# Fichier run {{{1
 
 rundir=~/racine/run/minuter
 
+runfile=$rundir/minuteurs
+
 [ -d $rundir ] || mkdir -p $rundir
 
-fichiers=( $(print -l $rundir/temoin-*) )
+[ -e $runfile ] || touch $runfile
 
-mid=$(( $#fichiers + 1 ))
+minuteurs=( ${(f)"$(< $runfile)"} )
 
-celuici=$rundir/temoin-$mid
+# }}}1
 
-echo "touch $celuici"
+# ID du minuteur {{{1
+
+identifiants=( ${(f)"$(< $runfile | awk '{print $1}')"} )
+
+echo "Identifiants"
+echo "------------"
+echo
+print -l $identifiants
 echo
 
-touch $celuici
+mid=1
+
+while true
+do
+	[[ $identifiants[(i)$mid] -gt $#identifiants ]] && break
+	(( mid += 1 ))
+done
+
+echo "ID de ce minuteur : $mid"
+echo
 
 # }}}1
 
@@ -75,89 +97,79 @@ touch $celuici
 
 TRAPINT () {
 
-	echo "rm -f $celuici"
-	echo
-
-	rm -f $celuici
+	sed -i '/^'$mid'/d' $runfile
 
 	exit 128
 }
 
 # }}}1
 
-# Informations {{{1
+# Informations HH:MM:SS {{{1
 
 if (( heures > 0 && minutes > 0 && secondes > 0 ))
 then
-	echo "$heures heures $minutes minutes $secondes secondes =  $total secondes"
-	echo
+	chaine_echo="$heures heures $minutes minutes $secondes secondes =  $total secondes"
 
-	echo "$heures heures $minutes minutes $secondes secondes =  $total secondes" >! ~celuici
-
-	notifie "Minuterie : $heures heu $minutes min $secondes sec" &
+	chaine_notification="Minuterie : $heures heu $minutes min $secondes sec"
 
 elif (( heures > 0 && minutes > 0 && secondes == 0 ))
 then
-	echo "$heures heures $minutes minutes =  $total secondes"
-	echo
+	chaine_echo="$heures heures $minutes minutes =  $total secondes"
 
-	echo "$heures heures $minutes minutes =  $total secondes" >! ~celuici
-
-	notifie "Minuterie : $heures heu $minutes min" &
+	chaine_notification="Minuterie : $heures heu $minutes min"
 
 elif (( heures > 0 && minutes == 0 && secondes > 0 ))
 then
-	echo "$heures heures $secondes secondes =  $total secondes"
-	echo
+	chaine_echo="$heures heures $secondes secondes =  $total secondes"
 
-	echo "$heures heures $secondes secondes =  $total secondes" >! ~celuici
-
-	notifie "Minuterie : $heures heu $secondes sec" &
+	chaine_notification="Minuterie : $heures heu $secondes sec"
 
 elif (( heures > 0 && minutes == 0 && secondes == 0 ))
 then
-	echo "$heures heures =  $total secondes"
-	echo
+	chaine_echo="$heures heures =  $total secondes"
 
-	echo "$heures heures =  $total secondes" >! ~celuici
-
-	notifie "Minuterie : $heures heu" &
+	chaine_notification="Minuterie : $heures heu"
 
 elif (( heures == 0 && minutes > 0 && secondes > 0 ))
 then
-	echo "$minutes minutes $secondes secondes =  $total secondes"
-	echo
+	chaine_echo="$minutes minutes $secondes secondes =  $total secondes"
 
-	echo "$minutes minutes $secondes secondes =  $total secondes" >! ~celuici
-
-	notifie "Minuterie : $minutes min $secondes sec" &
+	chaine_notification="Minuterie : $minutes min $secondes sec"
 
 elif (( heures == 0 && minutes > 0 && secondes == 0 ))
 then
-	echo "$minutes minutes =  $total secondes"
-	echo
+	chaine_echo="$minutes minutes =  $total secondes"
 
-	echo "$minutes minutes =  $total secondes" >! ~celuici
-
-	notifie "Minuterie : $minutes min" &
+	chaine_notification="Minuterie : $minutes min"
 
 elif (( heures == 0 && minutes == 0 && secondes > 0 ))
 then
-	echo "$secondes secondes =  $total secondes"
-	echo
+	chaine_echo="$secondes secondes =  $total secondes"
 
-	echo "$secondes secondes =  $total secondes" >! ~celuici
-
-	notifie "Minuterie : $secondes sec" &
+	chaine_notification="Minuterie : $secondes sec"
 
 else
-	echo "Minuterie instantanée"
-	echo
+	chaine_echo="Minuterie instantanée"
 
-	echo "Minuterie instantanée" >! ~celuici
-
-	notifie "Minuterie instantanée" &
+	chaine_notification="Minuterie instantanée"
 fi
+
+chaine_runfile="$mid : $chaine_echo"
+
+echo $chaine_echo
+echo
+
+echo $chaine_runfile >>! $runfile
+
+notifie $chaine_notification &
+
+minuteurs+=$chaine_runfile
+
+echo "Minuteurs"
+echo "---------"
+echo
+print -l $minuteurs
+echo
 
 # }}}1
 
@@ -194,43 +206,8 @@ notifie-long "La minuterie a sonné !" &
 
 # }}}1
 
-# Suppression du fichier témoin {{{1
+# Suppression du minuteur dans $runfile {{{1
 
-echo "rm -f $celuici"
-echo
-
-rm -f $celuici
-
-# }}}1
-
-# Vérification des fichiers témoins abondonnés {{{1
-
-processus=("${(f)$(psgrep minuterie.zsh)}")
-
-# On enlève 1 pour le processus $(...)
-
-nombre=$(( $#processus - 1 ))
-
-echo "Nombre de minuteries en route : $nombre"
-echo
-
-# On enlève les fichiers témoins abandonnés
-
-(( nombre <= 1 )) && {
-
-	abandonnes=($rundir/*)
-
-	(( $#abandonnes > 0 )) && {
-
-		echo "rm -f $abandonnes"
-		echo
-
-		# Normalement plus nécessaire, grâce au TRAPINT
-
-		#rm -f $abandonnes
-	}
-}
-
-exit 0
+sed -i '/^'$mid'/d' $runfile
 
 # }}}1
