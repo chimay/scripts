@@ -66,8 +66,6 @@ runfile=$rundir/minuteurs
 
 [ -e $runfile ] || touch $runfile
 
-minuteurs=( ${(f)"$(< $runfile)"} )
-
 # }}}1
 
 # ID du minuteur {{{1
@@ -154,16 +152,20 @@ else
 	chaine_notification="Minuterie instantanée"
 fi
 
-chaine_runfile="$mid : $chaine_echo"
-
 echo $chaine_echo
 echo
 
-echo $chaine_runfile >>! $runfile
-
 notifie $chaine_notification &
 
-minuteurs+=$chaine_runfile
+chaine_runfile="$mid : $chaine_echo"
+
+echo $chaine_runfile >>! $runfile
+
+# }}}1
+
+# Minuteurs {{{1
+
+minuteurs=( ${(f)"$(< $runfile)"} )
 
 echo "Minuteurs"
 echo "---------"
@@ -211,3 +213,48 @@ notifie-long "La minuterie a sonné !" &
 sed -i '/^'$mid'/d' $runfile
 
 # }}}1
+
+# Vérification des lignes abondonnées dans $runfile {{{1
+
+processi=("${(f)$(psgrep minuterie.zsh)}")
+
+echo "Processi"
+echo "--------"
+echo
+print -l $processi
+echo
+
+# On enlève 1 pour le processus $(...)
+
+numproc=$(( $#processi - 1 ))
+
+echo "Nombre de minuteries en route : $numproc"
+echo
+
+# On enlève les lignes abandonnées
+
+(( numproc <= 1 )) && {
+
+	echo "Runfile"
+	echo "-------"
+	echo
+	cat $runfile
+	echo
+
+	abandonnees=$(wc -l $runfile | awk '{print $1}')
+
+	echo "Nombre de lignes abandonnées : " $abandonnees
+	echo
+
+	(( $abandonnees > 0 )) && {
+
+		echo "{ echo '1,\$d' ; echo w } | ed $runfile"
+		echo
+
+		{ echo '1,$d' ; echo w } | ed $runfile
+	}
+}
+
+# }}}1
+
+exit 0
