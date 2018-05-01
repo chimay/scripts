@@ -17,7 +17,7 @@ Dependances :
 
   - multi-the.zsh -> the.zsh -> minuterie.zsh -> sonnerie.zsh -> audio files
 
-  - meditation.zsh -> audio files
+  - meditation.zsh -> alea.py, audio files
 
   - My "speaking" audio files are generated with pico2wave (svox-pico-git on AUR)
 
