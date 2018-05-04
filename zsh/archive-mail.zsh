@@ -68,9 +68,21 @@ esac
 
 # {{{ Archivemail
 
-echo "exec archivemail $=fanions --include-flagged $=delai -s '-%Y' -o $archdir $boite"
-echo
+if [[ $fanions[(i)--delete] -gt $#fanions ]]
+then
+	echo "Pas de delete dans les options"
+	echo
+	echo "exec archivemail $=fanions --include-flagged $=delai -s '-%Y' -o $archdir $boite"
+	echo
 
-exec archivemail $=fanions --include-flagged $=delai -s '-%Y' -o $archdir $boite
+	exec archivemail $=fanions --include-flagged $=delai -s '-%Y' -o $archdir $boite
+else
+	echo "On a delete dans les options"
+	echo
+	echo "exec archivemail $=fanions --include-flagged $=delai $boite"
+	echo
+
+	exec archivemail $=fanions --include-flagged $=delai $boite
+fi
 
 # }}}
