@@ -3,7 +3,7 @@
 
 * Repo contents
 
-Some scripts of mine, I hope you will find some of them useful.
+Scripts of mine, I hope you will find some of them useful.
 
 
 * Licence
