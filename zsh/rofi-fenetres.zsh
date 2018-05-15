@@ -20,4 +20,4 @@
 # 	-multi-select \
 # 	-terminal lxterminal
 
-exec rofi -show combi -theme ~/racine/config/terminal/rofi/theme.rasi
+exec rofi -modi window,run -show window -p "rofi : " -theme ~/racine/config/terminal/rofi/theme.rasi

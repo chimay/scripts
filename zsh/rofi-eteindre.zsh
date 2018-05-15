@@ -1,6 +1,6 @@
 #! /usr/bin/env zsh
 
-menu=("Préparer le café" Veille Hibernation Eteindre)
+menu=("Préparer le café" Fermer Veille Hibernation Eteindre)
 
 confirmation=(Non \
 	"J’hésite" \
@@ -15,7 +15,7 @@ choix=$(for element in $menu
 do
 	echo $element
 
-done | rofi -dmenu -p "choix ? " -i -theme ~/racine/config/terminal/rofi/theme.rasi)
+done | rofi -dmenu -p "que faire ? " -i -theme ~/racine/config/terminal/rofi/theme.rasi)
 
 # }}}1
 
@@ -34,6 +34,14 @@ sync
 	echo
 
 	zenity --info --no-wrap --text "Dis tout de suite que j’ai une tête de cafetière ?"
+}
+
+[[ $choix = Fermer ]] && {
+
+	echo "i3-msg kill"
+	echo
+
+	i3-msg kill
 }
 
 [[ $choix = Veille ]] && {

@@ -2,13 +2,17 @@
 
 menu=("0 Principal" "1 Auxiliaire" "2 Navigation" "3 Graphique")
 
+menu+=(${(f)"$(wmctrl -d | cut -d' '  -f12- | sed 's/^ //')"})
+
+menu=(${(u)menu})
+
 # Rofi dmenu {{{1
 
 choix=$(for element in $menu
 do
 	echo $element
 
-done | rofi -dmenu -p "choix ? " -i -theme ~/racine/config/terminal/rofi/theme.rasi)
+done | rofi -dmenu -p "bureau ? " -i -theme ~/racine/config/terminal/rofi/theme.rasi)
 
 # }}}1
 
