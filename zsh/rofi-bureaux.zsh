@@ -12,7 +12,7 @@ choix=$(for element in $menu
 do
 	echo $element
 
-done | rofi -dmenu -p "bureau ? " -i -theme ~/racine/config/terminal/rofi/theme.rasi)
+done | rofi -dmenu -p "bureau ? " -i
 
 # }}}1
 

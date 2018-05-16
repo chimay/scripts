@@ -5,6 +5,7 @@ menu=(
 	"Bureaux"
 	"Fenêtres"
 	"Presse-papier"
+	"Recherche Web"
 	"Fermer ou Éteindre"
 	"Combinaison"
 )
@@ -15,7 +16,7 @@ choix=$(for element in $menu
 do
 	echo $element
 
-done | rofi -dmenu -p "Choix ? " -i -theme ~/racine/config/terminal/rofi/theme.rasi)
+done | rofi -dmenu -p "Menu : " -i)
 
 # }}}1
 
@@ -38,6 +39,9 @@ case $choix in
 		;;
 	"Presse-papier")
 		~/racine/shell/dialog/rofi-greenclip.zsh
+		;;
+	"Recherche Web")
+		~/racine/shell/dialog/rofi-surfraw.zsh
 		;;
 	"Fermer ou Éteindre")
 		~/racine/shell/dialog/rofi-eteindre.zsh

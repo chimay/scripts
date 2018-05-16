@@ -20,4 +20,7 @@
 # 	-multi-select \
 # 	-terminal lxterminal
 
-exec rofi -show combi -p "rofi : " -theme ~/racine/config/terminal/rofi/theme.rasi
+exec rofi \
+	-show combi \
+	-mesg "Shift + Gauche ou Droite pour changer de rubrique" \
+	-theme ~/racine/config/terminal/rofi/theme.rasi

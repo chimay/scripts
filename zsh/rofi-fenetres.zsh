@@ -1,5 +1,7 @@
 #! /usr/bin/env zsh
 
-#print -l $path
-
-exec rofi -modi window,run -show window -p "rofi : " -theme ~/racine/config/terminal/rofi/theme.rasi
+exec rofi \
+	-modi window,run \
+	-show window \
+	-mesg "Shift + Gauche ou Droite pour changer de rubrique" \
+	-p "rofi : "

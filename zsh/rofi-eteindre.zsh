@@ -1,6 +1,6 @@
 #! /usr/bin/env zsh
 
-menu=("Préparer le café" Fermer Veille Hibernation Eteindre)
+menu=("Préparer le café" Fermer Veille Hibernation Éteindre)
 
 confirmation=(Non \
 	"J’hésite" \
@@ -15,7 +15,7 @@ choix=$(for element in $menu
 do
 	echo $element
 
-done | rofi -dmenu -p "que faire ? " -i -theme ~/racine/config/terminal/rofi/theme.rasi)
+done | rofi -dmenu -p "que faire ? " -i)
 
 # }}}1
 
@@ -50,7 +50,7 @@ sync
 	do
 		echo $element
 
-	done | rofi -dmenu -i -p "$choix ? " -theme ~/racine/config/terminal/rofi/theme.rasi)
+	done | rofi -dmenu -i -p "$choix ? ")
 
 	[[ $certain = Oui ]] && {
 
@@ -69,13 +69,13 @@ sync
 	zenity --info --no-wrap --text "Il fait trop chaud pour hiberner."
 }
 
-[[ $choix = Eteindre ]] && {
+[[ $choix = Éteindre ]] && {
 
 	certain=$(for element in $confirmation
 	do
 		echo $element
 
-	done | rofi -dmenu -i -p "$choix ? " -theme ~/racine/config/terminal/rofi/theme.rasi)
+	done | rofi -dmenu -i -p "$choix ? ")
 
 	[[ $certain = Oui ]] && {
 

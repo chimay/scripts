@@ -5,7 +5,7 @@ menu=("0 Principal" "1 Auxiliaire" "2 Navigation" "3 Graphique")
 
 # Rofi dmenu {{{1
 
-choix=$(rofi -dmenu -p "nouveau nom pour le bureau ? " -i -theme ~/racine/config/terminal/rofi/theme.rasi)
+choix=$(rofi -dmenu -p "nouveau nom pour le bureau ? " -i)
 
 # }}}1
 
