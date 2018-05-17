@@ -1,13 +1,12 @@
 #! /usr/bin/env zsh
 
-menu=("Préparer le café" Fermer Veille Hibernation Éteindre)
+menu=(Rien Veille Hibernation Éteindre)
 
-confirmation=(Non \
-	"J’hésite" \
-	"Y a du pour et du contre" \
-	"Aujourd’hui non, on verra demain" \
-	Oui \
-	"Quoique")
+confirmation=(
+	Non
+	"Faut voir"
+	Oui
+)
 
 # Rofi dmenu {{{1
 
@@ -27,22 +26,6 @@ echo
 # }}}1
 
 sync
-
-[[ $choix = *café* ]] && {
-
-	echo "Non implémenté"
-	echo
-
-	zenity --info --no-wrap --text "Dis tout de suite que j’ai une tête de cafetière ?"
-}
-
-[[ $choix = Fermer ]] && {
-
-	echo "i3-msg kill"
-	echo
-
-	i3-msg kill
-}
 
 [[ $choix = Veille ]] && {
 

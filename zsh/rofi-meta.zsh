@@ -11,7 +11,8 @@ menu=(
 	"5 Signets"
 	"6 Internet"
 	"7 Combinaison"
-	"8 Fermer ou Éteindre"
+	"8 Fermer une fenêtre"
+	"9 Éteindre"
 )
 
 # Rofi dmenu {{{1
@@ -59,7 +60,10 @@ case $choix in
 	[0-9]##" Combinaison")
 		~/racine/shell/dialog/rofi-combi.zsh
 		;;
-	[0-9]##" Fermer ou Éteindre")
+	[0-9]##" Fermer une fenêtre")
+		~/racine/shell/dialog/rofi-fermer.zsh
+		;;
+	[0-9]##" Éteindre")
 		~/racine/shell/dialog/rofi-eteindre.zsh
 		;;
 esac
