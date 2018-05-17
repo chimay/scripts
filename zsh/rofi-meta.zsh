@@ -9,8 +9,9 @@ menu=(
 	"3 Presse-papier"
 	"4 Recherche Web"
 	"5 Signets"
-	"6 Fermer ou Éteindre"
+	"6 Internet"
 	"7 Combinaison"
+	"8 Fermer ou Éteindre"
 )
 
 # Rofi dmenu {{{1
@@ -51,10 +52,14 @@ case $choix in
 		~/racine/shell/dialog/rofi-buku.zsh &
 		disown
 		;;
-	[0-9]##" Fermer ou Éteindre")
-		~/racine/shell/dialog/rofi-eteindre.zsh
+	[0-9]##" Internet")
+		~/racine/shell/dialog/rofi-internet.zsh &
+		disown
 		;;
 	[0-9]##" Combinaison")
 		~/racine/shell/dialog/rofi-combi.zsh
+		;;
+	[0-9]##" Fermer ou Éteindre")
+		~/racine/shell/dialog/rofi-eteindre.zsh
 		;;
 esac
