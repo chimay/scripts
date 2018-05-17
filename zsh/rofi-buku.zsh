@@ -2,6 +2,8 @@
 
 path+=(~/racine/bin/local/bin)
 
+navigateur=${1:-qutebrowser}
+
 #rofi-bookmarks ~/racine/config/webrowser/bookmarks
 
-buku_run
+BROWSER=$navigateur buku_run

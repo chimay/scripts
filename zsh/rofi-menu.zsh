@@ -48,7 +48,7 @@ case $choix in
 		disown
 		;;
 	[0-9]##" Signets")
-		~/racine/shell/dialog/rofi-signets.zsh &
+		~/racine/shell/dialog/rofi-buku.zsh &
 		disown
 		;;
 	[0-9]##" Fermer ou Éteindre")

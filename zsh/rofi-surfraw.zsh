@@ -1,6 +1,8 @@
 #! /usr/bin/env zsh
 
-surfraw -browser=qutebrowser \
+navigateur=${1:-qutebrowser}
+
+surfraw -browser=$navigateur \
 	$(surfraw -elvi | \
 	awk -F'-' '{print $1}' | \
 	sed '/:/d' | \
