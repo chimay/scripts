@@ -15,7 +15,7 @@ choix=$(for element in $menu
 do
 	echo $element
 
-done | rofi -dmenu -p "que faire ? " -i)
+done | rofi -dmenu -p "que faire " -i)
 
 # }}}1
 

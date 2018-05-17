@@ -1,13 +1,16 @@
 #! /usr/bin/env zsh
 
+setopt extended_glob
+
 menu=(
-	"Applications"
-	"Bureaux"
-	"Fenêtres"
-	"Presse-papier"
-	"Recherche Web"
-	"Fermer ou Éteindre"
-	"Combinaison"
+	"0 Applications"
+	"1 Bureaux"
+	"2 Fenêtres"
+	"3 Presse-papier"
+	"4 Recherche Web"
+	"5 Signets"
+	"6 Fermer ou Éteindre"
+	"7 Combinaison"
 )
 
 # Rofi dmenu {{{1
@@ -16,7 +19,7 @@ choix=$(for element in $menu
 do
 	echo $element
 
-done | rofi -dmenu -p "Menu : " -i)
+done | rofi -dmenu -p "Menu " -i)
 
 # }}}1
 
@@ -28,25 +31,30 @@ echo
 # }}}1
 
 case $choix in
-	"Applications")
+	[0-9]##" Applications")
 		~/racine/shell/dialog/rofi-run.zsh
 		;;
-	"Bureaux")
+	[0-9]##" Bureaux")
 		~/racine/shell/dialog/rofi-bureaux.zsh
 		;;
-	"Fenêtres")
+	[0-9]##" Fenêtres")
 		~/racine/shell/dialog/rofi-fenetres.zsh
 		;;
-	"Presse-papier")
+	[0-9]##" Presse-papier")
 		~/racine/shell/dialog/rofi-greenclip.zsh
 		;;
-	"Recherche Web")
-		~/racine/shell/dialog/rofi-surfraw.zsh
+	[0-9]##" Recherche Web")
+		~/racine/shell/dialog/rofi-surfraw.zsh &
+		disown
 		;;
-	"Fermer ou Éteindre")
+	[0-9]##" Signets")
+		~/racine/shell/dialog/rofi-signets.zsh &
+		disown
+		;;
+	[0-9]##" Fermer ou Éteindre")
 		~/racine/shell/dialog/rofi-eteindre.zsh
 		;;
-	"Combinaison")
+	[0-9]##" Combinaison")
 		~/racine/shell/dialog/rofi-combi.zsh
 		;;
 esac

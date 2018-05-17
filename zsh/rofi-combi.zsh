@@ -23,4 +23,5 @@
 exec rofi \
 	-show combi \
 	-mesg "Shift + Gauche ou Droite pour changer de rubrique" \
+	-p "combi "
 	-theme ~/racine/config/terminal/rofi/theme.rasi

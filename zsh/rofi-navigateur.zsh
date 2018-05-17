@@ -1,9 +1,12 @@
 #! /usr/bin/env zsh
 
+setopt extended_glob
+
 menu=(
-	"Firefox"
-	"Qutebrowser"
-	"Recherche Web"
+	"0 Firefox"
+	"1 Qutebrowser"
+	"2 Recherche Web"
+	"3 Signets"
 )
 
 # Rofi dmenu {{{1
@@ -24,16 +27,20 @@ echo
 # }}}1
 
 case $choix in
-	"Firefox")
+	[0-9]##" Firefox")
 		firefox &!
 		disown
 		;;
-	"Qutebrowser")
+	[0-9]##" Qutebrowser")
 		qutebrowser &!
 		disown
 		;;
-	"Recherche Web")
+	[0-9]##" Recherche Web")
 		~/racine/shell/dialog/rofi-surfraw.zsh &
+		disown
+		;;
+	[0-9]##" Signets")
+		~/racine/shell/dialog/rofi-signets.zsh &
 		disown
 		;;
 esac

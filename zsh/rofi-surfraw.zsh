@@ -10,5 +10,5 @@ surfraw -browser=qutebrowser \
 	-dmenu \
 	-mesg ">>> Tab = Autocomplete" \
 	-i \
-	-p "websearch: "
+	-p "recherche "
 )
