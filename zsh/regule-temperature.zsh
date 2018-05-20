@@ -6,13 +6,37 @@ setopt extended_glob
 
 alias psgrep='command ps -eo "%p %r" | command grep -v grep | command grep --color=never'
 
+# Fonctions {{{1
+
+# Credits :
+# https://stackoverflow.com/questions/392022/whats-the-best-way-to-send-a-signal-to-all-members-of-a-process-group/6481337#6481337
+
+signal-arbre () {
+    local _pid=$1
+    local _sig=${2:--STOP}
+
+	 # needed to stop quickly forking parent from producing children
+	 # between child killing and parent killing
+
+    kill -stop ${_pid}
+
+	for _child in $(ps -o pid --no-headers --ppid ${_pid})
+	do
+        signal-arbre ${_child} ${_sig}
+    done
+
+    kill -${_sig} ${_pid}
+}
+
+# }}}1
+
 # Initialisation {{{1
 
-local script=$$
+script=$$
 
-local chaud=75
+chaud=75
 
-local delai=1
+delai=1
 
 # }}}1
 
@@ -50,6 +74,13 @@ journal=regule-temp-${(j:_:)commande}
 $=commande &>! ~/log/$journal &
 
 processus=$!
+
+# Groupe de processus
+
+groupe=($(ps -eo "%r %p" | awk '{ if ( $2 == '$processus' ) print $1 }'))
+
+echo Groupe de processus : $groupe
+echo
 
 # }}}1
 
@@ -91,36 +122,22 @@ do
 
 	maximum=0
 
-	for elt in $senseurs
+	for temperature in $senseurs
 	do
-		(( elt > maximum )) && maximum=$elt
+		(( temperature > maximum )) && maximum=$temperature
 	done
 
-	print "  " $maximum
+	print Temperature maximale : $maximum
 	print
-
-	groupe=($(ps -eo "%r %p" | \
-		awk '{ if ( $2 == '$processus' ) print $1 }'
-	))
-
-	echo Groupe de processus : $groupe
-	echo
-
-	arbre=($(ps -eo "%r %p" | \
-		awk '{ if ( $1 == '$groupe' && $2 != '$script' ) print $2 }'
-	))
-
-	echo Arbre des processus : $=arbre
-	echo
 
 	(( dodo == 0 )) && (( maximum > chaud )) && {
 
 		echo Pause de $repos secondes
 		echo
-		echo "kill -STOP $=arbre"
+		echo "signal-arbre $processus STOP"
 		echo
 
-		kill -STOP $=arbre
+		signal-arbre $processus STOP
 
 		dodo=1
 
@@ -136,10 +153,12 @@ do
 
 		(( somme >= repos )) && {
 
-			echo "kill -CONT $=arbre"
+			echo On reprend
+			echo
+			echo "signal-arbre $processus CONT"
 			echo
 
-			kill -CONT $=arbre
+			signal-arbre $processus CONT
 
 			dodo=0
 
