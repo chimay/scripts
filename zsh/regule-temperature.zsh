@@ -80,20 +80,6 @@ do
 
 	psgrep $processus &> /dev/null || break
 
-	groupe=($(ps -eo "%r %p" | \
-		awk '{ if ( $2 == '$processus' ) print $1 }'
-	))
-
-	echo Groupe de processus : $groupe
-	echo
-
-	arbre=($(ps -eo "%r %p" | \
-		awk '{ if ( $1 == '$groupe' && $2 != '$script' ) print $2 }'
-	))
-
-	echo Arbre des processus : $=arbre
-	echo
-
 	senseurs=($(sensors | \
 		grep -E '(temp|Core)[^(]+°C' | \
 		sed 's/(.*)//' | \
@@ -112,6 +98,20 @@ do
 
 	print "  " $maximum
 	print
+
+	groupe=($(ps -eo "%r %p" | \
+		awk '{ if ( $2 == '$processus' ) print $1 }'
+	))
+
+	echo Groupe de processus : $groupe
+	echo
+
+	arbre=($(ps -eo "%r %p" | \
+		awk '{ if ( $1 == '$groupe' && $2 != '$script' ) print $2 }'
+	))
+
+	echo Arbre des processus : $=arbre
+	echo
 
 	(( dodo == 0 )) && (( maximum > chaud )) && {
 
