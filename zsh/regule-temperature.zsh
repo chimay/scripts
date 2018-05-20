@@ -125,7 +125,9 @@ echo
 
 print Chaud : $chaud
 print
-print delai : $delai
+print Froi : $froid
+print
+print Delai : $delai
 print
 print Commande : $=commande
 print
