@@ -33,11 +33,47 @@ signal-arbre () {
 
 # Initialisation {{{1
 
-script=$$
+chaud=80
 
-chaud=75
+froid=70
 
 delai=1
+
+# }}}1
+
+# Aide {{{1
+
+[ $# -eq 0 ] && {
+
+	echo Usage : ${0##*/} +chaud -froid delai commande
+	echo
+	echo "Par défaut :"
+	echo
+	echo Chaud = $chaud
+	echo
+	echo Froid = $froid
+	echo
+	echo Delai = $delai
+	echo
+
+	exit
+}
+
+[ $# -gt 0 ] && [ $1 = help -o $1 = -h -o $1 = --help ] && {
+
+	echo Usage : ${0##*/} +chaud -froid delai commande
+	echo
+	echo "Par défaut :"
+	echo
+	echo Chaud = $chaud
+	echo
+	echo Froid = $froid
+	echo
+	echo Delai = $delai
+	echo
+
+	exit
+}
 
 # }}}1
 
@@ -46,16 +82,16 @@ delai=1
 while true
 do
 	case $1 in
-		[0-9]##)
-			chaud=$1
+		+[0-9]##)
+			chaud=${1#+}
 			shift
 			;;
 		-[0-9]##)
-			delai=${1#-}
+			froid=${1#-}
 			shift
 			;;
-		+[0-9]##)
-			repos=${1#+}
+		[0-9]##)
+			delai=$1
 			shift
 			;;
 		*)
@@ -133,26 +169,17 @@ do
 
 	(( dodo == 0 )) && (( maximum > chaud )) && {
 
-		echo Pause de $repos secondes
-		echo
 		echo "signal-arbre $processus STOP"
 		echo
 
 		signal-arbre $processus STOP
 
 		dodo=1
-
-		somme=0
 	}
 
 	(( dodo > 0 )) && {
 
-		(( somme += delai ))
-
-		echo Somme : $somme
-		echo
-
-		(( somme >= repos )) && {
+		(( maximum <= froid )) && {
 
 			echo On reprend
 			echo
@@ -162,8 +189,6 @@ do
 			signal-arbre $processus CONT
 
 			dodo=0
-
-			somme=0
 		}
 	}
 
