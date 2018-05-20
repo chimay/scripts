@@ -11,7 +11,6 @@ alias psgrep='command ps -eo "%p %r" | command grep -v grep | command grep --col
 local script=$$
 
 local chaud=75
-local tres_chaud=80
 
 local delai=1
 
