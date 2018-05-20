@@ -12,20 +12,21 @@ alias psgrep='command ps -eo "%p %r" | command grep -v grep | command grep --col
 # https://stackoverflow.com/questions/392022/whats-the-best-way-to-send-a-signal-to-all-members-of-a-process-group/6481337
 
 signal-arbre () {
-    local _pid=$1
-    local _sig=${2:--STOP}
+
+    local iden=$1
+    local signal=${2:--STOP}
 
 	 # needed to stop quickly forking parent from producing children
 	 # between child killing and parent killing
 
-    kill -stop ${_pid}
+    kill -stop $iden
 
-	for _child in $(ps -o pid --no-headers --ppid ${_pid})
+	for enfant in $(ps -o pid --no-headers --ppid ${iden})
 	do
-        signal-arbre ${_child} ${_sig}
+        signal-arbre $enfant $signal
     done
 
-    kill -${_sig} ${_pid}
+    kill -$signal $iden
 }
 
 # }}}1
