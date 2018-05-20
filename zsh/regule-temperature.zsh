@@ -9,7 +9,7 @@ alias psgrep='command ps -eo "%p %r" | command grep -v grep | command grep --col
 # Fonctions {{{1
 
 # Credits :
-# https://stackoverflow.com/questions/392022/whats-the-best-way-to-send-a-signal-to-all-members-of-a-process-group/6481337#6481337
+# https://stackoverflow.com/questions/392022/whats-the-best-way-to-send-a-signal-to-all-members-of-a-process-group/6481337
 
 signal-arbre () {
     local _pid=$1
