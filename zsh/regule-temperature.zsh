@@ -37,7 +37,9 @@ chaud=80
 
 froid=70
 
-delai=1
+delai_eveil=1
+
+delai_dodo=5
 
 # }}}1
 
@@ -45,7 +47,7 @@ delai=1
 
 [ $# -eq 0 ] && {
 
-	echo Usage : ${0##*/} +chaud -froid delai commande
+	echo Usage : ${0##*/} +chaud -froid delai_eveil-delai_dodo commande
 	echo
 	echo "Par défaut :"
 	echo
@@ -53,7 +55,9 @@ delai=1
 	echo
 	echo Froid = $froid
 	echo
-	echo Delai = $delai
+	echo Delai éveil = $delai_eveil
+	echo
+	echo Delai dodo = $delai_dodo
 	echo
 
 	exit
@@ -61,7 +65,7 @@ delai=1
 
 [ $# -gt 0 ] && [ $1 = help -o $1 = -h -o $1 = --help ] && {
 
-	echo Usage : ${0##*/} +chaud -froid delai commande
+	echo Usage : ${0##*/} +chaud -froid delai_eveil-delai_dodo commande
 	echo
 	echo "Par défaut :"
 	echo
@@ -69,7 +73,9 @@ delai=1
 	echo
 	echo Froid = $froid
 	echo
-	echo Delai = $delai
+	echo Delai éveil = $delai_eveil
+	echo
+	echo Delai dodo = $delai_dodo
 	echo
 
 	exit
@@ -90,8 +96,14 @@ do
 			froid=${1#-}
 			shift
 			;;
+		[0-9]##-[0-9]##)
+			delai_eveil=${1%-*}
+			delai_dodo=${1#*-}
+			shift
+			;;
 		[0-9]##)
-			delai=$1
+			delai_eveil=$1
+			(( delai_dodo = 2 * delai_eveil ))
 			shift
 			;;
 		*)
@@ -127,7 +139,9 @@ print Chaud : $chaud
 print
 print Froi : $froid
 print
-print Delai : $delai
+print Delai éveil : $delai_eveil
+print
+print Delai dodo : $delai_dodo
 print
 print Commande : $=commande
 print
@@ -141,12 +155,26 @@ print
 
 # Boucle {{{1
 
-dodo=0
+eveil=1
 
 while true
 do
-	echo Dodo : $dodo
-	echo
+	if (( eveil == 1 ))
+	then
+		echo "==== Mode éveil ===="
+		echo
+		echo "sleep $delai_eveil"
+		echo
+
+		sleep $delai_eveil
+	else
+		echo "==== Mode dodo  ===="
+		echo
+		echo "sleep $delai_dodo"
+		echo
+
+		sleep $delai_dodo
+	fi
 
 	psgrep $processus &> /dev/null || break
 
@@ -169,32 +197,28 @@ do
 	print Temperature maximale : $maximum
 	print
 
-	(( dodo == 0 )) && (( maximum > chaud )) && {
+	if (( eveil == 1 ))
+	then
+		(( maximum >= chaud )) && {
 
-		echo "signal-arbre $processus STOP"
-		echo
+			echo "signal-arbre $processus STOP"
+			echo
 
-		signal-arbre $processus STOP
+			signal-arbre $processus STOP
 
-		dodo=1
-	}
-
-	(( dodo > 0 )) && {
-
+			eveil=0
+		}
+	else
 		(( maximum <= froid )) && {
 
-			echo On reprend
-			echo
 			echo "signal-arbre $processus CONT"
 			echo
 
 			signal-arbre $processus CONT
 
-			dodo=0
+			eveil=1
 		}
-	}
-
-	sleep $delai
+	fi
 done
 
 # }}}1
