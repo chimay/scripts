@@ -124,13 +124,6 @@ $=commande &>! ~/log/$journal &
 
 processus=$!
 
-# Groupe de processus
-
-groupe=($(ps -eo "%r %p" | awk '{ if ( $2 == '$processus' ) print $1 }'))
-
-echo Groupe de processus : $groupe
-echo
-
 # }}}1
 
 # Affichage {{{1
