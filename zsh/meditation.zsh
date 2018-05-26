@@ -7,7 +7,7 @@ setopt extended_glob
 minimum=10
 maximum=60
 duree=900
-volume=10
+volume=100
 
 # }}}1
 

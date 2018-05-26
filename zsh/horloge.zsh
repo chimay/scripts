@@ -25,7 +25,11 @@ integer post=0
 integer carillon=1
 integer vocal=1
 
-integer volume=10
+integer volume=100
+
+integer finance=0
+
+integer ecole=0
 
 integer pause=0
 integer arret=0
@@ -39,6 +43,8 @@ tictac=$HOME/audio/Sonnerie/horloge/tictac.ogg
 
 bol=$HOME/audio/Sonnerie/horloge/bol-tibetain.ogg
 yinyang=$HOME/audio/Sonnerie/horloge/yinyang.ogg
+
+chercher=$HOME/audio/Sonnerie/notification/ecole.ogg
 
 carillon_simple=$HOME/audio/Sonnerie/horloge/coucou-1.ogg
 
@@ -102,6 +108,22 @@ do
 			volume=$1
 			shift
 			;;
+		-f)
+			shift
+			finance=1
+			;;
+		-F)
+			shift
+			finance=0
+			;;
+		-e)
+			shift
+			ecole=1
+			;;
+		-E)
+			shift
+			ecole=0
+			;;
 		-i)
 			shift
 			etat=$1
@@ -157,6 +179,9 @@ echo "   Vocal = $vocal"
 echo
 echo "   Volume = $volume"
 echo
+echo "   Finance = $finance"
+echo "   Ecole = $ecole"
+echo
 echo "   Etat = $etat"
 echo "   Temoin = $temoin"
 echo
@@ -188,6 +213,10 @@ cat <<- fin >| $etat
 	vocal = $vocal
 
 	volume = $volume
+
+	finance = $finance
+
+	ecole = $ecole
 
 	etat = $etat
 
@@ -263,6 +292,9 @@ echo
 	echo
 	echo "   Volume = $volume"
 	echo
+	echo "   Finance = $finance"
+	echo "   Ecole = $ecole"
+	echo
 	echo "   Etat = $etat"
 	echo "   Temoin = $temoin"
 	echo
@@ -322,6 +354,9 @@ echo
 
 dingdong=0
 
+fifi=0
+craie=0
+
 integer heure minute
 
 heure=`date +%H`
@@ -340,6 +375,78 @@ jour_semaine=`date +%u`
 # echo
 # echo Jour de la semaine : $jour_semaine
 # echo
+
+#  }}}
+
+# {{{ Finance
+
+	(( finance == 1 )) && \
+		(( jour_semaine >= 1 )) && \
+		(( jour_semaine <= 5 )) && {
+
+		(( heure == 8 && minute == 53 )) && fifi=1
+
+		(( heure == 17 && minute == 23 )) && fifi=1
+
+		(( heure == 15 && minute == 30 )) && fifi=1
+
+		(( heure == 22 && minute == 0 )) && fifi=1
+
+		# ------------------------------
+
+		(( heure == 10 && minute == 0 )) && fifi=1
+
+		(( heure == 12 && minute == 0 )) && fifi=1
+
+		(( heure == 14 && minute == 0 )) && fifi=1
+
+		(( heure == 15 && minute == 0 )) && fifi=1
+
+		(( heure == 16 && minute == 0 )) && fifi=1
+	}
+
+# }}}
+
+# {{{ Ecole
+
+	(( ecole == 1 )) && \
+		(( jour_semaine >= 1 )) && \
+		(( jour_semaine <= 5 )) && {
+
+		(( jour_semaine != 3 )) && (( heure == 15 && minute == 21 )) && craie=1
+
+		(( jour_semaine == 3 )) && (( heure == 11 && minute == 31 )) && craie=1
+	}
+
+# }}}
+
+#  {{{ Sonnerie finance
+
+	(( fifi == 1 )) && {
+
+		#dingdong=1
+
+		echo "   lecteur $volume $bol"
+		echo "   lecteur $volume $yinyang"
+		echo "   lecteur $volume $bol"
+		echo
+
+		lecteur $volume $bol
+		lecteur $volume $yinyang
+		lecteur $volume $bol
+	}
+
+#  }}}
+
+#  {{{ Sonnerie ecole
+
+	(( craie == 1 )) && {
+
+		echo "   lecteur $volume $chercher"
+		echo
+
+		lecteur $volume $chercher
+	}
 
 #  }}}
 

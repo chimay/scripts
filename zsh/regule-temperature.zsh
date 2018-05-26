@@ -21,7 +21,7 @@ signal-arbre () {
 
     kill -stop $iden
 
-	for enfant in $(ps -o pid --no-headers --ppid ${iden})
+	for enfant in $(ps -o pid --no-headers --ppid $iden)
 	do
         signal-arbre $enfant $signal
     done
