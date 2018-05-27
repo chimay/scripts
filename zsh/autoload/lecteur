@@ -13,7 +13,8 @@ setopt extended_glob
 # }}}1
 
 local fichiers=()
-local volume=10
+local volume=100
+local elt
 
 while true
 do
@@ -42,18 +43,11 @@ echo
 echo Volume : $volume
 echo
 
-alias psgrep="ps auxww | grep -v grep | grep --color=never"
+for elt in $fichiers
+do
+	echo "loadfile $elt append-play" > ~/racine/run/fifo/mpv
+done
 
-psgrep 'mplayer -idle -slave' &> /dev/null && {
+echo "set volume $volume" > ~/racine/run/fifo/mpv
 
-	for elt in $fichiers
-	do
-		echo "loadfile $elt 1" > ~/racine/run/fifo/mplayer
-	done
-
-	echo "set volume $volume" > ~/racine/run/fifo/mplayer
-
-	return 0
-}
-
-mplayer -noconsolecontrols -volume $volume $fichier &> /dev/null
+return 0

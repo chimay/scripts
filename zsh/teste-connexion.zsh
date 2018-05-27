@@ -16,9 +16,9 @@ lecteur () {
 	local fu_volume=$1
 	local fu_fichier=$2
 
-	echo "loadfile $fu_fichier 1" > ~/racine/run/fifo/mplayer
+	echo "loadfile $fu_fichier append-play" > ~/racine/run/fifo/mpv
 
-	echo "set volume $fu_volume" > ~/racine/run/fifo/mplayer
+	echo "set volume $fu_volume" > ~/racine/run/fifo/mpv
 }
 
 # }}}
@@ -28,7 +28,7 @@ lecteur () {
 
 while true
 do
-	# ! wget -O - www.google.com | grep LAN_ROUTER_IP
+	# ! wget -O - www.google.com | grep 192.168.1.1
 
 	if ! curl www.google.com &> /dev/null
 	then
@@ -42,7 +42,7 @@ do
 		continue
 	fi
 
-	if ! curl www.google.com 2>/dev/null | grep LAN_ROUTER_IP &> /dev/null
+	if ! curl www.google.com 2>/dev/null | grep 192.168.1.1 &> /dev/null
 	then
 		break
 	fi

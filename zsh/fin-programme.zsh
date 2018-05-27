@@ -65,7 +65,7 @@ lecteur () {
 
 	local fu_volume=$1
 	local fu_fichier=$2
-	mplayer -noconsolecontrols -volume $fu_volume $fu_fichier &> /dev/null
+	mpv -noconsolecontrols -volume $fu_volume $fu_fichier &> /dev/null
 }
 
 # }}}

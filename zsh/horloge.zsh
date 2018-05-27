@@ -151,9 +151,9 @@ lecteur () {
 	local fu_volume=$1
 	local fu_fichier=$2
 
-	echo "loadfile $fu_fichier 1" > ~/racine/run/fifo/mplayer
+	echo "loadfile $fu_fichier append-play" > ~/racine/run/fifo/mpv
 
-	echo "set volume $fu_volume" > ~/racine/run/fifo/mplayer
+	echo "set volume $fu_volume" > ~/racine/run/fifo/mpv
 }
 
 # }}}

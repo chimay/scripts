@@ -34,14 +34,12 @@ volume=100
 integer moyenne dispersion temps somme reste
 
 reception=$HOME/audio/Sonnerie/ding/reception.ogg
-
-bol_tibetain=$HOME/audio/Sonnerie/ding/bol-tibetain.ogg
-bol_nepalais=$HOME/audio/Sonnerie/ding/bol-nepalais.ogg
-bol_chantant=$HOME/audio/Sonnerie/ding/bol-chantant.ogg
-
 clochette=$HOME/audio/Sonnerie/ding/clochette.ogg
-
 yinyang=$HOME/audio/Sonnerie/ding/yinyang.ogg
+
+bol_chantant=$HOME/audio/Sonnerie/ding/bol-chantant.ogg
+bol_nepalais=$HOME/audio/Sonnerie/ding/bol-nepalais.ogg
+bol_tibetain=$HOME/audio/Sonnerie/ding/bol-tibetain.ogg
 
 fin=$HOME/audio/Sonnerie/notification/fin-meditation.ogg
 
@@ -106,12 +104,27 @@ lecteur () {
 	local fu_volume=$1
 	local fu_fichier=$2
 
-	echo "loadfile $fu_fichier 1" > ~/racine/run/fifo/mplayer
+	echo "loadfile $fu_fichier append-play" > ~/racine/run/fifo/mpv
 
-	echo "set volume $fu_volume" > ~/racine/run/fifo/mplayer
+	echo "set volume $fu_volume" > ~/racine/run/fifo/mpv
 }
 
 # }}}
+
+# Début {{{1
+
+echo "  Prélude avant la boucle"
+echo "=============================="
+echo
+echo lecteur $volume $yinyang
+echo lecteur $volume $bol_chantant
+echo lecteur $volume $bol_nepalais
+
+lecteur $volume $yinyang
+lecteur $volume $bol_chantant
+lecteur $volume $bol_nepalais
+
+# }}}1
 
 # {{{ Boucle
 
@@ -186,10 +199,14 @@ done
 echo "  Fin de la boucle"
 echo "=============================="
 echo
-echo "   lecteur $volume <fin>"
+echo lecteur $volume $yinyang
+echo lecteur $volume $clochette
+echo lecteur $volume $bol_tibetain
 echo
+echo lecteur $volume $fin
 
 lecteur $volume $yinyang
+lecteur $volume $clochette
 lecteur $volume $bol_tibetain
 
 lecteur $volume $fin
