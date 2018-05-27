@@ -83,7 +83,7 @@ done
 
 # {{{ Affichage
 
-echo "  Prélude"
+echo "  Affichage"
 echo "=============================="
 echo
 echo "Minimum : $minimum"
