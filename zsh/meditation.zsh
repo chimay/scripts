@@ -111,7 +111,7 @@ lecteur () {
 
 # }}}
 
-# Début {{{1
+# Prélude {{{1
 
 echo "  Prélude avant la boucle"
 echo "=============================="
@@ -119,10 +119,38 @@ echo
 echo lecteur $volume $yinyang
 echo lecteur $volume $bol_chantant
 echo lecteur $volume $bol_nepalais
+echo
 
 lecteur $volume $yinyang
 lecteur $volume $bol_chantant
 lecteur $volume $bol_nepalais
+
+# }}}1
+
+# On dort pendant que le prélude joue {{{1
+
+total=0
+
+for fichier in $yinyang $bol_chantant $bol_nepalais
+do
+	sortie=$(ogginfo $fichier | grep 'Playback length' | awk '{ print $3 }')
+
+	minutes=${sortie%m:*}
+
+	(( total += 60 * minutes ))
+
+	secondes=${sortie#*:}
+	secondes=${secondes:s/s/}
+
+	(( total += secondes ))
+
+	echo $sortie = $minutes minutes $secondes secondes
+	echo
+	echo total = $total
+	echo
+done
+
+sleep $total
 
 # }}}1
 
@@ -194,9 +222,9 @@ done
 
 # }}}
 
-# {{{ Fin
+# {{{ Conclusion
 
-echo "  Fin de la boucle"
+echo "  Conclusion après la boucle"
 echo "=============================="
 echo
 echo lecteur $volume $yinyang
