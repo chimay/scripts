@@ -19,7 +19,9 @@ Dependances :
 
   - meditation.zsh -> alea.py, audio files
 
-  - My "speaking" audio files are generated with pico2wave (svox-pico-git on AUR)
+  - I generate "speaking" audio files using pico2wave (svox-pico-git on AUR)
+
+  - For audio samples, see also https://freesound.org
 
 
 * Documentation (Français)
