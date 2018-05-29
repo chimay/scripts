@@ -3,12 +3,12 @@
 setopt extended_glob
 
 menu=(
-	"0 Vifm"
-	"1 Ranger"
-	"2 W3m"
-	"3 Elinks"
-	"4 Cmus"
-	"5 Ncmpcpp"
+	"0 Vifm (File manager)"
+	"1 Ranger (File manager)"
+	"2 W3m (Web browser)"
+	"3 Elinks (Web browser)"
+	"4 Cmus (Music)"
+	"5 Ncmpcpp (Music)"
 )
 
 # Rofi dmenu {{{1
@@ -29,22 +29,22 @@ echo
 # }}}1
 
 case $choix in
-	[0-9a-z]##" Vifm")
+	[0-9a-z]##" Vifm"*)
 		urxvtc -e vifm & disown
 		;;
-	[0-9a-z]##" Ranger")
+	[0-9a-z]##" Ranger"*)
 		urxvtc -e ranger & disown
 		;;
-	[0-9a-z]##" W3m")
+	[0-9a-z]##" W3m"*)
 		urxvtc -e w3m & disown
 		;;
-	[0-9a-z]##" Elinks")
+	[0-9a-z]##" Elinks"*)
 		urxvtc -e elinks & disown
 		;;
-	[0-9a-z]##" Cmus")
+	[0-9a-z]##" Cmus"*)
 		urxvtc -e cmus & disown
 		;;
-	[0-9a-z]##" Ncmpcpp")
+	[0-9a-z]##" Ncmpcpp"*)
 		urxvtc -e ncmpcpp & disown
 		;;
 esac
