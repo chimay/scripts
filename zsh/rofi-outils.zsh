@@ -8,10 +8,16 @@ menu=(
 	"x Emacs"
 	"2 Vifm (File manager)"
 	"3 Ranger (File manager)"
-	"@ W3m (Web browser)"
+	"# Sc-im (Spreadsheet Calculator)"
+	"+ Calcurse (Calendar & Tasks)"
+	"ŧ Vit (Tasks)"
+	"@ Nmtui (Connexion réseau)"
+	"< W3m (Web browser)"
 	"> Elinks (Web browser)"
-	"# Cmus (Music)"
-	"§ Ncmpcpp (Music)"
+	"µ Neomutt (Mail)"
+	"£ Newsboat (Rss)"
+	"§ Cmus (Music)"
+	"= Ncmpcpp (Music)"
 )
 
 # Rofi dmenu {{{1
@@ -47,16 +53,34 @@ case $choix in
 	"3 Ranger"*)
 		urxvtc -e ranger & disown
 		;;
-	"@ W3m"*)
+	"# Sc-im"*)
+		urxvtc -e sc-im & disown
+		;;
+	"+ Calcurse"*)
+		urxvtc -e calcurse & disown
+		;;
+	"ŧ Vit"*)
+		urxvtc -e vit & disown
+		;;
+	"@ Nmtui"*)
+		urxvtc -e nmtui & disown
+		;;
+	"< W3m"*)
 		urxvtc -e w3m & disown
 		;;
 	"> Elinks"*)
 		urxvtc -e elinks & disown
 		;;
-	"# Cmus"*)
+	"µ Neomutt"*)
+		urxvtc -e neomutt & disown
+		;;
+	"£ Newsboat"*)
+		urxvtc -e newsboat -c ~/racine/index/newsboat/cache.db & disown
+		;;
+	"§ Cmus"*)
 		urxvtc -e cmus & disown
 		;;
-	"§ Ncmpcpp"*)
+	"= Ncmpcpp"*)
 		urxvtc -e ncmpcpp & disown
 		;;
 esac
