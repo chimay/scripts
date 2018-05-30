@@ -1,6 +1,6 @@
 #! /usr/bin/env zsh
 
-menu=(Rien Veille Hibernation Éteindre)
+menu=(Annuler Veille Hibernation Éteindre)
 
 confirmation=(
 	Non

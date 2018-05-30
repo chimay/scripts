@@ -3,19 +3,21 @@
 setopt extended_glob
 
 menu=(
-	"0 Applications"
-	"1 Applications par catégories"
-	"2 Terminaux"
-	"3 Outils"
-	"4 Internet"
-	"5 Recherche Web"
-	"6 Signets"
-	"7 Presse-papier"
-	"8 Bureaux"
-	"9 Fenêtres"
-	"a Fermer une fenêtre"
-	"b Combinaison"
-	"c Éteindre"
+	"! Applications"
+	"= Applications par catégories"
+	"$ Terminaux"
+	"£ Outils"
+	"@ Internet"
+	"/ Recherche Web"
+	"° Signets"
+	"ç Presse-papier"
+	"0 Aller vers un bureau"
+	"1 Déplacer une fenêtre vers un bureau"
+	"2 Renommer un bureau"
+	"^ Fenêtres"
+	"X Fermer une fenêtre"
+	"§ Combinaison"
+	"IO Éteindre"
 )
 
 # Rofi dmenu {{{1
@@ -37,43 +39,49 @@ echo
 
 case $choix in
 
-	[0-9a-z]##" Applications")
+	"! Applications")
 		~/racine/shell/dialog/rofi-run.zsh & disown
 		;;
-	[0-9a-z]##" Applications par catégories")
+	"= Applications par catégories")
 		xfce4-appfinder & disown
 		;;
-	[0-9a-z]##" Terminaux")
+	"$ Terminaux")
 		~/racine/shell/dialog/rofi-terminal.zsh & disown
 		;;
-	[0-9a-z]##" Outils")
+	"£ Outils")
 		~/racine/shell/dialog/rofi-outils.zsh & disown
 		;;
-	[0-9a-z]##" Internet")
+	"@ Internet")
 		~/racine/shell/dialog/rofi-internet.zsh & disown
 		;;
-	[0-9a-z]##" Recherche Web")
+	"/ Recherche Web")
 		~/racine/shell/dialog/rofi-surfraw.zsh & disown
 		;;
-	[0-9a-z]##" Signets")
+	"° Signets")
 		~/racine/shell/dialog/rofi-buku.zsh & disown
 		;;
-	[0-9a-z]##" Presse-papier")
+	"ç Presse-papier")
 		~/racine/shell/dialog/rofi-greenclip.zsh & disown
 		;;
-	[0-9a-z]##" Bureaux")
+	"0 Aller vers un bureau")
 		~/racine/shell/dialog/rofi-bureaux.zsh & disown
 		;;
-	[0-9a-z]##" Fenêtres")
+	"1 Déplacer une fenêtre vers un bureau")
+		~/racine/shell/dialog/rofi-deplace-vers-bureau.zsh & disown
+		;;
+	"2 Renommer un bureau")
+		~/racine/shell/dialog/rofi-renomme-bureau.zsh & disown
+		;;
+	"^ Fenêtres")
 		~/racine/shell/dialog/rofi-fenetres.zsh & disown
 		;;
-	[0-9a-z]##" Combinaison")
+	"§ Combinaison")
 		~/racine/shell/dialog/rofi-combi.zsh & disown
 		;;
-	[0-9a-z]##" Fermer une fenêtre")
+	"X Fermer une fenêtre")
 		~/racine/shell/dialog/rofi-fermer.zsh & disown
 		;;
-	[0-9a-z]##" Éteindre")
+	"IO Éteindre")
 		~/racine/shell/dialog/rofi-eteindre.zsh & disown
 		;;
 esac
