@@ -3,21 +3,17 @@
 setopt extended_glob
 
 menu=(
-	"0 Recherche Web -> Qutebrowser"
-	"1 Signets -> Qutebrowser"
-	"2 Ouvrir Qutebrowser"
-	"3 Recherche Web -> Firefox"
-	"4 Signets -> Firefox"
-	"5 Ouvrir Firefox"
+	"/ Recherche Web -> Qutebrowser"
+	"? Recherche Web -> Firefox"
+	"+ Signets -> Qutebrowser"
+	"@ Signets -> Firefox"
+	"< Ouvrir Qutebrowser"
+	"> Ouvrir Firefox"
 )
 
 # Rofi dmenu {{{1
 
-choix=$(for element in $menu
-do
-	echo $element
-
-done | rofi -dmenu -p "Menu : " -i)
+choix=$(print -l $menu | rofi -dmenu -p "Menu : " -i)
 
 # }}}1
 

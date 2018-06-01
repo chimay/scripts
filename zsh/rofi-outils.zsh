@@ -3,15 +3,15 @@
 setopt extended_glob
 
 menu=(
-	": Gvim"
-	"; Neovim Qt"
-	"x Emacs"
+	": Gvim (Editor)"
+	"; Neovim Qt (Editor)"
+	"x Emacs (Editor)"
 	"2 Vifm (File manager)"
 	"3 Ranger (File manager)"
 	"# Sc-im (Spreadsheet Calculator)"
 	"+ Calcurse (Calendar & Tasks)"
 	"ŧ Vit (Tasks)"
-	"@ Nmtui (Connexion réseau)"
+	"@ Nmtui (Connection Manager)"
 	"< W3m (Web browser)"
 	"> Elinks (Web browser)"
 	"µ Neomutt (Mail)"

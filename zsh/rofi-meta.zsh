@@ -6,17 +6,15 @@ menu=(
 	"! Applications"
 	"= Applications par catégories"
 	"$ Terminaux"
-	"£ Outils"
+	": Outils"
 	"@ Internet"
 	"/ Recherche Web"
-	"° Signets"
+	"£ Signets"
 	"ç Presse-papier"
-	"0 Aller vers un bureau"
-	"1 Déplacer une fenêtre vers un bureau"
-	"2 Renommer un bureau"
+	"§ Bureaux"
 	"^ Fenêtres"
 	"X Fermer une fenêtre"
-	"§ Combinaison"
+	"µ Combinaison"
 	"IO Éteindre"
 )
 
@@ -48,7 +46,7 @@ case $choix in
 	"$ Terminaux")
 		~/racine/shell/dialog/rofi-terminal.zsh & disown
 		;;
-	"£ Outils")
+	": Outils")
 		~/racine/shell/dialog/rofi-outils.zsh & disown
 		;;
 	"@ Internet")
@@ -57,25 +55,19 @@ case $choix in
 	"/ Recherche Web")
 		~/racine/shell/dialog/rofi-surfraw.zsh & disown
 		;;
-	"° Signets")
+	"£ Signets")
 		~/racine/shell/dialog/rofi-buku.zsh & disown
 		;;
 	"ç Presse-papier")
 		~/racine/shell/dialog/rofi-greenclip.zsh & disown
 		;;
-	"0 Aller vers un bureau")
-		~/racine/shell/dialog/rofi-bureaux.zsh & disown
-		;;
-	"1 Déplacer une fenêtre vers un bureau")
-		~/racine/shell/dialog/rofi-deplace-vers-bureau.zsh & disown
-		;;
-	"2 Renommer un bureau")
-		~/racine/shell/dialog/rofi-renomme-bureau.zsh & disown
+	"§ Bureaux")
+		~/racine/shell/dialog/rofi-bureau.zsh & disown
 		;;
 	"^ Fenêtres")
 		~/racine/shell/dialog/rofi-fenetres.zsh & disown
 		;;
-	"§ Combinaison")
+	"µ Combinaison")
 		~/racine/shell/dialog/rofi-combi.zsh & disown
 		;;
 	"X Fermer une fenêtre")
