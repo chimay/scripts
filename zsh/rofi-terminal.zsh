@@ -13,11 +13,7 @@ menu=(
 
 # Rofi dmenu {{{1
 
-choix=$(for element in $menu
-do
-	echo $element
-
-done | rofi -dmenu -p "Menu " -i)
+choix=$(print -l $menu | rofi -dmenu -p "Menu " -i)
 
 # }}}1
 

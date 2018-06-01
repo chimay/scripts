@@ -10,11 +10,7 @@ confirmation=(
 
 # Rofi dmenu {{{1
 
-choix=$(for element in $menu
-do
-	echo $element
-
-done | rofi -dmenu -p "que faire " -i)
+choix=$(print -l $menu | rofi -dmenu -p "que faire " -i)
 
 # }}}1
 
@@ -29,11 +25,7 @@ sync
 
 [[ $choix = Veille ]] && {
 
-	certain=$(for element in $confirmation
-	do
-		echo $element
-
-	done | rofi -dmenu -i -p "$choix ? ")
+	certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
 
 	[[ $certain = Oui ]] && {
 
@@ -54,11 +46,7 @@ sync
 
 [[ $choix = Éteindre ]] && {
 
-	certain=$(for element in $confirmation
-	do
-		echo $element
-
-	done | rofi -dmenu -i -p "$choix ? ")
+	certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
 
 	[[ $certain = Oui ]] && {
 

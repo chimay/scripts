@@ -5,7 +5,7 @@ setopt extended_glob
 menu=(
 	"/ Recherche Web -> Qutebrowser"
 	"? Recherche Web -> Firefox"
-	"+ Signets -> Qutebrowser"
+	"£ Signets -> Qutebrowser"
 	"@ Signets -> Firefox"
 	"< Ouvrir Qutebrowser"
 	"> Ouvrir Firefox"
@@ -25,22 +25,22 @@ echo
 # }}}1
 
 case $choix in
-	[0-9]##" Recherche Web -> Qutebrowser")
+	"/ Recherche Web -> Qutebrowser")
 		~/racine/shell/dialog/rofi-surfraw.zsh & disown
 		;;
-	[0-9]##" Signets -> Qutebrowser")
-		~/racine/shell/dialog/rofi-buku.zsh & disown
-		;;
-	[0-9]##" Ouvrir Qutebrowser")
-		qutebrowser & disown
-		;;
-	[0-9]##" Recherche Web -> Firefox")
+	"? Recherche Web -> Firefox")
 		~/racine/shell/dialog/rofi-surfraw.zsh firefox & disown
 		;;
-	[0-9]##" Signets -> Firefox")
+	"£ Signets -> Qutebrowser")
+		~/racine/shell/dialog/rofi-buku.zsh & disown
+		;;
+	"@ Signets -> Firefox")
 		~/racine/shell/dialog/rofi-buku.zsh firefox & disown
 		;;
-	[0-9]##" Ouvrir Firefox")
+	"< Ouvrir Qutebrowser")
+		qutebrowser & disown
+		;;
+	"> Ouvrir Firefox")
 		firefox & disown
 		;;
 esac
