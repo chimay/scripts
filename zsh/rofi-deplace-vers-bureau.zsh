@@ -1,6 +1,8 @@
 #! /usr/bin/env zsh
 
-menu=("0 Principal" "1 Auxiliaire" "2 Navigation" "3 Graphique")
+fichier=~/racine/config/windenv/i3/bureaux
+
+menu=(${(f)"$(<$fichier)"})
 
 menu+=(${(f)"$(wmctrl -d | cut -d' '  -f12- | sed 's/^ //')"})
 
