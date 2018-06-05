@@ -145,9 +145,10 @@ grep-command () {
 # lc : locate {{{2
 
 lc () {
-	local options dossier motifs
+	local options mots dossier motifs
 
 	options=()
+	mots=()
 
 	while true
 	do
@@ -156,22 +157,25 @@ lc () {
 				options+=$1
 				shift
 				;;
+			?*)
+				mots+=$1
+				shift
+				;;
 			*)
 				break
 				;;
 		esac
 	done
 
-	if (( $# >= 2 ))
+	if (( $#mots >= 2 ))
 	then
-		dossier=$1
-		shift
-		motifs=("$@")
+		dossier=$mots[1]
+		motifs=$mots[2,-1]
 
-	elif (( $# == 1 ))
+	elif (( $#mots == 1 ))
 	then
 		dossier=racine
-		motifs=($1)
+		motifs=$mots
 	fi
 
 	case $dossier in
