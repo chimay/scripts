@@ -4,16 +4,36 @@
 #
 # Ctrl-D ou Ctrl-C pour interrompre la boucle
 
+# TRAPINT {{{1
+
+TRAPINT () {
+
+	echo
+	echo
+	echo "On arrête ..."
+	echo
+
+	exit 128
+}
+
+# }}}1
+
+# Initialisation {{{1
+
 integer heu min sec
 
 heu=0
 min=1
 sec=0
 
+# }}}1
+
 echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$min min] "
 
 while read temps
 do
+	# Entrée {{{1
+
 	if (( $#temps > 0 ))
 	then
 		tableau=(${(s/:/)temps})
@@ -37,6 +57,32 @@ do
 			sec=0
 		fi
 	fi
+
+	# }}}1
+
+	# Format canonique {{{1
+
+	integer quotient modulo
+
+	# N x 60 secondes -> N minutes
+
+	(( quotient = sec / 60 ))
+	(( modulo = sec % 60 ))
+
+	(( min += quotient ))
+	(( sec = modulo ))
+
+	# N x 60 minutes -> N heures
+
+	(( quotient = min / 60 ))
+	(( modulo = min % 60 ))
+
+	(( heu += quotient ))
+	(( min = modulo ))
+
+	# }}}1
+
+	# Affichage {{{1
 
 	if (( heu > 0 && min > 0 && sec > 0 ))
 	then
@@ -78,9 +124,13 @@ do
 		echo "	[$(date +%H:%M)] Ding dong maintenant"
 	fi
 
+	# }}}1
+
 	the.zsh $heu:$min:$sec &> /dev/null
 
 	(( min += 1 ))
+
+	# Prompt {{{1
 
 	if (( heu > 0 && min > 0 && sec > 0 ))
 	then
@@ -121,4 +171,7 @@ do
 		echo
 		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$min min] "
 	fi
+
+	# }}}1
+
 done
