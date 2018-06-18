@@ -1,5 +1,7 @@
 #! /usr/bin/env zsh
 
+xdotool search --class nvim-qt windowactivate && exit 0
+
 # Choix de la version de nvim {{{1
 
 if [[ /usr/bin/nvim -nt /usr/local/bin/nvim  ]]
