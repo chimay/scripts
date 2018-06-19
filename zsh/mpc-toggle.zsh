@@ -13,8 +13,12 @@ do
 	echo Autre : $autre
 	echo
 
-	(( autre == 0 )) && mpc play
-	(( autre == 1 )) && mpc pause
+	if (( autre == 0 ))
+	then
+		mpc play
+	else
+		mpc pause
+	fi
 
 	echo
 	echo "sleep $temps"
