@@ -21,11 +21,18 @@ MM=`date +%M`
 
 echo -n $HH:$MM
 
-cloche=$HOME/audio/Sonnerie/horloge/carillon-$HH-$MM.ogg
-
-[[ -f $cloche ]] || cloche=$HOME/audio/Sonnerie/horloge/carillon-HH-$MM.ogg
-
-[[ -f $cloche ]] || cloche=$HOME/audio/Sonnerie/horloge/carillon-HH-MM.ogg
+case $MM in
+	00) cloche=$HOME/audio/Sonnerie/horloge/carillon-$HH-00.ogg ;;
+	15) cloche=$HOME/audio/Sonnerie/horloge/coucou-1.ogg ;;
+	30) cloche=$HOME/audio/Sonnerie/horloge/coucou-2.ogg ;;
+	45) cloche=$HOME/audio/Sonnerie/horloge/coucou-3.ogg ;;
+	??)
+		cloche=$HOME/audio/Sonnerie/horloge/carillon-$HH-$MM.ogg
+		[[ -f $cloche ]] || cloche=$HOME/audio/Sonnerie/horloge/carillon-HH-$MM.ogg
+		[[ -f $cloche ]] || cloche=$HOME/audio/Sonnerie/horloge/carillon-HH-MM.ogg
+		;;
+	*) echo "Erreur : mauvais format de $MM minutes"
+esac
 
 echo "   lecteur $volume $cloche"
 
