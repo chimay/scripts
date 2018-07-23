@@ -50,12 +50,6 @@ done
 
 # }}}1
 
-# Total {{{1
-
-total=$(expr $heures '*' 3600 + $minutes '*' 60 + $secondes)
-
-# }}}1
-
 # Fichier run {{{1
 
 rundir=~/racine/run/minuter
@@ -72,12 +66,6 @@ runfile=$rundir/minuteurs
 
 identifiants=( ${(f)"$(< $runfile | awk '{print $1}')"} )
 
-echo "Identifiants"
-echo "------------"
-echo
-print -l $identifiants
-echo
-
 mid=1
 
 while true
@@ -86,23 +74,108 @@ do
 	(( mid += 1 ))
 done
 
-echo "ID de ce minuteur : $mid"
-echo
+{
+	echo "==============================="
+	echo "  $(date +'%H:%M %A %d %B %Y')"
+	echo "==============================="
+	echo
+	echo "Identifiants"
+	echo "------------"
+	echo
+	print -l $identifiants
+	echo
+
+	echo "ID de ce minuteur : $mid"
+	echo
+} >>! ~/log/minuteur-$mid.log
 
 # }}}1
 
-# Trap Ctrl-C interruption {{{1
+# Format canonique {{{1
 
-TRAPINT () {
+{
+	echo Format en argument : $heures:$minutes:$secondes
+	echo
+} >>! ~/log/minuteur-$mid.log
+
+integer quotient modulo
+
+# N x 60 secondes -> N minutes
+
+(( quotient = secondes / 60 ))
+(( modulo = secondes % 60 ))
+
+(( minutes += quotient ))
+(( secondes = modulo ))
+
+# N x 60 minutes -> N heures
+
+(( quotient = minutes / 60 ))
+(( modulo = minutes % 60 ))
+
+(( heures += quotient ))
+(( minutes = modulo ))
+
+{
+	echo Format canonique : $heures:$minutes:$secondes
+	echo
+} >>! ~/log/minuteur-$mid.log
+
+# }}}1
+
+# Total de secondes {{{1
+
+total=$(expr $heures '*' 3600 + $minutes '*' 60 + $secondes)
+
+# }}}1
+
+# Traps {{{1
+
+# Pour ajouter une fonction liée au signal :
+#
+# trap fonction SIGNAL
+#
+# Pour effacer les fonctions liées au signal :
+#
+# trap - SIGNAL
+
+clausule () {
+
+	{
+		echo
+		echo
+		echo "On arrête ..."
+		echo
+		echo "sed -i '/^'$mid'/d' $runfile"
+		echo
+	} >>! ~/log/minuteur-$mid.log
 
 	sed -i '/^'$mid'/d' $runfile
 
 	exit 128
 }
 
+trap clausule HUP INT TERM
+
+{
+	echo "Traps"
+	echo "-----"
+	echo
+
+	trap
+
+	echo
+} >>! ~/log/minuteur-$mid.log
+
 # }}}1
 
 # Informations HH:MM:SS {{{1
+
+{
+	echo "HH:MM:SS"
+	echo "--------"
+	echo
+} >>! ~/log/minuteur-$mid.log
 
 if (( heures > 0 && minutes > 0 && secondes > 0 ))
 then
@@ -152,14 +225,18 @@ else
 	chaine_notification="Minuterie instantanée"
 fi
 
-echo $chaine_echo
-echo
+{
+	echo $chaine_echo
+	echo
+} >>! ~/log/minuteur-$mid.log
 
 notifie $chaine_notification &
 
 chaine_runfile="$mid : $chaine_echo"
 
-echo $chaine_runfile >>! $runfile
+{
+	echo $chaine_runfile >>! $runfile
+} >>! ~/log/minuteur-$mid.log
 
 # }}}1
 
@@ -167,11 +244,13 @@ echo $chaine_runfile >>! $runfile
 
 minuteurs=( ${(f)"$(< $runfile)"} )
 
-echo "Minuteurs"
-echo "---------"
-echo
-print -l $minuteurs
-echo
+{
+	echo "Minuteurs"
+	echo "---------"
+	echo
+	print -l $minuteurs
+	echo
+} >>! ~/log/minuteur-$mid.log
 
 # }}}1
 
@@ -189,8 +268,10 @@ echo
 
 sleep $total
 
-echo "sonnerie.zsh $=arguments"
-echo
+{
+	echo "sonnerie.zsh $=arguments"
+	echo
+} >>! ~/log/minuteur-$mid.log
 
 sonnerie.zsh $=arguments
 
@@ -218,38 +299,48 @@ sed -i '/^'$mid'/d' $runfile
 
 processi=("${(f)$(psgrep minuterie.zsh)}")
 
-echo "Processi"
-echo "--------"
-echo
-print -l $processi
-echo
+{
+	echo "Processi"
+	echo "--------"
+	echo
+	print -l $processi
+	echo
+} >>! ~/log/minuteur-$mid.log
 
 # On enlève 1 pour le processus $(...)
 
 numproc=$(( $#processi - 1 ))
 
-echo "Nombre de minuteries en route : $numproc"
-echo
+{
+	echo "Nombre de minuteries en route : $numproc"
+	echo
+} >>! ~/log/minuteur-$mid.log
 
 # On enlève les lignes abandonnées
 
 (( numproc <= 1 )) && {
 
-	echo "Runfile"
-	echo "-------"
-	echo
-	cat $runfile
-	echo
+	{
+		echo "Runfile"
+		echo "-------"
+		echo
+		cat $runfile
+		echo
+	} >>! ~/log/minuteur-$mid.log
 
 	abandonnees=$(wc -l $runfile | awk '{print $1}')
 
-	echo "Nombre de lignes abandonnées : " $abandonnees
-	echo
+	{
+		echo "Nombre de lignes abandonnées : " $abandonnees
+		echo
+	} >>! ~/log/minuteur-$mid.log
 
 	(( $abandonnees > 0 )) && {
 
-		echo "{ echo '1,\$d' ; echo w } | ed $runfile"
-		echo
+		{
+			echo "{ echo '1,\$d' ; echo w } | ed $runfile"
+			echo
+		} >>! ~/log/minuteur-$mid.log
 
 		{ echo '1,$d' ; echo w } | ed $runfile
 	}
