@@ -1,7 +1,5 @@
 #! /usr/bin/env zsh
 
-volume=${1:-100}
-
 # {{{ Fonctions
 
 lecteur () {
@@ -21,6 +19,22 @@ MM=`date +%M`
 
 echo -n $HH:$MM
 
+fichier=~/racine/run/clock/clocher.etat
+
+[ -f $fichier  ] && {
+
+	etat=$(<$fichier)
+
+	(( etat == 0 )) && {
+
+		echo "   etat == 0 : on ne sonne pas"
+
+		exit 0
+	}
+}
+
+volume=${1:-100}
+
 case $MM in
 	00) cloche=$HOME/audio/Sonnerie/horloge/carillon-$HH-00.ogg ;;
 	15) cloche=$HOME/audio/Sonnerie/horloge/coucou-1.ogg ;;
@@ -31,7 +45,10 @@ case $MM in
 		[[ -f $cloche ]] || cloche=$HOME/audio/Sonnerie/horloge/carillon-HH-$MM.ogg
 		[[ -f $cloche ]] || cloche=$HOME/audio/Sonnerie/horloge/carillon-HH-MM.ogg
 		;;
-	*) echo "Erreur : mauvais format de $MM minutes"
+	*)
+		echo "   ERREUR : mauvais format de $MM minutes"
+		exit 0
+		;;
 esac
 
 echo "   lecteur $volume $cloche"
