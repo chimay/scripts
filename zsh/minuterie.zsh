@@ -23,20 +23,8 @@ while true
 do
 	case $1 in
 
-		[0-9]##)
-			minutes=$1
-			shift
-			;;
-		[0-9]##:[0-9]##)
-			minutes=${1%:*}
-			secondes=${1#*:}
-			shift
-			;;
-		[0-9]##:[0-9]##:[0-9]##)
-			temps=(${(s/:/)1})
-			heures=$temps[1]
-			minutes=$temps[2]
-			secondes=$temps[3]
+		[0-9.:]##)
+			heuminsec=$1
 			shift
 			;;
 		?*)
@@ -47,6 +35,47 @@ do
 			break
 	esac
 done
+
+if [[ $heuminsec = ?*:?*:?* ]]
+then
+	temps=(${(s/:/)heuminsec})
+	heures=$temps[1]
+	minutes=$temps[2]
+	secondes=$temps[3]
+
+elif [[ $heuminsec = ?*:?*: ]]
+then
+	temps=(${(s/:/)heuminsec})
+	heures=$temps[1]
+	minutes=$temps[2]
+
+elif [[ $heuminsec = ?*::?* ]]
+then
+	temps=(${(s/:/)heuminsec})
+	heures=$temps[1]
+	secondes=$temps[2]
+
+elif [[ $heuminsec = ?*:: ]]
+then
+	temps=(${(s/:/)heuminsec})
+	heures=$temps[1]
+
+elif [[ $heuminsec = :?*:?* ]]
+then
+	temps=(${(s/:/)heuminsec})
+	minutes=$temps[1]
+	secondes=$temps[2]
+
+elif [[ $heuminsec = :?*: ]]
+then
+	temps=(${(s/:/)heuminsec})
+	minutes=$temps[1]
+
+elif [[ $heuminsec = ::?* ]]
+then
+	temps=(${(s/:/)heuminsec})
+	secondes=$temps[1]
+fi
 
 # }}}1
 
@@ -98,6 +127,28 @@ done
 	echo
 } >>! ~/log/minuteur-$mid.log
 
+float flottant
+
+# Fraction heure
+
+(( flottant = heures % 1 ))
+
+(( heures -= flottant ))
+(( minutes += 60 * flottant ))
+
+# Fraction minute
+
+(( flottant = minutes % 1 ))
+
+(( minutes -= flottant ))
+(( secondes += 60 * flottant ))
+
+# Conversion en nombres entiers
+
+integer heures=$heures
+integer minutes=$minutes
+integer secndes=$secndes
+
 integer quotient modulo
 
 # N x 60 secondes -> N minutes
@@ -125,7 +176,7 @@ integer quotient modulo
 
 # Total de secondes {{{1
 
-total=$(expr $heures '*' 3600 + $minutes '*' 60 + $secondes)
+(( total = heures * 3600 + minutes * 60 + secondes ))
 
 # }}}1
 
