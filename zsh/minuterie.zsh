@@ -23,7 +23,7 @@ while true
 do
 	case $1 in
 
-		[0-9.:]##)
+		[0-9./:]##)
 			heuminsec=$1
 			shift
 			;;
@@ -75,6 +75,26 @@ elif [[ $heuminsec = ::?* ]]
 then
 	temps=(${(s/:/)heuminsec})
 	secondes=$temps[1]
+
+elif [[ $heuminsec = ?*:?* ]]
+then
+	temps=(${(s/:/)heuminsec})
+	minutes=$temps[1]
+	secondes=$temps[2]
+
+elif [[ $heuminsec = ?*: ]]
+then
+	temps=(${(s/:/)heuminsec})
+	minutes=$temps[1]
+
+elif [[ $heuminsec = :?* ]]
+then
+	temps=(${(s/:/)heuminsec})
+	secondes=$temps[1]
+
+elif [[ $heuminsec = ?* ]]
+then
+	secondes=$heuminsec
 fi
 
 # }}}1
@@ -127,27 +147,38 @@ done
 	echo
 } >>! ~/log/minuteur-$mid.log
 
+# Fractions {{{2
+
+heures=$(echo "scale=7\n$heures" | bc)
+minutes=$(echo "scale=7\n$minutes" | bc)
+secondes=$(echo "scale=7\n$secondes" | bc)
+
+# }}}2
+
+# Décimaux {{{2
+
 float flottant
 
-# Fraction heure
+# Décimaux heure
 
 (( flottant = heures % 1 ))
 
 (( heures -= flottant ))
 (( minutes += 60 * flottant ))
 
-# Fraction minute
+# Décimaux minute
 
 (( flottant = minutes % 1 ))
 
 (( minutes -= flottant ))
 (( secondes += 60 * flottant ))
 
-# Conversion en nombres entiers
+# }}}2
+
+# Conversion en nombres entiers {{{2
 
 integer heures=$heures
 integer minutes=$minutes
-integer secndes=$secndes
 
 integer quotient modulo
 
@@ -157,7 +188,7 @@ integer quotient modulo
 (( modulo = secondes % 60 ))
 
 (( minutes += quotient ))
-(( secondes = modulo ))
+(( secondes -= quotient * 60 ))
 
 # N x 60 minutes -> N heures
 
@@ -166,6 +197,15 @@ integer quotient modulo
 
 (( heures += quotient ))
 (( minutes = modulo ))
+
+# Secondes entières ?
+
+(( secondes % 1 == 0 )) && {
+
+	integer secondes=$secondes
+}
+
+# }}}2
 
 {
 	echo Format canonique : $heures:$minutes:$secondes
