@@ -4,6 +4,8 @@ setopt extended_glob
 
 # Valeurs par défaut {{{1
 
+float maximum minimum
+
 minimum=10
 maximum=60
 duree=900
@@ -30,8 +32,6 @@ volume=100
 # }}}1
 
 # Variables {{{1
-
-integer moyenne dispersion temps somme reste
 
 reception=$HOME/audio/Sonnerie/ding/reception.ogg
 clochette=$HOME/audio/Sonnerie/ding/clochette.ogg
@@ -110,6 +110,28 @@ lecteur () {
 }
 
 # }}}
+
+# Temps pris pour lire $reception {{{1
+
+temps_reception=0
+
+sortie=$(ogginfo $reception | grep 'Playback length' | awk '{ print $3 }')
+
+minutes=${sortie%m:*}
+
+(( temps_reception += 60 * minutes ))
+
+secondes=${sortie#*:}
+secondes=${secondes:s/s/}
+
+(( temps_reception += secondes ))
+
+echo $sortie = $minutes minutes $secondes secondes
+echo
+echo temps_reception = $temps_reception
+echo
+
+# }}}1
 
 # Prélude {{{1
 
@@ -213,6 +235,11 @@ do
 	echo
 
 	lecteur $volume $reception
+
+	echo "sleep $temps_reception"
+	echo
+
+	sleep $temps_reception
 
 	(( somme += temps ))
 
