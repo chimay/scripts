@@ -217,13 +217,19 @@ do
 
 		(( somme += reste ))
 
+		echo "------------------------------"
+		echo
 		echo Somme : $somme
 		echo
 
 		break
 	}
 
+	(( somme += temps ))
+
 	echo Temps : $temps
+	echo
+	echo Somme : $somme
 	echo
 
 	echo "sleep $temps"
@@ -240,11 +246,6 @@ do
 	echo
 
 	sleep $temps_reception
-
-	(( somme += temps ))
-
-	echo Somme : $somme
-	echo
 done
 
 # }}}
