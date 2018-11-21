@@ -9,7 +9,8 @@ seconde=0
 minute=0
 heure=0
 
-echo '\t' 0
+echo
+echo $heure heu $minute min
 echo
 
 sleep 1
