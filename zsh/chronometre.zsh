@@ -23,7 +23,7 @@ do
 
 	(( seconde % 12 == 0 )) && echo
 
-	(( seconde > 0 )) && (( seconde % 60 == 0 )) && {
+	 (( seconde == 60 )) && {
 
 		seconde=0
 
@@ -34,7 +34,7 @@ do
 		echo
 	}
 
-	(( minute > 0 )) && (( minute % 60 == 0 )) && {
+	(( minute == 60 )) && {
 
 		minute=0
 
