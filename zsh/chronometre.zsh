@@ -9,6 +9,11 @@ seconde=0
 minute=0
 heure=0
 
+echo '\t' 0
+echo
+
+sleep 1
+
 while true
 do
 	(( seconde += 1 ))
