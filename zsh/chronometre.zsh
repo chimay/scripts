@@ -9,7 +9,6 @@ seconde=0
 minute=0
 heure=0
 
-echo
 echo '\t' $heure heu $minute min
 echo
 
