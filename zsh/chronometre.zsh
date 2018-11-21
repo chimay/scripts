@@ -10,7 +10,7 @@ minute=0
 heure=0
 
 echo
-echo $heure heu $minute min
+echo '\t' $heure heu $minute min
 echo
 
 sleep 1
@@ -30,7 +30,7 @@ do
 		(( minute += 1 ))
 
 		echo
-		echo $heure heu $minute min
+		echo '\t' $heure heu $minute min
 		echo
 	}
 
@@ -41,7 +41,7 @@ do
 		(( heure += 1 ))
 
 		echo
-		echo $heure heu $minute min
+		echo '\t' $heure heu $minute min
 		echo
 	}
 
