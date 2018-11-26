@@ -1,12 +1,16 @@
 #! /usr/bin/env zsh
 
-temps=($*)
-
+temps=($1)
 shift
+notification="'${*:-rappel}'"
 
-alarme=(sonnerie.zsh $HOME/audio/Sonnerie/notification/generique.ogg)
+echo Temps : $temps
+echo Notification : $notification
+echo
 
-echo $alarme | at $temps
+code=(sonnerie.zsh $HOME/audio/Sonnerie/notification/generique.ogg n=$notification)
+
+echo $code | at $temps 2> ~/log/at.err
 
 echo
 
