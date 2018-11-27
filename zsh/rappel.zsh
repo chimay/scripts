@@ -2,7 +2,7 @@
 
 temps=($1)
 shift
-notification="'${*:-rappel}'"
+notification="'${*:-Générique}'"
 
 echo Temps : $temps
 echo Notification : $notification
@@ -10,7 +10,7 @@ echo
 
 cat <<- FIN | at $temps 2> ~/log/at.err
 	sonnerie.zsh $HOME/audio/Sonnerie/notification/generique.ogg
-	notify-send -u critical $notification
+	notify-send Rappel $notification
 FIN
 
 echo
