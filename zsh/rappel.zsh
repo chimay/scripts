@@ -8,9 +8,10 @@ echo Temps : $temps
 echo Notification : $notification
 echo
 
-code=(sonnerie.zsh $HOME/audio/Sonnerie/notification/generique.ogg n=$notification)
-
-echo $code | at $temps 2> ~/log/at.err
+cat <<- FIN | at $temps 2> ~/log/at.err
+	sonnerie.zsh $HOME/audio/Sonnerie/notification/generique.ogg
+	notify-send -u critical $notification
+FIN
 
 echo
 
