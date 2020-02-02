@@ -76,6 +76,7 @@ psgrep greenclip || greenclip daemon &
 
 # Terminal {{{2
 
+psgrep kitti3 || kitti3 -n kitti3-dropdown -p top -s 0.8 0.6 &
 psgrep urxvtd || urxvtd -q -o -f
 
 # }}}2
@@ -88,7 +89,7 @@ psgrep urxvtd || urxvtd -q -o -f
 
 # Musique {{{2
 
-psgrep mpd || { rm -f ~/racine/run/mpd/pid ; mpd ~/racine/config/music/mpd.conf }
+psgrep mpd || { rm -f ~/racine/run/mpd/pid ; mpd ~/racine/config/multimedia/mpd.conf }
 
 psgrep mpv || \
 	mpv \
@@ -96,14 +97,35 @@ psgrep mpv || \
 	--input-file=$HOME/racine/run/fifo/mpv \
 	&>>! ~/log/mpv.log &!
 
+# psgrep mpv || \
+# 	mpv \
+# 	--idle \
+# 	--input-ipc-server=$HOME/racine/run/fifo/mpv \
+# 	&>>! ~/log/mpv.log &!
+
 # }}}2
 
 #  Horloge {{{2
 
-if [ $HOST = shari ]
-then
-	psgrep horloge || horloge.zsh -4 -f -i ~/racine/run/clock/horloge.etat >>! ~/log/horloge.log 2>&1 &
-fi
+# Remplacè par clocher.zsh dans crontab
+
+# if [ $HOST = shari ]
+# then
+# 	psgrep horloge || horloge.zsh -4 -f -i ~/racine/run/clock/horloge.etat >>! ~/log/horloge.log 2>&1 &
+# fi
+
+# }}}2
+
+# Identification {{{2
+
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
+
+# }}}2
+
+# Compositor {{{2
+
+psgrep picom || picom &
 
 # }}}2
 
@@ -138,19 +160,34 @@ fi
 
 psgrep unclutter || unclutter -display :0.0 -root -jitter 7 -idle 5 &
 
-synclient TapButton1=1
+if [ $HOST = shari ]
+then
+	synclient TapButton1=1
 
-synclient VertEdgeScroll=1
-synclient HorizEdgeScroll=1
+	synclient VertEdgeScroll=1
+	synclient HorizEdgeScroll=1
 
-synclient LBCornerButton=2
-synclient RBCornerButton=3
+	synclient LBCornerButton=2
+	synclient RBCornerButton=3
+
+elif [ $HOST = quigonjinn ]
+then
+	xinput set-prop 17 289 1
+
+elif [ $HOST = tixu ]
+then
+
+elif [ $HOST = mandala ]
+then
+
+fi
+
 
 # }}}2
 
 #  Batterie {{{2
 
-if [ $HOST = shari ] || [ $HOST = tixu ]
+if [ $HOST = shari ] || [ $HOST = tixu ] || [ $HOST = mandala ]
 then
 	start-alarm-bat.zsh 15 10 5 3 >>! ~/log/alerteBatterie.log 2>&1 &
 fi
@@ -159,7 +196,10 @@ fi
 
 # Eviter le parquage excessif du disque {{{2
 
-psgrep load_cycle_fix || load_cycle_fix.sh &
+if [ $HOST != mandala ]
+then
+	pgrep load_cycle_fix || load_cycle_fix.sh >>! ~/log/load_cycle_fix.log 2>&1 &
+fi
 
 # }}}2
 
@@ -173,5 +213,12 @@ then
 fi
 
 # }}}2
+
+# }}}1
+
+# Message d’accueil {{{1
+
+echo "loadfile $HOME/audio/sonnerie/notification/accueil.ogg append-play" > ~/racine/run/fifo/mpv
+echo "set volume 100" > ~/racine/run/fifo/mpv
 
 # }}}1

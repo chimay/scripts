@@ -14,10 +14,10 @@ menu=(
 	"@ Nmtui (Connection Manager)"
 	"< W3m (Web browser)"
 	"> Elinks (Web browser)"
-	"µ Neomutt (Mail)"
-	"£ Newsboat (Rss)"
-	"§ Cmus (Music)"
-	"= Ncmpcpp (Music)"
+	"§ Neomutt (Mail)"
+	"= Newsboat (Rss)"
+	"µ Ncmpcpp (Music)"
+	"£ Cmus (Music)"
 )
 
 # Rofi dmenu {{{1
@@ -28,8 +28,9 @@ choix=$(print -l $menu | rofi -dmenu -p "Menu " -i)
 
 # Affichage {{{1
 
-echo choix : $choix
-echo
+# Empeche l’exécution de la suite dans polybar
+# echo choix : $choix
+# echo
 
 # }}}1
 
@@ -67,16 +68,16 @@ case $choix in
 	"> Elinks"*)
 		urxvtc -e elinks & disown
 		;;
-	"µ Neomutt"*)
+	"§ Neomutt"*)
 		urxvtc -e neomutt & disown
 		;;
-	"£ Newsboat"*)
+	"= Newsboat"*)
 		urxvtc -e newsboat -c ~/racine/index/newsboat/cache.db & disown
 		;;
-	"§ Cmus"*)
-		urxvtc -e cmus & disown
-		;;
-	"= Ncmpcpp"*)
+	"µ Ncmpcpp"*)
 		urxvtc -e ncmpcpp & disown
+		;;
+	"£ Cmus"*)
+		urxvtc -e cmus & disown
 		;;
 esac

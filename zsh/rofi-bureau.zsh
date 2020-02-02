@@ -16,8 +16,9 @@ choix=$(print -l $menu | rofi -dmenu -p "Menu : " -i)
 
 # Affichage {{{1
 
-echo choix : $choix
-echo
+# Empeche l’exécution de la suite dans polybar
+# echo choix : $choix
+# echo
 
 # }}}1
 
