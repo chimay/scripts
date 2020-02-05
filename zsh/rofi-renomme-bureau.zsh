@@ -1,8 +1,9 @@
 #! /usr/bin/env zsh
 
-fichier=~/racine/config/windenv/i3/bureaux
+menu=()
 
-menu=(${(f)"$(<$fichier)"})
+#fichier=~/racine/config/windenv/i3/bureaux
+#menu+=(${(f)"$(<$fichier)"})
 
 menu+=(${(f)"$(wmctrl -d | cut -d' '  -f12- | sed 's/^ //')"})
 
@@ -18,13 +19,22 @@ choix=${(j: :)choix}
 
 # Affichage {{{1
 
-echo choix : $choix
-echo
+# Empeche l’exécution de la suite dans polybar
+# echo choix : $choix
+# echo
 
 # }}}1
 
-# i3-msg {{{1
+# Window Manager {{{1
 
-i3-msg rename workspace to \"$choix\"
+winman=$(wmctrl -m | head -n 1 | cut -d ' ' -f 2)
+
+if [ $winman = i3 ]
+then
+	i3-msg rename workspace to \"$choix\"
+elif [ $winman = bspwm ]
+then
+	# todo
+fi
 
 # }}}1
