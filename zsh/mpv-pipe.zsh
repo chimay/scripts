@@ -47,3 +47,5 @@ mpv-msg() {
     for video in "$@"; do
         mpv-msg 'loadfile' "$video" 'append-play';
     done;
+# replace
+[ "$1" = "replace" ] && mpv-msg 'loadfile' "$2" 'replace';

@@ -14,7 +14,7 @@
 
 socket="$HOME/racine/run/socket/mpv"
 
-command() {
+mpv-msg() {
     # JSON preamble.
     local tosend='{ "command": ['
     # adding in the parameters.
@@ -30,21 +30,23 @@ command() {
 }
 
 # exit mpv
-[ "$1" = "quit" ] && command 'quit'
+[ "$1" = "quit" ] && mpv-msg 'quit'
 # adjust volume
-[ "$1" = "volume" ] && command 'set' 'volume' $2
+[ "$1" = "volume" ] && mpv-msg 'set' 'volume' $2
 # toggle play-pause
-[ "$1" = "play-pause" ] && command 'cycle' 'pause'
+[ "$1" = "play-pause" ] && mpv-msg 'cycle' 'pause'
 # start playing
-[ "$1" = "pause" ] && command 'set' 'pause' 'yes'
+[ "$1" = "pause" ] && mpv-msg 'set' 'pause' 'yes'
 # stop playing
-[ "$1" = "play" ] && command 'set' 'pause' 'no'
+[ "$1" = "play" ] && mpv-msg 'set' 'pause' 'no'
 # play next item in playlist
-[ "$1" = "next" ] && command 'playlist_next'
+[ "$1" = "next" ] && mpv-msg 'playlist_next'
 # play previous item in playlist
-[ "$1" = "previous" ] && command 'playlist_prev'
+[ "$1" = "previous" ] && mpv-msg 'playlist_prev'
 # add item(s) to playlist
 [ "$1" = "add" ] && shift &&
     for video in "$@"; do
-        command 'loadfile' "$video" 'append-play';
+        mpv-msg 'loadfile' "$video" 'append-play';
     done;
+# replace
+[ "$1" = "replace" ] && mpv-msg 'loadfile' "$2" 'replace';
