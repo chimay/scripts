@@ -9,7 +9,7 @@ echo id = $id
 echo
 
 if [ -z "$id" ]; then
-  kitty --name dropdown -e zsh
+  kitty --name dropdown zsh
 else
   action='hide';
   if [[ $(xprop -id $id | awk '/window state: / {print $3}') == 'Withdrawn' ]]; then
