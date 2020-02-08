@@ -15,7 +15,7 @@ HOST=`hostname -s`
 
 # }}}1
 
-kill -15 $(ps --no-headers -eo '%p %a' | grep -v grep | grep fond-ecran.zsh | awk '{ print $1 }')
+kill -15 $(ps --no-headers -eo '%p %a' | grep -v grep | grep fond-ecran.zsh | awk '{ print $1 }') &
 
 polybar-msg cmd quit &
 
