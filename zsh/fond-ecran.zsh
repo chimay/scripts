@@ -14,12 +14,25 @@ echoerr () {
 }
 
 signal-recharge () {
+	echoerr
 	echoerr "recharge -> 1"
+	echoerr
 	recharge=1
+}
+
+signal-suivant () {
+	echoerr
+	echoerr "suivant -> 1"
+	echoerr
+	[ -z $attendre ] || kill $attendre
 }
 
 signal-arret () {
 	echoerr "arret -> 1"
+	echoerr
+	echoerr "On arrête fond-ecran"
+	echoerr
+
 	arret=1
 
 	cat <<- fin >| $etat
@@ -39,6 +52,8 @@ signal-arret () {
 }
 
 trap signal-recharge SIGUSR1
+trap signal-suivant  SIGUSR2
+
 trap signal-arret    HUP INT TERM
 
 # }}}1
@@ -80,13 +95,14 @@ then
 
 	(( temps = minutes * 60 + secondes ))
 
+	echoerr
 	echoerr "*** Lecture préliminaire du fichier état ***"
 	echoerr
 	echoerr Dispersion : $dispersion
 	echoerr Minutes : $minutes
 	echoerr Secondes : $secondes
 	echoerr Temps : $temps
-	echoerr Fichier Gen : $generation
+	echoerr Génération : $generation
 	echoerr Racine : $racine
 	echoerr Courant : $courant
 	echoerr Recharge : $recharge
@@ -138,9 +154,6 @@ liste=${generation/.?*/.m3u}
 
 [ -f $liste ] || {
 	genere-liste-melangee.py $dispersion $generation &>! ~/log/genere-liste-melangee.log
-	images=($(cat $liste))
-	courant=1
-	Nimages=${#images}
 }
 
 racine=$(cat $generation | grep 'root' | cut -d ' ' -f 2)
@@ -153,6 +166,16 @@ racine=${racine// }
 
 # }}}1
 
+# Images {{{1
+
+images=($(cat $liste))
+
+Nimages=${#images}
+
+courant=1
+
+# }}}1
+
 # Affichage {{{1
 
 echoerr "*** Affichage avant la boucle ***"
@@ -161,7 +184,7 @@ echoerr Dispersion : $dispersion
 echoerr Minutes : $minutes
 echoerr Secondes : $secondes
 echoerr Temps : $temps
-echoerr Fichier Gen : $generation
+echoerr Génération : $generation
 echoerr Racine : $racine
 echoerr Courant : $courant
 echoerr Recharge : $recharge
@@ -176,16 +199,6 @@ echoerr
 #echoerr
 
 #{ echo $sortie | sed 's/^/\t/' } 1>&2
-
-# }}}1
-
-# Images {{{1
-
-liste=${generation/.?*/.m3u}
-
-images=($(cat $liste))
-
-Nimages=${#images}
 
 # }}}1
 
@@ -232,7 +245,7 @@ do
 		echoerr Minutes : $minutes
 		echoerr Secondes : $secondes
 		echoerr Temps : $temps
-		echoerr Fichier Gen : $generation
+		echoerr Génération : $generation
 		echoerr Racine : $racine
 		echoerr Courant : $courant
 		echoerr Recharge : $recharge
@@ -241,6 +254,12 @@ do
 		echoerr Fichier témoin : $temoin
 		echoerr
 	}
+
+	# }}}2
+
+	# Fin de la liste {{{2
+
+	(( courant >= Nimages )) && recharge=1
 
 	# }}}2
 
@@ -308,18 +327,13 @@ do
 
 	# }}}2
 
-	# Fin de la liste {{{2
-
-	(( courant >= Nimages )) && recharge=1
-
-	# }}}2
-
 	# Attente {{{2
 
 	# Pour ne pas retarder l’interception des traps
 
 	sleep $temps &
-	wait $!
+	attendre=$!
+	wait $attendre
 
 	# }}}2
 
