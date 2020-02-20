@@ -39,13 +39,15 @@ do
 	esac
 done
 
+[ -z $fichier ] && stdin=1
+
 # }}}
 
 # Aide {{{1
 
 [ $numarg -eq 0 -o $aide -eq 1 ] && {
 	echo "Usage: $(basename $0) list-file mpv-flags"
-	echo "\tif list-file = - : reads stdin"
+	echo "\tif list-file = - or none : reads stdin"
 	echo
 	exit 0
 }
