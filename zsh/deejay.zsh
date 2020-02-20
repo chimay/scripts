@@ -52,7 +52,7 @@ done
 # Aide {{{1
 
 [ $#autres -lt 2 -o $aide -eq 1 ] && {
-	echo "Usage: deejay.zsh [duration] file-in-1 ... file-in-N file-out"
+	echo "Usage: $(basename $0) [duration] file-in-1 ... file-in-N file-out"
 	exit 0
 }
 
