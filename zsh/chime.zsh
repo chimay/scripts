@@ -99,13 +99,13 @@ echo
 
 # sox -V3 -m $court "| sox $court -p pad $delai" $long $sortie
 
-evaluation="sox -V3 -m $court "
+evaluation="sox -V3 -m -v 1 $court "
 
 depart=$delai
 
 while (( depart < duree ))
 do
-	evaluation+='"'
+	evaluation+='-v 1 "'
 	evaluation+="| sox $court -p pad $depart"
 	evaluation+='" '
 	(( depart += delai ))
