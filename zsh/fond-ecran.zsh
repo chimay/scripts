@@ -48,6 +48,8 @@ signal-arret () {
 		temoin = $temoin
 	fin
 
+	touch $temoin
+
 	exit 128
 }
 
@@ -70,8 +72,6 @@ integer dispersion=12
 
 integer minutes=0
 integer secondes=0
-
-integer courant=1
 
 generation=~/graphix/list/wallpaper.gen
 
@@ -172,8 +172,6 @@ images=($(cat $liste))
 
 Nimages=${#images}
 
-courant=1
-
 # }}}1
 
 # Affichage {{{1
@@ -204,22 +202,29 @@ echoerr
 
 # Initialisation du fichier {{{1
 
-cat <<- fin >| $etat
-	dispersion = $dispersion
-	minutes = $minutes
-	secondes = $secondes
-	generation = $generation
-	racine = $racine
-	courant = $courant
-	recharge = 0
-	arret = 0
-	etat = $etat
-	temoin = $temoin
-fin
+if ! [ -f $etat ]
+then
+	cat <<- fin >| $etat
+		dispersion = $dispersion
+		minutes = $minutes
+		secondes = $secondes
+		generation = $generation
+		racine = $racine
+		courant = $courant
+		recharge = 0
+		arret = 0
+		etat = $etat
+		temoin = $temoin
+	fin
+
+	touch $temoin
+fi
 
 # }}}1
 
 # {{{ Boucle
+
+[ -z $courant ] && courant=1
 
 cd $racine
 
@@ -257,6 +262,12 @@ do
 
 	# }}}2
 
+	# Arrêt {{{2
+
+	(( arret > 0 )) && signal-arret
+
+	# }}}2
+
 	# Fin de la liste {{{2
 
 	(( courant >= Nimages )) && recharge=1
@@ -274,18 +285,6 @@ do
 	fi
 
 	recharge=0
-
-	# }}}2
-
-	# Arrêt {{{2
-
-	(( arret > 0 )) && {
-
-		echoerr "On arrête fond-ecran"
-		echoerr
-
-		break
-	}
 
 	# }}}2
 
@@ -321,11 +320,24 @@ do
 
 	# }}}2
 
-	# Incrément {{{2
+# Ecriture du fichier état {{{2
 
-	(( courant ++ ))
+cat <<- fin >| $etat
+	dispersion = $dispersion
+	minutes = $minutes
+	secondes = $secondes
+	generation = $generation
+	racine = $racine
+	courant = $courant
+	recharge = 0
+	arret = 0
+	etat = $etat
+	temoin = $temoin
+fin
 
-	# }}}2
+touch $temoin
+
+# }}}2
 
 	# Attente {{{2
 
@@ -334,6 +346,12 @@ do
 	sleep $temps &
 	attendre=$!
 	wait $attendre
+
+	# }}}2
+
+	# Incrément {{{2
+
+	(( courant ++ ))
 
 	# }}}2
 
