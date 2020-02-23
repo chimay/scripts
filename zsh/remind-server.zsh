@@ -13,6 +13,8 @@ signal-restart () {
 
 # }}}1
 
+fichier=~/racine/config/organizer/remind/reminders
+
 # Number of minutes between remind checks
 integer tictac=${1:-5}
 
@@ -44,8 +46,6 @@ do
 
 	date_courante=$(date -d @$epoque)
 	date_future=$(date -d @$epoque_future)
-
-	fichier=~/racine/config/organizer/remind/reminders
 
 	echo "tictac           = $tictac"
 	echo "minutes          = $minutes"
