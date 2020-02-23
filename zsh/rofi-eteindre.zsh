@@ -16,9 +16,8 @@ choix=$(print -l $menu | rofi -dmenu -p "que faire " -i)
 
 # Affichage {{{1
 
-# Empeche l’exécution de la suite dans polybar
-# echo choix : $choix
-# echo
+echo choix : $choix
+echo
 
 # }}}1
 
@@ -34,6 +33,8 @@ sync
 		echo
 
 		systemctl suspend
+
+		pkill -10 -f remind-server
 	}
 }
 
