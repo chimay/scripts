@@ -34,7 +34,7 @@ sync
 
 		systemctl suspend
 
-		pkill -10 -f remind-server
+		autowake.zsh
 	}
 }
 
