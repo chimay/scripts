@@ -22,7 +22,11 @@ setopt extended_glob
 
 # Initialisation {{{1
 
+float ecart=1
 
+racine=~/graphix/list
+
+fichier=$racine/wallpaper.meta
 
 # }}}1
 
@@ -61,6 +65,9 @@ do
 	esac
 done
 
+(( $#nombres > 0 )) && ecart=$nombres[1]
+(( $#autres > 0 )) && fichier=$autres[1]
+
 # }}}
 
 # Aide {{{1
@@ -95,5 +102,22 @@ done
 # for key val in ${(kv)scores}; do
 #     echo "$key -> $val"
 # done
+
+# }}}1
+
+# Lecture {{{1
+
+include=()
+englobe=()
+exclude=()
+repertoire=()
+
+racine=$(grep '^root' $fichier | cut -d ' ' -f 2)
+include=($(grep '^include' $fichier | cut -d ' ' -f 2))
+englobe=($(grep '^glob' $fichier | cut -d ' ' -f 2))
+exclude=($(grep '^exclude' $fichier | cut -d ' ' -f 2))
+repertoire=($(grep '^folder' $fichier | cut -d ' ' -f 2))
+
+echo "Racine = $racine"
 
 # }}}1
