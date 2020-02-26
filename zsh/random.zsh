@@ -78,8 +78,8 @@ done
 
 [ $numarg -eq 0 -o $aide -eq 1 ] && {
 	echo "Usage: $(basename $0) mean deviation sample-size [options]"
-	echo Options
-	echo "-s N : histogram of size N"
+	echo "\tOptions"
+	echo "\t-s N : print summary : mean, std dev and histogram of size N"
 	exit 0
 }
 
@@ -218,8 +218,8 @@ echantillon=()
 
 for ind in {1..$taille}
 do
-	echantillon+=$((lineaire(moyenne, ecart)))
-	#echantillon+=$((exponen(moyenne, ecart)))
+	#echantillon+=$((lineaire(moyenne, ecart)))
+	echantillon+=$((exponen(moyenne, ecart)))
 done
 
 if [ $numhist -gt 0 ]
