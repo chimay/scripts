@@ -12,7 +12,8 @@ setopt warn_create_global
 
 setopt extended_glob
 
-#setopt null_glob
+setopt null_glob
+unsetopt case_glob
 
 #zmodload -i zsh/mathfunc
 
@@ -188,7 +189,7 @@ do
 				;;
 			glob*)
 				motif=${ligne##* }
-				if ! [ $motif[1] = / ]
+				if ! [ $motif[1] = / -o $motif[1] = \~ ]
 				then
 					motif=$racine/$motif
 				fi
@@ -205,7 +206,7 @@ do
 				;;
 			ign*|igno*|ignor*|ignore*)
 				motif=${ligne##* }
-				if ! [ $motif[1] = / ]
+				if ! [ $motif[1] = / -o $motif[1] = \~ ]
 				then
 					motif=$racine/$motif
 				fi
@@ -222,7 +223,7 @@ do
 				;;
 			force*)
 				motif=${ligne##* }
-				if ! [ $motif[1] = / ]
+				if ! [ $motif[1] = / -o $motif[1] = \~ ]
 				then
 					motif=$racine/$motif
 				fi
@@ -232,14 +233,14 @@ do
 				fi
 				force+=$motif
 				;;
-			fol*|fold*|folde*|folder*)
+			?*|fol*|fold*|folde*|folder*)
 				motif=${ligne##* }
-				motif=$racine/$motif/**/*$filtre
-				glob+=$motif
-				;;
-			?*)
-				motif=${ligne##* }
-				motif=$racine/$motif/**/*$filtre
+				if ! [ $motif[1] = / -o $motif[1] = \~ ]
+				then
+					motif=$racine/$motif/**/*$filtre
+				else
+					motif=$motif/**/*$filtre
+				fi
 				glob+=$motif
 				;;
 		esac
@@ -265,6 +266,49 @@ echo
 
 # Conversion glob -> fichiers {{{1
 
+liste=()
 
+for motif in $glob
+do
+	liste+=($~motif)
+done
+
+liste=(${(ou)liste})
+
+echo Liste
+echo '-----'
+print -l $liste
+echo
+
+for motif in $ignore
+do
+	soustraction+=($~motif)
+done
+
+soustraction=(${(ou)soustraction})
+
+echo Soustraction
+echo '------------'
+print -l $soustraction
+echo
+
+liste=($(comm -23 <(print -l $liste) <(print -l $soustraction) ))
+
+echo Liste après soustraction
+echo '------------------------'
+print -l $liste
+echo
+
+for motif in $force
+do
+	liste+=($~motif)
+done
+
+liste=(${(ou)liste})
+
+echo Liste après addition
+echo '------------------------'
+print -l $liste
+echo
 
 # }}}1
