@@ -230,7 +230,7 @@ do
 				then
 					motif=$motif/*$filtre
 				fi
-				ignore+=$motif
+				force+=$motif
 				;;
 			fol*|fold*|folde*|folder*)
 				motif=${ligne##* }
@@ -252,13 +252,19 @@ print -l $glob
 echo
 
 echo Ignore
-echo '----'
+echo '------'
 print -l $ignore
 echo
 
 echo Force
-echo '----'
+echo '-----'
 print -l $force
 echo
+
+# }}}1
+
+# Conversion glob -> fichiers {{{1
+
+
 
 # }}}1
