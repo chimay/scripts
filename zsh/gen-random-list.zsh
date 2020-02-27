@@ -23,13 +23,45 @@ unsetopt case_glob
 
 # Initialisation {{{1
 
-float dispersion=1
+dispersion=5
 
 principal=$HOME/racine/pictura/list/wallpaper.meta
+
+complet=${principal/.?*/.score}
+genere=${principal/.?*/.m3u}
 
 prereper=$PWD
 
 filtre='(.)'
+
+# }}}1
+
+# Scores {{{1
+
+scoreParDefaut=-1
+
+typeset -A scores
+
+integer note=31
+
+for char in {0..9} {a..u}
+do
+	(( note -= 1 ))
+	scores[$char]=$note
+done
+
+for char in {v..z}
+do
+	(( note -= 100 ))
+	scores[$char]=$note
+done
+
+# echoerr Scores
+# echoerr '======'
+# for key val in ${(kv)scores}; do
+#     echoerr "$key -> $val"
+# done
+# echoerr
 
 # }}}1
 
@@ -108,27 +140,15 @@ done
 
 # }}}1
 
-# Scores {{{1
+# Fonctions {{{1
 
-typeset -A scores
+echoerr () {
+	print "$@" >&2
+}
 
-integer note=31
-
-for char in {0..9} {a..u}
-do
-	(( note -= 1 ))
-	scores[$char]=$note
-done
-
-for char in {v..z}
-do
-	(( note -= 100 ))
-	scores[$char]=$note
-done
-
-# for key val in ${(kv)scores}; do
-#     echo "$key -> $val"
-# done
+echoerr-lignes () {
+	print -l "$@" >&2
+}
 
 # }}}1
 
@@ -137,11 +157,11 @@ done
 metafile=`basename $principal`
 metadir=`dirname $principal`
 
-echo "Meta file : $metafile"
-echo "Meta dir  : $metadir"
-echo
-echo "cd $metadir"
-echo
+echoerr "Meta file : $metafile"
+echoerr "Meta dir  : $metadir"
+echoerr
+echoerr "cd $metadir"
+echoerr
 
 cd $metadir
 
@@ -149,8 +169,8 @@ metaroot=$(grep '^root' $metafile | cut -d ' ' -f 2)
 metaroot=$~metaroot
 [ -z $metaroot ] && metaroot=$prereper
 
-echo Metaroot : $metaroot
-echo
+echoerr Metaroot : $metaroot
+echoerr
 
 meta=($metafile)
 while read ligne
@@ -162,10 +182,10 @@ do
 	esac
 done < $metafile
 
-echo Meta
-echo '----'
-print -l $meta
-echo
+echoerr Meta
+echoerr '===='
+echoerr-lignes $meta
+echoerr
 
 glob=()
 ignore=()
@@ -177,9 +197,9 @@ do
 	[ -z $racine ] && racine=$metaroot
 	racine=$~racine
 
-	echo "Fichier : $fichier"
-	echo "Racine  : $racine"
-	echo
+	echoerr "Fichier : $fichier"
+	echoerr "Racine  : $racine"
+	echoerr
 
 	while read ligne
 	do
@@ -247,24 +267,27 @@ do
 	done < $fichier
 done
 
-echo Glob
-echo '----'
-print -l $glob
-echo
+echoerr Glob
+echoerr '===='
+echoerr-lignes $glob
+echoerr
 
-echo Ignore
-echo '------'
-print -l $ignore
-echo
+echoerr Ignore
+echoerr '======'
+echoerr-lignes $ignore
+echoerr
 
-echo Force
-echo '-----'
-print -l $force
-echo
+echoerr Force
+echoerr '====='
+echoerr-lignes $force
+echoerr
 
 # }}}1
 
 # Conversion glob -> fichiers {{{1
+
+echoerr Conversion des motifs glob
+echoerr
 
 liste=()
 
@@ -275,10 +298,10 @@ done
 
 liste=(${(ou)liste})
 
-echo Liste
-echo '-----'
-print -l $liste
-echo
+# echoerr Liste
+# echoerr '====='
+# echoerr-lignes $liste
+# echoerr
 
 for motif in $ignore
 do
@@ -287,17 +310,17 @@ done
 
 soustraction=(${(ou)soustraction})
 
-echo Soustraction
-echo '------------'
-print -l $soustraction
-echo
+# echoerr Soustraction
+# echoerr '============'
+# echoerr-lignes $soustraction
+# echoerr
 
 liste=($(comm -23 <(print -l $liste) <(print -l $soustraction) ))
 
-echo Liste après soustraction
-echo '------------------------'
-print -l $liste
-echo
+# echoerr Liste après soustraction
+# echoerr '========================'
+# echoerr-lignes $liste
+# echoerr
 
 for motif in $force
 do
@@ -306,9 +329,46 @@ done
 
 liste=(${(ou)liste})
 
-echo Liste après addition
-echo '------------------------'
-print -l $liste
-echo
+# echoerr Liste après addition
+# echoerr '========================'
+# echoerr-lignes $liste
+# echoerr
+
+# }}}1
+
+# Nombres aléatoires {{{1
+
+echoerr Génération des nombres aléatoires
+echoerr
+
+alea=($(random.zsh 0.0 $dispersion $#liste))
+
+# }}}1
+
+# Tri de la liste {{{1
+
+echoerr Tri de la liste
+echoerr
+
+rm -f $complet $genere
+
+ind=1
+
+for fichier in $liste
+do
+	base=`basename $fichier`
+	if [ $base[2] = - ]
+	then
+		caractere=${(L)base[1]}
+		valeur=$scores[$caractere]
+	else
+		valeur=$scoreParDefaut
+	fi
+	(( valeur += alea[ind] ))
+	(( ind += 1 ))
+	echo "$valeur $fichier"
+done | sort -k 1,1 -gr > $complet
+
+cut -d ' ' -f 2 $complet > $genere
 
 # }}}1
