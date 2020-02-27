@@ -77,9 +77,13 @@ done
 # Aide {{{1
 
 [ $numarg -eq 0 -o $aide -eq 1 ] && {
+	echo "$(basename $0) : roughly normal random numbers"
+	echo
 	echo "Usage: $(basename $0) mean deviation sample-size [options]"
-	echo "\tOptions"
-	echo "\t-s N : print summary : mean, std dev and histogram of size N"
+	echo
+	echo "Options"
+	echo
+	echo "-s N : print summary, ie mean, std dev and histogram of size N"
 	exit 0
 }
 
