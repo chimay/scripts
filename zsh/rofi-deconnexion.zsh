@@ -10,6 +10,8 @@ choix=$(print -l $menu | rofi -dmenu -p "Déconnexion ? " -i)
 
 [ $choix = Oui ] || exit 0
 
+autostop.zsh &>>! ~/log/autostop.log
+
 winman=$(wmctrl -m | head -n 1 | cut -d ' ' -f 2)
 
 if [ $winman = i3 ]

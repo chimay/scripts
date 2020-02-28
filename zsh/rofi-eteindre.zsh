@@ -34,7 +34,7 @@ sync
 
 		systemctl suspend
 
-		autowake.zsh
+		autowake.zsh &>>! ~/log/autowake.log
 	}
 }
 
