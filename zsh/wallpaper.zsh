@@ -1,0 +1,348 @@
+#! /usr/bin/env zsh
+
+# {{{ Options de zsh
+
+setopt null_glob
+setopt extended_glob
+
+# }}}
+
+# Fonctions {{{1
+
+echoerr () {
+	print "$@" >&2
+}
+
+signal-recharge () {
+	echoerr
+	echoerr "recharge -> 1"
+	echoerr
+	recharge=1
+}
+
+signal-suivant () {
+	echoerr
+	echoerr "suivant -> 1"
+	echoerr
+	[ -z $attendre ] || kill $attendre
+}
+
+signal-arret () {
+	echoerr "arret -> 1"
+	echoerr
+	echoerr "On arrête wallpaper"
+	echoerr
+
+	arret=1
+
+	cat <<- fin >| $etat
+		dispersion = $dispersion
+		minutes = $minutes
+		secondes = $secondes
+		meta = $meta
+		courant = $courant
+		recharge = 0
+		arret = 0
+		etat = $etat
+		temoin = $temoin
+	fin
+
+	touch $temoin
+
+	exit 128
+}
+
+trap signal-recharge SIGUSR1
+trap signal-suivant  SIGUSR2
+
+trap signal-arret    HUP INT TERM
+
+# }}}1
+
+# Nettoyage {{{1
+
+rm -f ~/graphix/wallpaper/**/*.exiv2_temp
+
+# }}}1
+
+# Initialisation {{{1
+
+integer dispersion=12
+
+integer minutes=0
+integer secondes=0
+
+meta=~/racine/pictura/list/wallpaper.meta
+
+# }}}1
+
+# Lecture préliminaire du fichier état s’il existe déjà {{{1
+
+etat=~/racine/run/wall/wallpaper.etat
+
+temoin=${etat/.?*/.temoin}
+
+if [ -f $etat ]
+then
+	touch $temoin
+
+	while read ligne
+	do
+		ligne=${ligne// }
+		eval $ligne
+	done < $etat
+
+	(( temps = minutes * 60 + secondes ))
+
+	echoerr
+	echoerr "*** Lecture préliminaire du fichier état ***"
+	echoerr
+	echoerr Dispersion : $dispersion
+	echoerr Minutes : $minutes
+	echoerr Secondes : $secondes
+	echoerr Temps : $temps
+	echoerr Meta : $meta
+	echoerr Courant : $courant
+	echoerr Recharge : $recharge
+	echoerr Arrêt : $arret
+	echoerr Fichier état : $etat
+	echoerr Fichier témoin : $temoin
+	echoerr
+fi
+
+# }}}1
+
+# Arguments {{{1
+
+while true
+do
+	case $1 in
+		[0-9]##)
+			dispersion=$1
+			shift
+			;;
+		[0-9]##m)
+			minutes=${1/m/}
+			shift
+			;;
+		[0-9]##s)
+			secondes=${1/s/}
+			shift
+			;;
+		?*)
+			meta=$1
+			shift
+			;;
+		*)
+			break
+			;;
+	esac
+done
+
+[[ $etat = $temoin ]] && temoin=${temoin}.temoin
+
+(( minutes == 0 )) && (( secondes == 0 )) && minutes=30
+(( temps = minutes * 60 + secondes ))
+
+# }}}1
+
+# Génération de la liste {{{1
+
+liste=${meta/.?*/.m3u}
+
+[ -f $liste ] || {
+	gen-random-list.zsh $dispersion $meta &>>! ~/log/gen-random-list.log
+}
+
+racine=$(cat $meta | grep 'root' | cut -d ' ' -f 2)
+
+(( $#racine == 0 )) && racine=~/graphix
+
+racine=$~racine
+racine=${racine##*:}
+racine=${racine// }
+
+# }}}1
+
+# Images {{{1
+
+images=($(cat $liste))
+
+Nimages=${#images}
+
+# }}}1
+
+# Affichage {{{1
+
+echoerr "*** Affichage avant la boucle ***"
+echoerr
+echoerr Dispersion : $dispersion
+echoerr Minutes : $minutes
+echoerr Secondes : $secondes
+echoerr Temps : $temps
+echoerr Meta : $meta
+echoerr Courant : $courant
+echoerr Recharge : $recharge
+echoerr Arrêt : $arret
+echoerr Fichier état : $etat
+echoerr Fichier témoin : $temoin
+echoerr
+trap 1>&2
+echoerr
+
+# }}}1
+
+# Initialisation du fichier {{{1
+
+if ! [ -f $etat ]
+then
+	cat <<- fin >| $etat
+		dispersion = $dispersion
+		minutes = $minutes
+		secondes = $secondes
+		meta = $meta
+		courant = $courant
+		recharge = 0
+		arret = 0
+		etat = $etat
+		temoin = $temoin
+	fin
+
+	touch $temoin
+fi
+
+# }}}1
+
+# {{{ Boucle
+
+[ -z $courant ] && courant=1
+
+
+while true
+do
+	# Lecture du fichier état {{{2
+
+	[[ $etat -nt $temoin ]] && {
+
+		touch $temoin
+
+		while read ligne
+		do
+			ligne=${ligne// }
+			eval $ligne
+		done < $etat
+
+		(( temps = minutes * 60 + secondes ))
+
+		echoerr "*** Fichier état rechargé ***"
+		echoerr
+		echoerr Dispersion : $dispersion
+		echoerr Minutes : $minutes
+		echoerr Secondes : $secondes
+		echoerr Temps : $temps
+		echoerr Meta : $meta
+		echoerr Courant : $courant
+		echoerr Recharge : $recharge
+		echoerr Arrêt : $arret
+		echoerr Fichier état : $etat
+		echoerr Fichier témoin : $temoin
+		echoerr
+	}
+
+	# }}}2
+
+	# Arrêt {{{2
+
+	(( arret > 0 )) && signal-arret
+
+	# }}}2
+
+	# Fin de la liste {{{2
+
+	(( courant >= Nimages )) && recharge=1
+
+	# }}}2
+
+	# Recharge {{{2
+
+	if (( recharge == 1 ))
+	then
+		gen-random-list.zsh $dispersion $meta &>>! ~/log/gen-random-list.log
+		images=($(cat $liste))
+		courant=1
+		Nimages=${#images}
+	fi
+
+	recharge=0
+
+	# }}}2
+
+	# Choix du fond d’écran {{{2
+
+	fond=$images[$courant]
+
+	# }}}2
+
+	# Date et heure {{{2
+
+	dateHeure=`date +"%a %d %b %Y, %H:%M"`
+
+	echo $dateHeure : $courant : $fond
+
+	# }}}2
+
+	# Changement du fond d’écran {{{2
+
+	feh --bg-max --no-fehbg $fond
+
+	# }}}2
+
+	# Lien symbolique {{{2
+
+	# Pour i3lock
+
+	lien=~/racine/run/wall/current
+
+	[ -L $lien ] && rm -f $lien
+
+	ln -s $fond $lien
+
+	# }}}2
+
+# Ecriture du fichier état {{{2
+
+cat <<- fin >| $etat
+	dispersion = $dispersion
+	minutes = $minutes
+	secondes = $secondes
+	meta = $meta
+	courant = $courant
+	recharge = 0
+	arret = 0
+	etat = $etat
+	temoin = $temoin
+fin
+
+touch $temoin
+
+# }}}2
+
+	# Attente {{{2
+
+	# Pour ne pas retarder l’interception des traps
+
+	sleep $temps &
+	attendre=$!
+	wait $attendre
+
+	# }}}2
+
+	# Incrément {{{2
+
+	(( courant ++ ))
+
+	# }}}2
+
+done
+
+# }}}
