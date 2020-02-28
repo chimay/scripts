@@ -39,9 +39,6 @@ dispersion=5
 
 principal=$HOME/racine/pictura/list/wallpaper.meta
 
-complet=${principal/.?*/.score}
-genere=${principal/.?*/.m3u}
-
 prereper=$PWD
 
 filtre='(.)'
@@ -244,7 +241,7 @@ do
 				;;
 			match*)
 				motif=${ligne##* }
-				motif=$racine/**/*$motif*$filtre
+				motif=$racine/**/*$motif*/**/*$filtre
 				glob+=$motif
 				;;
 			ign*|igno*|ignor*|ignore*)
@@ -261,7 +258,7 @@ do
 				;;
 			ban*)
 				motif=${ligne##* }
-				motif=$racine/**/*$motif*$filtre
+				motif=$racine/**/*$motif*/**/*$filtre
 				ignore+=$motif
 				;;
 			force*)
@@ -280,7 +277,7 @@ do
 				motif=${ligne##* }
 				if ! [ $motif[1] = / -o $motif[1] = \~ ]
 				then
-					motif=$racine/$motif/**/*$filtre
+					motif=$racine/**/$motif/**/*$filtre
 				else
 					motif=$motif/**/*$filtre
 				fi
@@ -373,6 +370,13 @@ alea=($(random.zsh 0.0 $dispersion $#liste))
 echoerr Tri de la liste
 echoerr
 
+complet=${principal/.?*/.score}
+genere=${principal/.?*/.m3u}
+
+echoerr "Liste avec score : $complet"
+echoerr "Liste            : $genere"
+echoerr
+
 rm -f $complet $genere
 
 ind=1
@@ -380,7 +384,10 @@ ind=1
 for fichier in $liste
 do
 	base=${fichier##*/}
-	if [ $base[2] = - ]
+	if [ $#base -lt 2 ]
+	then
+		valeur=$scoreParDefaut
+	elif [ $base[2] = - ]
 	then
 		caractere=$base[1]
 		valeur=$scores[$caractere]
