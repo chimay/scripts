@@ -224,10 +224,10 @@ do
 	while read ligne
 	do
 		case $ligne in
-			\#*|root*|include*)
+			\#*|root\ *|include\ *)
 				:
 				;;
-			glob*)
+			glob\ *)
 				motif=${ligne##* }
 				if ! [ $motif[1] = / -o $motif[1] = \~ ]
 				then
@@ -239,12 +239,12 @@ do
 				fi
 				glob+=$motif
 				;;
-			match*)
+			match\ *)
 				motif=${ligne##* }
 				motif=$racine/**/*$motif*/**/*$filtre
 				glob+=$motif
 				;;
-			ign*|igno*|ignor*|ignore*)
+			ign\ *|igno\ *|ignor\ *|ignore\ *)
 				motif=${ligne##* }
 				if ! [ $motif[1] = / -o $motif[1] = \~ ]
 				then
@@ -256,12 +256,12 @@ do
 				fi
 				ignore+=$motif
 				;;
-			ban*)
+			ban\ *)
 				motif=${ligne##* }
 				motif=$racine/**/*$motif*/**/*$filtre
 				ignore+=$motif
 				;;
-			force*)
+			force\ *)
 				motif=${ligne##* }
 				if ! [ $motif[1] = / -o $motif[1] = \~ ]
 				then
@@ -273,7 +273,7 @@ do
 				fi
 				force+=$motif
 				;;
-			?*|fol*|fold*|folde*|folder*)
+			?*|fol\ *|fold\ *|folde\ *|folder\ *)
 				motif=${ligne##* }
 				if ! [ $motif[1] = / -o $motif[1] = \~ ]
 				then
