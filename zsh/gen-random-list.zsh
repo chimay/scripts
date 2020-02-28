@@ -21,6 +21,18 @@ unsetopt case_glob
 
 # }}}
 
+# Fonctions {{{1
+
+echoerr () {
+	print "$@" >&2
+}
+
+echoerr-lignes () {
+	print -l "$@" >&2
+}
+
+# }}}1
+
 # Initialisation {{{1
 
 dispersion=5
@@ -33,6 +45,15 @@ genere=${principal/.?*/.m3u}
 prereper=$PWD
 
 filtre='(.)'
+
+# }}}1
+
+# Affichage {{{1
+
+echoerr "=========================================="
+echoerr " " $(date +"%H : %M %A %d %B %Y")
+echoerr "=========================================="
+echoerr
 
 # }}}1
 
@@ -56,8 +77,22 @@ do
 	scores[$char]=$note
 done
 
-# echoerr Scores
-# echoerr '======'
+note=21
+
+for char in {A..U}
+do
+	(( note -= 1 ))
+	scores[$char]=$note
+done
+
+for char in {V..Z}
+do
+	(( note -= 100 ))
+	scores[$char]=$note
+done
+
+# echoerr '[Scores]'
+# echoerr
 # for key val in ${(kv)scores}; do
 #     echoerr "$key -> $val"
 # done
@@ -140,18 +175,6 @@ done
 
 # }}}1
 
-# Fonctions {{{1
-
-echoerr () {
-	print "$@" >&2
-}
-
-echoerr-lignes () {
-	print -l "$@" >&2
-}
-
-# }}}1
-
 # Lecture meta {{{1
 
 metafile=`basename $principal`
@@ -182,8 +205,8 @@ do
 	esac
 done < $metafile
 
-echoerr Meta
-echoerr '===='
+echoerr '[Metas]'
+echoerr
 echoerr-lignes $meta
 echoerr
 
@@ -267,18 +290,18 @@ do
 	done < $fichier
 done
 
-echoerr Glob
-echoerr '===='
+echoerr '[Glob]'
+echoerr
 echoerr-lignes $glob
 echoerr
 
-echoerr Ignore
-echoerr '======'
+echoerr '[Ignore]'
+echoerr
 echoerr-lignes $ignore
 echoerr
 
-echoerr Force
-echoerr '====='
+echoerr '[Force]'
+echoerr
 echoerr-lignes $force
 echoerr
 
@@ -299,7 +322,7 @@ done
 liste=(${(ou)liste})
 
 # echoerr Liste
-# echoerr '====='
+# echoerr
 # echoerr-lignes $liste
 # echoerr
 
@@ -311,14 +334,14 @@ done
 soustraction=(${(ou)soustraction})
 
 # echoerr Soustraction
-# echoerr '============'
+# echoerr
 # echoerr-lignes $soustraction
 # echoerr
 
 liste=($(comm -23 <(print -l $liste) <(print -l $soustraction) ))
 
 # echoerr Liste après soustraction
-# echoerr '========================'
+# echoerr
 # echoerr-lignes $liste
 # echoerr
 
@@ -330,7 +353,7 @@ done
 liste=(${(ou)liste})
 
 # echoerr Liste après addition
-# echoerr '========================'
+# echoerr
 # echoerr-lignes $liste
 # echoerr
 
@@ -356,10 +379,10 @@ ind=1
 
 for fichier in $liste
 do
-	base=`basename $fichier`
+	base=${fichier##*/}
 	if [ $base[2] = - ]
 	then
-		caractere=${(L)base[1]}
+		caractere=$base[1]
 		valeur=$scores[$caractere]
 	else
 		valeur=$scoreParDefaut
