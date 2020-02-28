@@ -241,6 +241,9 @@ do
 				;;
 			match\ *)
 				motif=${ligne##* }
+				motif=$racine/**/*$motif*$filtre
+				glob+=$motif
+				motif=${ligne##* }
 				motif=$racine/**/*$motif*/**/*$filtre
 				glob+=$motif
 				;;
@@ -257,6 +260,9 @@ do
 				ignore+=$motif
 				;;
 			ban\ *)
+				motif=${ligne##* }
+				motif=$racine/**/*$motif*$filtre
+				ignore+=$motif
 				motif=${ligne##* }
 				motif=$racine/**/*$motif*/**/*$filtre
 				ignore+=$motif
