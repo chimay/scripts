@@ -7,9 +7,9 @@ lecteur () {
 	local fu_volume=$1
 	local fu_fichier=$2
 
-	echo "loadfile $fu_fichier append-play" > ~/racine/run/fifo/mpv
+	echo "loadfile $fu_fichier append-play" > ~/racine/run/pipe/mpv
 
-	echo "set volume $fu_volume" > ~/racine/run/fifo/mpv
+	echo "set volume $fu_volume" > ~/racine/run/pipe/mpv
 }
 
 # }}}
@@ -33,17 +33,17 @@ fichier=~/racine/run/clock/clocher.etat
 	}
 }
 
-volume=${1:-100}
+volume=${1:-$etat}
 
 case $MM in
-	00) cloche=$HOME/audio/Sonnerie/horloge/carillon-$HH-00.ogg ;;
-	15) cloche=$HOME/audio/Sonnerie/horloge/coucou-1.ogg ;;
-	30) cloche=$HOME/audio/Sonnerie/horloge/coucou-2.ogg ;;
-	45) cloche=$HOME/audio/Sonnerie/horloge/coucou-3.ogg ;;
+	00) cloche=$HOME/audio/sonnerie/horloge/carillon-$HH-00.ogg ;;
+	15) cloche=$HOME/audio/sonnerie/horloge/coucou-1.ogg ;;
+	30) cloche=$HOME/audio/sonnerie/horloge/coucou-2.ogg ;;
+	45) cloche=$HOME/audio/sonnerie/horloge/coucou-3.ogg ;;
 	??)
-		cloche=$HOME/audio/Sonnerie/horloge/carillon-$HH-$MM.ogg
-		[[ -f $cloche ]] || cloche=$HOME/audio/Sonnerie/horloge/carillon-HH-$MM.ogg
-		[[ -f $cloche ]] || cloche=$HOME/audio/Sonnerie/horloge/carillon-HH-MM.ogg
+		cloche=$HOME/audio/sonnerie/horloge/carillon-$HH-$MM.ogg
+		[[ -f $cloche ]] || cloche=$HOME/audio/sonnerie/horloge/carillon-HH-$MM.ogg
+		[[ -f $cloche ]] || cloche=$HOME/audio/sonnerie/horloge/carillon-HH-MM.ogg
 		;;
 	*)
 		echo "   ERREUR : mauvais format de $MM minutes"

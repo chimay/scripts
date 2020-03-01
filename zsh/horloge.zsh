@@ -38,15 +38,15 @@ integer jour_semaine=`date +%u`
 
 etat=$HOME/racine/run/clock/horloge.etat
 
-remonter=$HOME/audio/Sonnerie/horloge/remonter.ogg
-tictac=$HOME/audio/Sonnerie/horloge/tictac.ogg
+remonter=$HOME/audio/sonnerie/horloge/remonter.ogg
+tictac=$HOME/audio/sonnerie/horloge/tictac.ogg
 
-bol=$HOME/audio/Sonnerie/horloge/bol-tibetain.ogg
-yinyang=$HOME/audio/Sonnerie/horloge/yinyang.ogg
+bol=$HOME/audio/sonnerie/horloge/bol-tibetain.ogg
+yinyang=$HOME/audio/sonnerie/horloge/yinyang.ogg
 
-chercher=$HOME/audio/Sonnerie/notification/ecole.ogg
+chercher=$HOME/audio/sonnerie/notification/ecole.ogg
 
-carillon_simple=$HOME/audio/Sonnerie/horloge/coucou-1.ogg
+carillon_simple=$HOME/audio/sonnerie/horloge/coucou-1.ogg
 
 #  }}}
 
@@ -151,9 +151,11 @@ lecteur () {
 	local fu_volume=$1
 	local fu_fichier=$2
 
-	echo "loadfile $fu_fichier append-play" > ~/racine/run/fifo/mpv
+	echo "loadfile $fu_fichier append-play" > ~/racine/run/pipe/mpv
 
-	echo "set volume $fu_volume" > ~/racine/run/fifo/mpv
+	echo "set volume $fu_volume" > ~/racine/run/pipe/mpv
+
+	#amixer -c 0 -- set Master -3dB
 }
 
 # }}}
@@ -427,12 +429,10 @@ jour_semaine=`date +%u`
 		#dingdong=1
 
 		echo "   lecteur $volume $bol"
-		echo "   lecteur $volume $yinyang"
 		echo "   lecteur $volume $bol"
 		echo
 
 		lecteur $volume $bol
-		lecteur $volume $yinyang
 		lecteur $volume $bol
 	}
 
@@ -472,11 +472,11 @@ jour_semaine=`date +%u`
 
 		(( carillon == 2 )) && {
 
-			cloche=$HOME/audio/Sonnerie/horloge/carillon-$HH-$MM.ogg
+			cloche=$HOME/audio/sonnerie/horloge/carillon-$HH-$MM.ogg
 
-			[[ -f $cloche ]] || cloche=$HOME/audio/Sonnerie/horloge/carillon-HH-$MM.ogg
+			[[ -f $cloche ]] || cloche=$HOME/audio/sonnerie/horloge/carillon-HH-$MM.ogg
 
-			[[ -f $cloche ]] || cloche=$HOME/audio/Sonnerie/horloge/carillon-HH-MM.ogg
+			[[ -f $cloche ]] || cloche=$HOME/audio/sonnerie/horloge/carillon-HH-MM.ogg
 
 			echo "   lecteur $volume $cloche"
 			echo
@@ -494,9 +494,9 @@ jour_semaine=`date +%u`
 
 		(( vocal == 2 )) && {
 
-			voix=$HOME/audio/Sonnerie/horloge/vocal-$HH-$MM.ogg
+			voix=$HOME/audio/sonnerie/horloge/vocal-$HH-$MM.ogg
 
-			[[ -f $voix ]] || voix=$HOME/audio/Sonnerie/horloge/vocal-HH-$MM.ogg
+			[[ -f $voix ]] || voix=$HOME/audio/sonnerie/horloge/vocal-HH-$MM.ogg
 
 			echo "   lecteur $volume $voix"
 			echo
@@ -506,7 +506,7 @@ jour_semaine=`date +%u`
 
 		(( vocal == 1 )) && {
 
-			voix=$HOME/audio/Sonnerie/horloge/vocal-HH-$MM.ogg
+			voix=$HOME/audio/sonnerie/horloge/vocal-HH-$MM.ogg
 
 			echo "   lecteur $volume $voix"
 			echo

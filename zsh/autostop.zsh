@@ -15,8 +15,17 @@ HOST=`hostname -s`
 
 # }}}1
 
-kill -15 $(ps --no-headers -eo '%p %a' | grep -v grep | grep fond-ecran.zsh | awk '{ print $1 }') &
+pkill xcape &
+
+pkill -f wallpaper &
 
 polybar-msg cmd quit &
 
-killall -10 sxhkd &
+pkill -10 sxhkd &
+
+pkill -f mpv &
+
+{
+	pkill -f remind-server
+	pkill -f remind
+} &

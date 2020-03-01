@@ -29,7 +29,7 @@ alias psgrep='ps auxww | grep -v grep | grep --color=never'
 
 #xset dpms 0 0 234
 
-psgrep redshift || redshift-gtk >>! ~/log/redshift.log 2>&1 &
+psgrep redshift-gtk || redshift-gtk >>! ~/log/redshift.log 2>&1 &
 
 # }}}2
 
@@ -48,6 +48,17 @@ if [ $HOST != mandala ]
 then
 	numlockx on &
 fi
+
+# Shift_L = %
+# Control_L = .
+# Super_L = |
+# Alt_L = @
+# Alt Gr = \
+# Super_R = ~
+# Control_R = /
+# Shift_R = ?
+
+xcape -e 'Shift_L=Shift_L|percent;Control_L=Shift_L|period;Super_L=ISO_Level3_Shift|at;Alt_L=ISO_Level3_Shift|ampersand;ISO_Level3_Shift=ISO_Level3_Shift|backslash;Super_R=ISO_Level3_Shift|numbersign;Hyper_R=ISO_Level3_Shift|equal;Control_R=Shift_R|slash;Shift_R=Shift_L|question'
 
 # }}}2
 
@@ -77,12 +88,11 @@ then
 
 fi
 
-
 # }}}2
 
 #  Batterie {{{2
 
-psgrep alarm-battery.zsh || alarm-battery.zsh 30 15 5 >>! ~/log/alarm-battery.log 2>&1 &
+psgrep alarm-battery.zsh || alarm-battery.zsh 30 15 5 60 >>! ~/log/alarm-battery.log 2>&1 &
 
 # }}}2
 
@@ -90,7 +100,7 @@ psgrep alarm-battery.zsh || alarm-battery.zsh 30 15 5 >>! ~/log/alarm-battery.lo
 
 if [ $HOST != mandala ]
 then
-	pgrep load_cycle_fix || load_cycle_fix.sh >>! ~/log/load_cycle_fix.log 2>&1 &
+	psgrep load_cycle_fix || load_cycle_fix.sh >>! ~/log/load_cycle_fix.log 2>&1 &
 fi
 
 # }}}2
@@ -120,7 +130,7 @@ xrdb -load ~/.Xresources
 
 #  Fond d’écran {{{2
 
-psgrep fond-ecran || fond-ecran.zsh 7 30m ~/graphix/list/wallpaper.gen >>! ~/log/fond-ecran.log &
+psgrep wallpaper || wallpaper.zsh 7 30m ~/racine/pictura/list/wallpaper.meta >>! ~/log/wallpaper.log 2>&1 &
 
 #psgrep xplanet || xplanet -wait 300 -label -labelpos -15+50 -projection rectangular &
 
@@ -153,12 +163,10 @@ polybar.zsh
 
 if psgrep sxhkd
 then
-	killall -10 sxhkd
+	pkill -10 sxhkd
 else
-	sxhkd >>&! ~/log/sxhkd.log &
+	sxhkd >>! ~/log/sxhkd.log 2>&1  &
 fi
-
-psgrep xbindkeys || xbindkeys
 
 # }}}2
 
@@ -182,19 +190,26 @@ psgrep urxvtd || urxvtd -q -o -f
 
 # Musique {{{2
 
-psgrep mpd || { rm -f ~/racine/run/mpd/pid ; mpd ~/racine/config/multimedia/mpd.conf }
+[ -p ~/racine/run/pipe/mpv ] || {
+	rm -f ~/racine/run/pipe/mpv
+	mkfifo ~/racine/run/pipe/mpv
+}
 
 psgrep 'mpv --idle --input-file' || \
 	mpv \
 	--idle \
-	--input-file=$HOME/racine/run/fifo/mpv \
-	&>>! ~/log/mpv-pipe.log &!
+	--input-file=$HOME/racine/run/pipe/mpv \
+	>>! ~/log/mpv-pipe.log 2>&1 &!
+
+[ -S ~/racine/run/socket/mpv ] || rm -f ~/racine/run/socket/mpv
 
 psgrep 'mpv --idle --input-ipc-server' || \
 	mpv \
 	--idle \
 	--input-ipc-server=$HOME/racine/run/socket/mpv \
-	&>>! ~/log/mpv-socket.log &!
+	>>! ~/log/mpv-socket.log 2>&1 &!
+
+psgrep mpd || { rm -f ~/racine/run/mpd/pid ; mpd ~/racine/config/multimedia/mpd.conf }
 
 # }}}2
 
@@ -209,16 +224,32 @@ psgrep 'mpv --idle --input-ipc-server' || \
 
 # }}}2
 
-# Identification {{{2
+# Compositor {{{2
 
-/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
+psgrep picom || picom >>! ~/log/picom.log 2>&1 &
 
 # }}}2
 
-# Compositor {{{2
+# Notifications {{{2
 
-psgrep picom || picom &>>! ~/log/picom.log &
+# Dunst est lancé par
+# ~/.local/share/dbus-1/services/org.freedesktop.Notifications.service
+
+# }}}2
+
+# Rappels {{{2
+
+psgrep remind-server || remind-server.zsh 5 >>! ~/log/remind.log 2>&1 &
+
+# }}}2
+
+# Identification {{{2
+
+psgrep polkit-gnome-authentication-agent || \
+	/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+
+psgrep gnome-keyring-daemon || \
+	eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
 
 # }}}2
 
@@ -226,7 +257,6 @@ psgrep picom || picom &>>! ~/log/picom.log &
 
 # Message d’accueil {{{1
 
-mpv-socket.bash add $HOME/audio/sonnerie/notification/accueil.ogg
-mpv-socket.bash volume 100
+accueil.zsh >>! ~/log/accueil.log 2>&1 &
 
 # }}}1
