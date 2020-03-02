@@ -51,10 +51,11 @@ fi
 
 # Shift_L = %
 # Control_L = .
-# Super_L = |
-# Alt_L = @
+# Super_L = @
+# Alt_L = |
 # Alt Gr = \
-# Super_R = ~
+# Super_R = #
+# Hyper_R = Menu = ~
 # Control_R = /
 # Shift_R = ?
 
