@@ -1,4 +1,4 @@
-<!-- vim: set filetype=markdown:
+<!-- vim: set filetype=markdown: --!>
 
 # Random list with priorities for music & wallpaper
 
