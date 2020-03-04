@@ -145,7 +145,7 @@ done
 	echo
 	echo "Usage: $(basename $0) dispersion main-meta-file"
 	echo
-	echo Meta file format
+	echo "[Meta file format]"
 	echo
 	echo "root <basedir>      : evaluate glob patterns from <basedir>"
 	echo "                      if no root directory is found in main meta file,"
@@ -168,12 +168,22 @@ done
 	echo "                      in included files are ignored"
 	echo "# <comment>         : lines beginning with a # are ignored"
 	echo
-	echo Globbing
+	echo "[Globbing]"
 	echo
 	echo "Glob patterns are interpreted as zsh style."
 	echo
 	echo "In case of a ** ending pattern, a final /* will be added."
 	echo "Example : ** -> **/*"
+	echo
+	echo "[Priorities]"
+	echo
+	echo "You can add a priority to a file by using the name format :"
+	echo "    [0-9A-Z]-filename"
+	echo "The highest priority is 0, and the lowest is Z."
+	echo "So, with a null dispersion, you will have a shuffled list"
+	echo "which looks like :"
+	echo "    0-* 1-* ... 9-* A-* B-* ... Z-*"
+	echo "The more you raise the dispersion, the more shuffled priorities will be."
 	exit 0
 }
 
