@@ -13,124 +13,74 @@ echoerr () {
 	print "$@" >&2
 }
 
-signal-recharge () {
+signal-reload () {
 	echoerr
-	echoerr "recharge -> 1"
+	echoerr "reload -> 1"
 	echoerr
-	recharge=1
+	reload=1
 }
 
-signal-suivant () {
+signal-next () {
 	echoerr
-	echoerr "suivant -> 1"
+	echoerr "next -> 1"
 	echoerr
 	[ -z $attendre ] || kill $attendre
 }
 
-signal-arret () {
-	echoerr "arret -> 1"
+signal-stop () {
+	echoerr "stop -> 1"
 	echoerr
 	echoerr "On arrête wallpaper"
 	echoerr
 
-	arret=1
+	stop=1
 
-	cat <<- fin >| $etat
+	cat <<- fin >| $statusfile
 		dispersion = $dispersion
 		minutes = $minutes
-		secondes = $secondes
+		seconds = $seconds
 		meta = $meta
-		courant = $courant
-		recharge = 0
-		arret = 0
-		etat = $etat
-		temoin = $temoin
+		current = $current
+		reload = 0
+		stop = 0
+		statusfile = $statusfile
+		stamp = $stamp
+		logfile = $logfile
 	fin
 
-	touch $temoin
+	touch $stamp
 
 	exit 128
 }
 
-trap signal-recharge SIGUSR1
-trap signal-suivant  SIGUSR2
+trap signal-reload SIGUSR1
+trap signal-next  SIGUSR2
 
-trap signal-arret    HUP INT TERM
-
-# }}}1
-
-# Nettoyage {{{1
-
-rm -f ~/graphix/wallpaper/**/*.exiv2_temp
+trap signal-stop    HUP INT TERM
 
 # }}}1
 
 # Initialisation {{{1
 
-integer dispersion=12
-
-integer minutes=0
-integer secondes=0
-
-meta=~/racine/pictura/list/wallpaper.meta
-
-# }}}1
-
-# Lecture préliminaire du fichier état s’il existe déjà {{{1
-
-etat=~/racine/run/wall/wallpaper.etat
-
-temoin=${etat/.?*/.temoin}
-
-if [ -f $etat ]
-then
-	touch $temoin
-
-	while read ligne
-	do
-		ligne=${ligne// }
-		eval $ligne
-	done < $etat
-
-	(( temps = minutes * 60 + secondes ))
-
-	echoerr
-	echoerr "*** Lecture préliminaire du fichier état ***"
-	echoerr
-	echoerr Dispersion : $dispersion
-	echoerr Minutes : $minutes
-	echoerr Secondes : $secondes
-	echoerr Temps : $temps
-	echoerr Meta : $meta
-	echoerr Courant : $courant
-	echoerr Recharge : $recharge
-	echoerr Arrêt : $arret
-	echoerr Fichier état : $etat
-	echoerr Fichier témoin : $temoin
-	echoerr
-fi
+statusfile=~/racine/run/wall/wallpaper.status
 
 # }}}1
 
 # Arguments {{{1
 
+numarg=$#
+
+aide=0
+
 while true
 do
 	case $1 in
-		[0-9]##)
-			dispersion=$1
-			shift
-			;;
-		[0-9]##m)
-			minutes=${1/m/}
-			shift
-			;;
-		[0-9]##s)
-			secondes=${1/s/}
+		-h)
+			aide=1
 			shift
 			;;
 		?*)
-			meta=$1
+			statusfile=$1
 			shift
 			;;
 		*)
@@ -139,10 +89,98 @@ do
 	esac
 done
 
-[[ $etat = $temoin ]] && temoin=${temoin}.temoin
+# }}}1
 
-(( minutes == 0 )) && (( secondes == 0 )) && minutes=30
-(( temps = minutes * 60 + secondes ))
+# Aide {{{1
+
+[ $numarg -eq 0 -o $aide -eq 1 ] && {
+	echo "$(basename $0) : Dynamic wallpaper from random list & priorities."
+	echo
+	echo "Dependancies : gen-random-list.zsh, random.zsh"
+	echo
+	echo "Usage : $(basename $0) status-file"
+	echo
+	echo "[Status file format]"
+	echo
+	echo "variable = value"
+	echo
+	echo "Your status file must at least contain the following variables :"
+	echo
+	echo "meta"
+	echo
+	echo "Available variables"
+	echo
+	echo "dispersion        : the higher it is, the more the list will be shuffled"
+	echo "minutes & seconds : define time between wallpaper changes"
+	echo "meta              : meta-file to generate list"
+	echo "                    see 'gen-random-list.zsh -h' for details of file format"
+	echo "current           : index of current wallpaper in list"
+	echo "reload            : whether to generate a new list"
+	echo "stop              : whether to save statusfile and stop the script"
+	echo "statusfile        : path of status file"
+	echo "stamp             : stamp file, used to know when to reload the status file"
+	echo "logfile           : log file for gen-random-list.zsh"
+	exit 0
+}
+
+# }}}1
+
+# Lecture préliminaire du fichier état {{{1
+
+stamp=${statusfile/.?*/.stamp}
+[[ $statusfile = $stamp ]] && stamp=${stamp}.stamp
+
+if [ -f $statusfile ]
+then
+	touch $stamp
+
+	while read ligne
+	do
+		ligne=${ligne// }
+		eval $ligne
+	done < $statusfile
+
+	(( temps = minutes * 60 + seconds ))
+
+	echoerr
+	echoerr "*** Lecture préliminaire du fichier état ***"
+	echoerr
+	echoerr Dispersion  : $dispersion
+	echoerr Minutes     : $minutes
+	echoerr Seconds     : $seconds
+	echoerr Time        : $temps
+	echoerr Meta        : $meta
+	echoerr Current     : $current
+	echoerr Reload      : $reload
+	echoerr Stop        : $stop
+	echoerr Status file : $statusfile
+	echoerr Stamp file  : $stamp
+	echoerr Log file    : $logfile
+	echoerr
+else
+	echoerr "Status file has to exist to continue."
+	echoerr
+	exit 1
+fi
+
+# }}}1
+
+# Valeurs par défaut {{{1
+
+[ -z $dispersion ] && dispersion=0
+[ -z $minutes ]    && minutes=0
+[ -z $seconds ]    && seconds=0
+[ -z $current ]    && current=1
+[ -z $reload ]     && reload=0
+[ -z $stop ]       && stop=0
+[ -z $logfile ]    && logfile=~/log/gen-random-list.log
+
+[ $minutes -eq 0 -a $seconds -eq 0 ] && {
+	minutes=30
+	seconds=0
+}
+
+(( temps = minutes * 60 + seconds ))
 
 # }}}1
 
@@ -151,16 +189,8 @@ done
 liste=${meta/.?*/.m3u}
 
 [ -f $liste ] || {
-	gen-random-list.zsh $dispersion $meta &>>! ~/log/gen-random-list.log
+	gen-random-list.zsh $dispersion $meta &>>! $logfile
 }
-
-racine=$(cat $meta | grep 'root' | cut -d ' ' -f 2)
-
-(( $#racine == 0 )) && racine=~/graphix
-
-racine=$~racine
-racine=${racine##*:}
-racine=${racine// }
 
 # }}}1
 
@@ -176,76 +206,76 @@ Nimages=${#images}
 
 echoerr "*** Affichage avant la boucle ***"
 echoerr
-echoerr Dispersion : $dispersion
-echoerr Minutes : $minutes
-echoerr Secondes : $secondes
-echoerr Temps : $temps
-echoerr Meta : $meta
-echoerr Courant : $courant
-echoerr Recharge : $recharge
-echoerr Arrêt : $arret
-echoerr Fichier état : $etat
-echoerr Fichier témoin : $temoin
+echoerr Dispersion  : $dispersion
+echoerr Minutes     : $minutes
+echoerr Seconds     : $seconds
+echoerr Time        : $temps
+echoerr Meta        : $meta
+echoerr Current     : $current
+echoerr Reload      : $reload
+echoerr Stop        : $stop
+echoerr Status file : $statusfile
+echoerr Stamp file  : $stamp
+echoerr Log file    : $logfile
 echoerr
 trap 1>&2
 echoerr
 
 # }}}1
 
-# Initialisation du fichier {{{1
+# Initialisation du fichier état {{{1
 
-if ! [ -f $etat ]
+if ! [ -f $statusfile ]
 then
-	cat <<- fin >| $etat
+	cat <<- fin >| $statusfile
 		dispersion = $dispersion
 		minutes = $minutes
-		secondes = $secondes
+		seconds = $seconds
 		meta = $meta
-		courant = $courant
-		recharge = 0
-		arret = 0
-		etat = $etat
-		temoin = $temoin
+		current = $current
+		reload = 0
+		stop = 0
+		statusfile = $statusfile
+		stamp = $stamp
+		logfile = $logfile
 	fin
 
-	touch $temoin
+	touch $stamp
 fi
 
 # }}}1
 
 # {{{ Boucle
 
-[ -z $courant ] && courant=1
-
-
 while true
 do
 	# Lecture du fichier état {{{2
 
-	[[ $etat -nt $temoin ]] && {
+	[[ $statusfile -nt $stamp ]] && {
 
-		touch $temoin
+		touch $stamp
 
 		while read ligne
 		do
 			ligne=${ligne// }
 			eval $ligne
-		done < $etat
+		done < $statusfile
 
-		(( temps = minutes * 60 + secondes ))
+		(( temps = minutes * 60 + seconds ))
 
 		echoerr "*** Fichier état rechargé ***"
 		echoerr
-		echoerr Dispersion : $dispersion
-		echoerr Minutes : $minutes
-		echoerr Secondes : $secondes
-		echoerr Temps : $temps
-		echoerr Meta : $meta
-		echoerr Courant : $courant
-		echoerr Recharge : $recharge
-		echoerr Arrêt : $arret
-		echoerr Fichier état : $etat
-		echoerr Fichier témoin : $temoin
+		echoerr Dispersion  : $dispersion
+		echoerr Minutes     : $minutes
+		echoerr Seconds     : $seconds
+		echoerr Time        : $temps
+		echoerr Meta        : $meta
+		echoerr Current     : $current
+		echoerr Reload      : $reload
+		echoerr Stop        : $stop
+		echoerr Status file : $statusfile
+		echoerr Stamp file  : $stamp
+		echoerr Log file    : $logfile
 		echoerr
 	}
 
@@ -253,33 +283,33 @@ do
 
 	# Arrêt {{{2
 
-	(( arret > 0 )) && signal-arret
+	(( stop > 0 )) && signal-stop
 
 	# }}}2
 
 	# Fin de la liste {{{2
 
-	(( courant >= Nimages )) && recharge=1
+	(( current >= Nimages )) && reload=1
 
 	# }}}2
 
-	# Recharge {{{2
+	# reload {{{2
 
-	if (( recharge == 1 ))
+	if (( reload == 1 ))
 	then
 		gen-random-list.zsh $dispersion $meta &>>! ~/log/gen-random-list.log
 		images=($(cat $liste))
-		courant=1
+		current=1
 		Nimages=${#images}
 	fi
 
-	recharge=0
+	reload=0
 
 	# }}}2
 
 	# Choix du fond d’écran {{{2
 
-	fond=$images[$courant]
+	fond=$images[$current]
 
 	# }}}2
 
@@ -287,7 +317,7 @@ do
 
 	dateHeure=`date +"%a %d %b %Y, %H:%M"`
 
-	echo $dateHeure : $courant : $fond
+	echo $dateHeure : $current : $fond
 
 	# }}}2
 
@@ -311,19 +341,20 @@ do
 
 # Ecriture du fichier état {{{2
 
-cat <<- fin >| $etat
+cat <<- fin >| $statusfile
 	dispersion = $dispersion
 	minutes = $minutes
-	secondes = $secondes
+	seconds = $seconds
 	meta = $meta
-	courant = $courant
-	recharge = 0
-	arret = 0
-	etat = $etat
-	temoin = $temoin
+	current = $current
+	reload = 0
+	stop = 0
+	statusfile = $statusfile
+	stamp = $stamp
+	logfile = $logfile
 fin
 
-touch $temoin
+touch $stamp
 
 # }}}2
 
@@ -339,7 +370,7 @@ touch $temoin
 
 	# Incrément {{{2
 
-	(( courant ++ ))
+	(( current ++ ))
 
 	# }}}2
 

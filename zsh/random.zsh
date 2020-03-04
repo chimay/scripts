@@ -22,8 +22,10 @@ zmodload -i zsh/mathfunc
 
 # Initialisation {{{1
 
+facteur=1.224
+
 float moyenne=0.0
-float ecart=1.0
+float ecart=$facteur
 integer taille=1
 
 # }}}1
@@ -33,7 +35,7 @@ integer taille=1
 numarg=$#
 
 aide=0
-numhist=0
+summary=0
 
 nombres=()
 fanions=()
@@ -47,8 +49,8 @@ do
 			;;
 		-s)
 			shift
-			numhist=$1
-			shift
+			summary=${1:-7}
+			[ $# -gt 0 ] && shift
 			;;
 		[0-9.]##)
 			nombres+=$1
@@ -69,7 +71,7 @@ do
 done
 
 (( $#nombres > 0 )) && moyenne=$nombres[1]
-(( $#nombres > 1 )) && ecart=$nombres[2]
+(( $#nombres > 1 )) && (( ecart = facteur * nombres[2] ))
 (( $#nombres > 2 )) && taille=$nombres[3]
 
 # }}}
@@ -84,6 +86,7 @@ done
 	echo "Options"
 	echo
 	echo "-s N : print summary, ie mean, std dev and histogram of size N"
+	echo "       N is 7 by default."
 	exit 0
 }
 
@@ -161,20 +164,20 @@ functions -M exponen 0 2
 
 moyenne-ecart () {
 	local alea
-	local moyenne=0
-	local ecart=0
+	local moy=0
+	local dev=0
 	for alea in $echantillon
 	do
-		(( moyenne += alea ))
+		(( moy += alea ))
 	done
-	(( moyenne /= $#echantillon ))
+	(( moy /= $#echantillon ))
 	for alea in $echantillon
 	do
-		(( ecart += (alea - moyenne) * (alea - moyenne) ))
+		(( dev += (alea - moy) * (alea - moy) ))
 	done
-	(( ecart = sqrt(ecart/($#echantillon - 1)) ))
-	echo "Moyenne : $moyenne"
-	echo "Écart-type : $ecart"
+	(( dev = sqrt(dev/($#echantillon - 1)) ))
+	echo "Mean : $moy"
+	echo "Deviation : $dev"
 	echo
 }
 
@@ -218,6 +221,8 @@ histogramme () {
 
 # }}}1
 
+# Échantillon {{{1
+
 echantillon=()
 
 for ind in {1..$taille}
@@ -226,10 +231,16 @@ do
 	echantillon+=$((exponen(moyenne, ecart)))
 done
 
-if [ $numhist -gt 0 ]
+# }}}1
+
+# Résumé & Histogramme {{{1
+
+if [ $summary -gt 0 ]
 then
 	moyenne-ecart
-	histogramme $numhist
+	histogramme $summary
 else
 	print -l $echantillon
 fi
+
+# }}}1

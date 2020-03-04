@@ -143,6 +143,8 @@ done
 	echo "$(basename $0) : generate shuffled file list"
 	echo "                      with [0-9A-Z]-* priorities in filenames"
 	echo
+	echo "Dependancies : random.zsh"
+	echo
 	echo "Usage: $(basename $0) dispersion main-meta-file"
 	echo
 	echo "[Meta file format]"
@@ -178,8 +180,12 @@ done
 	echo "[Priorities]"
 	echo
 	echo "You can add a priority to a file by using the name format :"
-	echo "    [0-9A-Z]-filename"
+	echo "    [0-9A-Z]-*"
 	echo "The highest priority is 0, and the lowest is Z."
+	echo
+	echo "Example : 0-foo will have more chance to be at the top of the list,"
+	echo "and Z-bar will tend to be at the bottom."
+	echo
 	echo "So, with a null dispersion, you will have a shuffled list"
 	echo "which looks like :"
 	echo "    0-* 1-* ... 9-* A-* B-* ... Z-*"
