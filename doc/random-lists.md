@@ -1,5 +1,3 @@
-<!-- vim: set filetype=markdown: --!>
-
 # Random list with priorities for music & wallpaper
 
 These tools can help you build shuffled list for your music collection,
