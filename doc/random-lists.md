@@ -11,10 +11,12 @@ generator.
 
 [gen-random-list.zsh](https://github.com/chimay/scripts/blob/master/zsh/gen-random-list.zsh)
 produces shuffled list while taking file priorities into account. The
-priority is specified using the format [0-9A-Z]-* in the file name. It
+priority is specified using the format [0-9A-Z]-\* in the file name. It
 uses basic unix tools.
 
-Note : Using file tags to handle priorities would be much slower.
+Note : using file tags to handle priorities would be much slower.
 
 [wallpaper.zsh](https://github.com/chimay/scripts/blob/master/zsh/wallpaper.zsh)
 dynamically change your wallpaper using `feh` and the previous scripts.
+
+See the `-h` option of these scripts for how to use them.
