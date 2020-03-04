@@ -147,23 +147,30 @@ done
 	echo
 	echo Meta file format
 	echo
-	echo "root <basedir>    : evaluate glob patterns from <basedir>"
-	echo "                    if no root directory is found in main meta file,"
-	echo "                    current directory will be used"
-	echo "<folder>          : recursively add all files of <folder> in list"
-	echo "fold[er] <folder> : same as above"
-	echo "glob <glob>       : add all files matching glob"
-	echo "match <string>    : add all files matching **/*<string>*"
-	echo "ign[ore] <glob>   : remove all files matching <glob>"
-	echo "ban <string>      : remove all files matching **/*<string>*"
-	echo "force <glob>      : add all files matching **/*<glob>*, even if present"
-	echo "                    in ignore or ban directive"
-	echo "inc[lude] <file>  : include another meta <file>"
-	echo "                    to prevent infinite loops, include directives"
-	echo "                    in included files are ignored"
-	echo "# <comment>       : lines beginning with a # are ignored"
+	echo "root <basedir>      : evaluate glob patterns from <basedir>"
+	echo "                      if no root directory is found in main meta file,"
+	echo "                      current directory will be used"
+	echo "<folder>            : recursively add all files of <folder> in list"
+	echo "fold[er] <folder>   : same as above"
+	echo "file <name>         : add all files whose exact name is <name>"
+	echo "glob <glob>         : add all files matching glob"
+	echo "match <string>      : add all files/dirs containing <string>"
+	echo "match-file <string> : add all files containing <string>"
+	echo "match-dir <string>  : add all dirs containing <string>"
+	echo "ign[ore] <glob>     : remove all files matching <glob>"
+	echo "ban <string>        : remove all files/dirs containing <string>"
+	echo "ban-file <string>   : remove all files containing <string>"
+	echo "ban-dir <string>    : remove all dirs containing <string>"
+	echo "force <glob>        : add all files matching <glob>, even if present"
+	echo "                      in ignore or ban directive"
+	echo "inc[lude] <file>    : include another meta <file>"
+	echo "                      to prevent infinite loops, include directives"
+	echo "                      in included files are ignored"
+	echo "# <comment>         : lines beginning with a # are ignored"
 	echo
-	echo Globs
+	echo Globbing
+	echo
+	echo "Glob patterns are interpreted as zsh style."
 	echo
 	echo "In case of a ** ending pattern, a final /* will be added."
 	echo "Example : ** -> **/*"
@@ -247,6 +254,16 @@ do
 				motif=$racine/**/*$motif*/**/*$filtre
 				glob+=$motif
 				;;
+			match-file\ *)
+				motif=${ligne##* }
+				motif=$racine/**/*$motif*$filtre
+				glob+=$motif
+				;;
+			match-dir\ *)
+				motif=${ligne##* }
+				motif=$racine/**/*$motif*/**/*$filtre
+				glob+=$motif
+				;;
 			ign\ *|igno\ *|ignor\ *|ignore\ *)
 				motif=${ligne##* }
 				if ! [ $motif[1] = / -o $motif[1] = \~ ]
@@ -267,6 +284,16 @@ do
 				motif=$racine/**/*$motif*/**/*$filtre
 				ignore+=$motif
 				;;
+			ban-file\ *)
+				motif=${ligne##* }
+				motif=$racine/**/*$motif*$filtre
+				ignore+=$motif
+				;;
+			ban-dir\ *)
+				motif=${ligne##* }
+				motif=$racine/**/*$motif*/**/*$filtre
+				ignore+=$motif
+				;;
 			force\ *)
 				motif=${ligne##* }
 				if ! [ $motif[1] = / -o $motif[1] = \~ ]
@@ -278,6 +305,14 @@ do
 					motif=$motif/*$filtre
 				fi
 				force+=$motif
+				;;
+			file\ *)
+				motif=${ligne##* }
+				if ! [ $motif[1] = / -o $motif[1] = \~ ]
+				then
+					motif=$racine/**/$motif
+				fi
+				glob+=$motif
 				;;
 			?*|fol\ *|fold\ *|folde\ *|folder\ *)
 				motif=${ligne##* }
