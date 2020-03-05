@@ -1,0 +1,23 @@
+<h1 id="random-list-with-priorities-for-music-wallpaper">Random list with priorities for music &amp; wallpaper</h1>
+<p>These tools can help you build shuffled list for your music collection, but they can also be used to change your wallpaper dynamically.</p>
+<p><a href="https://github.com/chimay/scripts/blob/master/zsh/random.zsh">random.zsh</a> produces numbers which look remotely like a normal random distribution. The goal here is not to be precise, but to roughly shuffle lists. It’s written in pure zsh, no need for python or another external random generator.</p>
+<p><a href="https://github.com/chimay/scripts/blob/master/zsh/gen-random-list.zsh">gen-random-list.zsh</a> produces shuffled list while taking file priorities into account. The priority is specified using the format [0-9A-Z]-* in the file name. It uses basic unix tools.</p>
+<p>Note : using file tags to handle priorities would be much slower.</p>
+<p><a href="https://github.com/chimay/scripts/blob/master/zsh/wallpaper.zsh">wallpaper.zsh</a> dynamically change your wallpaper using <code>feh</code> and the previous scripts.</p>
+<p>See the <code>-h</code> option of these scripts for how to use them.</p>
+<h1 id="wallpaper">Wallpaper</h1>
+<h2 id="signals">Signals</h2>
+<p>You can send signals to the script, to :</p>
+<ul>
+<li>Generate a new file list (SIGUSR1)</li>
+<li>Go to the next file (SIGUSR2)</li>
+<li>Save status file and stop (HUP, INT, TERM)</li>
+</ul>
+<p>As an example, some keybindings in my sxhkdrc :</p>
+<pre><code># Generate a new list
+hyper + w ; r
+    pkill -10 -f wallpaper.zsh
+
+# Set next file as wallpaper
+hyper + w ; n
+    pkill -12 -f wallpaper.zsh</code></pre>

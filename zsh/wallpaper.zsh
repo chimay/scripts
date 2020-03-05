@@ -120,6 +120,12 @@ done
 	echo "statusfile        : path of status file"
 	echo "stamp             : stamp file, used to know when to reload the status file"
 	echo "logfile           : log file for gen-random-list.zsh"
+	echo
+	echo "[Signals]"
+	echo
+	echo "SIGUSR1        : generate a new list and set the first file as wallpaper"
+	echo "SIGUSR2        : go to the next wallpaper"
+	echo "HUP, INT, TERM : save status in status file and stop"
 	exit 0
 }
 
@@ -128,7 +134,7 @@ done
 # Lecture préliminaire du fichier état {{{1
 
 stamp=${statusfile/.?*/.stamp}
-[[ $statusfile = $stamp ]] && stamp=${stamp}.stamp
+[[ $stamp = $statusfile ]] && stamp=${stamp}.stamp
 
 if [ -f $statusfile ]
 then
@@ -331,9 +337,16 @@ do
 
 	# Pour i3lock
 
-	lien=~/racine/run/wall/current
+	lien=${statusfile%/*}/current
 
-	[ -L $lien ] && rm -f $lien
+	[ -L $lien ] && {
+		#echo "rm -f $lien"
+		#echo
+		rm -f $lien
+	}
+
+	#echo "ln -s $fond $lien"
+	#echo
 
 	ln -s $fond $lien
 

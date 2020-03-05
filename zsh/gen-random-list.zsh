@@ -428,7 +428,10 @@ echoerr Tri de la liste
 echoerr
 
 complet=${principal/.?*/.score}
+[[ $complet = $principal ]] && complet=${complet}.score
+
 genere=${principal/.?*/.m3u}
+[[ $genere = $principal ]] && genere=${genere}.m3u
 
 echoerr "Liste avec score : $complet"
 echoerr "Liste            : $genere"
