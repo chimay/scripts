@@ -49,17 +49,28 @@ then
 	numlockx on &
 fi
 
-# Shift_L = %
-# Control_L = .
-# Super_L = @
+# Shift_L = #
+# Control_L = *
+# Super_L = .
 # Alt_L = |
 # Alt Gr = \
-# Super_R = #
+# Super_R = @
 # Hyper_R = Menu = ~
 # Control_R = /
 # Shift_R = ?
 
-xcape -e 'Shift_L=Shift_L|percent;Control_L=Shift_L|period;Super_L=ISO_Level3_Shift|at;Alt_L=ISO_Level3_Shift|ampersand;ISO_Level3_Shift=ISO_Level3_Shift|backslash;Super_R=ISO_Level3_Shift|numbersign;Hyper_R=ISO_Level3_Shift|equal;Control_R=Shift_R|slash;Shift_R=Shift_L|question'
+chaine=''
+chaine+='Shift_L=ISO_Level3_Shift|numbersign;'
+chaine+='Control_L=Shift_L|asterisk;'
+chaine+='Super_L=Shift_L|period;'
+chaine+='Alt_L=ISO_Level3_Shift|ampersand;'
+chaine+='ISO_Level3_Shift=ISO_Level3_Shift|backslash;'
+chaine+='Super_R=ISO_Level3_Shift|at;'
+chaine+='Hyper_R=ISO_Level3_Shift|equal;'
+chaine+='Control_R=Shift_R|slash;'
+chaine+='Shift_R=Shift_L|question'
+
+xcape -e $chaine
 
 # }}}2
 
@@ -131,7 +142,7 @@ xrdb -load ~/.Xresources
 
 #  Fond d’écran {{{2
 
-psgrep wallpaper || wallpaper.zsh 7 30m ~/racine/pictura/list/wallpaper.meta >>! ~/log/wallpaper.log 2>&1 &
+psgrep wallpaper || wallpaper.zsh ~/racine/run/wall/wallpaper.status >>! ~/log/wallpaper.log 2>&1 &
 
 #psgrep xplanet || xplanet -wait 300 -label -labelpos -15+50 -projection rectangular &
 
