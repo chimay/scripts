@@ -4,13 +4,6 @@
 
 bspc subscribe node_add | while read ligne
 do
-	desktop_windows=($(bspc query -N -n .window -d focused))
-	print -l $desktop_windows
-	echo
-	if [ $#desktop_windows -eq 2 ]
-	then
-		echo "Swapping"
-		echo
-		bspwm-swap.sh
-	fi
+	bspc node -f $(echo $ligne | awk '{print $5}')
+	bspc node -s biggest.local
 done &
