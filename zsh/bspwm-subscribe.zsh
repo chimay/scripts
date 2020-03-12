@@ -13,4 +13,4 @@ do
 		echo
 		bspwm-swap.sh
 	fi
-done
+done &
