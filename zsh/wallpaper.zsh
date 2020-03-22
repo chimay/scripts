@@ -299,7 +299,25 @@ do
 
 	# }}}2
 
-	# reload {{{2
+	# Choix du fond d’écran {{{2
+
+	while [ ! -e $images[$current] -a $current -lt $Nimages ]
+	do
+		echoerr File $images[$current] does not exist : skipping
+		echoerr
+		(( current += 1 ))
+	done
+
+	if (( current < Nimages ))
+	then
+		fond=$images[$current]
+	else
+		reload=1
+	fi
+
+	# }}}2
+
+	# Reload {{{2
 
 	if (( reload == 1 ))
 	then
@@ -310,12 +328,6 @@ do
 	fi
 
 	reload=0
-
-	# }}}2
-
-	# Choix du fond d’écran {{{2
-
-	fond=$images[$current]
 
 	# }}}2
 
