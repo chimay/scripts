@@ -2,9 +2,15 @@
 
 # vim:filetype=sed:nofoldenable:
 
-# Italique
+# Include
 
-s:/\([^/]\+\)/:_\1_:g
+s/^#+include: "\([^"]\+\)"$/org2vimwiki.sed \1/e
+
+s/^#+INCLUDE: "\([^"]\+\)"$/org2vimwiki.sed \1/e
+
+# Italic
+
+s:/^[^[]]*\([^/]\+\)/[^[]]*$:_\1_:g
 
 # Code
 
@@ -24,10 +30,15 @@ s/+\(-*-[|+]\)/|\1/g
 s/^#+begin_src emacs-lisp$/{{{lisp/
 s/^#+begin_src \(.*\)$/{{{\1/
 
+s/^#+BEGIN_SRC emacs-lisp$/{{{lisp/
+s/^#+BEGIN_SRC \(.*\)$/{{{\1/
+
 # Links
 
 s/\[\[\([^]]*\)\]\[\([^]]*\)\]\]/[[\1|\2]]/g
 s/\(\[\[[^*]*\)\*\([^*]*\]\]\)/\1#\2/g
+s/\(\[\[[^*]*\)file:\([^*]*\]\]\)/\1\2/g
+s/\(\[\[[^*]*\)\.org\([^*]*\]\]\)/\1\2/g
 
 # Titres
 
