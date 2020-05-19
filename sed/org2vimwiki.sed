@@ -120,9 +120,12 @@ s/^#+TITLE: \(.*\)$/%title \1/
 # Replace other #+ directives by %% comments
 # ---------------------------------------------
 
-s/^#+.\+:.*$/%% &/
+s/^#+.*$/%% &/
+t skip-comment
 
 # Replace other # comments by %% comments
 # ---------------------------------------------
 
 s/^#\(.*\)$/%% \1/
+
+: skip-comment
