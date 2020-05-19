@@ -5,7 +5,6 @@
 # Include
 
 s/^#+include: "\([^"]\+\)"$/org2vimwiki.sed \1/e
-
 s/^#+INCLUDE: "\([^"]\+\)"$/org2vimwiki.sed \1/e
 
 # Italic
@@ -51,14 +50,19 @@ s/^\* \(.*\)$/= \1 =/
 
 # Table of contents
 
-s/^#+toc: .*$/= Contents =/
+# Local toc not supported
 
+/^#+toc: .*local/d
+/^#+TOC: .*local/d
+
+# Global toc
+
+s/^#+toc: .*$/= Contents =/
 s/^#+TOC: .*$/= Contents =/
 
 # Title
 
 s/^#+title: \(.*\)$/%title \1/
-
 s/^#+TITLE: \(.*\)$/%title \1/
 
 # Delete emacs -*- lines
