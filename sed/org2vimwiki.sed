@@ -9,15 +9,25 @@ s/^#+INCLUDE: "\([^"]\+\)"$/org2vimwiki.sed \1/e
 
 # Italic
 
-s:/\([^]/[]\+\)/:_\1_:g
+/\[\[.*\]\]/b skip-italic
+/\S\/\S/b skip-italic
+
+s:/\([^]/[ \t][^]/[]*[^]/[ \t]\)/:_\1_:g
+
+: skip-italic
+
+# Verbatim
+
+/\[\[.*\]\]/b skip-verbatim
+/\S=\S/b skip-verbatim
+
+s/=\([^]=[ \t]\+\)=/`\1`/g
+
+: skip-verbatim
 
 # Code
 
 s/~\([^~]\+\)~/`\1`/g
-
-# Verbatim
-
-s/=\([^=]\+\)=/`\1`/g
 
 # Tables
 
@@ -27,10 +37,17 @@ s/+\(-*-[|+]\)/|\1/g
 # Code blocs
 
 s/^#+begin_src emacs-lisp$/{{{lisp/
-s/^#+begin_src \(.*\)$/{{{\1/
-
 s/^#+BEGIN_SRC emacs-lisp$/{{{lisp/
+
+s/^#+begin_src \(.*\)$/{{{\1/
 s/^#+BEGIN_SRC \(.*\)$/{{{\1/
+
+s/^#+end_src$/}}}/
+s/^#+END_SRC$/}}}/
+
+# Per formatted text
+
+s/^#+begin_verse emacs-lisp$/{{{lisp/
 
 # Links
 
