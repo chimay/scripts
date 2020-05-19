@@ -49,6 +49,12 @@ s/^\*\*\* \(.*\)$/=== \1 ===/
 s/^\*\* \(.*\)$/== \1 ==/
 s/^\* \(.*\)$/= \1 =/
 
+# Table of contents
+
+s/^#+toc: .*$/= Contents =/
+
+s/^#+TOC: .*$/= Contents =/
+
 # Title
 
 s/^#+title: \(.*\)$/%title \1/
