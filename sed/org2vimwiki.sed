@@ -54,7 +54,11 @@ s/^#+END_SRC$/}}}/
 # Pre formatted text
 # ------------------------------
 
-s/^#+begin_verse emacs-lisp$/{{{lisp/
+s/^#+begin_verse/{{{/
+s/^#+BEGIN_VERSE/{{{/
+
+s/^#+end_verse/}}}/
+s/^#+END_VERSE/}}}/
 
 # Links
 # ------------------------------
