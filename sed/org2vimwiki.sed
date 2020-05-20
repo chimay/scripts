@@ -11,8 +11,10 @@ s/^#+INCLUDE: "\([^"]\+\)"$/org2vimwiki.sed \1/e
 # Italic
 # ------------------------------
 
+\: / :b skip-italic
+\://:b skip-italic
 /\[\[.*\]\]/b skip-italic
-/\S\/\S/b skip-italic
+\:\S/\S:b skip-italic
 
 s:/\([^]/[]\+\)/:_\1_:g
 
@@ -20,6 +22,9 @@ s:/\([^]/[]\+\)/:_\1_:g
 
 # Verbatim
 # ------------------------------
+
+s:=//=://:g
+s/=\.\.\.\+=/.../g
 
 /\[\[.*\]\]/b skip-verbatim
 /\S=\S/b skip-verbatim
