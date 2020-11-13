@@ -1,4 +1,4 @@
-#!/usr/bin/env /bin/zsh
+#!/usr/bin/env zsh
 
 [[ $TERM = tmux* ]] || {
 

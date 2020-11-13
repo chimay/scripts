@@ -18,9 +18,9 @@ setopt extended_glob
 
 # }}}
 
-numarg=$#
-
 # {{{ Arguments
+
+numarg=$#
 
 aide=0
 
@@ -99,7 +99,7 @@ echo
 
 # sox -V3 -m $court "| sox $court -p pad $delai" $long $sortie
 
-evaluation="sox -V3 -m -v 1 $court "
+evaluation="sox -S -V3 -m "
 
 depart=$delai
 
@@ -110,6 +110,10 @@ do
 	evaluation+='" '
 	(( depart += delai ))
 done
+
+evaluation+='-v 1 "'
+evaluation+="| sox $court -p pad $duree"
+evaluation+='" '
 
 evaluation+="$long $sortie"
 

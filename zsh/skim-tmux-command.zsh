@@ -8,18 +8,11 @@
 	exit 0
 }
 
-fichier=~/racine/hist/fzf/tmux-history
-
-sort $fichier | uniq >! $fichier.nouveau
-
-mv -f $fichier.nouveau $fichier
-
-commande=$( \
-	cat $fichier | \
-	fzf --cycle --hscroll-off=100 --color=bw --prompt='tmux> ' \
-)
+commande=$(tmux list-commands | sk-tmux | cut -d " " -f 1)
 
 (( $#commande == 0 )) && exit 0
+
+echo "$commande" >>! ~/racine/hist/fzf/tmux-history
 
 if [ $# > 0 -a x$1 = x-s ]
 then

@@ -1,4 +1,4 @@
-#!/usr/bin/env /bin/zsh
+#!/usr/bin/env zsh
 
 [[ $TERM = tmux* ]] || {
 
@@ -11,6 +11,7 @@
 menu=( \
 	"Exécuter une commande tmux" \
 	"Historique des commandes tmux" \
+	"Visualiser le contenu du pane dans un pager" \
 	"Charger une session" \
 	"Annuler" \
 )
@@ -27,6 +28,9 @@ case $choix in
 		;;
 	"Historique des commandes tmux")
 		exec ~/racine/shell/dialog/fzf-tmux-history.zsh
+		;;
+	"Visualiser le contenu du pane dans un pager")
+		tmux send-keys "tmux capture-pane -S - -p | less" Enter
 		;;
 	"Charger une session")
 		exec ~/racine/shell/dialog/fzf-tmux-session.zsh
