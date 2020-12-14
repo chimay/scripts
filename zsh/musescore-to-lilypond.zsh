@@ -40,6 +40,8 @@ done
 
 [ $#argumen -eq 0 ] && {
 	echo Usage : $0 '[-d lily-dest-dir] file(s)'
+	echo
+	echo Convert musescore files to lilypond, pdf, midi, ogg
 	exit 0
 }
 
