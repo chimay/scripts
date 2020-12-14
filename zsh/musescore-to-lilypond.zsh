@@ -34,6 +34,14 @@ do
 	esac
 done
 
+[ -e $lilydir -a ! -d $lilydir ] && {
+	echo Lilypond dir must be a directory
+	echo
+	exit 1
+}
+
+[ -d $lilydir ] || mkdir -p $lilydir
+
 # }}}
 
 # Aide {{{1
@@ -65,7 +73,7 @@ do
 		echo
 		echo "musescore -o $pdf $score"
 		echo
-		musescore -o $pdf $score
+		musescore -o $pdf -P $score
 	}
 
 	midi=${score%.*}.midi
