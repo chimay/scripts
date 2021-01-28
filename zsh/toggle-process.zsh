@@ -34,10 +34,13 @@ then
 	echo "kill -CONT $pid"
 	echo
 	kill -CONT $pid
-else
+elif [ $state = R -o $state = S ]
+then
 	echo "kill -STOP $pid"
 	echo
 	kill -STOP $pid
+else
+	echo Your process is in a ambiguous state.
 fi
 
 exit 0
