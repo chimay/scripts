@@ -18,7 +18,10 @@ nominees=("${(f)$(ps -A -o pid,state,args | grep $process | grep -v grep | grep 
 	exit 0
 }
 
-procinfo=${nominees[1]## }
+procinfo=$nominees[1]
+
+espaces=${procinfo%%[^[:blank:]]*}
+procinfo=${procinfo#${espaces}}
 
 # echo Process info
 # print -l $procinfo
