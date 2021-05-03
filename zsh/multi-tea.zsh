@@ -2,6 +2,8 @@
 
 # vim: fdm=indent:
 
+# REPL for multi infusions
+
 # REPL : Read Eval Print Loop
 #
 # Ctrl-D ou Ctrl-C pour interrompre la boucle

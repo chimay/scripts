@@ -1,5 +1,7 @@
 #! /usr/bin/env zsh
 
+# Minuter with default arguments
+
 arguments=($*)
 
 echo "minuter.zsh $=arguments ..."

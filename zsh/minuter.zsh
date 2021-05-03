@@ -1,5 +1,7 @@
 #! /usr/bin/env zsh
 
+# Minuter
+
 setopt extended_glob
 
 alias notifie='notify-send -t 10000'

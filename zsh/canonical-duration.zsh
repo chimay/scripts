@@ -2,6 +2,8 @@
 
 # vim: fdm=indent:
 
+# Transform argument in hours:minutes:seconds format
+
 setopt extended_glob
 
 if [ $# -eq 0 ]
