@@ -214,11 +214,11 @@ minuteurs=( ${(f)"$(< $runfile)"} )
 	echo -n " $mid DÉBUT $(date +'%a %d %b %Y %H:%M:%S') : "
 	echo "$hour heu $min min $sec sec"
 
-} >>! ~/log/minuterie.log
+} >>! ~/log/minuter.log
 
 # }}}1
 
-# Minuterie {{{1
+# minuter {{{1
 
 sleep $total
 
@@ -239,7 +239,7 @@ notifie-long "$chaine_notification a sonné !" &
 	echo -n " $mid ----- $(date +'%a %d %b %Y %H:%M:%S') : "
 	echo "$hour heu $min min $sec sec"
 
-} >>! ~/log/minuterie.log
+} >>! ~/log/minuter.log
 
 # }}}1
 
@@ -251,7 +251,7 @@ sed -i '/^'$mid'/d' $runfile
 
 # Vérification des lignes abondonnées dans $runfile {{{1
 
-processi=("${(f)$(psgrep minuterie.zsh)}")
+processi=("${(f)$(psgrep minuter.zsh)}")
 
 {
 	echo "Processi"
