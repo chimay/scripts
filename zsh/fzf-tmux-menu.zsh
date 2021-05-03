@@ -17,8 +17,7 @@ menu=( \
 )
 
 choix=$( \
-	print -l $menu | \
-	fzf --cycle --hscroll-off=100 --color=bw --prompt='tmux> ' \
+	print -l $menu | fzf --prompt='tmux> '
 )
 
 case $choix in

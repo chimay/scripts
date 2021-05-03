@@ -10,11 +10,7 @@
 
 cd ~/racine/config/multiplex/tmux/session
 
-fichier=$( \
-	print -l * | \
-	grep -v Grenier | \
-	fzf --cycle --hscroll-off=100 --color=bw --prompt='tmux> ' \
-)
+fichier=$(print -l * | grep -v Grenier | fzf --prompt='tmux> ')
 
 (( $#fichier == 0 )) && exit 0
 

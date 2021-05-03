@@ -10,14 +10,9 @@
 
 fichier=~/racine/hist/fzf/tmux-history
 
-sort $fichier | uniq >! $fichier.nouveau
+sort $fichier | uniq | sponge $fichier
 
-mv -f $fichier.nouveau $fichier
-
-commande=$( \
-	cat $fichier | \
-	fzf --cycle --hscroll-off=100 --color=bw --prompt='tmux> ' \
-)
+commande=$(cat $fichier | fzf)
 
 (( $#commande == 0 )) && exit 0
 

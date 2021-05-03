@@ -1,4 +1,4 @@
-#!/usr/bin/env /bin/zsh
+#!/usr/bin/env zsh
 
 [[ $TERM = tmux* ]] || {
 
@@ -8,22 +8,17 @@
 	exit 0
 }
 
-choix=$( \
-	tmux list-commands | \
-	fzf \
-	--history=$HOME/racine/hist/fzf/tmux-command \
-	--history-size=3000 \
-	--cycle --hscroll-off=100 --color=bw \
-	--prompt='tmux> ' \
-)
-
-commande=$( \
-	echo $choix | \
-	awk '{print $1}'
-)
+commande=$(tmux list-commands | fzf | cut -d " " -f 1)
 
 (( $#commande == 0 )) && exit 0
 
-echo "tmux $commande" >>! ~/racine/hist/fzf/tmux-history
+echo "$commande" >>! ~/racine/hist/fzf/tmux-history
 
-tmux send-keys "tmux $commande "
+if [ $# > 0 -a x$1 = x-s ]
+then
+	# add a space before the command
+	# so that zsh does not record this in its history
+	tmux send-keys " tmux $commande "
+else
+	tmux $commande
+fi

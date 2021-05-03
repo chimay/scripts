@@ -9,9 +9,9 @@ alias psgrep='ps auxww | /bin/grep -v grep | /bin/grep --color=never'
 
 # Valeurs initiales {{{1
 
-heures=0
-minutes=0
-secondes=0
+hour=0
+min=0
+sec=0
 
 # }}}1
 
@@ -24,7 +24,7 @@ do
 	case $1 in
 
 		[0-9./:]##)
-			heuminsec=$1
+			tempus=$1
 			shift
 			;;
 		?*)
@@ -36,66 +36,11 @@ do
 	esac
 done
 
-if [[ $heuminsec = ?*:?*:?* ]]
-then
-	temps=(${(s/:/)heuminsec})
-	heures=$temps[1]
-	minutes=$temps[2]
-	secondes=$temps[3]
-
-elif [[ $heuminsec = ?*:?*: ]]
-then
-	temps=(${(s/:/)heuminsec})
-	heures=$temps[1]
-	minutes=$temps[2]
-
-elif [[ $heuminsec = ?*::?* ]]
-then
-	temps=(${(s/:/)heuminsec})
-	heures=$temps[1]
-	secondes=$temps[2]
-
-elif [[ $heuminsec = ?*:: ]]
-then
-	temps=(${(s/:/)heuminsec})
-	heures=$temps[1]
-
-elif [[ $heuminsec = :?*:?* ]]
-then
-	temps=(${(s/:/)heuminsec})
-	minutes=$temps[1]
-	secondes=$temps[2]
-
-elif [[ $heuminsec = :?*: ]]
-then
-	temps=(${(s/:/)heuminsec})
-	minutes=$temps[1]
-
-elif [[ $heuminsec = ::?* ]]
-then
-	temps=(${(s/:/)heuminsec})
-	secondes=$temps[1]
-
-elif [[ $heuminsec = ?*:?* ]]
-then
-	temps=(${(s/:/)heuminsec})
-	minutes=$temps[1]
-	secondes=$temps[2]
-
-elif [[ $heuminsec = ?*: ]]
-then
-	temps=(${(s/:/)heuminsec})
-	minutes=$temps[1]
-
-elif [[ $heuminsec = :?* ]]
-then
-	temps=(${(s/:/)heuminsec})
-	secondes=$temps[1]
-
-elif [[ $heuminsec = ?* ]]
-then
-	secondes=$heuminsec
-fi
+duration=$(canonical-duration.zsh $tempus)
+tableau=(${(s/:/)duration})
+hour=$tableau[1]
+min=$tableau[2]
+sec=$tableau[3]
 
 # }}}1
 
@@ -128,95 +73,28 @@ done
 	echo "  $(date +'%H:%M %A %d %B %Y')"
 	echo "==============================="
 	echo
-	echo "Identifiants"
+	echo "Identifiers"
 	echo "------------"
 	echo
 	print -l $identifiants
 	echo
 
-	echo "ID de ce minuteur : $mid"
+	echo "ID of this minuter : $mid"
 	echo
 } >>! ~/log/minuteur-$mid.log
 
 # }}}1
 
-# Format canonique {{{1
-
 {
-	echo Format en argument : $heures:$minutes:$secondes
-	echo
-} >>! ~/log/minuteur-$mid.log
-
-# Fractions {{{2
-
-heures=$(echo "scale=7\n$heures" | bc)
-minutes=$(echo "scale=7\n$minutes" | bc)
-secondes=$(echo "scale=7\n$secondes" | bc)
-
-# }}}2
-
-# Décimaux {{{2
-
-float flottant
-
-# Décimaux heure
-
-(( flottant = heures % 1 ))
-
-(( heures -= flottant ))
-(( minutes += 60 * flottant ))
-
-# Décimaux minute
-
-(( flottant = minutes % 1 ))
-
-(( minutes -= flottant ))
-(( secondes += 60 * flottant ))
-
-# }}}2
-
-# Conversion en nombres entiers {{{2
-
-integer heures=$heures
-integer minutes=$minutes
-
-integer quotient modulo
-
-# N x 60 secondes -> N minutes
-
-(( quotient = secondes / 60 ))
-(( modulo = secondes % 60 ))
-
-(( minutes += quotient ))
-(( secondes -= quotient * 60 ))
-
-# N x 60 minutes -> N heures
-
-(( quotient = minutes / 60 ))
-(( modulo = minutes % 60 ))
-
-(( heures += quotient ))
-(( minutes = modulo ))
-
-# Secondes entières ?
-
-(( secondes % 1 == 0 )) && {
-
-	integer secondes=$secondes
-}
-
-# }}}2
-
-{
-	echo Format canonique : $heures:$minutes:$secondes
+	echo Canonical format : $hour:$min:$sec
 	echo
 } >>! ~/log/minuteur-$mid.log
 
 # }}}1
 
-# Total de secondes {{{1
+# Total de sec {{{1
 
-(( total = heures * 3600 + minutes * 60 + secondes ))
+(( total = hour * 3600 + min * 60 + sec ))
 
 # }}}1
 
@@ -235,7 +113,7 @@ clausule () {
 	{
 		echo
 		echo
-		echo "On arrête ..."
+		echo "Stopping ..."
 		echo
 		echo "sed -i '/^'$mid'/d' $runfile"
 		echo
@@ -268,52 +146,37 @@ trap clausule HUP INT TERM
 	echo
 } >>! ~/log/minuteur-$mid.log
 
-if (( heures > 0 && minutes > 0 && secondes > 0 ))
+if (( hour > 0 && min > 0 && sec > 0 ))
 then
-	chaine_echo="$heures heures $minutes minutes $secondes secondes =  $total secondes"
-
-	chaine_notification="Minuterie : $heures heu $minutes min $secondes sec"
-
-elif (( heures > 0 && minutes > 0 && secondes == 0 ))
+	chaine_echo="$hour hour $min min $sec sec =  $total sec"
+	chaine_notification="Minuter : $hour hou $min min $sec sec"
+elif (( hour > 0 && min > 0 && sec == 0 ))
 then
-	chaine_echo="$heures heures $minutes minutes =  $total secondes"
-
-	chaine_notification="Minuterie : $heures heu $minutes min"
-
-elif (( heures > 0 && minutes == 0 && secondes > 0 ))
+	chaine_echo="$hour hour $min min =  $total sec"
+	chaine_notification="Minuter : $hour hou $min min"
+elif (( hour > 0 && min == 0 && sec > 0 ))
 then
-	chaine_echo="$heures heures $secondes secondes =  $total secondes"
-
-	chaine_notification="Minuterie : $heures heu $secondes sec"
-
-elif (( heures > 0 && minutes == 0 && secondes == 0 ))
+	chaine_echo="$hour hour $sec sec =  $total sec"
+	chaine_notification="Minuter : $hour hou $sec sec"
+elif (( hour > 0 && min == 0 && sec == 0 ))
 then
-	chaine_echo="$heures heures =  $total secondes"
-
-	chaine_notification="Minuterie : $heures heu"
-
-elif (( heures == 0 && minutes > 0 && secondes > 0 ))
+	chaine_echo="$hour hour =  $total sec"
+	chaine_notification="Minuter : $hour hou"
+elif (( hour == 0 && min > 0 && sec > 0 ))
 then
-	chaine_echo="$minutes minutes $secondes secondes =  $total secondes"
-
-	chaine_notification="Minuterie : $minutes min $secondes sec"
-
-elif (( heures == 0 && minutes > 0 && secondes == 0 ))
+	chaine_echo="$min min $sec sec =  $total sec"
+	chaine_notification="Minuter : $min min $sec sec"
+elif (( hour == 0 && min > 0 && sec == 0 ))
 then
-	chaine_echo="$minutes minutes =  $total secondes"
-
-	chaine_notification="Minuterie : $minutes min"
-
-elif (( heures == 0 && minutes == 0 && secondes > 0 ))
+	chaine_echo="$min min =  $total sec"
+	chaine_notification="Minuter : $min min"
+elif (( hour == 0 && min == 0 && sec > 0 ))
 then
-	chaine_echo="$secondes secondes =  $total secondes"
-
-	chaine_notification="Minuterie : $secondes sec"
-
+	chaine_echo="$sec sec =  $total sec"
+	chaine_notification="Minuter : $sec sec"
 else
-	chaine_echo="Minuterie instantanée"
-
-	chaine_notification="Minuterie instantanée"
+	chaine_echo="Instant minuter"
+	chaine_notification="Instant minuter"
 fi
 
 {
@@ -349,7 +212,7 @@ minuteurs=( ${(f)"$(< $runfile)"} )
 
 {
 	echo -n " $mid DÉBUT $(date +'%a %d %b %Y %H:%M:%S') : "
-	echo "$heures heu $minutes min $secondes sec"
+	echo "$hour heu $min min $sec sec"
 
 } >>! ~/log/minuterie.log
 
@@ -366,7 +229,7 @@ sleep $total
 
 sonnerie.zsh $=arguments
 
-notifie-long "La minuterie a sonné !" &
+notifie-long "$chaine_notification a sonné !" &
 
 # }}}1
 
@@ -374,7 +237,7 @@ notifie-long "La minuterie a sonné !" &
 
 {
 	echo -n " $mid ----- $(date +'%a %d %b %Y %H:%M:%S') : "
-	echo "$heures heu $minutes min $secondes sec"
+	echo "$hour heu $min min $sec sec"
 
 } >>! ~/log/minuterie.log
 

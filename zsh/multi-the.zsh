@@ -1,177 +1,153 @@
 #! /usr/bin/env zsh
 
+# vim: fdm=indent:
+
 # REPL : Read Eval Print Loop
 #
 # Ctrl-D ou Ctrl-C pour interrompre la boucle
 
-# TRAPINT {{{1
+setopt extended_glob
 
 TRAPINT () {
-
 	echo
 	echo
-	echo "On arrête ..."
+	echo "Stopping ..."
 	echo
-
 	exit 128
 }
 
-# }}}1
+# Functions
 
-# Initialisation {{{1
+duration-prompt () {
+	if (( hour > 0 && min > 0 && sec > 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> timer duration ? [$hour hour $min min $sec sec] "
+	elif (( hour > 0 && min > 0 && sec == 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> timer duration ? [$hour hour $min min] "
+	elif (( hour > 0 && min == 0 && sec > 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> timer duration ? [$hour hour $sec sec] "
+	elif (( hour > 0 && min == 0 && sec == 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> timer duration ? [$hour hour] "
+	elif (( hour == 0 && min > 0 && sec > 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> timer duration ? [$min min $sec sec] "
+	elif (( hour == 0 && min > 0 && sec == 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> timer duration ? [$min min] "
+	elif (( hour == 0 && min == 0 && sec > 0 ))
+	then
+		echo
+		echo -n " <$(date +%H:%M)> timer duration ? [$sec sec] "
+	else
+		echo
+		echo -n " <$(date +%H:%M)> timer duration ? [$min min] "
+	fi
+}
 
-integer heu min sec
+# Initialisation
 
-heu=0
-min=1
-sec=0
+duration=0:1:0
 
-# }}}1
+augment=0
 
-echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$min min] "
+# Arguments
 
-while read temps
+while true
 do
-	# Entrée {{{1
+	case $1 in
+		[0-9./:]##)
+			tempus=$1
+			shift
+			;;
+		[0-9./:+]##)
+			tableau=(${(s/+/)1})
+			tempus=$tableau[1]
+			augment=$tableau[2]
+			shift
+			;;
+		*)
+			break
+			;;
+	esac
+done
 
-	if (( $#temps > 0 ))
+duration=$(canonical-duration.zsh $tempus)
+tableau=(${(s/:/)duration})
+hour=$tableau[1]
+min=$tableau[2]
+sec=$tableau[3]
+
+if [ $augment -gt 0 ]
+then
+	echo Default duration will be augmented each time of $augment seconds.
+	echo
+fi
+
+duration-prompt
+
+while read tempus
+do
+	if [ $#tempus -eq 0 ]
 	then
-		tableau=(${(s/:/)temps})
-
-		if (( $#tableau == 3 ))
-		then
-			heu=$tableau[1]
-			min=$tableau[2]
-			sec=$tableau[3]
-
-		elif (( $#tableau == 2 ))
-		then
-			min=$tableau[1]
-			sec=$tableau[2]
-
-			heu=0
-		else
-			min=$tableau[1]
-
-			heu=0
-			sec=0
-		fi
+		tempus=$hour:$min:$sec
 	fi
+	duration=$(canonical-duration.zsh $tempus)
+	tableau=(${(s/:/)duration})
+	hour=$tableau[1]
+	min=$tableau[2]
+	sec=$tableau[3]
 
-	# }}}1
-
-	# Format canonique {{{1
-
-	integer quotient modulo
-
-	# N x 60 secondes -> N minutes
-
-	(( quotient = sec / 60 ))
-	(( modulo = sec % 60 ))
-
-	(( min += quotient ))
-	(( sec = modulo ))
-
-	# N x 60 minutes -> N heures
-
-	(( quotient = min / 60 ))
-	(( modulo = min % 60 ))
-
-	(( heu += quotient ))
-	(( min = modulo ))
-
-	# }}}1
-
-	# Affichage {{{1
-
-	if (( heu > 0 && min > 0 && sec > 0 ))
+	if (( hour > 0 && min > 0 && sec > 0 ))
 	then
 		echo
-		echo "	[$(date +%H:%M)] Ding dong dans $heu heu $min min $sec sec"
-
-	elif (( heu > 0 && min > 0 && sec == 0 ))
+		echo "	[$(date +%H:%M)] Ding dong in $hour hour $min min $sec sec"
+	elif (( hour > 0 && min > 0 && sec == 0 ))
 	then
 		echo
-		echo "	[$(date +%H:%M)] Ding dong dans $heu heu $min min"
-
-	elif (( heu > 0 && min == 0 && sec > 0 ))
+		echo "	[$(date +%H:%M)] Ding dong in $hour hour $min min"
+	elif (( hour > 0 && min == 0 && sec > 0 ))
 	then
 		echo
-		echo "	[$(date +%H:%M)] Ding dong dans $heu heu $sec sec"
-
-	elif (( heu > 0 && min == 0 && sec == 0 ))
+		echo "	[$(date +%H:%M)] Ding dong in $hour hour $sec sec"
+	elif (( hour > 0 && min == 0 && sec == 0 ))
 	then
 		echo
-		echo "	[$(date +%H:%M)] Ding dong dans $heu heu"
-
-	elif (( heu == 0 && min > 0 && sec > 0 ))
+		echo "	[$(date +%H:%M)] Ding dong in $hour hour"
+	elif (( hour == 0 && min > 0 && sec > 0 ))
 	then
 		echo
-		echo "	[$(date +%H:%M)] Ding dong dans $min min $sec sec"
-
-	elif (( heu == 0 && min > 0 && sec == 0 ))
+		echo "	[$(date +%H:%M)] Ding dong in $min min $sec sec"
+	elif (( hour == 0 && min > 0 && sec == 0 ))
 	then
 		echo
-		echo "	[$(date +%H:%M)] Ding dong dans $min min"
-
-	elif (( heu == 0 && min == 0 && sec > 0 ))
+		echo "	[$(date +%H:%M)] Ding dong in $min min"
+	elif (( hour == 0 && min == 0 && sec > 0 ))
 	then
 		echo
-		echo "	[$(date +%H:%M)] Ding dong dans $sec sec"
-
+		echo "	[$(date +%H:%M)] Ding dong in $sec sec"
 	else
 		echo
-		echo "	[$(date +%H:%M)] Ding dong maintenant"
+		echo "	[$(date +%H:%M)] Ding dong now"
 	fi
 
-	# }}}1
+	minuteur.zsh $hour:$min:$sec &> /dev/null
 
-	the.zsh $heu:$min:$sec &> /dev/null
+	(( sec += augment ))
 
-	(( min += 1 ))
+	duration=$(canonical-duration.zsh $hour:$min:$sec)
+	tableau=(${(s/:/)duration})
+	hour=$tableau[1]
+	min=$tableau[2]
+	sec=$tableau[3]
 
-	# Prompt {{{1
-
-	if (( heu > 0 && min > 0 && sec > 0 ))
-	then
-		echo
-		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$heu heu $min min $sec sec] "
-
-	elif (( heu > 0 && min > 0 && sec == 0 ))
-	then
-		echo
-		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$heu heu $min min] "
-
-	elif (( heu > 0 && min == 0 && sec > 0 ))
-	then
-		echo
-		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$heu heu $sec sec] "
-
-	elif (( heu > 0 && min == 0 && sec == 0 ))
-	then
-		echo
-		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$heu heu] "
-
-	elif (( heu == 0 && min > 0 && sec > 0 ))
-	then
-		echo
-		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$min min $sec sec] "
-
-	elif (( heu == 0 && min > 0 && sec == 0 ))
-	then
-		echo
-		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$min min] "
-
-	elif (( heu == 0 && min == 0 && sec > 0 ))
-	then
-		echo
-		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$sec sec] "
-
-	else
-		echo
-		echo -n " <$(date +%H:%M)> Temps pour la minuterie ? [$min min] "
-	fi
-
-	# }}}1
-
+	duration-prompt
 done
