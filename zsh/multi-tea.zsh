@@ -91,7 +91,6 @@ sec=$tableau[3]
 if [ $augment -gt 0 ]
 then
 	echo Default duration will be increased by $augment seconds each time.
-	echo
 fi
 
 duration-prompt
