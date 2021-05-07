@@ -140,7 +140,7 @@ do
 		echo "	[$(date +%H:%M)] Ding dong now"
 	fi
 
-	default-minuter.zsh $hour:$min:$sec &> /dev/null
+	minuter-ding.zsh $hour:$min:$sec &> /dev/null
 
 	(( sec += augment ))
 

@@ -220,7 +220,7 @@ minuteurs=( ${(f)"$(< $runfile)"} )
 
 # }}}1
 
-# minuter {{{1
+# Ring {{{1
 
 sleep $total
 
