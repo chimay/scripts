@@ -100,13 +100,16 @@ do
 	if [ $#tempus -eq 0 ]
 	then
 		tempus=$hour:$min:$sec
+	elif [ $tempus = q -o $tempus = quit ]
+	then
+		# q to quit
+		break
 	fi
 	duration=$(canonical-duration.zsh $tempus)
 	tableau=(${(s/:/)duration})
 	hour=$tableau[1]
 	min=$tableau[2]
 	sec=$tableau[3]
-
 	if (( hour > 0 && min > 0 && sec > 0 ))
 	then
 		echo
@@ -139,16 +142,12 @@ do
 		echo
 		echo "	[$(date +%H:%M)] Ding dong now"
 	fi
-
 	minuter-ding.zsh $hour:$min:$sec &> /dev/null
-
 	(( sec += augment ))
-
 	duration=$(canonical-duration.zsh $hour:$min:$sec)
 	tableau=(${(s/:/)duration})
 	hour=$tableau[1]
 	min=$tableau[2]
 	sec=$tableau[3]
-
 	duration-prompt
 done
