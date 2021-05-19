@@ -5,11 +5,9 @@ setopt extended_glob
 alias notifie='notify-send -t 10000'
 
 volume=100
-
 Nsonneries=1
 
 alarmes=()
-
 notifications=()
 
 # {{{ Arguments
@@ -43,7 +41,7 @@ done
 
 # {{{ Défaut
 
-# Préfixe ~/audio/Sonnerie/ ajouté au besoin
+# Préfixe ~/audio/sonnerie/ ajouté au besoin
 
 (( $#alarmes == 0 )) && alarmes=(notification/generique.ogg)
 
@@ -58,21 +56,13 @@ alias psgrep="ps auxww | grep -v grep | grep --color=never"
 # {{{ Fonctions
 
 lecteur () {
-
 	local fu_volume=$1
 	local fu_fichier=$2
-
 	[[ $fu_fichier[1] != / ]] && {
-
-		fu_fichier=~/audio/Sonnerie/$fu_fichier
+		fu_fichier=~/audio/sonnerie/$fu_fichier
 	}
-
-	# echo fu_fichier : $fu_fichier
-	# echo
-
-	echo "loadfile $fu_fichier append-play" > ~/racine/run/fifo/mpv
-
-	echo "set volume $fu_volume" > ~/racine/run/fifo/mpv
+	mpv-socket.bash add $fu_fichier
+	mpv-socket.bash volume $fu_volume
 }
 
 # }}}
@@ -111,8 +101,8 @@ do
 	do
 		echo "lecteur $volume $dring"
 		echo
-
 		lecteur $volume $dring
+		sleep 1
 	done
 done
 
