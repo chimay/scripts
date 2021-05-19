@@ -3,14 +3,21 @@
 # Credit :
 # https://gist.github.com/dwgill/a66769e0edef69c04d3b
 
-# Currently, I’ve just added the volume subcommand
+# Currently, I’ve :
+#   - added the volume subcommand
+#   - modified the socket var
 
 # This script requires:
-# - that the directory $HOME/.mpv exist
+# - that the directory $socket exist
 # - that the program socat be installed
 # - that you start mpv with the unix socket feature pointing at that directory
 #   I recommend an alias in your .bashrc or equivalent file:
-#       alias mpv="mpv --input-unix-socket=$HOME/.mpv/socket"
+#       alias mpv="mpv --input-unix-socket=your-socket-file"
+
+# You can start an mpv server in the autostart script of your
+# X environment with a line like this :
+#
+# mpv --idle --input-ipc-server=$HOME/racine/run/socket/mpv &> ~/log/mpv-socket.log &
 
 socket="$HOME/racine/run/socket/mpv"
 
