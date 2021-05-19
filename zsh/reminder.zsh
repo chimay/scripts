@@ -9,7 +9,7 @@ echo Notification : $notification
 echo
 
 cat <<- FIN | at $temps 2> ~/log/at.err
-	sonnerie.zsh $HOME/audio/Sonnerie/notification/generique.ogg
+	bell.zsh $HOME/audio/sonnerie/notification/generique.ogg
 	notify-send Rappel $notification
 FIN
 
