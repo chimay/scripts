@@ -187,6 +187,7 @@ do
 			tempus=$answer
 			;;
 		+[0-9./:]##)
+			tempus=$duration
 			tableau=(${(s/+/)answer})
 			increment=$tableau[1]
 			;;
