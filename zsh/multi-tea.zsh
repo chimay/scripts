@@ -14,6 +14,11 @@ setopt extended_glob
 
 [ $# -gt 0 ] && [ $1 = -h -o $1 = --help -o $1 = help ] && {
 	echo "Usage : `basename $0` [default-time [+increment-time] ]"
+	echo
+	echo "Time format, one of these :"
+	echo "    hours:minutes:seconds"
+	echo "    minutes:seconds"
+	echo "    minutes"
 	exit 0
 }
 
@@ -30,9 +35,22 @@ TRAPINT () {
 # Functions
 
 duration-prompt () {
-	local hours=$1
-	local minutes=$2
-	local seconds=$3
+	local duration=$(canonical-duration.zsh $1)
+	local duratab=(${(s/:/)duration})
+	local hours=$duratab[1]
+	local minutes=$duratab[2]
+	local seconds=$duratab[3]
+	# increment
+	if [ $# -gt 1 ]
+	then
+		local augment=$(canonical-duration.zsh $2)
+	fi
+	# increment info
+	if [ $augment != 0:0:0 ]
+	then
+		echo Default duration will be increased by $augment each time.
+	fi
+	# prompt
 	if (( hours > 0 && minutes > 0 && seconds > 0 ))
 	then
 		echo
@@ -68,9 +86,11 @@ duration-prompt () {
 }
 
 minuter-info () {
-	local hours=$1
-	local minutes=$2
-	local seconds=$3
+	local duration=$(canonical-duration.zsh $1)
+	local duratab=(${(s/:/)duration})
+	local hours=$duratab[1]
+	local minutes=$duratab[2]
+	local seconds=$duratab[3]
 	if (( hours > 0 && minutes > 0 && seconds > 0 ))
 	then
 		echo
@@ -99,7 +119,8 @@ minuter-info () {
 	then
 		echo
 		echo "	[$(date +%H:%M)] Ding dong in $seconds seconds"
-	else
+	elif (( hours == 0 && minutes == 0 && seconds == 0 ))
+	then
 		echo
 		echo "	[$(date +%H:%M)] Ding dong now"
 	fi
@@ -143,31 +164,47 @@ added_hours=$augmentab[1]
 added_minutes=$augmentab[2]
 added_seconds=$augmentab[3]
 
-if [ $augment != 0:0:0 ]
-then
-	echo Default duration will be increased by $augment each time.
-fi
+duration-prompt $duration $augment
 
-duration-prompt $hours $minutes $seconds
-
-while read tempus
+while read answer
 do
-	if [ $#tempus -eq 0 ]
+	if [ $#answer -eq 0 ]
 	then
-		tempus=$hours:$minutes:$seconds
-	elif [ $tempus = q -o $tempus = quit ]
-	then
-		# q to quit
-		break
+		answer=$duration
 	fi
+	case $answer in
+		q|quit|x|exit)
+			# q to quit
+			break
+			;;
+		[0-9./:]##)
+			tempus=$answer
+			;;
+		[0-9./:+]##)
+			tableau=(${(s/+/)answer})
+			tempus=$tableau[1]
+			increment=$tableau[2]
+			;;
+		*)
+			echo Bad format : $answer
+			break
+			;;
+	esac
+	# duration
 	duration=$(canonical-duration.zsh $tempus)
 	duratab=(${(s/:/)duration})
 	hours=$duratab[1]
 	minutes=$duratab[2]
 	seconds=$duratab[3]
+	# augmentation
+	augment=$(canonical-duration.zsh $increment)
+	augmentab=(${(s/:/)augment})
+	added_hours=$augmentab[1]
+	added_minutes=$augmentab[2]
+	added_seconds=$augmentab[3]
 	# launch minuter
-	minuter-info $hours $minutes $seconds
-	ding-dong.zsh $hours:$minutes:$seconds &> /dev/null
+	minuter-info $duration
+	ding-dong.zsh $duration &> /dev/null
 	# add increment for next minuter
 	(( hours += added_hours ))
 	(( minutes += added_minutes ))
@@ -178,5 +215,5 @@ do
 	minutes=$duratab[2]
 	seconds=$duratab[3]
 	# prompt
-	duration-prompt $hours $minutes $seconds
+	duration-prompt $duration $augment
 done

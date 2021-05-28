@@ -1,30 +1,28 @@
 #! /usr/bin/env zsh
 
+# vim: fdm=indent:
+
 # Minuter
 
 setopt extended_glob
 
 alias notifie='notify-send -t 10000'
 alias notifie-long='notify-send -t 30000'
-
 alias psgrep='ps auxww | /bin/grep -v grep | /bin/grep --color=never'
 
-# Valeurs initiales {{{1
+# Initial values
 
-hour=0
-min=0
-sec=0
+hours=0
+minutes=0
+seconds=0
 
-# }}}1
-
-# Arguments {{{1
+# Arguments
 
 arguments=()
 
 while true
 do
 	case $1 in
-
 		[0-9./:]##)
 			tempus=$1
 			shift
@@ -39,36 +37,69 @@ do
 done
 
 duration=$(canonical-duration.zsh $tempus)
-tableau=(${(s/:/)duration})
-hour=$tableau[1]
-min=$tableau[2]
-sec=$tableau[3]
+duratab=(${(s/:/)duration})
+hours=$duratab[1]
+minutes=$duratab[2]
+seconds=$duratab[3]
 
-# }}}1
-
-# Fichier run {{{1
+# Run file
 
 rundir=~/racine/run/minuter
-
-runfile=$rundir/minuteurs
-
+runfile=$rundir/minuters
 [ -d $rundir ] || mkdir -p $rundir
-
 [ -e $runfile ] || touch $runfile
 
-# }}}1
-
-# ID du minuteur {{{1
+# ID of this minuter
 
 identifiants=( ${(f)"$(< $runfile | awk '{print $1}')"} )
-
-mid=1
-
+iden=1
 while true
 do
-	[[ $identifiants[(i)$mid] -gt $#identifiants ]] && break
-	(( mid += 1 ))
+	[[ $identifiants[(i)$iden] -gt $#identifiants ]] && break
+	(( iden += 1 ))
 done
+
+# Log file
+
+logdir=~/log
+logfile=$logdir/minuteur-$iden.log
+[ -d $logdir ] || mkdir -p $logdir
+[ -e $logfile ] || touch $logfile
+
+# Traps
+
+# Add a function to SIGNAL :
+#
+# trap fonction SIGNAL
+#
+# Remove all functions linked to SIGNAL :
+#
+# trap - SIGNAL
+
+clausule () {
+	{
+		echo
+		echo
+		echo "Stopping ..."
+		echo
+		echo "sed -i '/^'$iden'/d' $runfile"
+		echo
+	} >>! $logfile
+	sed -i '/^'$iden'/d' $runfile
+	exit 128
+}
+
+trap clausule HUP INT TERM
+
+{
+	echo "Traps"
+	echo "-----"
+	echo
+	trap
+	echo
+} >>! $logfile
+
+# Log basic infos
 
 {
 	echo "==============================="
@@ -80,178 +111,123 @@ done
 	echo
 	print -l $identifiants
 	echo
-
-	echo "ID of this minuter : $mid"
+	echo "ID of this minuter : $iden"
 	echo
-} >>! ~/log/minuteur-$mid.log
-
-# }}}1
-
-{
-	echo Canonical format : $hour:$min:$sec
+	echo Canonical format : $duration
 	echo
-} >>! ~/log/minuteur-$mid.log
+} >>! $logfile
 
-# }}}1
+# Total time in seconds
 
-# Total de sec {{{1
+(( total = hours * 3600 + minutes * 60 + seconds ))
 
-(( total = hour * 3600 + min * 60 + sec ))
-
-# }}}1
-
-# Traps {{{1
-
-# Pour ajouter une fonction liée au signal :
-#
-# trap fonction SIGNAL
-#
-# Pour effacer les fonctions liées au signal :
-#
-# trap - SIGNAL
-
-clausule () {
-
-	{
-		echo
-		echo
-		echo "Stopping ..."
-		echo
-		echo "sed -i '/^'$mid'/d' $runfile"
-		echo
-	} >>! ~/log/minuteur-$mid.log
-
-	sed -i '/^'$mid'/d' $runfile
-
-	exit 128
-}
-
-trap clausule HUP INT TERM
-
-{
-	echo "Traps"
-	echo "-----"
-	echo
-
-	trap
-
-	echo
-} >>! ~/log/minuteur-$mid.log
-
-# }}}1
-
-# Informations HH:MM:SS {{{1
+# Long time format
 
 {
 	echo "HH:MM:SS"
 	echo "--------"
 	echo
-} >>! ~/log/minuteur-$mid.log
+} >>! $logfile
 
-if (( hour > 0 && min > 0 && sec > 0 ))
+if (( hours > 0 && minutes > 0 && seconds > 0 ))
 then
-	chaine_echo="$hour hour $min min $sec sec =  $total sec"
-	chaine_notification="Minuter : $hour hou $min min $sec sec"
-elif (( hour > 0 && min > 0 && sec == 0 ))
+	echome="$hours hours $minutes minutes $seconds seconds =  $total seconds"
+	notify_msg="Minuter : $hours hou $minutes minutes $seconds seconds"
+elif (( hours > 0 && minutes > 0 && seconds == 0 ))
 then
-	chaine_echo="$hour hour $min min =  $total sec"
-	chaine_notification="Minuter : $hour hou $min min"
-elif (( hour > 0 && min == 0 && sec > 0 ))
+	echome="$hours hours $minutes minutes =  $total seconds"
+	notify_msg="Minuter : $hours hou $minutes minutes"
+elif (( hours > 0 && minutes == 0 && seconds > 0 ))
 then
-	chaine_echo="$hour hour $sec sec =  $total sec"
-	chaine_notification="Minuter : $hour hou $sec sec"
-elif (( hour > 0 && min == 0 && sec == 0 ))
+	echome="$hours hours $seconds seconds =  $total seconds"
+	notify_msg="Minuter : $hours hou $seconds seconds"
+elif (( hours > 0 && minutes == 0 && seconds == 0 ))
 then
-	chaine_echo="$hour hour =  $total sec"
-	chaine_notification="Minuter : $hour hou"
-elif (( hour == 0 && min > 0 && sec > 0 ))
+	echome="$hours hours =  $total seconds"
+	notify_msg="Minuter : $hours hou"
+elif (( hours == 0 && minutes > 0 && seconds > 0 ))
 then
-	chaine_echo="$min min $sec sec =  $total sec"
-	chaine_notification="Minuter : $min min $sec sec"
-elif (( hour == 0 && min > 0 && sec == 0 ))
+	echome="$minutes minutes $seconds seconds =  $total seconds"
+	notify_msg="Minuter : $minutes minutes $seconds seconds"
+elif (( hours == 0 && minutes > 0 && seconds == 0 ))
 then
-	chaine_echo="$min min =  $total sec"
-	chaine_notification="Minuter : $min min"
-elif (( hour == 0 && min == 0 && sec > 0 ))
+	echome="$minutes minutes =  $total seconds"
+	notify_msg="Minuter : $minutes minutes"
+elif (( hours == 0 && minutes == 0 && seconds > 0 ))
 then
-	chaine_echo="$sec sec =  $total sec"
-	chaine_notification="Minuter : $sec sec"
+	echome="$seconds seconds =  $total seconds"
+	notify_msg="Minuter : $seconds seconds"
 else
-	chaine_echo="Instant minuter"
-	chaine_notification="Instant minuter"
+	echome="Instant minuter"
+	notify_msg="Instant minuter"
 fi
 
 {
-	echo $chaine_echo
+	echo $echome
 	echo
-} >>! ~/log/minuteur-$mid.log
+} >>! $logfile
 
-notifie $chaine_notification &
+# Notify begin
 
-chaine_runfile="$mid : $chaine_echo"
+notifie $notify_msg &
+
+# Record this minuter in runfile
+
+runline="$iden : $echome"
+
+echo $runline >>! $runfile
+
+# Minuters
+
+minuters=( ${(f)"$(< $runfile)"} )
 
 {
-	echo $chaine_runfile >>! $runfile
-} >>! ~/log/minuteur-$mid.log
-
-# }}}1
-
-# Minuteurs {{{1
-
-minuteurs=( ${(f)"$(< $runfile)"} )
-
-{
-	echo "Minuteurs"
+	echo "minuters"
 	echo "---------"
 	echo
-	print -l $minuteurs
+	print -l $minuters
 	echo
-} >>! ~/log/minuteur-$mid.log
+} >>! $logfile
 
-# }}}1
-
-# Journal début {{{1
+# Log begin
 
 {
-	echo -n " $mid DÉBUT $(date +'%a %d %b %Y %H:%M:%S') : "
-	echo "$hour heu $min min $sec sec"
+	echo -n " $iden DÉBUT $(date +'%a %d %b %Y %H:%M:%S') : "
+	echo "$hours heu $minutes minutes $seconds seconds"
 
-} >>! ~/log/minuter.log
+} >>! $logfile
 
-# }}}1
-
-# Ring {{{1
+# Counting zzz
 
 sleep $total
 
+# Ring
+
 {
-	echo "sonnerie.zsh $=arguments"
+	echo "bell.zsh $=arguments"
 	echo
-} >>! ~/log/minuteur-$mid.log
+} >>! $logfile
 
-sonnerie.zsh $=arguments
+bell.zsh $=arguments
 
-notifie-long "$chaine_notification a sonné !" &
+# Notify end
 
-# }}}1
+notifie-long "$notify_msg a sonné !" &
 
-# Journal fin {{{1
+# Log end
 
 {
-	echo -n " $mid ----- $(date +'%a %d %b %Y %H:%M:%S') : "
-	echo "$hour heu $min min $sec sec"
+	echo -n " $iden ----- $(date +'%a %d %b %Y %H:%M:%S') : "
+	echo "$hours heu $minutes minutes $seconds seconds"
 
-} >>! ~/log/minuter.log
+} >>! $logfile
 
-# }}}1
 
-# Suppression du minuteur dans $runfile {{{1
+# Delete this minuter in $runfile
 
-sed -i '/^'$mid'/d' $runfile
+sed -i '/^'$iden'/d' $runfile
 
-# }}}1
-
-# Vérification des lignes abondonnées dans $runfile {{{1
+# Check abandoned lines in $runfile
 
 processi=("${(f)$(psgrep minuter.zsh)}")
 
@@ -261,47 +237,39 @@ processi=("${(f)$(psgrep minuter.zsh)}")
 	echo
 	print -l $processi
 	echo
-} >>! ~/log/minuteur-$mid.log
+} >>! $logfile
 
-# On enlève 1 pour le processus $(...)
+# Minus 1 for the processus $(...)
 
 numproc=$(( $#processi - 1 ))
 
 {
-	echo "Nombre de minuteries en route : $numproc"
+	echo "Number of running minuters : $numproc"
 	echo
-} >>! ~/log/minuteur-$mid.log
+} >>! $logfile
 
-# On enlève les lignes abandonnées
+# Remove abandoned lines
 
 (( numproc <= 1 )) && {
-
 	{
 		echo "Runfile"
 		echo "-------"
 		echo
 		cat $runfile
 		echo
-	} >>! ~/log/minuteur-$mid.log
-
-	abandonnees=$(wc -l $runfile | awk '{print $1}')
-
+	} >>! $logfile
+	abandoned=$(wc -l $runfile | awk '{print $1}')
 	{
-		echo "Nombre de lignes abandonnées : " $abandonnees
+		echo "Nombre de lignes abandonnées : " $abandoned
 		echo
-	} >>! ~/log/minuteur-$mid.log
-
-	(( $abandonnees > 0 )) && {
-
+	} >>! $logfile
+	(( $abandoned > 0 )) && {
 		{
 			echo "{ echo '1,\$d' ; echo w } | ed $runfile"
 			echo
-		} >>! ~/log/minuteur-$mid.log
-
+		} >>! $logfile
 		{ echo '1,$d' ; echo w } | ed $runfile
 	}
 }
-
-# }}}1
 
 exit 0
