@@ -48,6 +48,7 @@ duration-prompt () {
 	# increment info
 	if [ $augment != 0:0:0 ]
 	then
+		echo
 		echo Default duration will be increased by $augment each time.
 	fi
 	# prompt
@@ -140,6 +141,11 @@ do
 			tempus=$1
 			shift
 			;;
+		+[0-9./:]##)
+			tableau=(${(s/+/)1})
+			increment=$tableau[1]
+			shift
+			;;
 		[0-9./:+]##)
 			tableau=(${(s/+/)1})
 			tempus=$tableau[1]
@@ -179,6 +185,10 @@ do
 			;;
 		[0-9./:]##)
 			tempus=$answer
+			;;
+		+[0-9./:]##)
+			tableau=(${(s/+/)answer})
+			increment=$tableau[1]
 			;;
 		[0-9./:+]##)
 			tableau=(${(s/+/)answer})

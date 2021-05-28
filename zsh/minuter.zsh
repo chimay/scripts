@@ -174,10 +174,9 @@ notifie $notify_msg &
 # Record this minuter in runfile
 
 runline="$iden : $echome"
-
 echo $runline >>! $runfile
 
-# Minuters
+# Minuters in log file
 
 minuters=( ${(f)"$(< $runfile)"} )
 
