@@ -4,10 +4,6 @@
 
 # REPL for multi infusions
 
-# REPL : Read Eval Print Loop
-#
-# Ctrl-D ou Ctrl-C pour interrompre la boucle
-
 setopt extended_glob
 
 # Help
@@ -174,6 +170,7 @@ duration-prompt $duration $augment
 
 while read answer
 do
+	# answer format
 	if [ $#answer -eq 0 ]
 	then
 		answer=$duration

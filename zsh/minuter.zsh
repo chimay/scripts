@@ -51,18 +51,19 @@ runfile=$rundir/minuters
 
 # ID of this minuter
 
-identifiants=( ${(f)"$(< $runfile | awk '{print $1}')"} )
+identifiers=( ${(f)"$(< $runfile | awk '{print $1}')"} )
 iden=1
 while true
 do
-	[[ $identifiants[(i)$iden] -gt $#identifiants ]] && break
+	[[ $identifiers[(i)$iden] -gt $#identifiers ]] && break
 	(( iden += 1 ))
 done
 
 # Log file
 
 logdir=~/log
-logfile=$logdir/minuteur-$iden.log
+commonlog=$logdir/minuters.log
+logfile=$logdir/minuter-$iden.log
 [ -d $logdir ] || mkdir -p $logdir
 [ -e $logfile ] || touch $logfile
 
@@ -109,7 +110,7 @@ trap clausule HUP INT TERM
 	echo "Identifiers"
 	echo "------------"
 	echo
-	print -l $identifiants
+	print -l $identifiers
 	echo
 	echo "ID of this minuter : $iden"
 	echo
@@ -167,10 +168,6 @@ fi
 	echo
 } >>! $logfile
 
-# Notify begin
-
-notifie $notify_msg &
-
 # Record this minuter in runfile
 
 runline="$iden : $echome"
@@ -188,13 +185,17 @@ minuters=( ${(f)"$(< $runfile)"} )
 	echo
 } >>! $logfile
 
-# Log begin
+# Notify begin
+
+notifie $notify_msg &
+
+# Common log begin
 
 {
-	echo -n " $iden DÉBUT $(date +'%a %d %b %Y %H:%M:%S') : "
-	echo "$hours heu $minutes minutes $seconds seconds"
+	echo -n " $iden BEGIN $(date +'%a %d %b %Y %H:%M:%S') : "
+	echo "$hours hours $minutes minutes $seconds seconds"
 
-} >>! $logfile
+} >>! $commonlog
 
 # Counting zzz
 
@@ -213,14 +214,13 @@ bell.zsh $=arguments
 
 notifie-long "$notify_msg a sonné !" &
 
-# Log end
+# Common log end
 
 {
 	echo -n " $iden ----- $(date +'%a %d %b %Y %H:%M:%S') : "
 	echo "$hours heu $minutes minutes $seconds seconds"
 
-} >>! $logfile
-
+} >>! $commonlog
 
 # Delete this minuter in $runfile
 
