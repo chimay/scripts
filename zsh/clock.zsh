@@ -30,7 +30,7 @@ integer volume=100
 integer pause=0
 integer stop=0
 
-integer hour minute
+integer intmin
 integer day_of_week=`date +%u`
 
 statusfile=$HOME/racine/run/clock/clock.status
@@ -369,11 +369,12 @@ do
 	minute=`date +%M`
 	day_of_week=`date +%u`
 	# bell ?
-	(( min = minute - displace ))
-	(( min % interval == 0 )) && bell=1
+	intmin=minute
+	(( intmin = intmin - displace ))
+	(( intmin % interval == 0 )) && bell=1
 	# ante / post
-	(( (min + ante) % interval == 0 )) && bell=1
-	(( (min - post) % interval == 0 )) && bell=1
+	(( (intmin + ante) % interval == 0 )) && bell=1
+	(( (intmin - post) % interval == 0 )) && bell=1
 	# main bell
 	(( bell == 1 )) && ring-bell $hour $minute
 	# delay
