@@ -1,7 +1,5 @@
 #! /usr/bin/env zsh
 
-# {{{ Fonctions
-
 player () {
 
 	local fu_volume=$1
@@ -11,8 +9,6 @@ player () {
 	mpv-socket.bash volume 100
 }
 
-# }}}
-
 HH=`date +%H`
 MM=`date +%M`
 
@@ -21,13 +17,9 @@ echo -n $HH:$MM
 fichier=~/racine/run/clock/clocher.etat
 
 [ -f $fichier  ] && {
-
 	etat=$(<$fichier)
-
 	(( etat == 0 )) && {
-
-		echo "   etat == 0 : on ne sonne pas"
-
+		echo "   etat == 0 : no bell"
 		exit 0
 	}
 }
@@ -45,7 +37,7 @@ case $MM in
 		[[ -f $cloche ]] || cloche=$HOME/audio/sonnerie/horloge/carillon-HH-MM.ogg
 		;;
 	*)
-		echo "   ERREUR : mauvais format de $MM minutes"
+		echo "   ERROR : bad format of $MM minutes"
 		exit 0
 		;;
 esac
