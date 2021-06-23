@@ -13,6 +13,95 @@ echoerr () {
 	print "$@" >&2
 }
 
+read-status-file () {
+	[[ $statusfile -nt $stamp ]] || return 0
+	touch $stamp
+	while read ligne
+	do
+		ligne=${ligne// }
+		eval $ligne
+	done < $statusfile
+	(( delay = minutes * 60 + seconds ))
+	echoerr "*** Fichier état rechargé ***"
+	echoerr
+	echoerr dispersion  : $dispersion
+	echoerr minutes     : $minutes
+	echoerr seconds     : $seconds
+	echoerr delay       : $delay
+	echoerr meta        : $meta
+	echoerr current     : $current
+	echoerr reload      : $reload
+	echoerr stop        : $stop
+	echoerr status file : $statusfile
+	echoerr stamp file  : $stamp
+	echoerr logfile     : $logfile
+	echoerr
+}
+
+choose-wallpaper () {
+	while [ ! -e $images[$current] -a $current -lt $Nimages ]
+	do
+		echoerr File $images[$current] does not exist : skipping
+		echoerr
+		(( current += 1 ))
+	done
+	if (( current < Nimages ))
+	then
+		fond=$images[$current]
+	else
+		reload=1
+	fi
+}
+
+regen-image-list () {
+	if (( reload == 1 ))
+	then
+		gen-random-list.zsh $dispersion $meta &>>! ~/log/gen-random-list.log
+		images=($(cat $liste))
+		current=1
+		Nimages=${#images}
+	fi
+	reload=0
+}
+
+horodate () {
+	dateHeure=`date +"%a %d %b %Y, %H:%M"`
+	echo $dateHeure : $current : $fond
+}
+
+change-wallpaper () {
+	feh --bg-max --no-fehbg $fond
+}
+
+symlink () {
+	# Pour i3lock
+	lien=${statusfile%/*}/current
+	[ -L $lien ] && {
+		#echo "rm -f $lien"
+		#echo
+		rm -f $lien
+	}
+	#echo "ln -s $fond $lien"
+	#echo
+	ln -s $fond $lien
+}
+
+write-status-file () {
+	cat <<- fin >| $statusfile
+		dispersion = $dispersion
+		minutes = $minutes
+		seconds = $seconds
+		meta = $meta
+		current = $current
+		reload = 0
+		stop = 0
+		statusfile = $statusfile
+		stamp = $stamp
+		logfile = $logfile
+	fin
+	touch $stamp
+}
+
 # }}}1
 
 # Traps {{{1
@@ -64,7 +153,7 @@ trap signal-stop    HUP INT TERM
 
 # }}}1
 
-# Initialisation {{{1
+# Initialization {{{1
 
 statusfile=~/racine/run/wall/wallpaper.status
 
@@ -95,7 +184,7 @@ done
 
 # }}}1
 
-# Aide {{{1
+# Help {{{1
 
 [ $numarg -eq 0 -o $aide -eq 1 ] && {
 	echo "$(basename $0) : Dynamic wallpaper from random list & priorities."
@@ -115,7 +204,7 @@ done
 	echo "Available variables"
 	echo
 	echo "dispersion        : the higher it is, the more the list will be shuffled"
-	echo "minutes & seconds : define time between wallpaper changes"
+	echo "minutes & seconds : define delay between wallpaper changes"
 	echo "meta              : meta-file to generate list"
 	echo "                    see 'gen-random-list.zsh -h' for details of file format"
 	echo "current           : index of current wallpaper in list"
@@ -135,7 +224,7 @@ done
 
 # }}}1
 
-# Lecture préliminaire du fichier état {{{1
+# First reading of status file {{{1
 
 stamp=${statusfile/.?*/.stamp}
 [[ $stamp = $statusfile ]] && stamp=${stamp}.stamp
@@ -150,7 +239,7 @@ then
 		eval $ligne
 	done < $statusfile
 
-	(( temps = minutes * 60 + seconds ))
+	(( delay = minutes * 60 + seconds ))
 
 	echoerr
 	echoerr "*** Lecture préliminaire du fichier état ***"
@@ -158,7 +247,7 @@ then
 	echoerr Dispersion  : $dispersion
 	echoerr Minutes     : $minutes
 	echoerr Seconds     : $seconds
-	echoerr Time        : $temps
+	echoerr delay        : $delay
 	echoerr Meta        : $meta
 	echoerr Current     : $current
 	echoerr Reload      : $reload
@@ -175,7 +264,7 @@ fi
 
 # }}}1
 
-# Valeurs par défaut {{{1
+# Default values {{{1
 
 [ -z $dispersion ] && dispersion=0
 [ -z $minutes ]    && minutes=0
@@ -190,11 +279,11 @@ fi
 	seconds=0
 }
 
-(( temps = minutes * 60 + seconds ))
+(( delay = minutes * 60 + seconds ))
 
 # }}}1
 
-# Génération de la liste {{{1
+# Image list generation {{{1
 
 liste=${meta/.?*/.m3u}
 
@@ -204,7 +293,7 @@ liste=${meta/.?*/.m3u}
 
 # }}}1
 
-# Images {{{1
+# Image list in table {{{1
 
 images=($(cat $liste))
 
@@ -212,14 +301,14 @@ Nimages=${#images}
 
 # }}}1
 
-# Affichage {{{1
+# Display {{{1
 
 echoerr "*** Affichage avant la boucle ***"
 echoerr
 echoerr Dispersion  : $dispersion
 echoerr Minutes     : $minutes
 echoerr Seconds     : $seconds
-echoerr Time        : $temps
+echoerr delay        : $delay
 echoerr Meta        : $meta
 echoerr Current     : $current
 echoerr Reload      : $reload
@@ -233,7 +322,7 @@ echoerr
 
 # }}}1
 
-# Initialisation du fichier état {{{1
+# Status file init {{{1
 
 if ! [ -f $statusfile ]
 then
@@ -255,153 +344,25 @@ fi
 
 # }}}1
 
-# {{{ Boucle
+# {{{ Loop
 
 while true
 do
-	# Lecture du fichier état {{{2
-
-	[[ $statusfile -nt $stamp ]] && {
-
-		touch $stamp
-
-		while read ligne
-		do
-			ligne=${ligne// }
-			eval $ligne
-		done < $statusfile
-
-		(( temps = minutes * 60 + seconds ))
-
-		echoerr "*** Fichier état rechargé ***"
-		echoerr
-		echoerr Dispersion  : $dispersion
-		echoerr Minutes     : $minutes
-		echoerr Seconds     : $seconds
-		echoerr Time        : $temps
-		echoerr Meta        : $meta
-		echoerr Current     : $current
-		echoerr Reload      : $reload
-		echoerr Stop        : $stop
-		echoerr Status file : $statusfile
-		echoerr Stamp file  : $stamp
-		echoerr Log file    : $logfile
-		echoerr
-	}
-
-	# }}}2
-
-	# Arrêt {{{2
-
+	read-status-file
 	(( stop > 0 )) && signal-stop
-
-	# }}}2
-
-	# Fin de la liste {{{2
-
 	(( current >= Nimages )) && reload=1
-
-	# }}}2
-
-	# Choix du fond d’écran {{{2
-
-	while [ ! -e $images[$current] -a $current -lt $Nimages ]
-	do
-		echoerr File $images[$current] does not exist : skipping
-		echoerr
-		(( current += 1 ))
-	done
-
-	if (( current < Nimages ))
-	then
-		fond=$images[$current]
-	else
-		reload=1
-	fi
-
-	# }}}2
-
-	# Reload {{{2
-
-	if (( reload == 1 ))
-	then
-		gen-random-list.zsh $dispersion $meta &>>! ~/log/gen-random-list.log
-		images=($(cat $liste))
-		current=1
-		Nimages=${#images}
-	fi
-
-	reload=0
-
-	# }}}2
-
-	# Date et heure {{{2
-
-	dateHeure=`date +"%a %d %b %Y, %H:%M"`
-
-	echo $dateHeure : $current : $fond
-
-	# }}}2
-
-	# Changement du fond d’écran {{{2
-
-	feh --bg-max --no-fehbg $fond
-
-	# }}}2
-
-	# Lien symbolique {{{2
-
-	# Pour i3lock
-
-	lien=${statusfile%/*}/current
-
-	[ -L $lien ] && {
-		#echo "rm -f $lien"
-		#echo
-		rm -f $lien
-	}
-
-	#echo "ln -s $fond $lien"
-	#echo
-
-	ln -s $fond $lien
-
-	# }}}2
-
-# Ecriture du fichier état {{{2
-
-cat <<- fin >| $statusfile
-	dispersion = $dispersion
-	minutes = $minutes
-	seconds = $seconds
-	meta = $meta
-	current = $current
-	reload = 0
-	stop = 0
-	statusfile = $statusfile
-	stamp = $stamp
-	logfile = $logfile
-fin
-
-touch $stamp
-
-# }}}2
-
-	# Attente {{{2
-
-	# Pour ne pas retarder l’interception des traps
-
-	sleep $temps &
+	choose-wallpaper
+	regen-image-list
+	horodate
+	change-wallpaper
+	symlink
+	write-status-file
+	# so as not to delay traps interception
+	sleep $delay &
 	attendre=$!
 	wait $attendre
-
-	# }}}2
-
-	# Incrément {{{2
-
+	# increment
 	(( current ++ ))
-
-	# }}}2
 done
 
 # }}}

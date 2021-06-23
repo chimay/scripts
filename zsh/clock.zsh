@@ -190,7 +190,7 @@ pause () {
 	sleep 900
 	seconds=`date +%S`
 	delay=$(( 60 - seconds ))
-	echo '   We are' $seconds 'late, we sleep' $delay 'seconds'
+	echo '   We are' $seconds 'seconds late, we sleep' $delay 'seconds'
 	echo
 	sleep $delay
 	continue
@@ -358,14 +358,14 @@ seconds=`date +%S`
 
 delay=$(( 60 - seconds ))
 
-echo '   We are late of ' $seconds 'seconds, we sleep' $delay 'seconds'
+echo '   We are ' $seconds 'seconds late, we sleep' $delay 'seconds'
 echo
 
 sleep $delay
 
 #  }}}
 
-#  {{{ Boucle
+#  {{{ Loop
 
 while true
 do
@@ -387,11 +387,12 @@ do
 	(( (minute - post) % interval == 0 )) && bell=1
 	# main bell
 	(( bell == 1 )) && ring-bell
-	# Delay
+	# delay
 	seconds=`date +%S`
 	delay=$(( 60 - seconds ))
 	echo '   We are' $seconds 'seconds late, we sleep' $delay 'seconds'
 	echo
+	# so as not to delay traps interception
 	sleep $delay &
 	waiting=$!
 	wait $waiting
