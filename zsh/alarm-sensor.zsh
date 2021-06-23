@@ -92,7 +92,7 @@ print
 
 # {{{ Fonctions
 
-lecteur () {
+player () {
 
 	local fu_volume=$1
 	local fu_fichier=$2
@@ -149,10 +149,10 @@ do
 
 	(( maximum >= tres_chaud )) && {
 
-		echo "lecteur $volume ~/audio/bell/notification/cpu-tres-chaud.ogg"
+		echo "player $volume ~/audio/bell/notification/cpu-tres-chaud.ogg"
 		echo
 
-		lecteur $volume ~/audio/bell/notification/cpu-tres-chaud.ogg
+		player $volume ~/audio/bell/notification/cpu-tres-chaud.ogg
 
 		sleep 3
 
@@ -161,10 +161,10 @@ do
 
 	(( maximum >= chaud )) && {
 
-		echo "lecteur $volume ~/audio/bell/notification/cpu-chaud.ogg"
+		echo "player $volume ~/audio/bell/notification/cpu-chaud.ogg"
 		echo
 
-		lecteur $volume ~/audio/bell/notification/cpu-chaud.ogg
+		player $volume ~/audio/bell/notification/cpu-chaud.ogg
 
 		sleep 3
 

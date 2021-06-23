@@ -61,7 +61,7 @@ echo
 
 # {{{ Fonctions
 
-lecteur () {
+player () {
 
 	local fu_volume=$1
 	local fu_fichier=$2
@@ -83,10 +83,10 @@ lecteur () {
 
 	echo "Le script ne peut se surveiller lui-même"
 	echo
-	echo "	  lecteur $volume $fini"
+	echo "	  player $volume $fini"
 	echo
 
-	lecteur $volume $fini
+	player $volume $fini
 
 	exit 0
 }
@@ -102,10 +102,10 @@ do
 
 	psgrep $programme &>| /dev/null || {
 
-		echo "	  lecteur $volume $fini"
+		echo "	  player $volume $fini"
 		echo
 
-		lecteur $volume $fini
+		player $volume $fini
 
 		(( persistant == 0 )) && break
 	}

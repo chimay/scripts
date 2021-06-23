@@ -99,7 +99,7 @@ echo
 
 # {{{ Fonctions
 
-lecteur () {
+player () {
 
 	local fu_volume=$1
 	local fu_fichier=$2
@@ -142,12 +142,12 @@ echo
 echo "  Prélude avant la boucle"
 echo "=============================="
 echo
-echo lecteur $volume $yinyang
-echo lecteur $volume $bol_nepalais
+echo player $volume $yinyang
+echo player $volume $bol_nepalais
 echo
 
-lecteur $volume $yinyang
-lecteur $volume $bol_nepalais
+player $volume $yinyang
+player $volume $bol_nepalais
 
 # }}}1
 
@@ -239,10 +239,10 @@ do
 
 	sleep $temps
 
-	echo "lecteur $volume $reception"
+	echo "player $volume $reception"
 	echo
 
-	lecteur $volume $reception
+	player $volume $reception
 
 	echo "sleep $temps_reception"
 	echo
@@ -257,16 +257,16 @@ done
 echo "  Conclusion après la boucle"
 echo "=============================="
 echo
-echo lecteur $volume $yinyang
-echo lecteur $volume $bol_nepalais
-echo lecteur $volume $clochette
+echo player $volume $yinyang
+echo player $volume $bol_nepalais
+echo player $volume $clochette
 echo
-echo lecteur $volume $fin
+echo player $volume $fin
 
-lecteur $volume $yinyang
-lecteur $volume $bol_nepalais
-lecteur $volume $clochette
+player $volume $yinyang
+player $volume $bol_nepalais
+player $volume $clochette
 
-lecteur $volume $fin
+player $volume $fin
 
 # }}}

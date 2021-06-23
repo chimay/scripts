@@ -14,6 +14,7 @@ echoerr () {
 }
 
 read-status-file () {
+	local statusfile=$1
 	[[ $statusfile -nt $stamp ]] || return 0
 	touch $stamp
 	while read ligne
@@ -47,13 +48,14 @@ choose-wallpaper () {
 	done
 	if (( current < Nimages ))
 	then
-		fond=$images[$current]
+		poster=$images[$current]
 	else
 		reload=1
 	fi
 }
 
 regen-image-list () {
+	local reload=$1
 	if (( reload == 1 ))
 	then
 		gen-random-list.zsh $dispersion $meta &>>! ~/log/gen-random-list.log
@@ -66,11 +68,11 @@ regen-image-list () {
 
 horodate () {
 	dateHeure=`date +"%a %d %b %Y, %H:%M"`
-	echo $dateHeure : $current : $fond
+	echo $dateHeure : $current : $poster
 }
 
 change-wallpaper () {
-	feh --bg-max --no-fehbg $fond
+	feh --bg-max --no-fehbg $poster
 }
 
 symlink () {
@@ -81,9 +83,9 @@ symlink () {
 		#echo
 		rm -f $lien
 	}
-	#echo "ln -s $fond $lien"
+	#echo "ln -s $poster $lien"
 	#echo
-	ln -s $fond $lien
+	ln -s $poster $lien
 }
 
 write-status-file () {
@@ -125,9 +127,7 @@ signal-stop () {
 	echoerr
 	echoerr "Halting wallpaper"
 	echoerr
-
 	stop=1
-
 	cat <<- fin >| $statusfile
 		dispersion = $dispersion
 		minutes = $minutes
@@ -140,9 +140,7 @@ signal-stop () {
 		stamp = $stamp
 		logfile = $logfile
 	fin
-
 	touch $stamp
-
 	exit 128
 }
 
@@ -348,11 +346,11 @@ fi
 
 while true
 do
-	read-status-file
+	read-status-file $statusfile
 	(( stop > 0 )) && signal-stop
 	(( current >= Nimages )) && reload=1
 	choose-wallpaper
-	regen-image-list
+	regen-image-list $reload
 	horodate
 	change-wallpaper
 	symlink

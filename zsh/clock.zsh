@@ -131,11 +131,12 @@ echoerr () {
 	print "$@" >&2
 }
 
-lecteur () {
+player () {
 	local fu_volume=$1
 	local fu_fichier=$2
 	mpv-socket.bash add $fu_fichier
 	mpv-socket.bash volume 100
+	echo
 	#amixer -c 0 -- set Master -3dB
 }
 
@@ -147,6 +148,7 @@ horodate () {
 }
 
 read-status-file () {
+	local statusfile=$1
 	[[ $statusfile -nt $stamp ]] || return 0
 	touch $stamp
 	while read ligne
@@ -173,14 +175,15 @@ read-status-file () {
 	echo
 	echo "   stop = $stop"
 	echo
-	echo "   lecteur $volume $rewind"
-	echo "   lecteur $volume $tictac"
+	echo "   player $volume $rewind"
+	echo "   player $volume $tictac"
 	echo
-	lecteur $volume $rewind
-	lecteur $volume $tictac
+	player $volume $rewind
+	player $volume $tictac
 }
 
 pause () {
+	local pause=$1
 	(( pause > 0 )) || return 0
 	echo "    The clock is paused, sleeping 15 minutes."
 	echo
@@ -194,6 +197,7 @@ pause () {
 }
 
 halt () {
+	local halt=$1
 	(( stop > 0 )) || return 0
 	echo "Clock is halting."
 	echo
@@ -201,31 +205,35 @@ halt () {
 }
 
 ring-bell () {
+	local hour=$1
+	local minute=$2
+	echo ringing at $hour:$minute
+	echo
 	(( chime == 2 )) && {
 		cloche=$audiodir/chime-$hour-$minute.ogg
 		[[ -f $cloche ]] || cloche=$audiodir/chime-HH-$minute.ogg
 		[[ -f $cloche ]] || cloche=$audiodir/chime-HH-MM.ogg
-		echo "   lecteur $volume $cloche"
+		echo "   player $volume $cloche"
 		echo
-		lecteur $volume $cloche
+		player $volume $cloche
 	}
 	(( chime == 1 )) && {
-		echo "   lecteur $volume $simple_chime"
+		echo "   player $volume $simple_chime"
 		echo
-		lecteur $volume $simple_chime
+		player $volume $simple_chime
 	}
 	(( vocal == 2 )) && {
 		voix=$audiodir/vocal-$hour-$minute.ogg
 		[[ -f $voix ]] || voix=$audiodir/vocal-HH-$minute.ogg
-		echo "   lecteur $volume $voix"
+		echo "   player $volume $voix"
 		echo
-		lecteur $volume $voix
+		player $volume $voix
 	}
 	(( vocal == 1 )) && {
 		voix=$audiodir/vocal-HH-$minute.ogg
-		echo "   lecteur $volume $voix"
+		echo "   player $volume $voix"
 		echo
-		lecteur $volume $voix
+		player $volume $voix
 		#saytime
 	}
 	date +"   [=] %A %d %B %Y  (o) %H : %M : %S  | %:z | "
@@ -328,12 +336,12 @@ touch $stamp
 
 #  {{{ Initial delay
 
-echo "   lecteur $volume $rewind"
-echo "   lecteur $volume $tictac"
+echo "   player $volume $rewind"
+echo "   player $volume $tictac"
 echo
 
-lecteur $volume $rewind
-lecteur $volume $tictac
+player $volume $rewind
+player $volume $tictac
 
 seconds=`date +%S`
 
@@ -351,9 +359,9 @@ sleep $delay
 while true
 do
 	horodate
-	read-status-file
-	pause
-	halt
+	read-status-file $statusfile
+	pause $pause
+	halt $stop
 	# Variables
 	bell=0
 	# Format 00 .. 23 & 00 .. 59
@@ -361,13 +369,13 @@ do
 	minute=`date +%M`
 	day_of_week=`date +%u`
 	# bell ?
-	(( minute = minute - displace ))
-	(( minute % interval == 0 )) && bell=1
+	(( min = minute - displace ))
+	(( min % interval == 0 )) && bell=1
 	# ante / post
-	(( (minute + ante) % interval == 0 )) && bell=1
-	(( (minute - post) % interval == 0 )) && bell=1
+	(( (min + ante) % interval == 0 )) && bell=1
+	(( (min - post) % interval == 0 )) && bell=1
 	# main bell
-	(( bell == 1 )) && ring-bell
+	(( bell == 1 )) && ring-bell $hour $minute
 	# delay
 	seconds=`date +%S`
 	delay=$(( 60 - seconds ))

@@ -2,7 +2,7 @@
 
 # {{{ Fonctions
 
-lecteur () {
+player () {
 
 	local fu_volume=$1
 	local fu_fichier=$2
@@ -50,6 +50,6 @@ case $MM in
 		;;
 esac
 
-echo "   lecteur $volume $cloche"
+echo "   player $volume $cloche"
 
-lecteur $volume $cloche
+player $volume $cloche

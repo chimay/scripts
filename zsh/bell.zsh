@@ -51,7 +51,7 @@ done
 
 # {{{ Fonctions
 
-lecteur () {
+player () {
 	local fu_volume=$1
 	local fu_fichier=$2
 	[[ $fu_fichier[1] != / ]] && {
@@ -95,9 +95,9 @@ for dring in $alarms
 do
 	for (( i = 0 ; i < Nbells ; i++ ))
 	do
-		echo "lecteur $volume $dring"
+		echo "player $volume $dring"
 		echo
-		lecteur $volume $dring
+		player $volume $dring
 	done
 done
 
