@@ -252,7 +252,7 @@ signal-stop-wait () {
 }
 
 signal-stop () {
-	echoerr "halting wallpaper"
+	echoerr "halting clock"
 	echoerr
 	stop=1
 	cat <<- fin >| $statusfile
@@ -358,7 +358,7 @@ sleep $delay
 
 while true
 do
-	horodate
+	#horodate
 	read-status-file $statusfile
 	pause $pause
 	halt $stop
@@ -379,8 +379,6 @@ do
 	# delay
 	seconds=`date +%S`
 	delay=$(( 60 - seconds ))
-	echo '   We are' $seconds 'seconds late, we sleep' $delay 'seconds'
-	echo
 	# so as not to delay traps interception
 	sleep $delay &
 	waiting=$!

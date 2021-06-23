@@ -125,7 +125,7 @@ signal-next () {
 signal-stop () {
 	echoerr "stop -> 1"
 	echoerr
-	echoerr "Halting wallpaper"
+	echoerr "halting wallpaper"
 	echoerr
 	stop=1
 	cat <<- fin >| $statusfile
