@@ -7,9 +7,8 @@ lecteur () {
 	local fu_volume=$1
 	local fu_fichier=$2
 
-	echo "loadfile $fu_fichier append-play" > ~/racine/run/pipe/mpv
-
-	echo "set volume $fu_volume" > ~/racine/run/pipe/mpv
+	mpv-socket.bash add $fu_fichier
+	mpv-socket.bash volume 100
 }
 
 # }}}

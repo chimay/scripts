@@ -6,8 +6,8 @@ setopt extended_glob
 
 float maximum minimum
 
-minimum=10
-maximum=60
+minimum=1
+maximum=70
 duree=900
 volume=100
 
@@ -33,15 +33,15 @@ volume=100
 
 # Variables {{{1
 
-reception=$HOME/audio/Sonnerie/ding/reception.ogg
-clochette=$HOME/audio/Sonnerie/ding/clochette.ogg
-yinyang=$HOME/audio/Sonnerie/ding/yinyang.ogg
+reception=$HOME/audio/bell/ding/reception.ogg
+clochette=$HOME/audio/bell/ding/clochette.ogg
+yinyang=$HOME/audio/bell/ding/yinyang.ogg
 
-bol_chantant=$HOME/audio/Sonnerie/ding/bol-chantant.ogg
-bol_nepalais=$HOME/audio/Sonnerie/ding/bol-nepalais.ogg
-bol_tibetain=$HOME/audio/Sonnerie/ding/bol-tibetain.ogg
+bol_chantant=$HOME/audio/bell/ding/bol-chantant.ogg
+bol_nepalais=$HOME/audio/bell/ding/bol-nepalais.ogg
+bol_tibetain=$HOME/audio/bell/ding/bol-tibetain.ogg
 
-fin=$HOME/audio/Sonnerie/notification/fin-meditation.ogg
+fin=$HOME/audio/bell/notification/fin-meditation.ogg
 
 # }}}1
 
@@ -104,9 +104,13 @@ lecteur () {
 	local fu_volume=$1
 	local fu_fichier=$2
 
-	echo "loadfile $fu_fichier append-play" > ~/racine/run/fifo/mpv
+	[[ $fu_fichier[1] != / ]] && {
 
-	echo "set volume $fu_volume" > ~/racine/run/fifo/mpv
+		fu_fichier=~/audio/bell/$fu_fichier
+	}
+
+	mpv-socket.bash add $fu_fichier
+	mpv-socket.bash volume $fu_volume
 }
 
 # }}}
@@ -139,12 +143,10 @@ echo "  Prélude avant la boucle"
 echo "=============================="
 echo
 echo lecteur $volume $yinyang
-echo lecteur $volume $bol_chantant
 echo lecteur $volume $bol_nepalais
 echo
 
 lecteur $volume $yinyang
-lecteur $volume $bol_chantant
 lecteur $volume $bol_nepalais
 
 # }}}1
@@ -153,7 +155,7 @@ lecteur $volume $bol_nepalais
 
 total=0
 
-for fichier in $yinyang $bol_chantant $bol_nepalais
+for fichier in $yinyang $bol_nepalais
 do
 	sortie=$(ogginfo $fichier | grep 'Playback length' | awk '{ print $3 }')
 
@@ -186,7 +188,7 @@ do
 	echo "=============================="
 	echo
 
-	temps=$(alea.py $moyenne $dispersion)
+	temps=$(random.zsh $moyenne $dispersion)
 
 	(( temps < $minimum )) && temps=$minimum
 	(( temps > $maximum )) && temps=$maximum
@@ -256,14 +258,14 @@ echo "  Conclusion après la boucle"
 echo "=============================="
 echo
 echo lecteur $volume $yinyang
+echo lecteur $volume $bol_nepalais
 echo lecteur $volume $clochette
-echo lecteur $volume $bol_tibetain
 echo
 echo lecteur $volume $fin
 
 lecteur $volume $yinyang
+lecteur $volume $bol_nepalais
 lecteur $volume $clochette
-lecteur $volume $bol_tibetain
 
 lecteur $volume $fin
 

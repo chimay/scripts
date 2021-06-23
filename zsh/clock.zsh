@@ -22,7 +22,7 @@ integer displace=0
 integer ante=0
 integer post=0
 
-integer chime=1
+integer chime=2
 integer vocal=0
 
 integer volume=100
@@ -35,7 +35,7 @@ integer day_of_week=`date +%u`
 
 statusfile=$HOME/racine/run/clock/clock.status
 
-audiodir=$HOME/audio/sonnerie/horloge
+audiodir=$HOME/audio/bell/clock
 
 rewind=$audiodir/rewind.ogg
 tictac=$audiodir/tictac.ogg
@@ -132,13 +132,10 @@ echoerr () {
 }
 
 lecteur () {
-
 	local fu_volume=$1
 	local fu_fichier=$2
-
 	mpv-socket.bash add $fu_fichier
 	mpv-socket.bash volume 100
-
 	#amixer -c 0 -- set Master -3dB
 }
 
@@ -161,18 +158,18 @@ read-status-file () {
 	echo
 	echo "   displace = $displace"
 	echo
-	echo "   Ante = $ante"
-	echo "   Post = $post"
+	echo "   ante = $ante"
+	echo "   post = $post"
 	echo
 	echo "   chime = $chime"
-	echo "   Vocal = $vocal"
+	echo "   vocal = $vocal"
 	echo
-	echo "   Volume = $volume"
+	echo "   volume = $volume"
 	echo
 	echo "   statusfile = $statusfile"
 	echo "   stamp = $stamp"
 	echo
-	echo "   Pause = $pause"
+	echo "   pause = $pause"
 	echo
 	echo "   stop = $stop"
 	echo
@@ -249,24 +246,21 @@ signal-stop-wait () {
 signal-stop () {
 	echoerr "halting wallpaper"
 	echoerr
-
 	stop=1
-
 	cat <<- fin >| $statusfile
-		dispersion = $dispersion
-		minutes = $minutes
-		seconds = $seconds
-		meta = $meta
-		current = $current
-		reload = 0
-		stop = 0
+		interval = $interval
+		displace = $displace
+		ante = $ante
+		post = $post
+		chime = $chime
+		vocal = $vocal
+		volume = $volume
 		statusfile = $statusfile
 		stamp = $stamp
-		logfile = $logfile
+		pause = $pause
+		stop = $stop
 	fin
-
 	touch $stamp
-
 	exit 128
 }
 
@@ -315,29 +309,16 @@ echo
 #  {{{ Status file init
 
 cat <<- fin >| $statusfile
-
-	# vim: set filetype=conf :
-
 	interval = $interval
-
 	displace = $displace
-
 	ante = $ante
-
 	post = $post
-
 	chime = $chime
-
 	vocal = $vocal
-
 	volume = $volume
-
 	statusfile = $statusfile
-
 	stamp = $stamp
-
 	pause = $pause
-
 	stop = $stop
 fin
 

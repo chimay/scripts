@@ -1,4 +1,4 @@
-#!/usr/bin/env /bin/zsh
+#!/usr/bin/env zsh
 
 setopt extended_glob
 
@@ -97,7 +97,13 @@ lecteur () {
 	local fu_volume=$1
 	local fu_fichier=$2
 
-	mpv -noconsolecontrols -volume $fu_volume $fu_fichier &> /dev/null
+	[[ $fu_fichier[1] != / ]] && {
+
+		fu_fichier=~/audio/bell/$fu_fichier
+	}
+
+	mpv-socket.bash replace $fu_fichier
+	mpv-socket.bash volume $fu_volume
 }
 
 # }}}
@@ -110,8 +116,17 @@ do
 
 	print
 
+# 	senseurs=($(sensors | \
+# 		grep -E '(temp|Core)[^(]+°C' | \
+# 		sed 's/(.*)//' | \
+# 		sed 's/°C//' | \
+# 		sed 's/+//' | \
+# 		sed 's/^temp[0-9]:\s\+//' | \
+# 		sed 's/^Core [0-9]:\s\+//' \
+# 	))
+
 	senseurs=($(sensors | \
-		grep -E '(temp|Core)[^(]+°C' | \
+		grep -E 'Core[^(]+°C' | \
 		sed 's/(.*)//' | \
 		sed 's/°C//' | \
 		sed 's/+//' | \
@@ -134,18 +149,24 @@ do
 
 	(( maximum >= tres_chaud )) && {
 
-		lecteur $volume ~/audio/Sonnerie/notification/cpu-tres-chaud.ogg
+		echo "lecteur $volume ~/audio/bell/notification/cpu-tres-chaud.ogg"
+		echo
 
-		sleep 2
+		lecteur $volume ~/audio/bell/notification/cpu-tres-chaud.ogg
+
+		sleep 3
 
 		continue
 	}
 
 	(( maximum >= chaud )) && {
 
-		lecteur $volume ~/audio/Sonnerie/notification/cpu-chaud.ogg
+		echo "lecteur $volume ~/audio/bell/notification/cpu-chaud.ogg"
+		echo
 
-		sleep 2
+		lecteur $volume ~/audio/bell/notification/cpu-chaud.ogg
+
+		sleep 3
 
 		continue
 	}

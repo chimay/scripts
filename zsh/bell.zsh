@@ -43,7 +43,7 @@ done
 
 # {{{ Default
 
-# Prefix ~/audio/sonnerie/ added if needed
+# Prefix ~/audio/bell/ added if needed
 
 (( $#alarms == 0 )) && alarms=(notification/generique.ogg)
 
@@ -55,7 +55,7 @@ lecteur () {
 	local fu_volume=$1
 	local fu_fichier=$2
 	[[ $fu_fichier[1] != / ]] && {
-		fu_fichier=~/audio/sonnerie/$fu_fichier
+		fu_fichier=~/audio/bell/$fu_fichier
 	}
 	mpv-socket.bash add $fu_fichier
 	mpv-socket.bash volume $fu_volume
@@ -69,7 +69,7 @@ temps=$(date +" [=] %A %d %B %Y  (o) %H:%M")
 
 echo
 echo "========================================================================"
-echo "       Sonnerie ($Nbells x) le $temps"
+echo "       Bell ($Nbells x), $temps"
 echo "========================================================================"
 echo
 echo volume : $volume

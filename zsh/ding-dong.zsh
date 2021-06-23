@@ -8,7 +8,7 @@ echo "minuter.zsh $=arguments ..."
 echo
 
 minuter.zsh $=arguments \
-	~/audio/sonnerie/ding/clochette.ogg \
-	~/audio/sonnerie/ding/reception.ogg \
-	~/audio/sonnerie/ding/clochette.ogg \
-	~/audio/sonnerie/ding/reception.ogg
+	~/audio/bell/ding/clochette.ogg \
+	~/audio/bell/ding/reception.ogg \
+	~/audio/bell/ding/clochette.ogg \
+	~/audio/bell/ding/reception.ogg
