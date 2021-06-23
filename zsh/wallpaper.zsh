@@ -1,17 +1,21 @@
 #! /usr/bin/env zsh
 
-# {{{ Options de zsh
+# {{{ Options
 
 setopt null_glob
 setopt extended_glob
 
 # }}}
 
-# Fonctions {{{1
+# Functions {{{1
 
 echoerr () {
 	print "$@" >&2
 }
+
+# }}}1
+
+# Traps {{{1
 
 signal-reload () {
 	echoerr
@@ -30,7 +34,7 @@ signal-next () {
 signal-stop () {
 	echoerr "stop -> 1"
 	echoerr
-	echoerr "On arrête wallpaper"
+	echoerr "Halting wallpaper"
 	echoerr
 
 	stop=1
@@ -398,7 +402,6 @@ touch $stamp
 	(( current ++ ))
 
 	# }}}2
-
 done
 
 # }}}

@@ -1,13 +1,15 @@
 #! /usr/bin/env zsh
 
+# Ring a bell & notify
+
 setopt extended_glob
 
-alias notifie='notify-send -t 10000'
+alias notify='notify-send -t 10000'
 
 volume=100
-Nsonneries=1
+Nbells=1
 
-alarmes=()
+alarms=()
 notifications=()
 
 # {{{ Arguments
@@ -24,11 +26,11 @@ do
 			shift
 			;;
 		re*=?*)
-			Nsonneries=${1#*\=}
+			Nbells=${1#*\=}
 			shift
 			;;
 		?*)
-			alarmes+=$1
+			alarms+=$1
 			shift
 			;;
 		*)
@@ -39,19 +41,13 @@ done
 
 # }}}
 
-# {{{ Défaut
+# {{{ Default
 
-# Préfixe ~/audio/sonnerie/ ajouté au besoin
+# Prefix ~/audio/sonnerie/ added if needed
 
-(( $#alarmes == 0 )) && alarmes=(notification/generique.ogg)
+(( $#alarms == 0 )) && alarms=(notification/generique.ogg)
 
 # }}}
-
-# Aliases {{{1
-
-alias psgrep="ps auxww | grep -v grep | grep --color=never"
-
-# }}}1
 
 # {{{ Fonctions
 
@@ -73,36 +69,35 @@ temps=$(date +" [=] %A %d %B %Y  (o) %H:%M")
 
 echo
 echo "========================================================================"
-echo "       Sonnerie ($Nsonneries x) le $temps"
+echo "       Sonnerie ($Nbells x) le $temps"
 echo "========================================================================"
 echo
-echo Volume : $volume
+echo volume : $volume
 echo
-echo Nsonneries : $Nsonneries
+echo Nbells : $Nbells
 echo
-echo Alarmes : $alarmes
+echo alarms : $alarms
 echo
-echo Notifications : $notifications
+echo notifications : $notifications
 echo
 
 # }}}
 
 # {{{ Notifications
 
-(( $#notifications > 0 )) && notifie "$notifications"
+(( $#notifications > 0 )) && notify "$notifications"
 
 # }}}
 
-# {{{ Sonnerie
+# {{{ Bell
 
-for dring in $alarmes
+for dring in $alarms
 do
-	for (( i = 0 ; i < Nsonneries ; i++ ))
+	for (( i = 0 ; i < Nbells ; i++ ))
 	do
 		echo "lecteur $volume $dring"
 		echo
 		lecteur $volume $dring
-		sleep 1
 	done
 done
 
