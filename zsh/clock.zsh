@@ -190,7 +190,7 @@ pause () {
 	sleep 900
 	seconds=`date +%S`
 	delay=$(( 60 - seconds ))
-	echo '   On a' $seconds 'seconds de delay, on dort' $delay 'seconds'
+	echo '   We are' $seconds 'late, we sleep' $delay 'seconds'
 	echo
 	sleep $delay
 	continue
@@ -307,8 +307,8 @@ echo "   stop = $stop"
 echo
 echo "   day = $day_of_week"
 echo
-
 trap 1>&2
+echo
 
 #  }}}
 
@@ -390,7 +390,7 @@ do
 	# Delay
 	seconds=`date +%S`
 	delay=$(( 60 - seconds ))
-	echo '   On a' $seconds 'seconds de delay, on dort' $delay 'seconds'
+	echo '   We are' $seconds 'seconds late, we sleep' $delay 'seconds'
 	echo
 	sleep $delay &
 	waiting=$!
