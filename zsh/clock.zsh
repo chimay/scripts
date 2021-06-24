@@ -41,20 +41,18 @@ wait-until-next-minute () {
 }
 
 echo-status-vars () {
-	echo "interval = $interval"
-	echo "frequency = $frequency"
-	echo "displace = $displace"
-	echo "ante = $ante"
-	echo "post = $post"
-	echo "chime = $chime"
-	echo "vocal = $vocal"
-	echo "volume = $volume"
-	echo "statusfile = $statusfile"
-	echo "stamp = $stamp"
-	echo "pause = $pause"
-	echo "stop = $stop"
-	echo "player $volume $rewind"
-	echo "player $volume $tictac"
+	echo interval   : $interval
+	echo frequency  : $frequency
+	echo displace   : $displace
+	echo ante       : $ante
+	echo post       : $post
+	echo chime      : $chime
+	echo vocal      : $vocal
+	echo volume     : $volume
+	echo statusfile : $statusfile
+	echo stamp      : $stamp
+	echo pause      : $pause
+	echo stop       : $stop
 	echo
 }
 
@@ -210,9 +208,9 @@ integer stop=0
 
 integer intmin
 
-statusfile=$HOME/racine/run/clock/clock.status
+statusfile=~/racine/run/clock/clock.status
 
-audiodir=$HOME/audio/bell/clock
+audiodir=~/audio/bell/clock
 
 rewind=$audiodir/rewind.ogg
 tictac=$audiodir/tictac.ogg
@@ -222,9 +220,17 @@ simple_chime=$audiodir/coucou-1.ogg
 
 # {{{ Arguments
 
+numarg=$#
+
+aide=0
+
 while true
 do
 	case $1 in
+		-h)
+			aide=1
+			break
+			;;
 		+[0-9]##)
 			interval=${1#+}
 			frequency=$(( 60 / interval ))
@@ -294,6 +300,35 @@ done
 
 # }}}
 
+# Help {{{1
+
+[ $numarg -eq 0 -o $aide -eq 1 ] && {
+	echo "$(basename $0) : configurable clock."
+	echo
+	echo "Dependancies : audio files in ~/audio/bell/clock"
+	echo
+	echo "Usage : $(basename $0) options"
+	echo
+	echo "[Options]"
+	echo
+	echo "+interval : interval between chimes/vocals"
+	echo "-frequency  : number of chimes/vocals per hour"
+	echo "-d shift : chimes/vocals shift in minutes versus the hour start at 0 minute"
+	echo "-a ante : also chime/vocal ante minutes before"
+	echo "-p post : also chime/vocal post minutes after"
+	echo "+c : long chime"
+	echo "-c : short chime"
+	echo "-C : no chime"
+	echo "+v : long vocal"
+	echo "-v : short vocal"
+	echo "-V : no vocal"
+	echo "volume (digits) : volume level"
+	echo "-i status-file : file with status vars"
+	exit 0
+}
+
+# }}}1
+
 # Status file {{{1
 
 stamp=${statusfile/.?*/.stamp}
@@ -309,6 +344,8 @@ echo '========================================================================'
 echo
 
 echo-status-vars
+echo player $volume $rewind
+echo player $volume $tictac
 
 trap 1>&2
 echo
