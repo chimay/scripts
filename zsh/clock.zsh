@@ -2,13 +2,191 @@
 
 setopt extended_glob
 
+# {{{ Functions
+
+echoerr () {
+	print "$@" >&2
+}
+
+player () {
+	local fu_volume=$1
+	local fu_fichier=$2
+	mpv-socket.bash add $fu_fichier
+	mpv-socket.bash volume 100
+	echo
+	#amixer -c 0 -- set Master -3dB
+}
+
+horodate () {
+	date +"[=] %A %d %B %Y  (o) %H : %M : %S  | %:z | "
+	echo
+}
+
+await () {
+	# so as not to delay traps interception
+	delay=$1
+	sleep $delay &
+	waitpid=$!
+	wait $waitpid
+}
+
+wait-until-next-minute () {
+	seconds=`date +%S`
+	delay=$(( 60 - seconds ))
+	[ $seconds -gt 0 ] && {
+		echo We are $seconds seconds late, we sleep $delay seconds
+		echo
+	}
+	await $delay
+}
+
+echo-status-vars () {
+	echo "interval = $interval"
+	echo "frequency = $frequency"
+	echo "displace = $displace"
+	echo "ante = $ante"
+	echo "post = $post"
+	echo "chime = $chime"
+	echo "vocal = $vocal"
+	echo "volume = $volume"
+	echo "statusfile = $statusfile"
+	echo "stamp = $stamp"
+	echo "pause = $pause"
+	echo "stop = $stop"
+	echo "player $volume $rewind"
+	echo "player $volume $tictac"
+	echo
+}
+
+read-status-file () {
+	local statusfile=$1
+	[[ $statusfile -nt $stamp ]] || return 0
+	touch $stamp
+	while read ligne
+	do
+		ligne=${ligne// }
+		eval $ligne
+	done < $statusfile
+	echo-status-vars
+	player $volume $rewind
+	player $volume $tictac
+}
+
+rest () {
+	local switch=$1
+	(( switch > 0 )) || return 0
+	echo "clock is paused, sleeping 15 minutes."
+	echo
+	await 900
+	wait-until-next-minute
+}
+
+halt () {
+	local halt=$1
+	(( stop > 0 )) || return 0
+	echo "clock is halting."
+	echo
+	write-status-file
+	break
+}
+
+ring-bell () {
+	local hour=$1
+	local minute=$2
+	echo ringing at $hour:$minute
+	echo
+	(( chime == 2 )) && {
+		cloche=$audiodir/chime-$hour-$minute.ogg
+		[[ -f $cloche ]] || cloche=$audiodir/chime-HH-$minute.ogg
+		[[ -f $cloche ]] || cloche=$audiodir/chime-HH-MM.ogg
+		echo "player $volume $cloche"
+		echo
+		player $volume $cloche
+	}
+	(( chime == 1 )) && {
+		echo "player $volume $simple_chime"
+		echo
+		player $volume $simple_chime
+	}
+	(( vocal == 2 )) && {
+		voix=$audiodir/vocal-$hour-$minute.ogg
+		[[ -f $voix ]] || voix=$audiodir/vocal-HH-$minute.ogg
+		echo "player $volume $voix"
+		echo
+		player $volume $voix
+	}
+	(( vocal == 1 )) && {
+		voix=$audiodir/vocal-HH-$minute.ogg
+		echo "player $volume $voix"
+		echo
+		player $volume $voix
+		#saytime
+	}
+}
+
+write-status-file () {
+	cat <<- fin >| $statusfile
+		interval = $interval
+		displace = $displace
+		ante = $ante
+		post = $post
+		chime = $chime
+		vocal = $vocal
+		volume = $volume
+		statusfile = $statusfile
+		stamp = $stamp
+		pause = $pause
+		stop = $stop
+	fin
+	touch $stamp
+}
+
+# }}}
+
+# Traps {{{1
+
+signal-stop-wait () {
+	echoerr
+	echoerr "stop waiting"
+	echoerr
+	[ -z $waitpid ] || kill $waitpid
+}
+
+signal-toggle () {
+	# toggle active / paused
+	if [ $pause -eq 0 ]
+	then
+		pause=1
+	else
+		pause=0
+	fi
+	write-status-file
+	signal-stop-wait
+}
+
+signal-stop () {
+	echoerr "halting clock"
+	echoerr
+	stop=1
+	write-status-file
+	signal-stop-wait
+	exit 128
+}
+
+trap signal-stop-wait	SIGUSR1
+trap signal-toggle		SIGUSR2
+
+trap signal-stop	HUP INT TERM
+
+# }}}1
+
 #  {{{ Already running ?
 
 grep="/bin/grep --color=never"
 
 ps auxww | $=grep -v grep | $=grep -v $$ | $=grep clock.zsh && {
 
-	echo "Clock already running."
+	echo "clock already running."
 	exit 0
 }
 
@@ -31,7 +209,6 @@ integer pause=0
 integer stop=0
 
 integer intmin
-integer day_of_week=`date +%u`
 
 statusfile=$HOME/racine/run/clock/clock.status
 
@@ -125,232 +302,29 @@ stamp=${statusfile/.?*/.stamp}
 
 # }}}1
 
-# {{{ Functions
-
-echoerr () {
-	print "$@" >&2
-}
-
-player () {
-	local fu_volume=$1
-	local fu_fichier=$2
-	mpv-socket.bash add $fu_fichier
-	mpv-socket.bash volume 100
-	echo
-	#amixer -c 0 -- set Master -3dB
-}
-
-horodate () {
-	echo "------------------------------"
-	echo
-	date +"   [=] %A %d %B %Y  (o) %H : %M : %S  | %:z | "
-	echo
-}
-
-read-status-file () {
-	local statusfile=$1
-	[[ $statusfile -nt $stamp ]] || return 0
-	touch $stamp
-	while read ligne
-	do
-		ligne=${ligne// }
-		eval $ligne
-	done < $statusfile
-	echo "   interval = $interval"
-	echo
-	echo "   displace = $displace"
-	echo
-	echo "   ante = $ante"
-	echo "   post = $post"
-	echo
-	echo "   chime = $chime"
-	echo "   vocal = $vocal"
-	echo
-	echo "   volume = $volume"
-	echo
-	echo "   statusfile = $statusfile"
-	echo "   stamp = $stamp"
-	echo
-	echo "   pause = $pause"
-	echo
-	echo "   stop = $stop"
-	echo
-	echo "   player $volume $rewind"
-	echo "   player $volume $tictac"
-	echo
-	player $volume $rewind
-	player $volume $tictac
-}
-
-pause () {
-	local pause=$1
-	(( pause > 0 )) || return 0
-	echo "    The clock is paused, sleeping 15 minutes."
-	echo
-	sleep 900
-	seconds=`date +%S`
-	delay=$(( 60 - seconds ))
-	echo '   We are' $seconds 'seconds late, we sleep' $delay 'seconds'
-	echo
-	sleep $delay
-	continue
-}
-
-halt () {
-	local halt=$1
-	(( stop > 0 )) || return 0
-	echo "Clock is halting."
-	echo
-	break
-}
-
-ring-bell () {
-	local hour=$1
-	local minute=$2
-	echo ringing at $hour:$minute
-	echo
-	(( chime == 2 )) && {
-		cloche=$audiodir/chime-$hour-$minute.ogg
-		[[ -f $cloche ]] || cloche=$audiodir/chime-HH-$minute.ogg
-		[[ -f $cloche ]] || cloche=$audiodir/chime-HH-MM.ogg
-		echo "   player $volume $cloche"
-		echo
-		player $volume $cloche
-	}
-	(( chime == 1 )) && {
-		echo "   player $volume $simple_chime"
-		echo
-		player $volume $simple_chime
-	}
-	(( vocal == 2 )) && {
-		voix=$audiodir/vocal-$hour-$minute.ogg
-		[[ -f $voix ]] || voix=$audiodir/vocal-HH-$minute.ogg
-		echo "   player $volume $voix"
-		echo
-		player $volume $voix
-	}
-	(( vocal == 1 )) && {
-		voix=$audiodir/vocal-HH-$minute.ogg
-		echo "   player $volume $voix"
-		echo
-		player $volume $voix
-		#saytime
-	}
-	date +"   [=] %A %d %B %Y  (o) %H : %M : %S  | %:z | "
-	echo
-}
-
-# }}}
-
-# Traps {{{1
-
-signal-stop-wait () {
-	echoerr
-	echoerr "stop waiting"
-	echoerr
-	[ -z $waiting ] || kill $waiting
-}
-
-signal-stop () {
-	echoerr "halting clock"
-	echoerr
-	stop=1
-	cat <<- fin >| $statusfile
-		interval = $interval
-		displace = $displace
-		ante = $ante
-		post = $post
-		chime = $chime
-		vocal = $vocal
-		volume = $volume
-		statusfile = $statusfile
-		stamp = $stamp
-		pause = $pause
-		stop = $stop
-	fin
-	touch $stamp
-	exit 128
-}
-
-trap signal-stop-wait	SIGUSR1
-trap signal-stop		SIGUSR2
-
-trap signal-stop	HUP INT TERM
-
-# }}}1
-
-#  {{{ Initial display
-
 echo
 echo '========================================================================'
-date +"   Démarrage le %A %d %B %Y  (o) %H : %M : %S  | %:z | "
+date +"   clock starting %A %d %B %Y  (o) %H : %M : %S  | %:z | "
 echo '========================================================================'
 echo
 
-echo "   interval = $interval"
-echo "   frequency = $frequency"
-echo
-echo "   displace = $displace"
-echo
-echo "   ante = $ante"
-echo "   post = $post"
-echo
-echo "   chime = $chime"
-echo "   vocal = $vocal"
-echo
-echo "   volume = $volume"
-echo
-echo "   statusfile = $statusfile"
-echo "   stamp = $stamp"
-echo
-echo "   pause = $pause"
-echo
-echo "   stop = $stop"
-echo
-echo "   day = $day_of_week"
-echo
+echo-status-vars
+
 trap 1>&2
 echo
 
-#  }}}
-
-#  {{{ Status file init
-
-cat <<- fin >| $statusfile
-	interval = $interval
-	displace = $displace
-	ante = $ante
-	post = $post
-	chime = $chime
-	vocal = $vocal
-	volume = $volume
-	statusfile = $statusfile
-	stamp = $stamp
-	pause = $pause
-	stop = $stop
-fin
-
-touch $stamp
-
-#  }}}
+write-status-file
 
 #  {{{ Initial delay
 
-echo "   player $volume $rewind"
-echo "   player $volume $tictac"
+echo "player $volume $rewind"
+echo "player $volume $tictac"
 echo
 
 player $volume $rewind
 player $volume $tictac
 
-seconds=`date +%S`
-
-delay=$(( 60 - seconds ))
-
-echo '   We are ' $seconds 'seconds late, we sleep' $delay 'seconds'
-echo
-
-sleep $delay
+wait-until-next-minute
 
 #  }}}
 
@@ -358,16 +332,15 @@ sleep $delay
 
 while true
 do
-	#horodate
+	horodate
 	read-status-file $statusfile
-	pause $pause
+	rest $pause
 	halt $stop
-	# Variables
+	# variables
 	bell=0
-	# Format 00 .. 23 & 00 .. 59
+	# format 00 .. 23 & 00 .. 59
 	hour=`date +%H`
 	minute=`date +%M`
-	day_of_week=`date +%u`
 	# bell ?
 	intmin=minute
 	(( intmin = intmin - displace ))
@@ -377,13 +350,8 @@ do
 	(( (intmin - post) % interval == 0 )) && bell=1
 	# main bell
 	(( bell == 1 )) && ring-bell $hour $minute
-	# delay
-	seconds=`date +%S`
-	delay=$(( 60 - seconds ))
-	# so as not to delay traps interception
-	sleep $delay &
-	waiting=$!
-	wait $waiting
+	# sync with minute start
+	wait-until-next-minute
 done
 
 #  }}}
