@@ -1,9 +1,5 @@
 #!/usr/bin/env /bin/zsh
 
-# vim: set filetype=zsh:
-
-# Fonctions {{{1
-
 signal-restart () {
 	echo
 	echo Restarting remind ...
@@ -11,18 +7,16 @@ signal-restart () {
 	kill $remindproc
 }
 
-# }}}1
-
-fichier=~/racine/config/organizer/remind/reminders
+reminders=~/racine/config/organizer/remind/reminders
 
 # Number of minutes between remind checks
 integer tictac=${1:-5}
 
 integer minutes
 integer modulo
-integer futur
-integer epoque
-integer epoque_future
+integer future
+integer epoch
+integer future_epoch
 integer delta
 
 while true
@@ -32,49 +26,49 @@ do
 
 	if (( modulo > 0 ))
 	then
-		futur=$(( tictac - modulo ))
+		future=$(( tictac - modulo ))
 	else
-		futur=0
+		future=0
 	fi
 
-	epoque=$(date +%s)
-	epoque_future=$(date -d "$futur min" +%s)
-	(( epoque_future -= $(date -d "$futur min" +%S) ))
+	epoch=$(date +%s)
+	future_epoch=$(date -d "$future min" +%s)
+	(( future_epoch -= $(date -d "$future min" +%S) ))
 
-	delta=$(( epoque_future - epoque ))
+	delta=$(( future_epoch - epoch ))
 	(( delta < 0 )) && delta=0
 
-	date_courante=$(date -d @$epoque)
-	date_future=$(date -d @$epoque_future)
+	current_date=$(date -d @$epoch)
+	future_date=$(date -d @$future_epoch)
 
 	echo "tictac           = $tictac"
 	echo "minutes          = $minutes"
 	echo "modulo           = $modulo"
-	echo "futur            = $futur"
-	echo "epoque           = $epoque"
-	echo "epoque_future    = $epoque_future"
+	echo "future           = $future"
+	echo "epoch            = $epoch"
+	echo "future_epoch     = $future_epoch"
 	echo "delta            = $delta"
-	echo "date_courante    = $date_courante"
-	echo "date_future      = $date_future"
+	echo "current_date     = $current_date"
+	echo "future_date      = $future_date"
 	echo
 
 	trap '' SIGUSR1
 
 	sleep $delta &
 
-	attendre=$!
+	waitpid=$!
 
-	echo attendre = $attendre
+	echo waitpid = $waitpid
 	echo
 
-	wait $attendre
+	wait $waitpid
 
 	echo $(date) : Starting remind ...
 	echo
 
 	trap signal-restart SIGUSR1
 
-	remind -z$tictac -k'remind-msg.sh %s &' $fichier &
+	remind -z$tictac -k'remind-msg.sh %s &' $reminders &
 
 	remindproc=$!
 

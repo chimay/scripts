@@ -4,6 +4,14 @@ setopt extended_glob
 
 # {{{ Functions
 
+await () {
+	local delay=$1
+	# so as not to delay traps interception
+	sleep $delay &
+	waitpid=$!
+	wait $waitpid
+}
+
 echoerr () {
 	print "$@" >&2
 }
@@ -22,17 +30,9 @@ horodate () {
 	echo
 }
 
-await () {
-	# so as not to delay traps interception
-	delay=$1
-	sleep $delay &
-	waitpid=$!
-	wait $waitpid
-}
-
 wait-until-next-minute () {
-	seconds=`date +%S`
-	delay=$(( 60 - seconds ))
+	local seconds=`date +%S`
+	local delay=$(( 60 - seconds ))
 	[ $seconds -gt 0 ] && {
 		echo We are $seconds seconds late, we sleep $delay seconds
 		echo
@@ -56,9 +56,28 @@ echo-status-vars () {
 	echo
 }
 
+write-status-file () {
+	local statusfile=$1
+	frequency=$(( 60 / interval ))
+	cat <<- fin >| $statusfile
+		interval = $interval
+		displace = $displace
+		ante = $ante
+		post = $post
+		chime = $chime
+		vocal = $vocal
+		volume = $volume
+		statusfile = $statusfile
+		stamp = $stamp
+		pause = $pause
+		stop = $stop
+	fin
+	touch $stamp
+}
+
 read-status-file () {
 	local statusfile=$1
-	[[ $statusfile -nt $stamp ]] || return 0
+	[[ -f $statusfile ]] || write-status-file $statusfile
 	touch $stamp
 	while read ligne
 	do
@@ -84,13 +103,14 @@ halt () {
 	(( stop > 0 )) || return 0
 	echo "clock is halting."
 	echo
-	write-status-file
+	write-status-file $statusfile
 	break
 }
 
 ring-bell () {
 	local hour=$1
 	local minute=$2
+	(( pause > 0 )) && return 0
 	echo ringing at $hour:$minute
 	echo
 	(( chime == 2 )) && {
@@ -122,23 +142,6 @@ ring-bell () {
 	}
 }
 
-write-status-file () {
-	cat <<- fin >| $statusfile
-		interval = $interval
-		displace = $displace
-		ante = $ante
-		post = $post
-		chime = $chime
-		vocal = $vocal
-		volume = $volume
-		statusfile = $statusfile
-		stamp = $stamp
-		pause = $pause
-		stop = $stop
-	fin
-	touch $stamp
-}
-
 # }}}
 
 # Traps {{{1
@@ -158,7 +161,7 @@ signal-toggle () {
 	else
 		pause=0
 	fi
-	write-status-file
+	write-status-file $statusfile
 	signal-stop-wait
 }
 
@@ -166,7 +169,7 @@ signal-stop () {
 	echoerr "halting clock"
 	echoerr
 	stop=1
-	write-status-file
+	write-status-file $statusfile
 	signal-stop-wait
 	exit 128
 }
@@ -197,12 +200,9 @@ integer frequency=4
 integer displace=0
 integer ante=0
 integer post=0
-
 integer chime=2
 integer vocal=0
-
 integer volume=100
-
 integer pause=0
 integer stop=0
 
@@ -350,7 +350,7 @@ echo player $volume $tictac
 trap 1>&2
 echo
 
-write-status-file
+write-status-file $statusfile
 
 #  {{{ Initial delay
 

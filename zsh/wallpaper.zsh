@@ -9,6 +9,20 @@ setopt extended_glob
 
 # Functions {{{1
 
+await () {
+	local delay=$1
+	# so as not to delay traps interception
+	sleep $delay &
+	waitpid=$!
+	wait $waitpid
+}
+
+stop-wait () {
+	echoerr "stop waiting"
+	echoerr
+	[ -z $waitpid ] || kill $waitpid
+}
+
 echoerr () {
 	print "$@" >&2
 }
@@ -29,6 +43,7 @@ echo-status-vars () {
 }
 
 write-status-file () {
+	local statusfile=$1
 	cat <<- fin >| $statusfile
 		statusfile = $statusfile
 		stamp = $stamp
@@ -46,8 +61,7 @@ write-status-file () {
 
 read-status-file () {
 	local statusfile=$1
-	[[ -f $statusfile ]] || write-status-file
-	[[ $statusfile -nt $stamp ]] || return 0
+	[[ -f $statusfile ]] || write-status-file $statusfile
 	touch $stamp
 	while read ligne
 	do
@@ -61,7 +75,7 @@ read-status-file () {
 choose-wallpaper () {
 	while [ ! -e $images[$current] -a $current -lt $Nimages ]
 	do
-		echoerr File $images[$current] does not exist : skipping
+		echoerr file $images[$current] does not exist : skipping
 		echoerr
 		(( current += 1 ))
 	done
@@ -81,6 +95,7 @@ regen-image-list () {
 		images=($(cat $liste))
 		current=1
 		Nimages=${#images}
+		poster=$images[$current]
 	fi
 	reload=0
 }
@@ -96,15 +111,13 @@ change-wallpaper () {
 
 symlink () {
 	# Pour i3lock
-	lien=${statusfile%/*}/current
-	[ -L $lien ] && {
-		#echoerr "rm -f $lien"
+	link=${statusfile%/*}/current
+	[ -L $link ] && {
+		#echoerr "rm -f $link"
 		#echoerr
-		rm -f $lien
+		rm -f $link
 	}
-	#echoerr "ln -s $poster $lien"
-	#echoerr
-	ln -s $poster $lien
+	ln -s $poster $link
 }
 
 # }}}1
@@ -112,38 +125,26 @@ symlink () {
 # Traps {{{1
 
 signal-reload () {
+	echoerr "reloading wallpapers list"
 	echoerr
-	echoerr "reload -> 1"
-	echoerr
-	reload=1
+	{ echo 'g/^reload/s/= .*$/= 1/' ; echo w } | ed $statusfile
+	stop-wait
 }
 
 signal-next () {
+	echoerr "switching to next wallpaper"
 	echoerr
-	echoerr "next -> 1"
-	echoerr
-	[ -z $attendre ] || kill $attendre
+	(( current += 1 ))
+	{ echo 'g/^current/s/= .*$/= '$current'/' ; echo w } | ed $statusfile
+	stop-wait
 }
 
 signal-stop () {
-	echoerr "stop -> 1"
-	echoerr
 	echoerr "halting wallpaper"
 	echoerr
-	stop=1
-	cat <<- fin >| $statusfile
-		dispersion = $dispersion
-		minutes = $minutes
-		seconds = $seconds
-		meta = $meta
-		current = $current
-		reload = 0
-		stop = 0
-		statusfile = $statusfile
-		stamp = $stamp
-		logfile = $logfile
-	fin
-	touch $stamp
+	stop=0
+	write-status-file $statusfile
+	stop-wait
 	exit 128
 }
 
@@ -241,7 +242,7 @@ done
 stamp=${statusfile/.?*/.stamp}
 [[ $stamp = $statusfile ]] && stamp=${stamp}.stamp
 
-read-status-file
+read-status-file $statusfile
 
 # }}}1
 
@@ -299,11 +300,8 @@ do
 	horodate
 	change-wallpaper
 	symlink
-	write-status-file
-	# so as not to delay traps interception
-	sleep $delay &
-	attendre=$!
-	wait $attendre
+	write-status-file $statusfile
+	await $delay
 	# increment
 	(( current ++ ))
 done
