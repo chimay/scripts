@@ -1,5 +1,18 @@
 #!/usr/bin/env /bin/zsh
 
+# remind-server.zsh [reminders-file] [tictac]
+# where tictac is the number of minutes between remind checks
+
+reminders=${1:-~/racine/config/organizer/remind/reminders}
+
+integer tictac=${2:-5}
+
+integer minutes
+integer modulo
+integer future
+integer epoch
+integer future_epoch
+
 await () {
 	local delay=$1
 	# so as not to delay traps interception
@@ -8,73 +21,83 @@ await () {
 	wait $waitpid
 }
 
-signal-restart () {
-	echo
-	echo restarting remind ...
-	echo
-	kill $remindproc
+stop-wait () {
+	echoerr "stop waiting"
+	echoerr
+	[ -z $waitpid ] || kill $waitpid
+	waitpid=
 }
 
-reminders=~/racine/config/organizer/remind/reminders
+echoerr () {
+	print "$@" >&2
+}
 
-# Number of minutes between remind checks
-integer tictac=${1:-5}
+display-info () {
+	local current_date=$(date -d @$epoch)
+	local future_date=$(date -d @$future_epoch)
+	echoerr "minutes          = $minutes"
+	echoerr "modulo           = $modulo"
+	echoerr "future           = $future"
+	echoerr "epoch            = $epoch"
+	echoerr "future_epoch     = $future_epoch"
+	echoerr "delta            = $delta"
+	echoerr "current_date     = $current_date"
+	echoerr "future_date      = $future_date"
+	echoerr
+}
 
-integer minutes
-integer modulo
-integer future
-integer epoch
-integer future_epoch
-integer delta
-
-while true
-do
+delta-until-good-time () {
+	local delta
 	minutes=$(date +%M)
 	modulo=$(( minutes % tictac ))
-
 	if (( modulo > 0 ))
 	then
 		future=$(( tictac - modulo ))
 	else
 		future=0
 	fi
-
 	epoch=$(date +%s)
 	future_epoch=$(date -d "$future min" +%s)
 	(( future_epoch -= $(date -d "$future min" +%S) ))
-
 	delta=$(( future_epoch - epoch ))
 	(( delta < 0 )) && delta=0
+	# some info to display
+	display-info
+	# result
+	echo $delta
+}
 
-	current_date=$(date -d @$epoch)
-	future_date=$(date -d @$future_epoch)
-
-	echo "tictac           = $tictac"
-	echo "minutes          = $minutes"
-	echo "modulo           = $modulo"
-	echo "future           = $future"
-	echo "epoch            = $epoch"
-	echo "future_epoch     = $future_epoch"
-	echo "delta            = $delta"
-	echo "current_date     = $current_date"
-	echo "future_date      = $future_date"
+wait-until-good-time () {
+	echo $(date) : waiting for the good time to restart remind ...
 	echo
-
 	trap '' SIGUSR1
-
-	await $delta
-
-	echo $(date) : Starting remind ...
+	trap 1>&2
 	echo
+	await $(delta-until-good-time)
+}
 
-	trap signal-restart SIGUSR1
-
+start-remind () {
+	echo $(date) : starting remind ...
+	echo
+	trap restart-remind SIGUSR1
+	trap 1>&2
 	remind -z$tictac -k'remind-msg.sh %s &' $reminders &
-
 	remindproc=$!
-
 	echo remindproc = $remindproc
 	echo
-
 	wait $remindproc
+}
+
+restart-remind () {
+	echo
+	echo restarting remind ...
+	echo
+	kill $remindproc
+	remindproc=
+}
+
+while true
+do
+	wait-until-good-time
+	start-remind
 done
