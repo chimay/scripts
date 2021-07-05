@@ -1,8 +1,16 @@
 #!/usr/bin/env /bin/zsh
 
+await () {
+	local delay=$1
+	# so as not to delay traps interception
+	sleep $delay &
+	waitpid=$!
+	wait $waitpid
+}
+
 signal-restart () {
 	echo
-	echo Restarting remind ...
+	echo restarting remind ...
 	echo
 	kill $remindproc
 }
@@ -54,14 +62,7 @@ do
 
 	trap '' SIGUSR1
 
-	sleep $delta &
-
-	waitpid=$!
-
-	echo waitpid = $waitpid
-	echo
-
-	wait $waitpid
+	await $delta
 
 	echo $(date) : Starting remind ...
 	echo
