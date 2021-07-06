@@ -40,7 +40,6 @@ display-info () {
 	echoerr "future           = $future"
 	echoerr "epoch            = $epoch"
 	echoerr "future_epoch     = $future_epoch"
-	echoerr "delta            = $delta"
 	echoerr "current_date     = $current_date"
 	echoerr "future_date      = $future_date"
 	echoerr
@@ -68,12 +67,13 @@ delta-until-good-time () {
 }
 
 wait-until-good-time () {
-	echo $(date) : waiting for the good time to restart remind ...
-	echo
+	local delta=$(delta-until-good-time)
 	trap '' SIGUSR1
+	echo $(date) : waiting $delta seconds for the good time to start remind ...
+	echo
 	trap 1>&2
 	echo
-	await $(delta-until-good-time)
+	await $delta
 }
 
 start-remind () {
