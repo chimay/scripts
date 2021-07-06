@@ -21,6 +21,7 @@ stop-wait () {
 	echoerr "stop waiting"
 	echoerr
 	[ -z $waitpid ] || kill $waitpid
+	waitpid=
 }
 
 echoerr () {
@@ -57,6 +58,11 @@ write-status-file () {
 		stop = 0
 	fin
 	touch $stamp
+}
+
+update-current-in-status-file () {
+	{ echo 'g/^current/s/= .*$/= '$current'/' ; echo w } | ed $statusfile
+	echoerr
 }
 
 read-status-file () {
@@ -96,6 +102,8 @@ regen-image-list () {
 		current=1
 		Nimages=${#images}
 		poster=$images[$current]
+		update-current-in-status-file
+		echo-status-vars
 	fi
 	reload=0
 }
@@ -103,6 +111,7 @@ regen-image-list () {
 horodate () {
 	dateHeure=`date +"%a %d %b %Y, %H:%M"`
 	echoerr $dateHeure : $current : $poster
+	echoerr
 }
 
 change-wallpaper () {
@@ -128,14 +137,13 @@ signal-reload () {
 	echoerr "reloading wallpapers list"
 	echoerr
 	{ echo 'g/^reload/s/= .*$/= 1/' ; echo w } | ed $statusfile
+	echoerr
 	stop-wait
 }
 
 signal-next () {
 	echoerr "switching to next wallpaper"
 	echoerr
-	(( current += 1 ))
-	{ echo 'g/^current/s/= .*$/= '$current'/' ; echo w } | ed $statusfile
 	stop-wait
 }
 
@@ -304,6 +312,7 @@ do
 	await $delay
 	# increment
 	(( current ++ ))
+	update-current-in-status-file
 done
 
 # }}}
