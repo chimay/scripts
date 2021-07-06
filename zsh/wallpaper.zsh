@@ -9,6 +9,42 @@ setopt extended_glob
 
 # Functions {{{1
 
+help () {
+	echoerr "$(basename $0) : Dynamic wallpaper from random list & priorities."
+	echoerr
+	echoerr "Dependancies : gen-random-list.zsh, random.zsh"
+	echoerr
+	echoerr "Usage : $(basename $0) [status-file]"
+	echoerr
+	echoerr "[Status file format]"
+	echoerr
+	echoerr "variable = value"
+	echoerr
+	echoerr "Your status file must at least contain the following variables :"
+	echoerr
+	echoerr "meta"
+	echoerr
+	echoerr "Available variables"
+	echoerr
+	echoerr "dispersion        : the higher it is, the more the list will be shuffled"
+	echoerr "minutes & seconds : define delay between wallpaper changes"
+	echoerr "meta              : meta-file to generate list"
+	echoerr "                    see 'gen-random-list.zsh -h' for details of file format"
+	echoerr "current           : index of current wallpaper in list"
+	echoerr "reload            : whether to generate a new list"
+	echoerr "stop              : whether to save statusfile and stop the script"
+	echoerr "statusfile        : path of status file"
+	echoerr "stamp             : stamp file, used to know when to reload the status file"
+	echoerr "logfile           : log file for gen-random-list.zsh"
+	echoerr
+	echoerr "[Signals]"
+	echoerr
+	echoerr "SIGUSR1        : generate a new list and set the first file as wallpaper"
+	echoerr "SIGUSR2        : go to the next wallpaper"
+	echoerr "HUP, INT, TERM : save status in status file and stop"
+	exit 0
+}
+
 await () {
 	local delay=$1
 	# so as not to delay traps interception
@@ -26,6 +62,25 @@ stop-wait () {
 
 echoerr () {
 	print "$@" >&2
+}
+
+init-empty-vars () {
+	[ -z $statusfile ] && statusfile=~/racine/run/wall/wallpaper.status
+	[ -z $stamp ]      && stamp=~/racine/run/wall/wallpaper.stamp
+	[ -z $meta ]       && meta=~/racine/list/pictura/wallpaper.meta
+	[ -z $logfile ]    && logfile=~/log/gen-random-list.log
+	[ -z $dispersion ] && dispersion=0
+	[ -z $minutes ]    && minutes=0
+	[ -z $seconds ]    && seconds=0
+	[ -z $current ]    && current=1
+	[ -z $reload ]     && reload=0
+	[ -z $stop ]       && stop=0
+	if [ $minutes -eq 0 -a $seconds -eq 0 ]
+	then
+		minutes=30
+		seconds=0
+	fi
+	(( delay = minutes * 60 + seconds ))
 }
 
 echo-status-vars () {
@@ -65,6 +120,11 @@ update-current-in-status-file () {
 	echoerr
 }
 
+update-reload-in-status-file () {
+	{ echo 'g/^reload/s/= .*$/= '$reload'/' ; echo w } | ed $statusfile
+	echoerr
+}
+
 read-status-file () {
 	local statusfile=$1
 	[[ -f $statusfile ]] || write-status-file $statusfile
@@ -83,7 +143,7 @@ choose-wallpaper () {
 	do
 		echoerr file $images[$current] does not exist : skipping
 		echoerr
-		(( current += 1 ))
+		(( current ++ ))
 	done
 	if (( current < Nimages ))
 	then
@@ -93,19 +153,37 @@ choose-wallpaper () {
 	fi
 }
 
-regen-image-list () {
+gen-image-list () {
 	local reload=$1
-	if (( reload == 1 ))
+	random_list=${meta/.?*/.m3u}
+	if [ ! -f $random_list ]
 	then
-		gen-random-list.zsh $dispersion $meta &>>! ~/log/gen-random-list.log
-		images=($(cat $liste))
+		echo wallpaper list does not exist
+		echo
+	fi
+	if [ $reload -eq 1 -o ! -f $random_list ]
+	then
+		echo generating new wallpaper list
+		echo
+		gen-random-list.zsh $dispersion $meta &>>! $logfile
+		images=($(< $random_list))
 		current=1
 		Nimages=${#images}
 		poster=$images[$current]
 		update-current-in-status-file
 		echo-status-vars
 	fi
+	if [ -z $Nimages ]
+	then
+		echo random image list does not exist, generating it ...
+		echo
+		images=($(< $random_list))
+		Nimages=${#images}
+		poster=$images[$current]
+		echo-status-vars
+	fi
 	reload=0
+	update-reload-in-status-file
 }
 
 horodate () {
@@ -133,17 +211,17 @@ symlink () {
 
 # Traps {{{1
 
-signal-reload () {
-	echoerr "reloading wallpapers list"
-	echoerr
-	{ echo 'g/^reload/s/= .*$/= 1/' ; echo w } | ed $statusfile
+signal-next () {
+	echoerr "switching to next wallpaper"
 	echoerr
 	stop-wait
 }
 
-signal-next () {
-	echoerr "switching to next wallpaper"
+signal-reload () {
+	echoerr "reloading wallpapers list"
 	echoerr
+	reload=1
+	update-reload-in-status-file
 	stop-wait
 }
 
@@ -205,96 +283,23 @@ done
 
 # }}}1
 
-# Help {{{1
-
-[ $numarg -eq 0 -o $aide -eq 1 ] && {
-	echoerr "$(basename $0) : Dynamic wallpaper from random list & priorities."
-	echoerr
-	echoerr "Dependancies : gen-random-list.zsh, random.zsh"
-	echoerr
-	echoerr "Usage : $(basename $0) [status-file]"
-	echoerr
-	echoerr "[Status file format]"
-	echoerr
-	echoerr "variable = value"
-	echoerr
-	echoerr "Your status file must at least contain the following variables :"
-	echoerr
-	echoerr "meta"
-	echoerr
-	echoerr "Available variables"
-	echoerr
-	echoerr "dispersion        : the higher it is, the more the list will be shuffled"
-	echoerr "minutes & seconds : define delay between wallpaper changes"
-	echoerr "meta              : meta-file to generate list"
-	echoerr "                    see 'gen-random-list.zsh -h' for details of file format"
-	echoerr "current           : index of current wallpaper in list"
-	echoerr "reload            : whether to generate a new list"
-	echoerr "stop              : whether to save statusfile and stop the script"
-	echoerr "statusfile        : path of status file"
-	echoerr "stamp             : stamp file, used to know when to reload the status file"
-	echoerr "logfile           : log file for gen-random-list.zsh"
-	echoerr
-	echoerr "[Signals]"
-	echoerr
-	echoerr "SIGUSR1        : generate a new list and set the first file as wallpaper"
-	echoerr "SIGUSR2        : go to the next wallpaper"
-	echoerr "HUP, INT, TERM : save status in status file and stop"
-	exit 0
-}
-
-# }}}1
-
-# Status file {{{1
+[ $numarg -eq 0 -o $aide -eq 1 ] && help
 
 stamp=${statusfile/.?*/.stamp}
 [[ $stamp = $statusfile ]] && stamp=${stamp}.stamp
-
 read-status-file $statusfile
 
-# }}}1
+init-empty-vars
 
-# Empty -> default values {{{1
-
-[ -z $statusfile ] && statusfile=~/racine/run/wall/wallpaper.status
-[ -z $stamp ]      && stamp=~/racine/run/wall/wallpaper.stamp
-
-[ -z $meta ]       && meta=~/racine/list/pictura/wallpaper.meta
-[ -z $logfile ]    && logfile=~/log/gen-random-list.log
-
-[ -z $dispersion ] && dispersion=0
-[ -z $minutes ]    && minutes=0
-[ -z $seconds ]    && seconds=0
-[ -z $current ]    && current=1
-[ -z $reload ]     && reload=0
-[ -z $stop ]       && stop=0
-
-[ $minutes -eq 0 -a $seconds -eq 0 ] && {
-	minutes=30
-	seconds=0
-}
-
-(( delay = minutes * 60 + seconds ))
-
-# }}}1
-
-# Image list generation {{{1
-
-liste=${meta/.?*/.m3u}
-
-[ -f $liste ] || {
-	gen-random-list.zsh $dispersion $meta &>>! $logfile
-}
-
-images=($(cat $liste))
-Nimages=${#images}
-
-# }}}1
+gen-image-list $reload
 
 echo-status-vars
 
 trap 1>&2
 echoerr
+
+echo 'wallpaper is launched'
+echo
 
 # {{{ Loop
 
@@ -304,11 +309,10 @@ do
 	(( stop > 0 )) && signal-stop
 	(( current >= Nimages )) && reload=1
 	choose-wallpaper
-	regen-image-list $reload
+	gen-image-list $reload
 	horodate
 	change-wallpaper
 	symlink
-	write-status-file $statusfile
 	await $delay
 	# increment
 	(( current ++ ))
