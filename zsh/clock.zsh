@@ -151,6 +151,7 @@ signal-stop-wait () {
 	echoerr "stop waiting"
 	echoerr
 	[ -z $waitpid ] || kill $waitpid
+	waitpid=
 }
 
 signal-toggle () {

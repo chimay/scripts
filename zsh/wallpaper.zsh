@@ -9,6 +9,10 @@ setopt extended_glob
 
 # Functions {{{1
 
+echoerr () {
+	print "$@" >&2
+}
+
 help () {
 	echoerr "$(basename $0) : Dynamic wallpaper from random list & priorities."
 	echoerr
@@ -47,6 +51,8 @@ help () {
 
 await () {
 	local delay=$1
+	echo "waiting $delay seconds"
+	echo
 	# so as not to delay traps interception
 	sleep $delay &
 	waitpid=$!
@@ -54,14 +60,10 @@ await () {
 }
 
 stop-wait () {
-	echoerr "stop waiting"
-	echoerr
+	echo "stop waiting"
+	echo
 	[ -z $waitpid ] || kill $waitpid
 	waitpid=
-}
-
-echoerr () {
-	print "$@" >&2
 }
 
 init-empty-vars () {
@@ -84,22 +86,24 @@ init-empty-vars () {
 }
 
 echo-status-vars () {
-	echoerr status file : $statusfile
-	echoerr stamp file  : $stamp
-	echoerr meta        : $meta
-	echoerr logfile     : $logfile
-	echoerr dispersion  : $dispersion
-	echoerr minutes     : $minutes
-	echoerr seconds     : $seconds
-	echoerr delay       : $delay
-	echoerr current     : $current
-	echoerr reload      : $reload
-	echoerr stop        : $stop
-	echoerr
+	echo status file : $statusfile
+	echo stamp file  : $stamp
+	echo meta        : $meta
+	echo logfile     : $logfile
+	echo dispersion  : $dispersion
+	echo minutes     : $minutes
+	echo seconds     : $seconds
+	echo delay       : $delay
+	echo current     : $current
+	echo reload      : $reload
+	echo stop        : $stop
+	echo
 }
 
 write-status-file () {
 	local statusfile=$1
+	echo "writing status file"
+	echo
 	cat <<- fin >| $statusfile
 		statusfile = $statusfile
 		stamp = $stamp
@@ -116,17 +120,24 @@ write-status-file () {
 }
 
 update-current-in-status-file () {
+	echo "updating current in status file"
+	echo
 	{ echo 'g/^current/s/= .*$/= '$current'/' ; echo w } | ed $statusfile
-	echoerr
+	echo
 }
 
 update-reload-in-status-file () {
+	echo "updating reload in status file"
+	echo
 	{ echo 'g/^reload/s/= .*$/= '$reload'/' ; echo w } | ed $statusfile
-	echoerr
+	echo
 }
 
 read-status-file () {
 	local statusfile=$1
+	[[ $statusfile -nt $stamp ]] || return 0
+	echo "reading status file"
+	echo
 	[[ -f $statusfile ]] || write-status-file $statusfile
 	touch $stamp
 	while read ligne
@@ -141,8 +152,8 @@ read-status-file () {
 choose-wallpaper () {
 	while [ ! -e $images[$current] -a $current -lt $Nimages ]
 	do
-		echoerr file $images[$current] does not exist : skipping
-		echoerr
+		echo file $images[$current] does not exist : skipping
+		echo
 		(( current ++ ))
 	done
 	if (( current < Nimages ))
@@ -158,12 +169,12 @@ gen-image-list () {
 	random_list=${meta/.?*/.m3u}
 	if [ ! -f $random_list ]
 	then
-		echo wallpaper list does not exist
+		echo "wallpaper list does not exist"
 		echo
 	fi
 	if [ $reload -eq 1 -o ! -f $random_list ]
 	then
-		echo generating new wallpaper list
+		echo "generating new wallpaper list"
 		echo
 		gen-random-list.zsh $dispersion $meta &>>! $logfile
 		images=($(< $random_list))
@@ -175,21 +186,24 @@ gen-image-list () {
 	fi
 	if [ -z $Nimages ]
 	then
-		echo random image list does not exist, generating it ...
+		echo "random image list does not exist, generating it ..."
 		echo
 		images=($(< $random_list))
 		Nimages=${#images}
 		poster=$images[$current]
 		echo-status-vars
 	fi
-	reload=0
-	update-reload-in-status-file
+	if [ $reload -eq 1 ]
+	then
+		reload=0
+		update-reload-in-status-file
+	fi
 }
 
 horodate () {
 	dateHeure=`date +"%a %d %b %Y, %H:%M"`
-	echoerr $dateHeure : $current : $poster
-	echoerr
+	echo $dateHeure : $current : $poster
+	echo
 }
 
 change-wallpaper () {
@@ -200,8 +214,8 @@ symlink () {
 	# Pour i3lock
 	link=${statusfile%/*}/current
 	[ -L $link ] && {
-		#echoerr "rm -f $link"
-		#echoerr
+		#echo "rm -f $link"
+		#echo
 		rm -f $link
 	}
 	ln -s $poster $link
@@ -212,22 +226,24 @@ symlink () {
 # Traps {{{1
 
 signal-next () {
-	echoerr "switching to next wallpaper"
-	echoerr
+	echo "switching to next wallpaper"
+	echo
+	(( current ++ ))
+	update-current-in-status-file
 	stop-wait
 }
 
 signal-reload () {
-	echoerr "reloading wallpapers list"
-	echoerr
+	echo "reloading wallpapers list"
+	echo
 	reload=1
 	update-reload-in-status-file
 	stop-wait
 }
 
 signal-stop () {
-	echoerr "halting wallpaper"
-	echoerr
+	echo "halting wallpaper"
+	echo
 	stop=0
 	write-status-file $statusfile
 	stop-wait
@@ -244,7 +260,6 @@ trap signal-stop    HUP INT TERM
 # Initialization {{{1
 
 statusfile=~/racine/run/wall/wallpaper.status
-stamp=~/racine/run/wall/wallpaper.stamp
 
 meta=~/racine/list/pictura/wallpaper.meta
 logfile=~/log/gen-random-list.log
@@ -287,6 +302,7 @@ done
 
 stamp=${statusfile/.?*/.stamp}
 [[ $stamp = $statusfile ]] && stamp=${stamp}.stamp
+touch $statusfile
 read-status-file $statusfile
 
 init-empty-vars
@@ -296,9 +312,9 @@ gen-image-list $reload
 echo-status-vars
 
 trap 1>&2
-echoerr
+echo
 
-echo 'wallpaper is launched'
+echo "wallpaper is launched"
 echo
 
 # {{{ Loop
@@ -316,7 +332,6 @@ do
 	await $delay
 	# increment
 	(( current ++ ))
-	update-current-in-status-file
 done
 
 # }}}
