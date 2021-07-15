@@ -186,12 +186,11 @@ gen-image-list () {
 	fi
 	if [ -z $Nimages ]
 	then
-		echo "random image list does not exist, generating it ..."
+		echo "assigning image list"
 		echo
 		images=($(< $random_list))
 		Nimages=${#images}
 		poster=$images[$current]
-		echo-status-vars
 	fi
 	if [ $reload -eq 1 ]
 	then
@@ -308,8 +307,6 @@ read-status-file $statusfile
 init-empty-vars
 
 gen-image-list $reload
-
-echo-status-vars
 
 trap 1>&2
 echo
