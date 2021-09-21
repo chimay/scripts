@@ -58,6 +58,7 @@ echo-status-vars () {
 
 write-status-file () {
 	local statusfile=$1
+	local stamp=$2
 	frequency=$(( 60 / interval ))
 	cat <<- fin >| $statusfile
 		interval = $interval
@@ -77,7 +78,7 @@ write-status-file () {
 
 read-status-file () {
 	local statusfile=$1
-	[[ -f $statusfile ]] || write-status-file $statusfile
+	local stamp=$2
 	touch $stamp
 	while read ligne
 	do
@@ -87,6 +88,7 @@ read-status-file () {
 	echo-status-vars
 	player $volume $rewind
 	player $volume $tictac
+	echo
 }
 
 rest () {
@@ -100,10 +102,10 @@ rest () {
 
 halt () {
 	local halt=$1
-	(( stop > 0 )) || return 0
+	(( halt > 0 )) || return 0
 	echo "clock is halting."
 	echo
-	write-status-file $statusfile
+	write-status-file $statusfile $stamp
 	break
 }
 
@@ -162,7 +164,7 @@ signal-toggle () {
 	else
 		pause=0
 	fi
-	write-status-file $statusfile
+	write-status-file $statusfile $stamp
 	signal-stop-wait
 }
 
@@ -170,7 +172,7 @@ signal-stop () {
 	echoerr "halting clock"
 	echoerr
 	stop=1
-	write-status-file $statusfile
+	write-status-file $statusfile $stamp
 	signal-stop-wait
 	exit 128
 }
@@ -344,34 +346,21 @@ date +"   clock starting %A %d %B %Y  (o) %H : %M : %S  | %:z | "
 echo '========================================================================'
 echo
 
-echo-status-vars
-echo player $volume $rewind
-echo player $volume $tictac
+write-status-file $statusfile $stamp
+
+read-status-file $statusfile $stamp
 
 trap 1>&2
 echo
 
-write-status-file $statusfile
-
-#  {{{ Initial delay
-
-echo "player $volume $rewind"
-echo "player $volume $tictac"
-echo
-
-player $volume $rewind
-player $volume $tictac
-
 wait-until-next-minute
-
-#  }}}
 
 #  {{{ Loop
 
 while true
 do
 	horodate
-	read-status-file $statusfile
+	[ $statusfile -nt $stamp ] && read-status-file $statusfile $stamp
 	rest $pause
 	halt $stop
 	# variables
