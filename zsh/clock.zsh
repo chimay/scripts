@@ -130,13 +130,7 @@ rest () {
 
 halt () {
 	local halt=$1
-	(( halt > 0 )) || return 0
-	echo "clock is halting."
-	echo
-	echo "------------------------------"
-	echo
-	write-status-file $statusfile $stamp
-	break
+	(( halt > 0 )) && signal-stop
 }
 
 ring-bell () {
@@ -179,9 +173,9 @@ ring-bell () {
 # Traps {{{1
 
 signal-stop-wait () {
-	echoerr
-	echoerr "stop waiting"
-	echoerr
+	echo
+	echo "stop waiting"
+	echo
 	[ -z $waitpid ] || kill $waitpid
 	waitpid=
 }
@@ -199,8 +193,10 @@ signal-toggle () {
 }
 
 signal-stop () {
-	echoerr "halting clock"
-	echoerr
+	echo "halting clock"
+	echo
+	echo "------------------------------"
+	echo
 	stop=0
 	write-status-file $statusfile $stamp
 	signal-stop-wait
