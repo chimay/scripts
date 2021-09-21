@@ -26,16 +26,14 @@ help () {
 	echoerr
 	echoerr "Available variables"
 	echoerr
-	echoerr "dispersion        : the higher it is, the more the list will be shuffled"
-	echoerr "minutes & seconds : define delay between wallpaper changes"
 	echoerr "meta              : meta-file to generate list"
 	echoerr "                    see 'gen-random-list.zsh -h' for details of file format"
+	echoerr "logfile           : log file for gen-random-list.zsh"
+	echoerr "dispersion        : the higher it is, the more the list will be shuffled"
+	echoerr "minutes & seconds : define delay between wallpaper changes"
 	echoerr "current           : index of current wallpaper in list"
 	echoerr "reload            : whether to generate a new list"
 	echoerr "stop              : whether to save statusfile and stop the script"
-	echoerr "statusfile        : path of status file"
-	echoerr "stamp             : stamp file, used to know when to reload the status file"
-	echoerr "logfile           : log file for gen-random-list.zsh"
 	echoerr
 	echoerr "[Signals]"
 	echoerr
@@ -127,10 +125,10 @@ update-reload-in-status-file () {
 
 read-status-file () {
 	local statusfile=$1
+	local stamp=$2
 	[[ $statusfile -nt $stamp ]] || return 0
 	echo "reading status file"
 	echo
-	[[ -f $statusfile ]] || write-status-file $statusfile
 	touch $stamp
 	while read ligne
 	do
@@ -287,6 +285,8 @@ stamp=${statusfile/.?*/.stamp}
 
 [[ $statusfile = $stamp ]] && stamp=${stamp}.stamp
 
+touch $statusfile
+
 # }}}1
 
 [ $numarg -eq 0 -o $aide -eq 1 ] && help
@@ -300,10 +300,7 @@ echo statusfile : $statusfile
 echo stamp : $stamp
 echo
 
-stamp=${statusfile/.?*/.stamp}
-[[ $stamp = $statusfile ]] && stamp=${stamp}.stamp
-touch $statusfile
-read-status-file $statusfile
+read-status-file $statusfile $stamp
 
 init-empty-vars
 
@@ -319,7 +316,7 @@ echo
 
 while true
 do
-	read-status-file $statusfile
+	read-status-file $statusfile $stamp
 	(( stop > 0 )) && signal-stop
 	(( current >= Nimages )) && reload=1
 	choose-wallpaper

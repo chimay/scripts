@@ -281,6 +281,8 @@ stamp=${statusfile/.?*/.stamp}
 
 [[ $statusfile = $stamp ]] && stamp=${stamp}.stamp
 
+touch $statusfile
+
 # }}}1
 
 [ $numarg -eq 0 -o $aide -eq 1 ] && help
@@ -293,8 +295,6 @@ echo
 echo statusfile : $statusfile
 echo stamp : $stamp
 echo
-
-write-status-file $statusfile $stamp
 
 read-status-file $statusfile $stamp
 
