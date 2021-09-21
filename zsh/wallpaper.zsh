@@ -94,6 +94,7 @@ echo-status-vars () {
 
 write-status-file () {
 	local statusfile=$1
+	local stamp=$2
 	echo "writing status file"
 	echo
 	cat <<- fin >| $statusfile
@@ -236,7 +237,7 @@ signal-stop () {
 	echo "------------------------------"
 	echo
 	stop=0
-	write-status-file $statusfile
+	write-status-file $statusfile $stamp
 	stop-wait
 	exit 128
 }
