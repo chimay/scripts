@@ -201,7 +201,7 @@ signal-toggle () {
 signal-stop () {
 	echoerr "halting clock"
 	echoerr
-	stop=1
+	stop=0
 	write-status-file $statusfile $stamp
 	signal-stop-wait
 	exit 128
