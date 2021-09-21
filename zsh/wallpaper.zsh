@@ -24,10 +24,6 @@ help () {
 	echoerr
 	echoerr "variable = value"
 	echoerr
-	echoerr "Your status file must at least contain the following variables :"
-	echoerr
-	echoerr "meta"
-	echoerr
 	echoerr "Available variables"
 	echoerr
 	echoerr "dispersion        : the higher it is, the more the list will be shuffled"
@@ -72,7 +68,7 @@ init-empty-vars () {
 	[ -z $meta ]       && meta=~/racine/list/pictura/wallpaper.meta
 	[ -z $logfile ]    && logfile=~/log/gen-random-list.log
 	[ -z $dispersion ] && dispersion=0
-	[ -z $minutes ]    && minutes=0
+	[ -z $minutes ]    && minutes=30
 	[ -z $seconds ]    && seconds=0
 	[ -z $current ]    && current=1
 	[ -z $reload ]     && reload=0
@@ -86,8 +82,6 @@ init-empty-vars () {
 }
 
 echo-status-vars () {
-	echo status file : $statusfile
-	echo stamp file  : $stamp
 	echo meta        : $meta
 	echo logfile     : $logfile
 	echo dispersion  : $dispersion
@@ -105,8 +99,6 @@ write-status-file () {
 	echo "writing status file"
 	echo
 	cat <<- fin >| $statusfile
-		statusfile = $statusfile
-		stamp = $stamp
 		meta = $meta
 		logfile = $logfile
 		dispersion = $dispersion
@@ -243,6 +235,8 @@ signal-reload () {
 signal-stop () {
 	echo "halting wallpaper"
 	echo
+	echo "------------------------------"
+	echo
 	stop=0
 	write-status-file $statusfile
 	stop-wait
@@ -259,16 +253,6 @@ trap signal-stop    HUP INT TERM
 # Initialization {{{1
 
 statusfile=~/racine/run/wall/wallpaper.status
-
-meta=~/racine/list/pictura/wallpaper.meta
-logfile=~/log/gen-random-list.log
-
-dispersion=7
-minutes=30
-seconds=0
-current=1
-reload=0
-stop=0
 
 # }}}1
 
@@ -297,7 +281,24 @@ done
 
 # }}}1
 
+# Status file {{{1
+
+stamp=${statusfile/.?*/.stamp}
+
+[[ $statusfile = $stamp ]] && stamp=${stamp}.stamp
+
+# }}}1
+
 [ $numarg -eq 0 -o $aide -eq 1 ] && help
+
+echo
+echo '================================================================================'
+date +"   wallpaper starting %A %d %B %Y  (o) %H : %M : %S  | %:z | "
+echo '================================================================================'
+echo
+echo statusfile : $statusfile
+echo stamp : $stamp
+echo
 
 stamp=${statusfile/.?*/.stamp}
 [[ $stamp = $statusfile ]] && stamp=${stamp}.stamp
