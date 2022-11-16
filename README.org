@@ -15,7 +15,7 @@ BSD
 
 Dependances :
 
-  - multi-the.zsh -> the.zsh -> minuterie.zsh -> sonnerie.zsh -> audio files
+  - multi-tea.zsh -> ding-dong.zsh -> minuter.zsh -> bell.zsh -> audio files
 
   - meditation.zsh -> alea.py, audio files
 
