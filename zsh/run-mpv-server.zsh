@@ -1,4 +1,4 @@
-#!/usr/bin/env /bin/zsh
+#!/usr/bin/env zsh
 
 # {{{ Options
 
@@ -24,13 +24,13 @@ psgrep 'mpv --idle --input-file' &> /dev/null && {
 
 # }}}1
 
-local tube=~/racine/run/fifo/mpv
+local tube=~/racine/run/pipe/mpv
 
 [[ -p $tube ]] || {
 
 	[[ -e $tube ]] && rm -f $tube
 
-	mkdir -p ~/racine/run/fifo
+	mkdir -p ~/racine/run/pipe
 
 	mkfifo $tube
 }

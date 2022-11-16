@@ -1,6 +1,4 @@
-#!/usr/bin/env /bin/zsh
-
-[ $HOST = shari ] || exit 0
+#!/usr/bin/env zsh
 
 echo
 echo "=================================="

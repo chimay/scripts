@@ -1,4 +1,4 @@
-#!/usr/bin/env /bin/zsh
+#!/usr/bin/env zsh
 
 lieu=${1:-Paris}
 
@@ -8,4 +8,4 @@ echo " " $(date +"%H : %M %A %d %B %Y")
 echo "=================================="
 echo
 
-curl wttr.in/$lieu
+curl wttr.in/$lieu 2>~/log/wttr-in.err.log

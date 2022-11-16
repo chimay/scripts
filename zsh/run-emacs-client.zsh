@@ -1,8 +1,8 @@
 #! /usr/bin/env zsh
 
-#xdotool search --name emacs@$HOST windowactivate && exit 0
+xdotool search --name emacs@$HOST windowactivate && exit 0
 
-xdotool windowactivate $(xdotool search --class Emacs | tail -n 1) && exit 0
+#xdotool windowactivate $(xdotool search --class Emacs | tail -n 1) && exit 0
 
 # Choix de la version d’emacs {{{1
 
