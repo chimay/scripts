@@ -133,19 +133,19 @@ trap clausule HUP INT TERM
 if (( hours > 0 && minutes > 0 && seconds > 0 ))
 then
 	echome="$hours hours $minutes minutes $seconds seconds =  $total seconds"
-	notify_msg="Minuter : $hours hou $minutes minutes $seconds seconds"
+	notify_msg="Minuter : $hours hours $minutes minutes $seconds seconds"
 elif (( hours > 0 && minutes > 0 && seconds == 0 ))
 then
 	echome="$hours hours $minutes minutes =  $total seconds"
-	notify_msg="Minuter : $hours hou $minutes minutes"
+	notify_msg="Minuter : $hours hours $minutes minutes"
 elif (( hours > 0 && minutes == 0 && seconds > 0 ))
 then
 	echome="$hours hours $seconds seconds =  $total seconds"
-	notify_msg="Minuter : $hours hou $seconds seconds"
+	notify_msg="Minuter : $hours hours $seconds seconds"
 elif (( hours > 0 && minutes == 0 && seconds == 0 ))
 then
 	echome="$hours hours =  $total seconds"
-	notify_msg="Minuter : $hours hou"
+	notify_msg="Minuter : $hours hours"
 elif (( hours == 0 && minutes > 0 && seconds > 0 ))
 then
 	echome="$minutes minutes $seconds seconds =  $total seconds"
