@@ -4,10 +4,6 @@
 
 # Variables {{{1
 
-#sound=~/racine/musica/soundfont/Unison.sf2
-#sound=/usr/share/soundfonts/FluidR3_GM.sf2
-sound=/usr/share/soundfonts/freepats-general-midi.sf2
-
 #musescore=/usr/bin/musescore
 musescore=/usr/bin/mscore
 
@@ -15,7 +11,7 @@ musescore=/usr/bin/mscore
 
 # {{{ Arguments
 
-lilydir=lilypond
+lilydir=.
 
 argumen=()
 
@@ -52,7 +48,7 @@ done
 [ $#argumen -eq 0 ] && {
 	echo Usage : $0 '[-d lily-dest-dir] file(s)'
 	echo
-	echo Convert musescore files to lilypond, pdf, midi, ogg
+	echo Convert musescore files to lilypond
 	exit 0
 }
 

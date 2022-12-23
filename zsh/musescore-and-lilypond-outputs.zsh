@@ -15,7 +15,7 @@ musescore=/usr/bin/mscore
 
 # {{{ Arguments
 
-lilydir=lilypond
+lilydir=.
 
 argumen=()
 
