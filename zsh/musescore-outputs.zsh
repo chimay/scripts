@@ -70,6 +70,35 @@ do
 
 	score=${score#$PWD/}
 
+	# musescore dir
+
+	pdf=${score%.*}.pdf
+
+	[ ! -f $pdf -o $score -nt $pdf ] && {
+		echo
+		echo "$musescore -o $pdf $score"
+		echo
+		$musescore -o $pdf -P $score
+	}
+
+	midi=${score%.*}.midi
+
+	[ ! -f $midi -o $score -nt $midi ] && {
+		echo
+		echo "$musescore -o $midi $score"
+		echo
+		$musescore -o $midi $score
+	}
+
+	ogg=${score%.*}.ogg
+
+	[ ! -f $ogg -o $score -nt $ogg ] && {
+		echo
+		echo "$musescore -o $ogg $score"
+		echo
+		$musescore -o $ogg $score
+	}
+
 	# music xml bridge
 
 	xml=$lilydir/${score%.*}.mxl
@@ -98,6 +127,34 @@ do
 	}
 
 	rm -f *.ly~
+
+	pdf=${lily%.ly}.pdf
+	midi=${lily%.ly}.midi
+
+	[ ! -f $pdf -o $lily -nt $pdf -o ! -f $midi -o $lily -nt $midi ] && {
+		echo
+		echo "lilypond $lily"
+		echo
+		lilypond $lily
+	}
+
+	ogg_fluid=${lily%.ly}-fluid.ogg
+
+	[ ! -f $ogg_fluid -o $midi -nt $ogg_fluid ] && {
+		echo
+		echo "fluidsynth  -nli -r 48000 -o synth.cpu-cores=2 -T oga -F $ogg_fluid $sound $midi"
+		echo
+		fluidsynth  -nli -r 48000 -o synth.cpu-cores=2 -T oga -F $ogg_fluid $sound $midi
+	}
+
+	ogg_timidity=${lily%.ly}-timidity.ogg
+
+	[ ! -f $ogg_timidity -o $midi -nt $ogg_timidity ] && {
+		echo
+		echo "timidity -Ov -o $ogg_timidity $midi"
+		echo
+		timidity -Ov -o $ogg_timidity $midi
+	}
 
 	# back to musescore
 
