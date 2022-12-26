@@ -95,6 +95,11 @@ do
 
 	rm -f *.ly~
 
+	# adjustments
+
+	sed -i 's/\\stemUp //g' $lily
+	sed -i 's/\\stemDown //g' $lily
+
 	# back to musescore
 
 	echo
