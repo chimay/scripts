@@ -12,5 +12,6 @@ do
 	target=$(<$file)
 	target=${target//{{ .chezmoi.homeDir }}/\$HOME}
 	target=${target//{{ .chezmoi.hostname }}/\$HOST}
+	target=${target//{{ .chezmoi.sourceDir }}/\$HOME/racine/self/chezmoi/source}
 	printf '%s\t%s\n' $link $target
 done
