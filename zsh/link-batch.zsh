@@ -1,10 +1,6 @@
 #! /usr/bin/env zsh
 
-cd $HOME
-[ -d .config ] || mkdir -p .config
-[ -d .local/share ] || mkdir -p .local/share
-
-linksfile=${1:-~/racine/self/links/racine-links.txt}
+linksfile=$1
 
 linklist=()
 targetlist=()
@@ -50,7 +46,7 @@ do
 		echo 'target is empty'
 		continue
 	}
-	# -- exists ?
+	# -- link exists ?
 	[ -L $link ] && {
 		#echo link $link already exists
 		curtarget=$(readlink $link)
@@ -80,6 +76,22 @@ do
 		echo $link already exists
 		continue
 	}
+	# -- link dir exists ?
+	linkdir=${link%/*}
+	if ! [ -d $linkdir ]
+	then
+		[ -e $linkdir ] && {
+			echo $linkdir already exists but is not a dir
+			echo -n 'delete it ? (y/[N]) '
+			read answer
+			[ $#answer -eq 0 ] && answer=no
+			[[ $answer = n* ]] && continue
+			echo "rm -f $linkdir"
+			rm -f $linkdir
+		}
+		echo "mkdir -p $linkdir"
+		mkdir -p $linkdir
+	fi
 	# -- linking
 	echo "ln -sf $target $link"
 	ln -sf $target $link
