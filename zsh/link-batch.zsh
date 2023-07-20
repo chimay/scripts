@@ -11,22 +11,31 @@ targetlist=()
 
 while read line
 do
+	# -- fields
 	fields=(${(s/	/)line})
-	# -- link
 	link=$~fields[1]
-	link=${link//\$HOME/$HOME}
-	linklist+=($link)
-	# -- target
 	target=$~fields[2]
+	# -- link
+	link=${link//\$HOME/$HOME}
+	link=${link//\$HOST/$HOST}
+	# -- target
 	target=${target//\$HOME/$HOME}
 	target=${target//\$HOST/$HOST}
+	# -- lists
+	linklist+=($link)
 	targetlist+=($target)
 done < $linksfile
 
+# echo $#linklist $#targetlist
 # print -l $linklist
 # echo
 # print -l $targetlist
 # exit 0
+
+[ $#linklist -eq $#targetlist ] || {
+	echo 'link and target list are not of the same length'
+	exit 1
+}
 
 length=$#linklist
 
