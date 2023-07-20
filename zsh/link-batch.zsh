@@ -43,6 +43,15 @@ for index in {1..$length}
 do
 	link=$linklist[$index]
 	target=$targetlist[$index]
+	# -- empty ?
+	[ $#link -eq 0 ] && {
+		echo 'link is empty'
+		continue
+	}
+	[ $#target -eq 0 ] && {
+		echo 'target is empty'
+		continue
+	}
 	# -- exists ?
 	[ -L $link ] && {
 		#echo link $link already exists
