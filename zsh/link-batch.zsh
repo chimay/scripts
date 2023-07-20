@@ -13,14 +13,12 @@ while read line
 do
 	# -- fields
 	fields=(${(s/	/)line})
-	link=$~fields[1]
-	target=$~fields[2]
 	# -- link
-	link=${link//\$HOME/$HOME}
-	link=${link//\$HOST/$HOST}
+	link=$~fields[1]
+	link=${(e)link}
 	# -- target
-	target=${target//\$HOME/$HOME}
-	target=${target//\$HOST/$HOST}
+	target=$~fields[2]
+	target=${(e)target}
 	# -- lists
 	linklist+=($link)
 	targetlist+=($target)
