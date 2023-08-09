@@ -106,8 +106,8 @@ do
 		echo $link is not a link
 		continue
 	}
-	[ -e $link ] || {
-		target=$targetlist[$index]
+	target=$targetlist[$index]
+	[ -e $target ] || {
 		echo broken : $link '->' $target
 		continue
 	}
