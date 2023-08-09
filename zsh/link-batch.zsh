@@ -96,3 +96,19 @@ do
 	echo "ln -sf $target $link"
 	ln -sf $target $link
 done
+
+echo
+
+for index in {1..$length}
+do
+	link=$linklist[$index]
+	[ -L $link ] || {
+		echo $link is not a link
+		continue
+	}
+	[ -e $link ] || {
+		target=$targetlist[$index]
+		echo broken : $link '->' $target
+		continue
+	}
+done
