@@ -1,11 +1,9 @@
 #! /usr/bin/env sh
 
-psgrep='/bin/ps auxww | /bin/grep -v grep | /bin/grep --color=never'
-
-$=psgrep nvim &> ~/log/psgrep.log && {
+pgrep nvim > ~/log/psgrep.log 2>&1 && {
 	echo 'neovim tourne déjà'
 	echo
-	return 0
+	exit 0
 }
 
 exec nvim --listen ~/racine/run/socket/neovim --headless >> ~/log/neovim-server.log 2>&1

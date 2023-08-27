@@ -2,6 +2,11 @@
 
 lignes=${1:-'30'}
 
+#exe=`dmenu_path | dmenu ${1+"$@"}` && exec $exe
+
+#exe=`dmenu_path | dmenu -l $lignes -fn '-*-*-*-*-*-*-17-*-*-*-*-*-*-*' ${1+"$@"}` && exec $exe
+#exe=`dmenu_path | dmenu -l $lignes -fn '-*-terminal-*-*-*-*-17-*-*-*-*-*-*-*' ${1+"$@"}` && exec $exe
+
 exe=`dmenu_path | \
 	dmenu -l $lignes \
 	-b -i \
