@@ -23,7 +23,6 @@ do
 	autoload $fichier
 done
 
-# }}}1
 
 # Fonctions ordinaires {{{1
 
@@ -34,18 +33,51 @@ err () {
 	print "$@" 1>&2
 }
 
-# }}}2
 
-# x : échange des noms de fichiers {{{2
+# pager {{{2
 
-x () {
+pager () {
+	local less
+
+	#less="less --lesskey-file=$HOME/racine/built/less/key.out"
+	less="less"
+
+	(( $# == 0 )) && {
+
+		$=less .
+
+		return 0
+	}
+
+	$=less "$@"
+}
+
+
+# run-ed {{{2
+
+run-ed () {
+	local runme='BROWSER=w3m BUKU_COLORS=xXxxx '
+	runme=$runme'rlwrap --always-readline --history-no-dupes 2 --multi-line '
+	runme=$runme'-H ~/racine/hist/rlwrap/ed.history  '
+	runme=$runme'-f ~/racine/hist/rlwrap/ed.comp '
+	runme=$runme'-l ~/racine/hist/rlwrap/ed.comp '
+	runme=${runme}'ed -v -p " ed : "'
+	echo $runme
+	echo
+	eval $runme
+}
+
+
+# swap-files : échange des noms de fichiers {{{2
+
+swap-files () {
 	(( $# < 2 )) && {
 		echo "Usage : x <file-1> <file 2>"
 		echo
 		return 1
 	}
 
-	local TMPFILE=tmp-$1-$2.$$
+	local TMPFILE=$(mktemp)
 
 	mv "$1" $TMPFILE
 
@@ -54,11 +86,10 @@ x () {
 	mv $TMPFILE "$2"
 }
 
-# }}}2
 
-# nf : nombre-de-fichiers {{{2
+# number-of-files {{{2
 
-nf () {
+number-of-files () {
 	local arguments
 	local repertoire
 
@@ -77,11 +108,10 @@ nf () {
 	done
 }
 
-# }}}2
 
-# mrm : most recent modified files {{{2
+# most-recently-modified files {{{2
 
-mrm () {
+most-recently-modified () {
 
 	local vecteur=()
 
@@ -118,63 +148,93 @@ mrm () {
 	command ls -lt $repertoire/**/*(.om[1,$nombre])
 }
 
-# }}}2
 
-# search-grep {{{2
+# {{{ clifm
 
-search-grep () {
+# CliFM CD on quit function
 
+# Description
+# Run CliFM and, after exit, read the .last file and cd into it
+
+# 1) Customize this function as you need and add copy it or source it from your shell configuration file (e.g., .bashrc, .zshrc, etc)
+# 2) Restart your shell (for changes to take effect)
+# 3) Run clifm using the name of the function below: clifm [ARGS ...]
+
+# CliFM CD on quit function
+
+clifm() {
+	command clifm "--cd-on-quit" "$@"
+	local dir="$(grep "^\*" "${XDG_CONFIG_HOME:=${HOME}/.config}/clifm/.last" 2>/dev/null | cut -d':' -f2)";
+	if [ -d "$dir" ]; then
+		cd -- "$dir" || return 1
+	else
+		printf "No directory specified\n" >&2
+	fi
+}
+
+# }}}
+
+# run-vifm {{{2
+
+run-vifm () {
+	local dir=$(pwd)
+	cd ~/racine/config/fileman/vifm
+	vifm-clean-matchers.sh vifminfo.json
+	cd sessions
+	vifm-clean-matchers.sh *.json
+	cd $dir
+	vifmrun
+}
+
+
+# yank-file {{{2
+
+yank-file () {
+
+	cat $1 | xclip -i -selection clipboard
+}
+
+
+# searcher : grep like search {{{2
+
+searcher () {
 	local motif fichiers
-
 	motif=${1:-''}
-
 	(( $# > 0 )) && shift
-
 	fichiers=(${*:-()})
-
 	(( $#motif > 0 )) || {
-
 		echo -n "Motif : "
 		read motif
 		echo
 	}
-
 	(( $#motif > 0 )) || return 1
-
-	(( $#fichiers > 0 )) || fichiers=(**/*(.))
-
-	command grep --color=never $motif $=fichiers | sed 's/^/  /'
-}
-
-# }}}2
-
-# search-ag {{{2
-
-search-ag () {
-
-	local motif fichiers
-
-	motif=${1:-''}
-
-	(( $# > 0 )) && shift
-
-	fichiers=(${*:-()})
-
-	(( $#motif > 0 )) || {
-
-		echo -n "Motif : "
-		read motif
+	if command -v rg &> /dev/null
+	then
+		echo Using ripgrep
 		echo
-	}
-
-	(( $#motif > 0 )) || return 1
-
-	(( $#fichiers > 0 )) || fichiers=(.)
-
-	command ag --nocolor --vimgrep --smart-case $motif $=fichiers | sed 's/^/  /'
+		(( $#fichiers > 0 )) || fichiers=(.)
+		command rg --color=never --heading --smart-case --line-number $motif $=fichiers | sed 's/^/  /'
+	elif command -v ag &> /dev/null
+	then
+		echo Using silver searcher
+		echo
+		(( $#fichiers > 0 )) || fichiers=(.)
+		command ag --nocolor --vimgrep --smart-case $motif $=fichiers | sed 's/^/  /'
+	elif command -v ack &> /dev/null
+	then
+		echo Using ack
+		echo
+		(( $#fichiers > 0 )) || fichiers=(.)
+		ack --nocolor --nogroup --column --smart-case $motif $=fichiers | sed 's/^/  /'
+	elif command -v grep &> /dev/null
+	then
+		echo Using grep
+		echo
+		(( $#fichiers > 0 )) || fichiers=(**/*(.))
+		command grep --color=never $motif $=fichiers | sed 's/^/  /'
+	fi
 }
 
-# }}}2
 
 # grep-command {{{2
 
@@ -182,7 +242,6 @@ grep-command () {
 	print -l $commands | command grep "$@"
 }
 
-# }}}2
 
 # lc : locate {{{2
 
@@ -221,40 +280,70 @@ lc () {
 	fi
 
 	case $dossier in
-
 		r|ra|rac|raci|racin|racine)
-			echo "locate -d ~/racine/index/locate/racine.db -e -A $=options $=motifs"
+			echo "locate -d ~/racine/index/files/locate/racine.db -e -A $=options $=motifs"
 			echo
-			locate -d ~/racine/index/locate/racine.db -e -A $=options $=motifs
+			locate -d ~/racine/index/files/locate/racine.db -e -A $=options $=motifs
 			;;
 		ul|ulo|uloc|usrloc|usrlocal)
-			echo "locate -d ~/racine/index/locate/usr-local.db -e -A $=options $=motifs"
+			echo "locate -d ~/racine/index/files/locate/usr-local.db -e -A $=options $=motifs"
 			echo
-			locate -d ~/racine/index/locate/usr-local.db -e -A $=options $=motifs
-			;;
-		p|pa|pac|pacman|pacmanlib)
-			echo "locate -d ~/racine/index/locate/pacman-lib.db -e -A $=options $=motifs"
-			echo
-			locate -d ~/racine/index/locate/pacman-lib.db -e -A $=options $=motifs
+			locate -d ~/racine/index/files/locate/usr-local.db -e -A $=options $=motifs
 			;;
 		a|au|aud|audi|audio)
-			echo "locate -d ~/racine/index/locate/audio.db -e -A $=options $=motifs"
+			echo "locate -d ~/racine/index/files/locate/audio.db -e -A $=options $=motifs"
 			echo
-			locate -d ~/racine/index/locate/audio.db -e -A $=options $=motifs
+			locate -d ~/racine/index/files/locate/audio.db -e -A $=options $=motifs
 			;;
 		f|ph|pho|phot|photo)
-			echo "locate -d ~/racine/index/locate/photo.db -e -A $=options $=motifs"
+			echo "locate -d ~/racine/index/files/locate/photo.db -e -A $=options $=motifs"
 			echo
-			locate -d ~/racine/index/locate/photo.db -e -A $=options $=motifs
+			locate -d ~/racine/index/files/locate/photo.db -e -A $=options $=motifs
+			;;
+		dc|dotconfig)
+			echo "locate -d ~/racine/index/files/locate/dotconfig.db -e -A $=options $=motifs"
+			echo
+			locate -d ~/racine/index/files/locate/dotconfig.db -e -A $=options $=motifs
+			;;
+		dl|dotlocal)
+			echo "locate -d ~/racine/index/files/locate/dotlocal.db -e -A $=options $=motifs"
+			echo
+			locate -d ~/racine/index/files/locate/dotlocal.db -e -A $=options $=motifs
+			;;
+		p|pa|pac|pacman|pacmanlib)
+			echo "locate -d ~/racine/index/files/locate/pacman-lib.db -e -A $=options $=motifs"
+			echo
+			locate -d ~/racine/index/files/locate/pacman-lib.db -e -A $=options $=motifs
 			;;
 	esac
 }
 
-# }}}2
 
-# pgrep : process grep {{{2
+# vim-quickfix {{{2
 
-pgrep () {
+vim-quickfix () {
+	if command -v rg &> /dev/null
+	then
+		echo Using ripgrep
+		vim +cope -q <(rg --vimgrep --smart-case "$@")
+	elif command -v ag &> /dev/null
+	then
+		echo Using silver searcher
+		vim +cope -q <(ag --nocolor --vimgrep --smart-case "$@")
+	elif command -v ack &> /dev/null
+	then
+		echo Using ack
+		vim +cope -q <(ack --nocolor --nogroup --column --smart-case "$@")
+	elif command -v grep &> /dev/null
+	then
+		echo Using grep
+		vim +cope -q <(grep --line-number --ignore-case --no-messages "$@")
+	fi
+}
+
+# procgrep : process grep {{{2
+
+procgrep () {
 
 	local motif
 
@@ -272,7 +361,6 @@ pgrep () {
 	command ps --no-headers -eo '%p %a' | command grep -v grep | command grep --color=never $motif
 }
 
-# }}}2
 
 # pid : grep process id(s) {{{2
 
@@ -297,8 +385,145 @@ pid () {
 		awk '{print $1}'
 }
 
+# pgroup : groupe d’un processus {{{2
 
-# }}}2
+pgroup () {
+
+	local motif listiden iden groupe arbre
+
+	motif="$@"
+
+	(( $#motif > 0 )) || {
+
+		echo -n "Motif : "
+		read motif
+		echo
+	}
+
+	(( $#motif > 0 )) || return 1
+
+	listiden=($(
+		command ps --no-headers -eo '%p %a' |
+		command grep -v grep |
+		command grep --color=never $motif |
+		awk '{print $1}'
+	))
+
+	for iden in $=listiden
+	do
+		groupe=$(ps --no-headers -o "%r" -p $iden | tr -d ' \t\n\r')
+
+		arbre=($(
+			ps -eo "%r %p" |
+			awk '{ if ( $1 == '$groupe' ) print $2 }'
+		))
+
+		echo "Groupe de $iden : $groupe"
+		echo "------------------------------"
+		echo
+		command ps -o "%r %p %a" -p $=arbre
+		echo
+	done
+}
+
+# ptree : arbre du groupe d’un processus {{{2
+
+ptree () {
+
+	local motif listiden iden listgroupes groupe
+	local parent enfant racine
+
+	motif="$@"
+
+	(( $#motif > 0 )) || {
+
+		echo -n "Motif : "
+		read motif
+		echo
+	}
+
+	(( $#motif > 0 )) || return 1
+
+	listiden=($(
+		command ps --no-headers -eo '%p %a' |
+		command grep -v grep |
+		command grep --color=never $motif |
+		awk '{print $1}'
+	))
+
+	listgroupes=()
+
+	typeset -A grpiden
+
+	for iden in $=listiden
+	do
+		groupe=$(ps --no-headers -o "%r" -p $iden | tr -d ' \t\n\r')
+		listgroupes+=$groupe
+		grpiden[$groupe]=$iden
+	done
+
+	listgroupes=(${(u)listgroupes})
+
+	for groupe in $=listgroupes
+	do
+		enfant=$grpiden[$groupe]
+
+		while true
+		do
+			parent=$( \
+				ps -eo "%r %P %p" | \
+				awk '{ if ( $1 == '$groupe' && $3 == '$enfant' ) print $2 }' \
+			)
+
+			echo "$parent -> $enfant"
+			echo
+
+			if (( $#parent > 0 ))
+			then
+				enfant=$parent
+				racine=$parent
+			else
+				break
+			fi
+		done
+
+		echo Racine : $racine
+		echo
+
+		pstree -p $racine
+		echo
+		ps -eo "%r %p %a" --forest | awk '{ if ( $1 == '$groupe' ) print $0 }'
+	done
+
+}
+
+
+# signal-all processes matching a pattern {{{2
+
+signal-all () {
+	local signal motif iden
+	while true
+	do
+		case $1 in
+			[0-9]##)
+				signal=$1
+				shift
+				;;
+			?*)
+				motif=$1
+				shift
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	(( $#signal > 0 )) || signal=15
+	iden=($(pgrep -f "$motif"))
+	echo "kill -$signal $=iden"
+	echo
+	kill -$signal $=iden
+}
 
 # psi : process signal {{{2
 
@@ -390,160 +615,114 @@ psi () {
 
 }
 
-# }}}2
 
-# pgroup : groupe d’un processus {{{2
+# webreader : using readable & w3m {{{2
 
-pgroup () {
+webreader () {
 
-	local motif listiden iden groupe arbre
+	readable $1 | w3m -T text/html
 
-	motif="$@"
-
-	(( $#motif > 0 )) || {
-
-		echo -n "Motif : "
-		read motif
-		echo
-	}
-
-	(( $#motif > 0 )) || return 1
-
-	listiden=($(
-		command ps --no-headers -eo '%p %a' |
-		command grep -v grep |
-		command grep --color=never $motif |
-		awk '{print $1}'
-	))
-
-	for iden in $=listiden
-	do
-		groupe=$(ps --no-headers -o "%r" -p $iden | tr -d ' \t\n\r')
-
-		arbre=($(
-			ps -eo "%r %p" |
-			awk '{ if ( $1 == '$groupe' ) print $2 }'
-		))
-
-		echo "Groupe de $iden : $groupe"
-		echo "------------------------------"
-		echo
-		command ps -o "%r %p %a" -p $=arbre
-		echo
-	done
+	#readable $1 -p html-title,html-content | w3m -T text/html
 }
 
-# }}}2
 
-# ptree : arbre du groupe d’un processus {{{2
+# mail {{{2
 
-ptree () {
+mua () {
 
-	local motif listiden iden listgroupes groupe
-	local parent enfant racine
+	local executable
+	which mail && executable=mail
+	which s-nail && executable=s-nail
+	$executable
+}
 
-	motif="$@"
 
-	(( $#motif > 0 )) || {
+# send-mail {{{2
 
-		echo -n "Motif : "
-		read motif
+send-mail () {
+	local name=$1
+	local recipient=$(abook --mutt-query $name | fzf | cut -f 1)
+	echo "mail $recipient"
+	mail $recipient
+}
+
+
+# calculator {{{2
+
+calculator () {
+	local expression="$@"
+	cat <<- EOF | bc -l
+		scale = 7
+		$expression
+	EOF
+}
+
+
+# translator {{{2
+
+translator () {
+	# translator from:to keywords
+	local fromto=$1
+	local file=~/racine/index/dict/translation/$fromto
+	shift
+	local search=${@//\'/}
+	local words=($=search)
+	local pattern="^  $words"'$'
+	if grep $pattern $file &>/dev/null
+	then
+		less -p $pattern -f $file
+	else
+		echo trans $fromto "$words"
 		echo
-	}
+		echo '------------------------------' >>! $file
+		echo "  $words" >>! $file
+		echo '------------------------------' >>! $file
+		echo >>! $file
+		trans $fromto "$words" | tee -a $file
+		echo >>! $file
+	fi
+}
 
-	(( $#motif > 0 )) || return 1
 
-	listiden=($(
-		command ps --no-headers -eo '%p %a' |
-		command grep -v grep |
-		command grep --color=never $motif |
-		awk '{print $1}'
-	))
+# synonym {{{2
 
-	listgroupes=()
-
-	typeset -A grpiden
-
-	for iden in $=listiden
-	do
-		groupe=$(ps --no-headers -o "%r" -p $iden | tr -d ' \t\n\r')
-		listgroupes+=$groupe
-		grpiden[$groupe]=$iden
-	done
-
-	listgroupes=(${(u)listgroupes})
-
-	for groupe in $=listgroupes
-	do
-		enfant=$grpiden[$groupe]
-
-		while true
-		do
-			parent=$( \
-				ps -eo "%r %P %p" | \
-				awk '{ if ( $1 == '$groupe' && $3 == '$enfant' ) print $2 }' \
-			)
-
-			echo "$parent -> $enfant"
-			echo
-
-			if (( $#parent > 0 ))
-			then
-				enfant=$parent
-				racine=$parent
-			else
-				break
-			fi
-		done
-
-		echo Racine : $racine
+synonym () {
+	local lang=$1
+	local file=~/racine/index/dict/synonym/thesaurus-$lang
+	shift
+	local search=${@//\'/}
+	local words=($=search)
+	local pattern="^  $words"'$'
+	if grep $pattern $file &>/dev/null
+	then
+		less -p $pattern -f $file
+	else
+		echo synonym -l $lang "$words"
 		echo
-
-		pstree -p $racine
-		echo
-		ps -eo "%r %p %a" --forest | awk '{ if ( $1 == '$groupe' ) print $0 }'
-	done
-
+		echo '------------------------------' >>! $file
+		echo "  $words" >>! $file
+		echo '------------------------------' >>! $file
+		echo >>! $file
+		command synonym -l $lang "$words" | tee -a $file
+		echo >>! $file
+	fi
 }
 
-# }}}2
 
-# pageur {{{2
+# run-buku {{{2
 
-pageur () {
-	local less
-
-	#less="less --lesskey-file=$HOME/racine/built/less/key.out"
-	less="less"
-
-	(( $# == 0 )) && {
-
-		$=less .
-
-		return 0
-	}
-
-	$=less "$@"
+run-buku () {
+	local runme='BROWSER=w3m BUKU_COLORS=xXxxx '
+	runme=$runme'rlwrap --always-readline --history-no-dupes 2 --multi-line '
+	runme=$runme'-H ~/racine/hist/rlwrap/buku.history '
+	runme=$runme'-f ~/racine/hist/rlwrap/buku.comp '
+	runme=$runme'-l ~/racine/hist/rlwrap/buku.comp '
+	runme=${runme}"buku $@"
+	echo $runme
+	echo
+	eval $runme
 }
 
-# }}}2
-
-# yank-file {{{2
-
-yank-file () {
-
-	cat $1 | xclip -i -selection clipboard
-}
-
-# }}}2
-
-# vf : vim quick fix {{{2
-
-vf () {
-	vim +cope -q <(rg --vimgrep --smart-case "$@")
-}
-
-# }}}2
 
 # ssh {{{2
 
@@ -602,7 +781,6 @@ ssh() {
 	return $code
 }
 
-# }}}2
 
 # sshx : ssh -X pour lancer des apps X Window {{{2
 
@@ -661,16 +839,6 @@ sshx() {
 	return $code
 }
 
-# }}}2
-
-# cmd-mplayer {{{2
-
-cmd-mplayer () {
-
-	echo $* > ~/racine/run/fifo/mplayer
-}
-
-# }}}2
 
 # cmd-mpv {{{2
 
@@ -679,9 +847,56 @@ cmd-mpv () {
 	echo $* > ~/racine/run/fifo/mpv
 }
 
-# }}}2
 
-# }}}1
+# listen-and-clean {{{2
+
+listen-and-clean () {
+	local pattern=${1:-"[U-Z]"}
+	local number_of_songs=${2:-1}
+	local songnumber=0
+	local donotremove=~/log/listen-and-clean-do-not-remove.log
+	local answer
+	echo number of songs : $number_of_songs
+	echo
+	while [ $songnumber -lt $number_of_songs ]
+	do
+		echo song number : $songnumber
+		echo
+		local glob="~/audio/$pattern"
+		local pack=($~glob)
+		local songlist=($(print -l $pack | shuf))
+		local index=1
+		local length=$#songlist
+		local song=$songlist[$index]
+		echo trying song index in list : $index
+		echo trying song : $song
+		echo
+		while grep $song $donotremove &>/dev/null && (( index < length ))
+		do
+			(( index ++ ))
+			song=$songlist[$index]
+			echo trying song index in list : $index
+			echo trying song : $song
+			echo
+		done
+		echo playing : $song
+		echo
+		mpv $song
+		echo
+		echo -n 'Remove ? (y/n) '
+		read answer
+		echo
+		if [ $answer = y ]
+		then
+			rm -f $song
+		else
+			echo $song >>! $donotremove
+		fi
+		(( songnumber ++ ))
+	done
+}
+
+
 
 # Fonctions ZLE {{{1
 
@@ -692,6 +907,13 @@ cmd-mpv () {
 # avant
 #
 # bindkey '...' fonction
+
+# avant-plan {{{2
+
+avant-plan () {
+	fg %%
+	zle reset-prompt
+}
 
 # Copie et désactive région {{{2
 
@@ -708,7 +930,6 @@ copie-et-desactive-region () {
 	(( REGION_ACTIVE == 1 )) && REGION_ACTIVE=0
 }
 
-# }}}2
 
 # Fzf & Greenclip {{{2
 
@@ -739,37 +960,27 @@ fzf-greenclip () {
 	zle beginning-of-line
 }
 
-# }}}2
 
-# }}}1
 
 # Fonctions mathématiques {{{1
 
-# Module {{{2
-
-zmodload -i zsh/mathfunc
-
-# }}}2
+#zmodload -i zsh/mathfunc
 
 # Gaussienne {{{2
 
-#function zmath_gauss () {
+# function zmath_gauss () {
+# 	local x mu sigma
+# 	x=$1
+# 	mu=$2
+# 	sigma=$3
+# 	(( exp( - (x - mu) * (x - mu) / sigma ** 2 ) ))
+# }
 
-	#local x mu sigma
+# functions -M gauss 3 3 zmath_gauss
 
-	#x=$1
-	#mu=$2
-	#sigma=$3
-	#(( exp( - (x - mu) * (x - mu) / sigma ** 2 ) ))
-#}
 
-#functions -M gauss 3 3 zmath_gauss
 
-# }}}2
-
-# }}}1
-
-# Crochets {{{1
+# Crochets (hooks) {{{1
 
 # Chpwd {{{2
 
@@ -785,7 +996,6 @@ chpwd () {
 	print -l $PWD >>! $REPERTOIRES_FICHIER
 }
 
-# }}}2
 
 # Periodic {{{2
 
@@ -798,14 +1008,12 @@ periodic () {
 
 }
 
-# }}}2
 
 # Precmd {{{2
 
 typeset -ga precmd_functions
 
 precmd () {
-
 	case $TERM in
 		xterm*)
 			print -Pn "\e]0;%n@%m: %~\a"
@@ -813,18 +1021,15 @@ precmd () {
 	esac
 }
 
-# }}}2
 
 # Preexec {{{2
 
 typeset -ga preexec_functions
 
 preexec () {
-
 	echo
 }
 
-# }}}2
 
 #  Zshaddhistory {{{2
 
@@ -847,7 +1052,6 @@ zshaddhistory () {
     ]]
 }
 
-# }}}2
 
 # Zshexit {{{2
 
@@ -858,9 +1062,7 @@ zshexit () {
 
 }
 
-# }}}2
 
-# }}}1
 
 # Special Widgets {{{1
 
@@ -878,5 +1080,3 @@ function zle-line-init zle-keymap-select {
 
 zle -N zle-line-init
 zle -N zle-keymap-select
-
-# }}}1
