@@ -1,9 +1,0 @@
-# vim: set filetype=zsh :
-
-emulate -R zsh
-
-setopt local_options
-
-setopt warn_create_global
-
-echo $* > ~/racine/run/fifo/mplayer

@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+
+# file & path finder
+
+# Pour tmux-fpp
+
+~/racine/bin/go/bin/path-extractor | fzf -e | read chemin
+
+[ ! -z $chemin ] &&  {
+
+	[ -e $chemin ] && {
+
+		</dev/tty vim $chemin
+	}
+}

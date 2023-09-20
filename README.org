@@ -5,22 +5,13 @@
 
 Scripts of mine, I hope you will find some of them useful.
 
-
-* Licence
-
-BSD
-
-
 * Documentation (English)
 
 Dependances :
 
   - multi-tea.zsh -> ding-dong.zsh -> minuter.zsh -> bell.zsh -> audio files
-
   - meditation.zsh -> alea.py, audio files
-
   - I generate "speaking" audio files using pico2wave (svox-pico-git on AUR)
-
   - For audio samples, see also https://freesound.org
 
 
