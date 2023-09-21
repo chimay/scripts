@@ -3,7 +3,10 @@
 
 * Repo contents
 
-Scripts of mine, I hope you will find some of them useful.
+- some scripts of mine, I hope you will find some of them useful.
+- some scripts may come from elsewhere on the net, I wrote the credit
+  when I remember the origin, if you see one w/o it, please open an
+  issue
 
 * Documentation (English)
 
@@ -13,7 +16,6 @@ Dependances :
   - meditation.zsh -> alea.py, audio files
   - I generate "speaking" audio files using pico2wave (svox-pico-git on AUR)
   - For audio samples, see also https://freesound.org
-
 
 * Documentation (Français)
 
