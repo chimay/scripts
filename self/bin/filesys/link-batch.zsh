@@ -2,6 +2,20 @@
 
 # Gathering links & targets from input file {{{1
 
+[ $# -eq 0 ] && {
+	echo Usage : link-batch.zsh link-file
+	cat << END
+	where link-file contains 2 columns separated by a tab :
+		1. first column contains the links
+		2. second column contains the targets
+	Like this :
+		link-1	target-1
+		link-2	target-2
+	and so on
+END
+	exit 0
+}
+
 linksfile=$1
 
 linklist=()
