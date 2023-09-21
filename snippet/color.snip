@@ -1,0 +1,178 @@
+# vim: set filetype=conf:
+
+# Terminal {{{1
+
+# ANSI Codes : Effets, Couleurs {{{2
+
+# Code de la forme :
+
+$'\E[0;30m'
+
+# ou le 0 est le code de l’effet (attribut), ici aucun
+# et le 30 est le code de la couleur
+
+# Exemple :
+
+echo $'\E[7;35m' coucou
+
+# $'\E[
+#
+# 0 : défaut
+# 1 : bold
+# 2 : dim
+# 3 : italic
+# 4 : underline
+# 5 : slow blink
+# 6 : rapid blink
+# 7 : reverse video
+#
+# ;
+#
+# 30 : black
+# 31 : red
+# 32 : green
+# 33 : yellow
+# 34 : blue
+# 35 : magenta
+# 36 : cyan
+# 37 : white
+#
+# 90 : bright black
+# 91 : bright red
+# 92 : bright green
+# 93 : bright yellow
+# 94 : bright blue
+# 95 : bright magenta
+# 96 : bright cyan
+# 97 : bright white
+#
+# m'
+
+# }}}2
+
+# }}}1
+
+# Couleurs base16 personnel {{{
+
+color00="00/00/00" # Base 00 - Black
+color01="b2/18/18" # Base 08 - Red
+color02="11/80/11" # Base 0B - Green
+color03="96/57/24" # Base 0A - Yellow
+color04="18/18/b2" # Base 0D - Blue
+color05="b2/18/b2" # Base 0E - Magenta
+color06="14/96/96" # Base 0C - Cyan
+color07="94/94/94" # Base 05 - White
+
+color08="43/43/43" # Base 03 - Bright Black
+color09="c7/41/41" # Base 08 - Bright Red
+color10="36/a6/36" # Base 0B - Bright Green
+color11="98/84/04" # Base 0A - Bright Yellow
+color12="54/54/ff" # Base 0D - Bright Blue
+color13="c8/42/c8" # Base 0E - Bright Magenta
+color14="30/94/94" # Base 0C - Bright Cyan
+color15="FFFFFF" # Bright White
+
+color16="93/5c/25" # Base 09
+color17="b7/2d/d2" # Base 0F
+color18="1f/29/2e" # Base 01
+color19="51/6d/7b" # Base 02
+color20="71/95/a8" # Base 04
+color21="c1/e4/f6" # Base 06
+
+color_foreground="5b/3c/11"
+color_background="00/00/00"
+color_cursor="5b/3c/11"
+
+# }}}1
+
+# Couleurs thème brun konsole {{{1
+
+[Background]
+Color=0,0,0
+
+[BackgroundIntense]
+Color=104,104,104
+
+[Color0]
+Color=0,0,0
+
+[Color0Intense]
+Color=67,67,67
+
+[Color1]
+Color=178,24,24
+
+[Color1Intense]
+Color=199,65,65
+
+[Color2]
+Color=17,128,17
+
+[Color2Intense]
+Color=54,166,54
+
+[Color3]
+Color=150,87,20
+
+[Color3Intense]
+Color=152,132,4
+
+[Color4]
+Color=24,24,178
+
+[Color4Intense]
+Color=84,84,255
+
+[Color5]
+Color=178,24,178
+
+[Color5Intense]
+Color=200,66,200
+
+[Color6]
+Color=20,150,150
+
+[Color6Intense]
+Color=48,148,148
+
+[Color7]
+Color=148,148,148
+
+[Color7Intense]
+Color=255,255,255
+
+[Foreground]
+Color=91,60,17
+
+[ForegroundIntense]
+Color=115,53,20
+
+# }}}1
+
+# Couleurs vim {{{1
+
+Brun			#5B3C11
+Brun rouge		#9b3c11
+Brun clair		#7C5E33
+Gris-brun		#754321
+Rose			#872E30
+Saumon			#88421D
+
+Rouge			brown
+
+Noir clair		#070707
+
+# }}}1
+
+# Tmux {{{1
+
+B36700		Jaune orangé
+d90115		Rouge activité
+
+# }}}1
+
+# I3 {{{1
+
+341207		Brun discret
+
+# }}}1

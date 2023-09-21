@@ -1,0 +1,85 @@
+# -*- org -*-
+
+# vim: set filetype=conf:
+
+* Org mode
+
+
+** Agenda
+
+1 jour :
+
+(org-agenda-list 1)
+
+
+** Listes à puces
+
+
+  0. [@0] Coucou
+
+  1. Beu
+
+
+** En-têtes
+
+# #+INCLUDE: "include/menu.org" :minlevel 1
+
+#+OPTIONS: H:6
+
+#+OPTIONS: tex:imagemagick
+#+OPTIONS: toc:0
+
+#+STARTUP: overview
+#+STARTUP: content
+#+STARTUP: showall
+
+# Voir aussi org-indent-mode :
+
+#+STARTUP: noindent
+
+:PROPERTIES:
+:RESET_CHECK_BOXES: t
+:END:
+
+
+*** Sous le titre d’une section à référencer
+
+:PROPERTIES:
+:CUSTOM_ID: section:metriqueQuantitative
+:END:
+
+
+*** Référence vers une section
+
+[[file:musica-03-triangle.org::#section:dominanteSeconde][dominante seconde]]
+
+[[file:matemat-11-equadiff.org::#section:eulerLagrange][Euler - Lagrange]]
+
+
+** Référence vers un fichier sur un serveur
+
+Sans les espaces :
+
+[ [ file:/ssh:user@host:file  ] [ description ]  ]
+
+
+** Rappels pour wild notifier
+
+
+*** DONE test org wild notifier
+SCHEDULED: <2018-04-13 ven 18:30>
+:PROPERTIES:
+:WILD_NOTIFIER_NOTIFY_BEFORE: 5 2 1
+:END:
+
+
+** Lilypond
+
+#+begin_src lilypond :file ionian.png :exports results
+\relative c' {
+c d e f g a b c b a g f e d c d e f g a b c b a g f e d c1
+}
+#+end_src
+
+#+RESULTS:
+[[file:ionian.png]]
