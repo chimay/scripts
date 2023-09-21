@@ -109,6 +109,7 @@ gpg -e flower-4-petals.ggb
 grep=qute-history ; =grep url qutebrowser.history | sort | uniq | sed 's/     url = //' >! ~/.local/share/qutebrowser/history
 groff -ms -D utf8 -T pdf groff.ms >! groff.pdf
 gv '^(\*|\*\*) ' *.org
+gv=check ; gv 'davi|onder|chimay|user|fa98|skyn|latit|longit|r1v'
 handlr set x-scheme-handler/http org.qutebrowser.qutebrowser.desktop
 hardlink -n -v ~/photo/numerique
 hardlink -v ~/photo >&! ~/log/hardlink.log &
@@ -182,6 +183,7 @@ pactl set-sink-volume bluez_sink.00_1D_DF_81_D7_55 -10%
 pass add sites/www.decathlon.be/user@mail.be
 pass edit sites/www.decathlon.be/user@mail.be
 pass init user@mail.com
+pass otp totp/github.com/chimay
 pass otp -c totp/github.com/chimay
 pass otp add totp/lemmy.ml/chimay
 pass otp uri -q totp/github.com/chimay
@@ -245,6 +247,19 @@ ssh -p 3022 user@localhost
 ssh-copy-id -i ~/.ssh/id_rsa.pub tixu.local
 sshfs=demonte ; fusermount -u ~/mount/import/sshfs
 sshfs=laozu ; sshfs laozu.local:$HOME ~/mount/import/sshfs
+sshfs=monte ; sshfs shari.local:$HOME ~/mount/import/sshfs
+sshfs=quigonjinn ; sshfs quigonjinn.local:$HOME ~/mount/import/sshfs
+sshfs=shari ; sshfs shari.local:$HOME ~/mount/import/sshfs
+sshfs=tixu ; sshfs tixu.local:$HOME ~/mount/import/sshfs
+sync=cleusb ; sn ~syncron/cleusb/ /media/cleusb/syncron
+sync=cleusb ; sn ~syncron/cleusb/ /media/cleusb/syncron
+sync=diskext-sdb1 ; unison diskext $HOME /run/media/user/sdb1/user
+sync=diskext-sdb4 ; unison diskext $HOME /run/media/user/sdb4/user
+sync=laozu-auto ; unison remote $HOME ssh://user@laozu.local//$HOME
+sync=laozu-force ; unison remote $HOME ssh://user@laozu.local//$HOME -force $HOME
+sync=pack-essentiel ; sn -n ~pack/aged/*(/om[1]) /media/cleusb/archive
+sync=quigonjinn-auto ; unison remote $HOME ssh://user@quigonjinn.local//$HOME
+sync=tixu-auto ; unison remote $HOME ssh://user@tixu.local//$HOME
 systemctl enable nmb.service --now # sudo
 systemctl enable smb.service --now # sudo
 systemctl enable wsdd.service --now # sudo

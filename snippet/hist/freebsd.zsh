@@ -63,11 +63,11 @@ mdconfig -a -t vnode -f swapfile -u 0 # doas
 mdconfig -l -v # doas
 mixer vol 70
 mixertui
-mkdir=run-media ; doas mkdir -p /run/media/david
+mkdir=run-media ; doas mkdir -p /run/media/user
 monte=cleusb ; mount -t msdosfs /dev/da0s1 /media/da0s1
 monte=cleusb ; udevil mount /dev/sdb1 /media/cleusb
-monte=diskext-sdb1 ; udevil mount /dev/sdb1 /run/media/david/sdb1
-monte=sdb1 ; udevil mount /dev/sdb1 /run/media/david/sdb1
+monte=diskext-sdb1 ; udevil mount /dev/sdb1 /run/media/user/sdb1
+monte=sdb1 ; udevil mount /dev/sdb1 /run/media/user/sdb1
 mount_vboxvfs -w virtualbox-share /mnt # doas
 mpliste=Detente ; droits-audio.zsh ; mpc --wait update ; mpc crop ; mpc load $mpliste ; mpc play
 mpliste=Meditation ; droits-audio.zsh ; mpc --wait update ; mpc crop ; mpc load $mpliste ; mpc play
@@ -98,8 +98,8 @@ portsnap extract # doas
 portsnap fetch # doas
 portsnap update # doas
 pstat -sh
-pw groupmod wheel -m david # doas
-pw usermod david -G wheel,operator,video,audio # doas
+pw groupmod wheel -m user # doas
+pw usermod user -G wheel,operator,video,audio # doas
 pw usermod toor -u 0 # doas
 python3 -m ensurepip --user
 restic restore -r /media/da0s1/restic latest --target ~
@@ -130,7 +130,7 @@ swapinfo -h # doas
 swapinfo -k # doas
 swapon -aL # doas
 swapon /dev/md0 # doas
-sync=shari-auto ; unison remote $HOME ssh://david@shari.local//$HOME -ui text
+sync=shari-auto ; unison remote $HOME ssh://user@shari.local//$HOME -ui text
 sysctl -a G 'cpu.*temperature'
 sysctl debug.acpi.suspend_bounce=1  # before testing suspend # doas
 sysctl dev.cpu.0.freq=800
