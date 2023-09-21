@@ -1,13 +1,159 @@
-# vim: set filetype=conf:
+" vim: set filetype=vim:
 
-# Commandes ex {{{1
+" Scripting
 
-# Appliquer une macro à tous les arguments
+" Fonctions {{{1
+
+echo call({k, v -> k - v}, [3, 4])
+
+echo map({1 : 2, 3 : 4}, {k, v -> k . ' . ' . v})
+
+" }}}1
+
+" Wheel {{{1
+
+call wheel#forge#init()
+
+call wheel#forge#print()
+
+call wheel#forge#add_torus("torus")
+
+call wheel#forge#add_circle("cercle")
+
+call wheel#riwo#write(range(10,50),"~/Documents/toto")
+call wheel#riwo#write(g:donut,"~/Documents/toto")
+
+" }}}1
+
+" CtrlSpace {{{1
+
+function! ctrlspace#keys#Keypressed(key)
+    let key = (s:keyEscSequence && (a:key ==# "Z")) ? "S-Tab" : a:key
+    let s:keyEscSequence = 0
+
+    if s:modes.Help.Enabled
+        let mapName = "Help"
+    elseif s:modes.Search.Enabled
+        let mapName = "Search"
+    elseif s:modes.Nop.Enabled
+        let mapName = "Nop"
+    else
+        let mapName = ctrlspace#modes#CurrentListView().Name
+    endif
+
+    call s:keyMap[mapName][key](key)
+endfunction
+
+for k in ctrlspace#keys#KeyNames()
+	let key = strlen(k) > 1 ? ("<" . k . ">") : k
+
+	if k == '"'
+		let k = '\' . k
+	endif
+
+	silent! exe "noremap <silent><buffer> " . key . " :call ctrlspace#keys#Keypressed(\"" . k . "\")<CR>"
+endfor
+
+" }}}1
+
+" Utilisation
+
+" Mode normal {{{1
+
+" Historique des commandes Ex dans un buffer {{{2
+
+q:
+
+" }}}2
+
+" }}}1
+
+" Commandes Ex {{{1
+
+" Historique des commandes dans un buffer {{{2
+
+<Ctfl-F>
+
+" }}}2
+
+" Appliquer une macro à tous les arguments {{{2
 
 argdo normal! @a
 
-# Ajouter les lignes correspondant à un motif à un registre
+" }}}2
+
+" Ajouter les lignes correspondant à un motif à un registre {{{2
 
 g/motif/y A
 
-# }}}1
+" }}}2
+
+" Utiliser une variable dans une command ex {{{2
+
+exe ":cd" g:CtrlSpaceCacheDir
+
+" }}}2
+
+" Folding {{{2
+
+" %s:\({{{\) \(.*\)$:\2 \11:
+"
+" %s: }}}$:&1:
+
+" }}}2
+
+" }}}1
+
+" Macros {{{1
+
+fun! Macro()
+
+" silent! %s-include 'clerc.php';-include '../../site/clerc.php';-
+
+" silent! %s:<link href="theme.css" rel="StyleSheet" type="text/css" />:<link href="../../site/theme.css" rel="StyleSheet" type="text/css" />:
+
+" silent! %s:<script type="text/javascript" language="Javascript" src="clerc.js"></script>:<script type="text/javascript" language="Javascript" src="../../site/clerc.js"></script>:
+
+" silent! %s:<script type="text/javascript" language="Javascript" src="accord.js"></script>:<script type="text/javascript" language="Javascript" src="../../site/accord.js"></script>:
+
+" silent! %s:<script type="text/javascript" language="Javascript" src="arbre.js"></script>:<script type="text/javascript" language="Javascript" src="../../site/arbre.js"></script>:
+
+" silent! %s:<?php insereFichier('menu.htm'); ?>:<?php insereFichier('../../site/menu.htm'); ?>:
+
+" silent! %s:<a href="index.php">Accueil</a>:<a href="../../index.php">Accueil</a>:
+
+endfun
+
+com! Macro call Macro()
+
+finish
+
+" }}}1
+
+" Maps {{{1
+
+map <F1>|map <F2>|map <F3>|map <F4>|map <F5>|map <F6>|map <F7>|map <F8>|map <F9>|map <F10>|map <F11>|map <F12>
+imap <F1>|imap <F2>|imap <F3>|imap <F4>|imap <F5>|imap <F6>|imap <F7>|imap <F8>|imap <F9>|imap <F10>|imap <F11>|imap <F12>
+vmap <F1>|vmap <F2>|vmap <F3>|vmap <F4>|vmap <F5>|vmap <F6>|vmap <F7>|vmap <F8>|vmap <F9>|vmap <F10>|vmap <F11>|vmap <F12>
+
+map <S-F1>|map <S-F2>|map <S-F3>|map <S-F4>|map <S-F5>|map <S-F6>|map <S-F7>|map <S-F8>|map <S-F9>|map <S-F10>|map <S-F11>|map <S-F12>
+imap <S-F1>|imap <S-F2>|imap <S-F3>|imap <S-F4>|imap <S-F5>|imap <S-F6>|imap <S-F7>|imap <S-F8>|imap <S-F9>|imap <S-F10>|imap <S-F11>|imap <S-F12>
+vmap <S-F1>|vmap <S-F2>|vmap <S-F3>|vmap <S-F4>|vmap <S-F5>|vmap <S-F6>|vmap <S-F7>|vmap <S-F8>|vmap <S-F9>|vmap <S-F10>|vmap <S-F11>|vmap <S-F12>
+
+map <M-F1>|map <M-F2>|map <M-F3>|map <M-F4>|map <M-F5>|map <M-F6>|map <M-F7>|map <M-F8>|map <M-F9>|map <M-F10>|map <M-F11>|map <M-F12>
+imap <M-F1>|imap <M-F2>|imap <M-F3>|imap <M-F4>|imap <M-F5>|imap <M-F6>|imap <M-F7>|imap <M-F8>|imap <M-F9>|imap <M-F10>|imap <M-F11>|imap <M-F12>
+vmap <M-F1>|vmap <M-F2>|vmap <M-F3>|vmap <M-F4>|vmap <M-F5>|vmap <M-F6>|vmap <M-F7>|vmap <M-F8>|vmap <M-F9>|vmap <M-F10>|vmap <M-F11>|vmap <M-F12>
+
+map <C-F1>|map <C-F2>|map <C-F3>|map <C-F4>|map <C-F5>|map <C-F6>|map <C-F7>|map <C-F8>|map <C-F9>|map <C-F10>|map <C-F11>|map <C-F12>
+imap <C-F1>|imap <C-F2>|imap <C-F3>|imap <C-F4>|imap <C-F5>|imap <C-F6>|imap <C-F7>|imap <C-F8>|imap <C-F9>|imap <C-F10>|imap <C-F11>|imap <C-F12>
+vmap <C-F1>|vmap <C-F2>|vmap <C-F3>|vmap <C-F4>|vmap <C-F5>|vmap <C-F6>|vmap <C-F7>|vmap <C-F8>|vmap <C-F9>|vmap <C-F10>|vmap <C-F11>|vmap <C-F12>
+
+map ù | map µ | | map £ | map <bar> | map & | map § | map é | map è | map ç | map à | map ° | map <bslash>
+
+map <c-up> | map <c-down> | map <c-left> | map <c-right> | map <s-up> | map <s-down> | map <s-left> | map <s-right> | map <m-up> | map <m-down> | map <m-left> | map <m-right>
+
+map <cr> | map <s-cr> | map <m-cr> | map <c-cr> | map <tab> | map <s-tab> | map <m-tab> | map <c-tab> | map <space> | map <s-space> | map <m-space> | map <c-space>
+imap <cr> | imap <s-cr> | imap <m-cr> | imap <c-cr> | imap <tab> | imap <s-tab> | imap <m-tab> | imap <c-tab> | imap <space> | imap <s-space> | imap <m-space> | imap <c-space>
+vmap <cr> | vmap <s-cr> | vmap <m-cr> | vmap <c-cr> | vmap <tab> | vmap <s-tab> | vmap <m-tab> | vmap <c-tab> | vmap <space> | vmap <s-space> | vmap <m-space> | vmap <c-space>
+
+" }}}1

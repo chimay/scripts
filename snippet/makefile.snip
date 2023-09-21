@@ -5,9 +5,157 @@
 VAR = $(OTHERVAR) # is evaluated when used,
 VAR := $(OTHERVAR) # is evaluated immediately.
 
+# --
+
 #HTMLDIR = $(subst $(ORGMODE),$(HTML),$(PWD))
 
 #EMACS_PRE_FLAGS = --batch -l $(ORGMODE)/config.el --visit
 #EMACS_PRE_FLAGS = -u "$(USER)" --batch --eval '(load user-init-file)' --visit
 
  $(ORGMODE)/include/menu.org
+
+# --
+
+.PHONY: all clean wipe
+
+all:
+	@echo "Fichier make générique"
+	@echo
+	@echo "Commandes disponible :"
+	@echo
+	@echo "(c)lean : rm -rf *~"
+	@echo "(w)ipe : rm -rf **/*~"
+
+clean:
+	rm -f *~
+	rm -f \#*\#
+
+wipe:
+	rm -f **/*~
+	rm -f **/\#*\#
+
+c : clean
+
+w : wipe
+
+# --
+
+MAKEFILES = $(shell find . -maxdepth 2 -type f -name Makefile)
+SUBDIRS   = $(filter-out ./,$(dir $(MAKEFILES)))
+
+SUBDIRS = $(shell ls -d */)
+
+all:
+	for dir in $(SUBDIRS) \
+	do \
+        make -C $$dir all; \
+    done
+
+# --
+
+# Make does not offer a recursive wildcard function, so here's one:
+rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
+
+# How to recursively find all files with the same name in a given folder
+ALL_INDEX_HTMLS := $(call rwildcard,foo/,index.html)
+
+# How to recursively find all files that match a pattern
+ALL_HTMLS := $(call rwildcard,foo/,*.html)
+
+# --
+
+rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
+
+o find all the C files in the current directory:
+
+$(call rwildcard,.,*.c)
+To find all the .c and .h files in src:
+
+$(call rwildcard,src,*.c *.h)
+
+# --
+
+subdirs := $(wildcard */)
+sources := $(wildcard $(addsuffix *.cpp,$(subdirs)))
+objects := $(patsubst %.cpp,%.o,$(sources))
+
+$(objects) : %.o : %.cpp
+
+# --
+
+SOURCES := $(wildcard *.cpp */*.cpp)
+if you need more depth:
+
+SOURCES := $(wildcard *.cpp */*.cpp */*/*.cpp */*/*/*.cpp)
+
+# --
+
+all: recursive
+    $(MAKE) -C componentX
+    # stuff for current dir
+
+# --
+
+all: recursive
+    cd componentX && $(MAKE)
+    # stuff for current dir
+
+recursive: true
+
+# --
+
+recurfind = $(shell find $(1) -name '$(2)')
+SRCS := $(call recurfind,subdir1,*.c) $(call recurfind,subdir2,*.cc) $(call recurfind,subdir2,*.cu)
+
+# --
+
+TARGET = kmusb
+
+CC = gcc
+CFLAGS = -g
+
+OUTDIR = ./bin
+DATADIR = ./data
+SUBDIR = semihost stream arg_parser
+DIR_OBJ = ./obj
+
+INCS = $(wildcard *.h $(foreach fd, $(SUBDIR), $(fd)/*.h))
+SRCS = $(wildcard *.c $(foreach fd, $(SUBDIR), $(fd)/*.c))
+NODIR_SRC = $(notdir $(SRCS))
+OBJS = $(addprefix $(DIR_OBJ)/, $(SRCS:c=o)) # obj/xxx.o obj/folder/xxx .o
+INC_DIRS = -I./ $(addprefix -I, $(SUBDIR))
+LIBS = -largp
+LIB_DIRS = -L/usr/local/Cellar/argp-standalone/1.3/lib
+
+PHONY := $(TARGET)
+$(TARGET): $(OBJS)
+    $(CC) -o $(OUTDIR)/$@ $(OBJS) $(LIB_DIRS) $(LIBS)
+
+$(DIR_OBJ)/%.o: %.c $(INCS)
+    mkdir -p $(@D)
+    $(CC) -o $@ $(CFLAGS) -c $< $(INC_DIRS)
+
+PHONY += clean
+clean:
+	rm -rf $(OUTDIR)/* $(DATADIR)/* $(DIR_OBJ)/*
+
+PHONY += echoes
+echoes:
+	@echo "INC files: $(INCS)"
+	@echo "SRC files: $(SRCS)"
+	@echo "OBJ files: $(OBJS)"
+	@echo "LIB files: $(LIBS)"
+	@echo "INC DIR: $(INC_DIRS)"
+	@echo "LIB DIR: $(LIB_DIRS)"
+
+.PHONY = $(PHONY)   
+
+# --
+
+all: blah
+
+blah::
+	echo "hello"
+
+blah::
+	echo "hello again"
