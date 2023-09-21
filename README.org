@@ -16,7 +16,7 @@ Dependances :
     + audio files are not on this repo, just pick your fav and change
       them in the script
   - meditation.zsh -> random.zsh, mpv-socket.bash, audio files
-  - I generate "speaking" audio files using pico2wave (svox-pico-git on [AUR](https://aur.archlinux.org/))
+  - I generate "speaking" audio files using pico2wave (svox-pico-git on [[https://aur.archlinux.org/][AUR]])
   - For audio samples, see also https://freesound.org
 
 * Warning
