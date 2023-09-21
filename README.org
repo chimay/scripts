@@ -13,7 +13,9 @@
 Dependances :
 
   - multi-tea.zsh -> ding-dong.zsh -> minuter.zsh -> bell.zsh -> audio files
-  - meditation.zsh -> alea.py, audio files
+    + audio files are not on this repo, just pick your fav and change
+      them in the script
+  - meditation.zsh -> random.zsh, mpv-socket.bash, audio files
   - I generate "speaking" audio files using pico2wave (svox-pico-git on AUR)
   - For audio samples, see also https://freesound.org
 
