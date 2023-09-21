@@ -7,6 +7,7 @@
 - some scripts may come from elsewhere on the net, I wrote the credit
   when I remember the origin, if you see one w/o it, please open an
   issue
+- some snippets
 
 * Documentation
 
