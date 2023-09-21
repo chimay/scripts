@@ -8,7 +8,7 @@
   when I remember the origin, if you see one w/o it, please open an
   issue
 
-* Documentation (English)
+* Documentation
 
 Dependances :
 
@@ -18,14 +18,6 @@ Dependances :
   - meditation.zsh -> random.zsh, mpv-socket.bash, audio files
   - I generate "speaking" audio files using pico2wave (svox-pico-git on AUR)
   - For audio samples, see also https://freesound.org
-
-* Documentation (Français)
-
-Les variables des scripts sont généralement en français, pour éviter
-la confusion avec les mots-clefs anglophones du langage. Cela peut
-vous aider à les déchiffrer. Si vous avec besoin de plus de détails,
-n’hésitez pas à me le faire savoir.
-
 
 * Warning
 
