@@ -1,0 +1,6 @@
+~/.XCompose	~/racine/config/windenv/XCompose
+~/.config/bat	~/racine/config/visu/bat
+~/.local/bin	~/racine/local/bin
+~/.local/etc	~/racine/local/etc
+~/.local/lib	~/racine/local/lib
+~/.local/share/Trash	~/racine/trash/corbeille
