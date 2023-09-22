@@ -1,74 +1,59 @@
 # vim: set ft=make :
 
-#  {{{ Racine Org, Html, Epub
+#  {{{ root dir of generic, html, epub
 
-RACINE_ORGMODE = $(HOME)/racine/site/orgmode
-
-RACINE_HTML = $(HOME)/racine/site/html
-
-RACINE_EPUB = $(HOME)/racine/site/epub
+ROOT_GENERIC := $(HOME)/racine/site/eclats2vers/generic
+ROOT_HTML    := $(HOME)/racine/site/eclats2vers/html
+ROOT_EPUB    := $(HOME)/racine/site/eclats2vers/epub
 
 #  }}}
 
-#  {{{ Programmes & Options
+#  {{{ local generic & html dir
 
-ECHO = echo
-EMACS = /usr/local/bin/emacs
-MAKE = /usr/bin/make
-
-EMACS_PRE_FLAGS = --batch --file
-EMACS_POST_FLAGS = -f org-html-export-to-html --kill 2> emacs.log
+CUR_DIR  = $(shell pwd)
+HTML_DIR = $(CUR_DIR:$(ROOT_GENERIC)%=$(ROOT_HTML)%)
+EPUB_DIR = $(CUR_DIR:$(ROOT_GENERIC)%=$(ROOT_EPUB)%)
 
 #  }}}
 
-#  {{{ Local Org & Html
+#  {{{ subdirs
 
-REPERTOIRE_COURANT = $(shell pwd)
-
-REPERTOIRE_HTML = $(REPERTOIRE_COURANT:$(RACINE_ORGMODE)%=$(RACINE_HTML)%)
-
-REPERTOIRE_EPUB = $(REPERTOIRE_COURANT:$(RACINE_ORGMODE)%=$(RACINE_EPUB)%)
-
-#  }}}
-
-#  {{{ Fichiers
-
-FICHIERS_HTML = $(patsubst %.org,%.html,$(wildcard *.org))
-
-FICHIERS_CSS = $(HTML)/style/defaut.css
-
-FICHIERS_INCLUDE = $(wildcard $($(RACINE_ORGMODE)/include/*))
-
-FICHIERS_EPUB = $(patsubst %.org,%.epub,$(wildcard *.org))
-
-#  }}}
-
-# {{{ Fichiers installés
-
-FICHIERS_INSTALLES_HTML = $(patsubst %.org,$(REPERTOIRE_HTML)/%.html,$(wildcard *.org))
-
-FICHIERS_INSTALLES_CSS = $(patsubst %.org,$(REPERTOIRE_HTML)/%.html,$(wildcard *.org))
-
-FICHIERS_INSTALLES_EPUB = $(patsubst %.org,$(REPERTOIRE_HTML)/%.epub,$(wildcard *.html))
-
-# }}}
-
-#  {{{ Sous-répertoires
-
-SUBDIRS = grimoire litera musica
-
-INSTALL_SUBDIRS = $(SUBDIRS:%=install-%)
-
-CLEAN_SUBDIRS = $(SUBDIRS:%=clean-%)
-
+SUBDIRS            = $(wildcard */)
+HTML_SUBDIRS       = $(SUBDIRS:%=html-%)
+EPUB_SUBDIRS       = $(SUBDIRS:%=epub-%)
+CLEAN_SUBDIRS      = $(SUBDIRS:%=clean-%)
 CLEAN_HTML_SUBDIRS = $(SUBDIRS:%=clean-html-%)
-
 CLEAN_EPUB_SUBDIRS = $(SUBDIRS:%=clean-epub-%)
+WIPE_SUBDIRS       = $(SUBDIRS:%=wipe-%)
 
-WIPE_SUBDIRS = $(SUBDIRS:%=wipe-%)
+#  }}}
 
-HTML_SUBDIRS = $(SUBDIRS:%=html-%)
+#  {{{ files
 
-EPUB_SUBDIRS = $(SUBDIRS:%=epub-%)
+ORG_FILES = $(wildcard *.org)
+HTML_FILES = $(ORG_FILES:.org=.html)
+EPUB_FILES = $(ORG_FILES:.org=.epub)
+CSS_FILES  = $(wildcard $(ROOT_GENERIC)/style/*.css)
+INC_FILES  = $(wildcard $(ROOT_GENERIC)/include/*.org)
+
+# HTML_FILES = $(patsubst %.org,%.html,$(wildcard *.org))
+# EPUB_FILES = $(patsubst %.org,%.epub,$(wildcard *.org))
+
+# files in ~/racine/musica/lilypond/templates
+
+LY_MEL_FILES = $(wildcard ~/racine/musica/lilypond/templates/include/mel*.ly)
+
+#  }}}
+
+#  {{{ programs & options
+
+ECHO  = echo
+
+EMACS            = /usr/bin/emacs
+EMACS_PRE_FLAGS  =
+EMACS_POST_FLAGS = --batch -f org-html-export-to-html --kill 2> emacs.log
+
+DRY_RSYNC = rsync -n -au --delete --exclude-from=./rsync-html-exclude -vhi --progress
+RSYNC     = rsync -au --delete --exclude-from=./rsync-html-exclude -vhi --progress
 
 #  }}}

@@ -2,96 +2,136 @@
 
 include ../Makefile.inc
 
-#  {{{  Phony
+.DEFAULT_GOAL := sync-html
 
-.PHONY: all install
-.PHONY: clean clean-html clean-epub wipe
+#  {{{  phony
+
+.PHONY: debug
 
 .PHONY: html
 .PHONY: epub
 
+.PHONY: dry-sync-html sync-html
+.PHONY: dry-sync-epub sync-epub
+.PHONY: dry-sync sync
+
+.PHONY: all install
+
+.PHONY: $(HTML_SUBDIRS) $(EPUB_SUBDIRS)
+.PHONY: $(CLEAN_SUBDIRS) $(CLEAN_HTML_SUBDIRS) $(CLEAN_EPUB_SUBDIRS) $(WIPE_SUBDIRS)
+
+.PHONY: clean clean-html clean-epub wipe
+
 #  }}}
 
-# All, Install, Clean, Wipe {{{1
+# debug {{{1
 
-all: $(FICHIERS_HTML) $(FICHIERS_EPUB)
-
-install: sync
-
-clean:
-	rm -f *~
-
-clean-html:
-	rm -f *.html
-	rm -f *~
-
-clean-epub:
-	rm -f *.epub
-	rm -f *~
-
-wipe:
-	rm -f *.html
-	rm -f *.epub
-	rm -f *~
+debug:
+	@echo $(SUBDIRS)
 
 # }}}1
 
-#  {{{  Org -> Html
+#  {{{  org -> html
 
-html: $(FICHIERS_HTML)
-
-%.html: %.org $(FICHIERS_INCLUDE)
-	$(EMACS) $(EMACS_PRE_FLAGS) $< $(EMACS_POST_FLAGS)
+$(HTML_SUBDIRS):
+	$(MAKE) -C ${@:html-%=%} html
 	@$(ECHO)
+
+%.html: %.org $(INC_FILES)
+	$(EMACS) $(EMACS_PRE_FLAGS) $< $(EMACS_POST_FLAGS)
+	remove-max-width-from-org-html-export.zsh $(patsubst %.org,%.html,$<)
+	@$(ECHO)
+
+html: $(HTML_SUBDIRS) $(HTML_FILES)
 
 #  }}}
 
-#  {{{  Org -> Epub
+#  {{{  org -> epub
 
-epub: $(FICHIERS_EPUB)
+$(EPUB_SUBDIRS):
+	$(MAKE) -C ${@:epub-%=%} epub
+	@$(ECHO)
 
-%.epub: %.org $(FICHIERS_INCLUDE)
+%.epub: %.org $(INC_FILES)
 	pandoc -t epub $< -o $(<:.org=.epub) 2> pandoc.log
 	@$(ECHO)
 
+epub: $(EPUB_SUBDIRS) $(EPUB_FILES)
+
 #  }}}
 
-# Sync -> html dir {{{1
+# sync -> html dir {{{1
 
 dry-sync-html: html
-	rsync -n -au --delete \
-		--exclude-from=../rsync-html-exclude \
-		-vhi --progress --stats $(REPERTOIRE_COURANT)/ $(REPERTOIRE_HTML)
+	$(DRY_RSYNC) $(CUR_DIR)/ $(HTML_DIR)
 	@$(ECHO)
 
 sync-html: html
-	rsync -au --delete \
-		--exclude-from=../rsync-html-exclude \
-		-vhi --progress --stats $(REPERTOIRE_COURANT)/ $(REPERTOIRE_HTML)
+	$(RSYNC) $(CUR_DIR)/ $(HTML_DIR)
 	@$(ECHO)
 
 # }}}1
 
-# Sync -> epub dir {{{1
+# sync -> epub dir {{{1
 
 dry-sync-epub: epub
-	rsync -n -au --delete \
-		--exclude-from=../rsync-epub-exclude \
-		-vhi --progress --stats $(REPERTOIRE_COURANT)/ $(REPERTOIRE_EPUB)
+	$(DRY_RSYNC) $(CUR_DIR)/ $(EPUB_DIR)
 	@$(ECHO)
 
 sync-epub: epub
-	rsync -au --delete \
-		--exclude-from=../rsync-epub-exclude \
-		-vhi --progress --stats $(REPERTOIRE_COURANT)/ $(REPERTOIRE_EPUB)
+	$(SYNC) $(CUR_DIR)/ $(EPUB_DIR)
 	@$(ECHO)
 
 # }}}1
 
-# {{{ Sync all
+# {{{ sync all
 
 dry-sync: dry-sync-html dry-sync-epub
 
 sync: sync-html sync-epub
 
 # }}}
+
+# all, install {{{1
+
+all: sync-html
+
+install: sync-html
+
+# }}}1
+
+# clean, wipe {{{1
+
+$(CLEAN_SUBDIRS):
+	$(MAKE) -C ${@:clean-%=%} clean
+	@$(ECHO)
+
+$(CLEAN_HTML_SUBDIRS):
+	$(MAKE) -C ${@:clean-html-%=%} clean-html
+	@$(ECHO)
+
+$(CLEAN_EPUB_SUBDIRS):
+	$(MAKE) -C ${@:clean-epub-%=%} clean-epub
+	@$(ECHO)
+
+$(WIPE_SUBDIRS):
+	$(MAKE) -C ${@:wipe-%=%} wipe
+	@$(ECHO)
+
+clean: $(CLEAN_SUBDIRS)
+	rm -f ?*~
+
+clean-html: $(CLEAN_HTML_SUBDIRS)
+	rm -f ?*.html
+	rm -f ?*~
+
+clean-epub: $(CLEAN_EPUB_SUBDIRS)
+	rm -f ?*.epub
+	rm -f ?*~
+
+wipe: $(WIPE_SUBDIRS)
+	rm -f ?*.html
+	rm -f ?*.epub
+	rm -f ?*~
+
+# }}}1

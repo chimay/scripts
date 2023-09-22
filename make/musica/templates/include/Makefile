@@ -1,6 +1,6 @@
 # vim: set ft=make :
 
-include Makefile.inc
+include ../../../Makefile.inc
 
 .DEFAULT_GOAL := sync-html
 
@@ -27,9 +27,7 @@ include Makefile.inc
 # debug {{{1
 
 debug:
-	@echo $(HTML_FILES)
-	@echo $(EPUB_FILES)
-	@echo $(LY_MEL_FILES)
+	@echo $(SUBDIRS)
 
 # }}}1
 
@@ -39,7 +37,7 @@ $(HTML_SUBDIRS):
 	$(MAKE) -C ${@:html-%=%} html
 	@$(ECHO)
 
-%.html: %.org $(INC_FILES)
+%.html: %.org $(INC_FILES) $(LY_MEL_FILES)
 	$(EMACS) $(EMACS_PRE_FLAGS) $< $(EMACS_POST_FLAGS)
 	remove-max-width-from-org-html-export.zsh $(patsubst %.org,%.html,$<)
 	@$(ECHO)
@@ -65,11 +63,11 @@ epub: $(EPUB_SUBDIRS) $(EPUB_FILES)
 # sync -> html dir {{{1
 
 dry-sync-html: html
-	$(DRY_RSYNC) $(ROOT_GENERIC)/ $(ROOT_HTML)
+	$(DRY_RSYNC) $(CUR_DIR)/ $(HTML_DIR)
 	@$(ECHO)
 
 sync-html: html
-	$(RSYNC) $(ROOT_GENERIC)/ $(ROOT_HTML)
+	$(RSYNC) $(CUR_DIR)/ $(HTML_DIR)
 	@$(ECHO)
 
 # }}}1
@@ -77,11 +75,11 @@ sync-html: html
 # sync -> epub dir {{{1
 
 dry-sync-epub: epub
-	$(DRY_RSYNC) $(ROOT_GENERIC)/ $(ROOT_EPUB)
+	$(DRY_RSYNC) $(CUR_DIR)/ $(EPUB_DIR)
 	@$(ECHO)
 
 sync-epub: epub
-	$(SYNC) $(ROOT_GENERIC)/ $(ROOT_EPUB)
+	$(SYNC) $(CUR_DIR)/ $(EPUB_DIR)
 	@$(ECHO)
 
 # }}}1
