@@ -1,0 +1,16 @@
+*~
+*.org
+*.html
+*.css
+*.png
+*.svg
+*.el
+*.log
+*.ancien
+.git
+Makefile*
+Grenier
+README*
+rsync-html-exclude
+rsync-epub-exclude
+tar-exclude
