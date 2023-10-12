@@ -13,6 +13,7 @@ echo
 restic \
 	-r "$repo" \
 	forget \
+	--keep-last 12 \
 	--keep-daily 7 \
 	--keep-weekly 4 \
 	--keep-monthly 12 \

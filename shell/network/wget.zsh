@@ -17,14 +17,15 @@ adresse=""
 
 # Certains fanions peuvent poser problème dans certains cas, notamment :
 #
-# 	--relative
 # 	--no-parent
+# 	--relative
 # 	--no-host-directories
 #
 #	Ne pas hésiter à les ajouter/enlever lors de l’édition proposée par le script
 
 fanions=(
 	--recursive
+	--no-parent
 	--page-requisites
 	--convert-links
 	--adjust-extension

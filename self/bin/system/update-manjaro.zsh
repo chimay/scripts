@@ -10,7 +10,7 @@ w3m https://archlinux.org
 
 # update mirrors
 
-sudo reflector --latest 12 --sort rate --save /etc/pacman.d/mirrorlist
+sudo pacman-mirrors --fasttrack
 
 # refresh
 
