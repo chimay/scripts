@@ -1,8 +1,22 @@
 # vim: set filetype=conf:
 
-# Terminal {{{1
+# ANSI Codes {{{1
 
-# ANSI Codes : Effets, Couleurs {{{2
+# CSI {{{2
+
+# CSI = Control Sequence Introducer = ESC[
+
+# ESC[ ... m
+# ESC[ ... ; ... m
+# ESC[ ... ; ... ; ... m
+#
+# ... = nombres
+#
+# Signification des nombres ci-dessous
+
+# }}}2
+
+# Effets, Couleurs {{{2
 
 # Code de la forme :
 
@@ -50,6 +64,92 @@ echo $'\E[7;35m' coucou
 
 # }}}2
 
+# SGR = Select Graphic Rendition {{{2
+
+# Code		Effect	Note
+#
+# 0			Reset / Normal	all attributes off
+# 1			Bold or increased intensity
+# 2			Faint (decreased intensity)
+# 3			Italic	Not widely supported. Sometimes treated as inverse.
+# 4			Underline
+# 5			Slow Blink	less than 150 per minute
+# 6			Rapid Blink	MS-DOS ANSI.SYS; 150+ per minute; not widely supported
+# 7			Reverse video	swap foreground and background colors
+# 8			Conceal	Not widely supported.
+# 9			Crossed-out	Characters legible, but marked for deletion.
+# 10		Primary(default) font
+# 11–19		Alternative font	Select alternative font n − 10
+# 20		Fraktur	Rarely supported
+# 21		Doubly underline or Bold off	Double-underline per ECMA-48.[26] See discussion
+# 22		Normal color or intensity	Neither bold nor faint
+# 23		Not italic, not Fraktur
+# 24		Underline off	Not singly or doubly underlined
+# 25		Blink off
+# 27		Inverse off
+# 28		Reveal	conceal off
+# 29		Not crossed out
+# 30–37		Set foreground color	See color table below
+# 38		Set foreground color	Next arguments are 5;n or 2;r;g;b, see below
+# 39		Default foreground color	implementation defined (according to standard)
+# 40–47		Set background color	See color table below
+# 48		Set background color	Next arguments are 5;n or 2;r;g;b, see below
+# 49		Default background color	implementation defined (according to standard)
+# 51		Framed
+# 52		Encircled
+# 53		Overlined
+# 54		Not framed or encircled
+# 55		Not overlined
+# 60		ideogram underline or right side line	Rarely supported
+# 61		ideogram double underline or double line on the right side
+# 62		ideogram overline or left side line
+# 63		ideogram double overline or double line on the left side
+# 64		ideogram stress marking
+# 65		ideogram attributes off	reset the effects of all of 60–64
+# 90–97		Set bright foreground color	aixterm (not in standard)
+# 100–107	Set bright background color	aixterm (not in standard)
+
+# }}}2
+
+# 3/4 bits {{{2
+
+# Black				30	40
+# Red				31	41
+# Green				32	42
+# Yellow			33	43
+# Blue				34	44
+# Magenta			35	45
+# Cyan				36	46
+# White				37	47
+# Bright Black		90	100
+# Bright Red		91	101
+# Bright Green		92	102
+# Bright Yellow		93	103
+# Bright Blue		94	104
+# Bright Magenta	95	105
+# Bright Cyan		96	106
+# Bright White		97	107
+
+# }}}2
+
+# 8 bits {{{2
+
+# ESC[ 38;5;⟨n⟩ m Select foreground color
+# ESC[ 48;5;⟨n⟩ m Select background color
+#      0-  7:  standard colors (as in ESC [ 30–37 m)
+#      8- 15:  high intensity colors (as in ESC [ 90–97 m)
+#     16-231:  6 × 6 × 6 cube (216 colors): 16 + 36 × r + 6 × g + b (0 ≤ r, g, b ≤ 5)
+#    232-255:  grayscale from black to white in 24 steps
+
+# }}}2
+
+# 24 bits {{{2
+
+# ESC[ 38;2;⟨r⟩;⟨g⟩;⟨b⟩ m Select RGB foreground color
+# ESC[ 48;2;⟨r⟩;⟨g⟩;⟨b⟩ m Select RGB background color
+
+# }}}2
+
 # }}}1
 
 # Couleurs base16 personnel {{{
@@ -61,7 +161,7 @@ color03="96/57/24" # Base 0A - Yellow
 color04="18/18/b2" # Base 0D - Blue
 color05="b2/18/b2" # Base 0E - Magenta
 color06="14/96/96" # Base 0C - Cyan
-color07="94/94/94" # Base 05 - White
+color07="94/74/54" # Base 05 - White
 
 color08="43/43/43" # Base 03 - Bright Black
 color09="c7/41/41" # Base 08 - Bright Red
@@ -85,89 +185,26 @@ color_cursor="5b/3c/11"
 
 # }}}1
 
-# Couleurs thème brun konsole {{{1
-
-[Background]
-Color=0,0,0
-
-[BackgroundIntense]
-Color=104,104,104
-
-[Color0]
-Color=0,0,0
-
-[Color0Intense]
-Color=67,67,67
-
-[Color1]
-Color=178,24,24
-
-[Color1Intense]
-Color=199,65,65
-
-[Color2]
-Color=17,128,17
-
-[Color2Intense]
-Color=54,166,54
-
-[Color3]
-Color=150,87,20
-
-[Color3Intense]
-Color=152,132,4
-
-[Color4]
-Color=24,24,178
-
-[Color4Intense]
-Color=84,84,255
-
-[Color5]
-Color=178,24,178
-
-[Color5Intense]
-Color=200,66,200
-
-[Color6]
-Color=20,150,150
-
-[Color6Intense]
-Color=48,148,148
-
-[Color7]
-Color=148,148,148
-
-[Color7Intense]
-Color=255,255,255
-
-[Foreground]
-Color=91,60,17
-
-[ForegroundIntense]
-Color=115,53,20
-
-# }}}1
-
 # Couleurs vim {{{1
 
 Brun			#5B3C11
 Brun rouge		#9b3c11
 Brun clair		#7C5E33
+Brun discret	#341207
+
 Gris-brun		#754321
+
+Gris 			#434343
+Gris foncé		#120507
+Gris très foncé	#070707
+
 Rose			#872E30
 Saumon			#88421D
-
 Rouge			brown
+Rouge ?			#845A3B
 
-Noir clair		#070707
 
-# }}}1
-
-# Tmux {{{1
-
-B36700		Jaune orangé
-d90115		Rouge activité
+Blanc laiteux  #947454
 
 # }}}1
 

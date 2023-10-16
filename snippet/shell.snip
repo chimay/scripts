@@ -3,54 +3,6 @@
 
 # Terminal {{{1
 
-# ANSI Codes : Effets, Couleurs {{{2
-
-# Code de la forme :
-
-$'\E[0;30m'
-
-# ou le 0 est le code de l’effet (attribut), ici aucun
-# et le 30 est le code de la couleur
-
-# Exemple :
-
-echo $'\E[7;35m' coucou
-
-# $'\E[
-#
-# 0 : défaut
-# 1 : bold
-# 2 : dim
-# 3 : italic
-# 4 : underline
-# 5 : slow blink
-# 6 : rapid blink
-# 7 : reverse video
-#
-# ;
-#
-# 30 : black
-# 31 : red
-# 32 : green
-# 33 : yellow
-# 34 : blue
-# 35 : magenta
-# 36 : cyan
-# 37 : white
-#
-# 90 : bright black
-# 91 : bright red
-# 92 : bright green
-# 93 : bright yellow
-# 94 : bright blue
-# 95 : bright magenta
-# 96 : bright cyan
-# 97 : bright white
-#
-# m'
-
-# }}}2
-
 # }}}1
 
 # Shell {{{1
@@ -298,6 +250,17 @@ echo
 trap
 
 echo
+
+# Dans une boucle avec sleep :
+# sleep N retarde la prise en compte du trap de N secondes
+# Pour éviter cela, remplacer:
+
+sleep 300
+
+# par:
+
+sleep 300 &
+wait $!
 
 # }}}2
 
@@ -556,7 +519,7 @@ tar xzvf archive <tab> :
 
 complétion par sous-ensembles :
 
-cd /h/d/art/ec --> /home/user/art/eclats2vers
+cd /h/d/art/ec --> /home/user_name/art/eclats2vers
 
 	idem avec les options pour :
 

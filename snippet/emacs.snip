@@ -5,6 +5,11 @@
 * Org mode
 
 
+** Table of content
+
+#+TOC: headlines 1 local
+
+
 ** Agenda
 
 1 jour :
@@ -83,3 +88,28 @@ c d e f g a b c b a g f e d c d e f g a b c b a g f e d c1
 
 #+RESULTS:
 [[file:ionian.png]]
+
+
+* Regex
+
+Majuscule -> minuscule dans les listes à puces
+
+^\( +[-+*]\)\( [A-ZÉ]\)\(\w\) → \1\,(downcase \2)\3
+
+^\( +[-+*] [a-z ]*\)\( [A-Z]\)\(\w\) → \1\,(downcase \2)\3
+
+Majuscule -> minuscule dans les tableaux
+
+\(| \)\([A-ZÉ]\)\(\w\) → \1\,(downcase \2)\3
+
+Ajouter une ligne vide sous les titres org-mode :
+
+^\(\*.*\) → \1
+
+Ajouter une ligne vide au-dessus des titres org-mode si la ligne
+précédente n’est pas vide :
+
+\(.+\)
+\* → \1
+
+*

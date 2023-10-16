@@ -14,6 +14,7 @@ archlinux-java help
 archlinux-java set java-8-openjdk # sudo
 archlinux-java status
 blkid # sudo
+borg extract ~/backup/borg::taijitu-2023-08-25T20:10:22.264263
 borg list ~/backup/borg
 borg mount ~/backup/borg::taijitu-2023-08-25T20:10:22.264263 ~/backup/mnt
 borg umount ~/backup/mnt
@@ -48,8 +49,14 @@ demonte=diskext-sdb1 ; udevil umount /dev/sdb1
 demonte=liseuse ; udevil umount /dev/sdb
 demonte=photo ; udevil umount /dev/sdb1
 demonte=sdb1 ; udevil umount /dev/sdb1
-df=1 ; df G 'Sys\|sda\|sdb\|sdc\|sdd\|user'
+df=1 ; df G 'Sys\|sda\|sdb\|sdc\|sdd\|user_name'
 diff -e un deux >! patch.ed
+distrobox create --root --name debian --image debian
+distrobox enter --root debian -- /bin/bash # sans le -- /bin/bash, les programmes gui ne fonctionnent pas
+distrobox enter --root fedora -- /bin/bash # sans le -- /bin/bash, les programmes gui ne fonctionnent pas
+distrobox list --root
+distrobox rm --root debian
+distrobox stop --root debian
 doc=git ; m ~infoman/unix/version/progit.txt
 doc=i3 ; w /usr/share/doc/i3/userguide.html
 doc=mpv ; m /usr/share/doc/mpv/input.conf
@@ -61,7 +68,7 @@ ed=script ; (cat script.ed && echo w) | ed un
 efibootmgr -b 05 -B # sudo, delete boot entry
 efibootmgr -c -d /dev/sda -p 1 -L "Gentoo" -l '\efi\boot\bootx64.efi' # sudo, create boot entry
 efibootmgr -v
-emacs=byte-comp-dir ; emacs --batch --eval '(byte-recompile-directory "~/racine/plugin/manager/el-get/mtorus-chimay")'
+emacs=byte-comp-dir ; emacs --batch --eval '(byte-recompile-directory "~/racine/plugin/manager/el-get/mtorus-user_name")'
 fallocate -l 8G swapfile # sudo
 feh=wallpaper ; feh --bg-max ~wallpaper/artisan/A-intoTheVoid.jpg
 file --mime-type Bonhomme_hiver_2018.docx
@@ -85,7 +92,7 @@ fossil status
 fossil timeline
 fzf=pipe ; var=$(e * | fzf -m --reverse --cycle --color=bw)
 git=checkout ; git checkout adc060c dirs-quigonjinn
-git=clone-using-ssh ; git clone 'ssh://git@github.com/chimay/nb'
+git=clone-using-ssh ; git clone 'ssh://git@github.com/user_name/nb'
 git=commit ; git add -A ; git commit
 git=compresse ; git gc
 git=doc ; m ~infoman/unix/version/progit.txt
@@ -93,13 +100,14 @@ git=filtre-fichier ; git filter-branch --index-filter 'git rm --cached --ignore-
 git=push ; git push -u origin master
 git=push-u ; git push -u origin master
 git=rebase ; git rebase -i HEAD~4
-git=remote-add ; git remote add origin git@github.com:chimay/configuration.git
+git=remote-add-github ; git remote add origin git@github.com:user_name/configuration.git
+git=remote-add-gitlab git remote add origin git@gitlab.com:user_name/equa6on.git
 git=remote-show ; git remote get-url origin
 git=remote-show ; git remote show origin
 git=reset ; git fetch --all && git reset --hard origin/master
 git_rm_file=file ; git filter-repo --path-match $git_rm_file --invert-paths
 gopher=1 ; lynx gopher://gopher.floodgap.com/1/world/
-gpg --edit-key user@mail.com
+gpg --edit-key user_name@mail_server.com
 gpg --list-keys
 gpg --list-secret-keys
 gpg --list-sigs
@@ -109,11 +117,10 @@ gpg -e flower-4-petals.ggb
 grep=qute-history ; =grep url qutebrowser.history | sort | uniq | sed 's/     url = //' >! ~/.local/share/qutebrowser/history
 groff -ms -D utf8 -T pdf groff.ms >! groff.pdf
 gv '^(\*|\*\*) ' *.org
-gv=check ; gv 'davi|onder|chimay|user|fa98|skyn|latit|longit|r1v'
 handlr set x-scheme-handler/http org.qutebrowser.qutebrowser.desktop
 hardlink -n -v ~/photo/numerique
 hardlink -v ~/photo >&! ~/log/hardlink.log &
-hardlink -vv /mnt/sda7/user/photo/numerique
+hardlink -vv /mnt/sda7/user_name/photo/numerique
 hsetroot -fill ~/graphix/wallpaper/multics/multics-logo-rouge.jpg
 i3-msg '[class="qutebrowser"] focus'
 i3-msg -t get_tree
@@ -139,11 +146,11 @@ lpoptions
 ls -l `find ~/photo -type f -links +1` L
 lsblk
 lscpu
-lsmonte=1 ; monte && e '\n----\n' && monte G --color=never 'sda\|sdb\|sdc\|sdd\|user\|media'
+lsmonte=1 ; monte && e '\n----\n' && monte G --color=never 'sda\|sdb\|sdc\|sdd\|user_name\|media'
 lstune=1 ; ls-tune -l
-mail=send ; mail -s "eclats de vers $(date +%Y-%m-%d)" -a ~archive/eclats2vers-`date +%Y-%m-%d`.tar.xz user@mail.com < ~common/mail/archive
-mail=send ; mail -s "eclats de vers" -a ~site/backup/orgmode.tar.xz -r user@mail.be user@mail.com < ~common/mail/archive
-mail=send ; mutt -a =gen-skeleton.zsh -s script -- user@mail.be < ~common/mail/archive
+mail=send ; mail -s "eclats de vers $(date +%Y-%m-%d)" -a ~archive/eclats2vers-`date +%Y-%m-%d`.tar.xz user_name@mail_server.com < ~common/mail/archive
+mail=send ; mail -s "eclats de vers" -a ~site/backup/orgmode.tar.xz -r user_name@mail_server.be user_name@mail_server.com < ~common/mail/archive
+mail=send ; mutt -a =gen-skeleton.zsh -s script -- user_name@mail_server.be < ~common/mail/archive
 mail=smtp-queue ; sudo smtpctl show queue
 make install PREFIX=/usr/local # sudo
 midi=connect_list ; aconnect -l
@@ -154,13 +161,13 @@ midi=play_fluid ; fluidsynth -a alsa -m alsa_seq -i /usr/share/soundfonts/FluidR
 midi=server_fluid ; fluidsynth -is -a pulseaudio -m alsa_seq -r 48000 /usr/share/soundfonts/FluidR3_GM.sf2
 midi=server_timidity ; timidity -iA
 midi=to_ogg ; fluidsynth  -nli -r 48000 -o synth.cpu-cores=2 -T oga -F test.ogg /usr/share/soundfonts/FluidR3_GM.sf2 test.mid
-mkdir=run-media ; sudo mkdir -p /run/media/user
+mkdir=run-media ; sudo mkdir -p /run/media/user_name
 mkswap -U clear swapfile # sudo
 monte=cleusb ; udevil mount /dev/sdb1 /media/cleusb
 monte=diskext-sdb1 ; udevil mount /dev/sdb1 /media/diskext-sdb1
 monte=liseuse ; udevil mount /dev/sdb /media/liseuse
 monte=photo ; udevil mount /dev/sdb1 /media/photo
-monte=sdb1 ; udevil mount /dev/sdb1 /run/media/user/sdb1
+monte=sdb1 ; udevil mount /dev/sdb1 /run/media/user_name/sdb1
 mount -t cifs //shari/export ~/mount/import/samba
 mount -t vboxsf -o uid=1000,gid=100 virtualbox-share /mnt # guest virtualbox, sudo
 mpd=start ; pgrep mpd || { rm -f ~/racine/music/mpd/pid ; mpd ~/racine/config/music/mpd.conf }
@@ -175,23 +182,25 @@ nf ~pack/aged/* ; echo ; nf /media/cleusb/archive/*
 nf ~pack/aged/* ; echo ; nf /media/cleusb/archive/*
 nmcli dev wifi
 pacman -S --force ttf-dejavu # sudo
-pacman-mirrors --fasttrack # manjaro, sudo
+pacman=get-pkg ; pacman -Qqe > liste-paquets
 pacman=orphans ; pacman -Qtdq
 pacman=remove-orphans ; sudo pacman -Rns $(pacman -Qtdq)
+pacman=set-pkg ; pacman -S --needed - < liste-paquets
 pactl list sinks short
 pactl set-sink-volume bluez_sink.00_1D_DF_81_D7_55 -10%
-pass add sites/www.decathlon.be/user@mail.be
-pass edit sites/www.decathlon.be/user@mail.be
-pass init user@mail.com
-pass otp totp/github.com/chimay
-pass otp -c totp/github.com/chimay
-pass otp add totp/lemmy.ml/chimay
-pass otp uri -q totp/github.com/chimay
+pass add sites/www.decathlon.be/user_name@mail_server.be
+pass edit sites/www.decathlon.be/user_name@mail_server.be
+pass init user_name@mail_server.com
+pass otp -c totp/github.com/user_name
+pass otp add totp/lemmy.ml/user_name
+pass otp totp/github.com/user_name
+pass otp uri -q totp/github.com/user_name
 pass show -c repository/gitter
 pass show artisan/soundcloud
 pdbedit -L -v
 pdftotext -layout *.pdf
 perl=var-tube ; perl -e '$a=qx(cat tags | grep spir) ; print $a'
+pgrep -af vim
 pico2wave -l fr-FR -w cpu-tres-chaud.wav 'Attention, les processeurs ont très chaud.'
 pip install --user --upgrade neovim
 pip install --user --upgrade neovim-gui
@@ -200,7 +209,6 @@ pip2 install --user --upgrade pip
 pip3 install --user --upgrade neovim
 pip3 install --user --upgrade pip
 pk + virtualbox{,-host-modules-arch} net-tools vde2
-pk rm $(pacman -Qtqd)
 pk rm gnome-{perl,vfs-perl} gnomecanvas-perl perl-{gnome2-wnck,goo-canvas,gtk2-imageview,gtk2-unique} shutter
 pk rm plasma-workspace kuiserver plasma-nm plasma-vault powerdevil kdeplasma-addons khotkeys plasma-meta plasma-pa kmenuedit plasma-desktop
 pssh -vi -H quigonjinn.local -H shari.local date
@@ -221,45 +229,63 @@ qrencode -o toto.jpg coucou
 qute=reddit ; gv $qute ~dotdir/qutebrowser/$HOST
 reflector --latest 12 --sort rate --save /etc/pacman.d/mirrorlist # arch, sudo
 restic find -r /media/cleusb/restic -s latest unison
-restic init -r sftp:user@shari.local:$HOME/backup/restic
+restic init -r sftp:user_name@shari.local:$HOME/backup/restic
 restic init -r ~/backup/restic
 restic mount ~/backup/mnt
 restic restore -r /media/da0s1/restic latest --target ~
 restic restore -r /media/da0s1/restic latest --target ~ --include ~/racine/self
 restic snapshots -r /media/da0s1/restic -c
 restic-backup.sh /media/cleusb/restic
-restic-backup.sh sftp:user@shari.local:$HOME/backup/restic
+restic-backup.sh sftp:user_name@shari.local:$HOME/backup/restic
 rm=yt ; rm -f *.(m4a|webm|mp4|flv|aif|opus)
 rs ~/audio /media/cleusb
 rs ~pack/aged/ /media/cleusb/archive
-scp=tilde.institute ; scp book* Makefile chimay@tilde.institute:~
+scp=tilde.institute ; scp book* Makefile user_name@tilde.institute:~
 senseurs=1 && sudo sensors && sudo hddtemp /dev/sda
 signal=i3blocks-mpd ; k -36 $(pid i3blocks)
 signal=i3blocks-volume ; k -35 $(pid i3blocks)
 smbclient -L shari
-smbclient //shari/user
-smbpasswd -a user # sudo
-smbpasswd user # sudo
+smbclient //shari/user_name
+smbpasswd -a user_name # sudo
+smbpasswd user_name # sudo
 sn ~syncron/cleusb/ /media/cleusb/syncron
 sox carillon-23-00{,-fade}.ogg fade h 0 -0 1.7
 sql=qute-history ; sqlite3 -line ~/.local/share/qutebrowser/history.sqlite 'select * from history' >>! ~archive/qutebrowser.history
-ssh -p 3022 user@localhost
+ssh -p 3022 user_name@localhost
 ssh-copy-id -i ~/.ssh/id_rsa.pub tixu.local
+ssh=bitbucket-info ; ssh git@bitbucket.org host_key_info
+ssh=ctrl-c.club ; ssh user_name@ctrl-c.club
+ssh=dao-efi ; ssh -p 2223 user_name@localhost
+ssh=fingerprint ; ssh-keygen -lf ~/racine/config/crypte/ssh/taijitu/id_rsa
+ssh=fingerprint_all ; for f in ~config/crypte/ssh/**/*.pub; do ssh-keygen -lf $f; done
+ssh=laozu-efi ; rm ~/.ssh/known_hosts ; ssh -p 2223 user_name@localhost
+ssh=new_comment ; ssh-keygen -c -f ~config/crypte/ssh/ctrl-c.club/id_rsa
+ssh=tilde.club ; ssh user_name@tilde.club
+ssh=tilde.institute ; ssh user_name@tilde.institute
+ssh=virtual ; rm -f ~/.ssh/known_hosts ; ssh -p 3022 user_name@localhost
+ssh=virtual-root ; rm -f ~/.ssh/known_hosts ; ssh -p 3022 root@localhost
 sshfs=demonte ; fusermount -u ~/mount/import/sshfs
 sshfs=laozu ; sshfs laozu.local:$HOME ~/mount/import/sshfs
 sshfs=monte ; sshfs shari.local:$HOME ~/mount/import/sshfs
 sshfs=quigonjinn ; sshfs quigonjinn.local:$HOME ~/mount/import/sshfs
 sshfs=shari ; sshfs shari.local:$HOME ~/mount/import/sshfs
 sshfs=tixu ; sshfs tixu.local:$HOME ~/mount/import/sshfs
+su -
+su -c id
+su -l
+su -s /bin/sh
+sudo -e /etc/fstab
+sudo -s
+sudo -sE xterm
 sync=cleusb ; sn ~syncron/cleusb/ /media/cleusb/syncron
 sync=cleusb ; sn ~syncron/cleusb/ /media/cleusb/syncron
-sync=diskext-sdb1 ; unison diskext $HOME /run/media/user/sdb1/user
-sync=diskext-sdb4 ; unison diskext $HOME /run/media/user/sdb4/user
-sync=laozu-auto ; unison remote $HOME ssh://user@laozu.local//$HOME
-sync=laozu-force ; unison remote $HOME ssh://user@laozu.local//$HOME -force $HOME
+sync=diskext-sdb1 ; unison diskext $HOME /run/media/user_name/sdb1/user_name
+sync=diskext-sdb4 ; unison diskext $HOME /run/media/user_name/sdb4/user_name
+sync=laozu-auto ; unison remote $HOME ssh://user_name@laozu.local//$HOME
+sync=laozu-force ; unison remote $HOME ssh://user_name@laozu.local//$HOME -force $HOME
 sync=pack-essentiel ; sn -n ~pack/aged/*(/om[1]) /media/cleusb/archive
-sync=quigonjinn-auto ; unison remote $HOME ssh://user@quigonjinn.local//$HOME
-sync=tixu-auto ; unison remote $HOME ssh://user@tixu.local//$HOME
+sync=quigonjinn-auto ; unison remote $HOME ssh://user_name@quigonjinn.local//$HOME
+sync=tixu-auto ; unison remote $HOME ssh://user_name@tixu.local//$HOME
 systemctl enable nmb.service --now # sudo
 systemctl enable smb.service --now # sudo
 systemctl enable wsdd.service --now # sudo
@@ -271,7 +297,7 @@ systemd=pulseaudio-restart ; pulseaudio=restart ; systemctl --user restart pulse
 systemd=timer-mask ; sudo systemctl mask updatedb.timer
 systemd=timesync ; sudo systemctl status systemd-timesyncd
 systemd=user-active-tmux ; systemctl --user enable tmux
-systemd=user-services-persistants ; sudo loginctl enable-linger user
+systemd=user-services-persistants ; sudo loginctl enable-linger user_name
 t context delete important
 timedatectl list-timezones
 timedatectl set-ntp true
@@ -282,11 +308,16 @@ tmux kill-session -t 0
 tmux=start ; systemctl --user start tmux
 tmux=stop ; systemctl --user start tmux
 tmux=systemd ; systemd-run --user --scope tmux
+toot activate user_name@bsd.cafe
+toot auth
+toot login
+toot tui
 touchpad=list-options ; xinput list-props 15
 touchpad=tap ; xinput set-prop 15 289 1
 tri=audio ; e ~/audio/**/0-*.* | shuf >! ~/racine/musica/list/triage.m3u
 truncate -s 8G swapfile # sudo
 update=1 ; teste-connexion.zsh && pk cln && sync && sleep 3 && pk sf && sleep 3 && w https://archlinux.org && pk ++
+usermod -aG wheel,adm,sys,log,network,video,audio,power,lp,autologin user_name # sudo
 var=( ${(f)"$(< fichier )"} )
 var=( ${(fu)"$(< fichier )"} )
 verifie=sdb1 ; sudo fsck /dev/$verifie

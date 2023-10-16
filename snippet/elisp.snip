@@ -1,4 +1,984 @@
-;; -*- mode: emacs-lisp; -*-
+;; -*- mode: emacs-lisp; lexical-binding: t; -*-
+
+;;; Quote
+;;; ------------------------------
+
+(setq a '(1 2))
+(setq b `(,@a 3))
+
+(setq a '(1 2 3 4 5 6 7))
+(max 1 2 3)
+
+(eval '(+ 1 2))
+
+(eval `(max ,@a))
+(setq b `(max ,@a))
+(setq b (eval`(max ,@a)))
+
+(apply 'max a)
+
+;;; Types
+;;; ------------------------------
+
+(type-of 1)
+(type-of 1.2)
+(type-of "abc")
+(type-of '(1 . 2))
+(type-of '(1 2 3))
+(type-of '(+ 1 2))
+(type-of '(+ 1 2 3 4 5))
+
+(seqp 1)
+(seqp "abc")
+(seqp '(1 . 2))
+(seqp '(1 2 3))
+
+(consp '(1 . 2))
+(consp '(1 2 3))
+
+(listp '(1 . 2))
+(listp '(1 2 3))
+
+;;; Symbol
+;;; ------------------------------
+
+(setq abc nil)
+(boundp 'abc)
+
+(setq a "toto")
+(symbol-name 'a)
+(symbol-value 'a)
+(symbol-function 'a)
+(symbol-plist 'a)
+(intern "a")
+(intern-soft "a")
+(symbol-value (intern-soft "a"))
+(set (intern-soft "a") 1)
+
+(symbol-name 'sin)
+(symbol-function 'sin)
+(symbol-plist 'sin)
+
+(setq a "toto")
+(makunbound 'a)
+(intern-soft "a")
+(unintern "a")
+
+(setq a "toto")
+(setq b (quote a))
+(symbol-value b)
+
+(setq s (make-symbol "var"))
+(set s "make symbol variable")
+(setq var "variable")
+(symbol-value s)
+var
+(eq s 'var)
+
+(setq s (make-symbol "var"))
+(setq y (make-symbol "var"))
+(eq s y)
+(set s "abc")
+(set y "def")
+(symbol-value s)
+(symbol-value y)
+
+(setq a '(("1" 2) (3 4) (5 6)))
+(setq b 'a)
+(setq b (quote a))
+(set b '(1 2))
+a
+(setf (symbol-value b) '(1 2 3))
+a
+(print (symbol-value b))
+(eval b)
+
+;;; Equality
+;;; ------------------------------
+
+(setq a 1)
+(setq b 1)
+(eq 'a 'b)
+(eq a b)
+(eql a b)
+(equal a b)
+
+(setq a 1)
+(setq b a)
+(eq 'a 'b)
+(eq a b)
+(eql a b)
+(equal a b)
+
+(setq a ?a)
+(setq b ?a)
+(eq a b)
+(eql a b)
+(equal a b)
+
+(setq a "toto")
+(setq b "toto")
+(eq a b)
+(eql a b)
+(equal a b)
+
+(setq a '(2))
+(setq b a)
+(eq 'a 'b)
+(eq a b)
+(eql a b)
+(equal a b)
+
+(setq a '(2))
+(setq b '(2))
+(eq a b)
+(eql a b)
+(equal a b)
+
+(setq a '(1 2))
+(setq b (cdr a))
+(setq c '(2))
+(eq b c)
+(equal b c)
+
+;;; Local variables
+;;; ------------------------------
+
+(setq a 1)
+(let ((a 2)
+      (b a))
+  (message "a %s b %s" a b))
+
+(setq a 1)
+(let* ((a 2)
+       (b a))
+  (message "a %s b %s" a b))
+
+(let ((f))
+  ;; Not local
+  (fset 'f '+)
+  (f 2 4))
+(f 2 4)
+
+;;; Valeurs & Références
+;;; ------------------------------
+
+(setq a '(1 2 3 4 5 6 7))
+(setq b a)
+(setcar b "un")
+(setcdr b '("deux" "trois"))
+(print a)
+(print b)
+(eq a b)
+
+(setq l '(1 2 3 4 5 6 7))
+(setcar (cdr l) 0)
+(setcdr (cdr l) '(8 9))
+
+(setq a '((1)))
+(setq b a)
+(setcar b '(2))
+
+(setq a '((1)))
+(setq b (copy-tree a))
+(setcar b '(2))
+a
+b
+
+(setq a 1)
+(set 'b a)
+(eq a b)
+(setq b 3)
+(eq a b)
+
+(setq a '(1 2))
+(setq b a)
+(setq b nil)
+a
+
+(setq a '(1 2))
+(setq b (cdr a))
+(setq b nil)
+a
+
+(setq a '(1 2 3))
+(setq b (cdr a))
+(setq c b)
+(setq b (cdr b))
+a
+b
+c
+
+(setq a '(1 2 3 4 5 6 7))
+(setq b '(8 9 11 12))
+(setq c a)
+(setcar c (car b))
+(setcdr c (cdr b))
+
+(setq al '((1 . 2) (3 . 4) (5 . 6)))
+(setq p (elt al 1))
+(set-deref p '("a" . "b"))
+al
+
+(setq al '((1 . 2) (3 . 4) (5 . 6)))
+(setq p (nth 1 al))
+(set-deref p '("a" . "b"))
+al
+
+(setq a '(1 2 3 4 5 6 7))
+(setq r (nthcdr 3 a))
+(setcar r "changed")
+(print a)
+
+(defun setval (var val)
+  (setq var val))
+
+(defun setsym (sym val)
+  (set sym val))
+
+(defun set-ref (p v)
+  (set p v))
+
+(defmacro macro-set-ref (p v)
+  `(setq ,p ,v))
+
+(defun set-deref (p v)
+  (setcar p (car v))
+  (setcdr p (cdr v))
+  p)
+
+(defun list-ref (v)
+  (list v))
+
+(defun set-list-deref (p v)
+  (if (consp (car p))
+    (progn
+      (setcar (car p) (car v))
+      (setcdr (car p) (cdr v)))
+    (setcar p v))
+  p)
+
+(macroexpand '(macro-set-ref p v))
+
+(setq a 1)
+(macro-set-ref p a)
+(eq a p)
+
+;; Ne marche pas
+(setq a 1)
+(setq b 2)
+(set-ref 'p a)
+(eq a p)
+(set-ref 'p b)
+p
+a
+
+(setq a '(1 2))
+(setq b a)
+(set-deref b nil)
+a
+
+;; Ne marche pas
+(setq a 1)
+(setq b 2)
+(setq p (list-ref a))
+(set-list-deref p b)
+p
+a
+
+;; Ok
+(setq a '(1 2 3 4 5 6 7))
+(setq b '(8 9 10 11 12))
+(set-ref 'p a)
+(eq a p)
+(set-deref p b)
+(set-deref p (reverse a))
+p
+a
+
+; Ne marche pas
+(setq a '(1 2 3 4 5 6 7))
+(setq b '(8 9 10 11 12))
+(setq p (list-ref a))
+(set-deref p b)
+(set-deref p (reverse a))
+p
+a
+
+; Ok
+(setq a '(1 2 3 4 5 6 7))
+(setq b '(8 9 10 11 12))
+(setq p a)
+(defun f (p val)
+  (set-deref p val))
+(f p b)
+p
+a
+
+(setq a '(1 2 3 4 5 6 7))
+(setq b '(8 9 10 11 12))
+(setq p (cdr a))
+(setq e (car p))
+(eq e (car p))
+(set-deref p b)
+a
+
+(setq a '(1 2 3 4 5 6 7))
+(setq b '(8 9 10 11 12))
+(setq p (nthcdr 2 a))
+(set-deref p b)
+a
+
+(setq al '((1 . (2 3)) (4 . (5 6)) (7 . (8 9))))
+(setq p (car (member '(4 5 6) al)))
+(set-deref p (list 10 11 12))
+al
+
+(setq al '((1 . (2 3)) (4 . (5 6)) (7 . (8 9))))
+(setq p (cdr (assoc 1 al)))
+(set-deref p (list 10 11 12))
+al
+
+(setq al '((1 . 2) (3 . 4) (5 . 6)))
+(setq p (assoc 1 al))
+(set-deref p (cons 7 8))
+(setq p (assoc 3 al))
+(set-deref p (cons 9 10))
+al
+
+(setq al '((1 . 2) (3 . 4) (5 . 6)))
+(setq p (member '(3 . 4) al))
+(set-deref p (append p '((7 . 8))))
+(set-deref p (append '((9 . 10)) (seq-copy p)))
+(set-deref p (append '((11 . 12)) (copy-tree p)))
+al
+
+(setq al '((1 . 2) (3 . 4) (5 . 6)))
+(setq p (member '(3 . 4) al))
+(push '(7 . 8) al)
+(nconc p '((7 . 8)))
+al
+p
+(eq (cdr al) p)
+(eq (cddr al) p)
+
+(setq al '((1 . 2) (3 . 4) (5 . 6)))
+(setq p (elt al 1))
+(set-deref p '(7 . 8))
+al
+
+(setq al '((1 . 2) (3 . 4) (5 . 6)))
+(setq p (nth 1 al))
+(set-deref p '(7 . 8))
+al
+
+(setq al '((1 . (2 3)) (4 . (5 6)) (7 . (8 9))))
+(setq p (cdr (assoc 1 al)))
+(set-deref p (list 10 11 12))
+al
+
+;; Lache la liste a pour une nouvelle
+(setf b '(8 9 10 11 12 13 14))
+
+(setq a '(1 2 3 4 5 6 7))
+(setq b (copy-seq a))
+(eq a b)
+
+;;; Generalized variables
+;;; ------------------------------
+
+(setq a 1)
+(setq b (gv-ref a))
+(setf (gv-deref b) 4)
+(setf (gv-deref b) '(4 5 6))
+(gv-deref b)
+b
+a
+
+(setq a '(1 2 3))
+(setq b (gv-ref (car a)))
+(setf (gv-deref b) '(4 5 6))
+(gv-deref b)
+b
+a
+
+(setq a '(1 2 3))
+(setq b (gv-ref (cdr a)))
+(setf (gv-deref b) '(4 5 6))
+(gv-deref b)
+b
+a
+
+(setq al '((1 . 2) (3 . 4) (5 . 6)))
+(setq p (gv-ref (cdr (assoc 1 al))))
+(setf (gv-deref p) 8)
+p
+al
+
+;;; Chars
+;;; ------------------------------
+
+(read-key "Key : ")
+(kbd "<next>")
+(setq a [next])
+(equal a [next])
+(eq a [next])
+
+;;; Listes
+;;; ------------------------------
+
+;;; Vide
+;;; ------------
+
+(setq a (cons nil nil))
+(setcar a 1)
+(setcdr a 2)
+a
+
+(setq a nil)
+(setq b nil)
+(eq a b)
+
+(setq a '(nil))
+(setcar a 1)
+(setcdr a '(2 3))
+a
+
+;; Ne marche pas
+(setq a nil)
+(setcar a 1)
+
+;;; Répétition
+;;; ------------
+
+(make-list 5 "manual")
+(make-list 5 '(1 2 3))
+
+;;; Éléments
+;;; ------------
+
+(last '(1 2 3 4 5) 3)
+
+;;; Concaténer
+;;; ------------
+
+(setq a '(1 2 3))
+(setq b '(4 5 6))
+(setq c '(7 8 9))
+
+(push 0 (cdr (last a)))
+(push 10 (cdr (last a 2)))
+a
+
+;; Renvoie le résultat
+(append a b c)
+a
+b
+c
+
+;; Modifie en place
+(nconc a b c)
+a
+b
+c
+
+;;; Listes de listes
+;;; ------------
+
+(setq a '(-2 -1))
+(setq lol '((1 2) (3 4) (5 6)))
+(push a lol)
+(setq a '("un" "deux"))
+(print lol)
+
+(setq lol '((1 2) (3 4) (5 6)))
+(setq a lol)
+(setcar a '("un" "deux"))
+(print lol)
+(print a)
+
+(setq lol '((1 2) (3 4) (5 6)))
+(setq a (copy-seq lol))
+(setcar a '("un" "deux"))
+(print lol)
+(print a)
+
+(setq lol '((1 2) (3 4) (5 6)))
+(setq a (copy-tree lol))
+(setcar a '("un" "deux"))
+(print lol)
+(print a)
+
+;;; Cons de cons
+;;; ------------
+
+(setq c '((1 . 2) . (3 . 4)))
+(setq a (copy-tree c))
+(setcar a '("un" "deux"))
+(print c)
+(print a)
+
+(setq c '((1 . 2) . 3))
+(setq a (copy-tree c))
+(setcar a '("un" "deux"))
+(print c)
+(print a)
+
+(setq c '(1 . (2 . 3)))
+(setq a (copy-tree c))
+(setcar a '("un" "deux"))
+(print c)
+(print a)
+
+(setq c '(((1 . 2) . 3) ((4 . 5) . 6)))
+(member '((1 . 2) . 3) c)
+(member '((1 . 2) . 4) c)
+(setcdr (assoc '(1 . 2) c) '((7 . 8) . 9))
+(print c)
+
+;;; Listes de listes de listes
+;;; ------------
+
+(setq lolol '(((1 2) (3 4) (5 6))))
+(setq a (copy-seq lolol))
+(setcar (car a) '("un" "deux"))
+(print lolol)
+(print a)
+(eq a lol)
+
+(setq lolol '(((1 2) (3 4) (5 6))))
+(setq a (copy-tree lolol))
+(setcar (car a) '("un" "deux"))
+(print lolol)
+(print a)
+(eq a lol)
+
+;;; Alists
+;;; ------------
+
+(setq al '((1 . 2) (3 . 4) (5 . 6)))
+(assoc 1 al)
+(setcdr (assoc 1 al) 8)
+(setcar (assoc 1 al) 7)
+(setf (assoc 3 al) '(9 0))
+(print al)
+
+(nth 1 '(1 2 3 4 5 6 7))
+(elt "1234567" 1)
+(subseq "1234567" 0 2)
+(subseq "1234567" 0 -2)
+(subseq "1234567" -2 -1)
+(subseq "1234567" 2)
+(subseq "1234567" -2)
+(seq-subseq "1234567" 1 3)
+(seq-subseq "1234567" -2 -1)
+(seq-subseq "1234567" -2)
+(subseq "1234567" 0 nil)
+(subseq "1234567" nil)
+
+;;; Ok
+;;; ------------
+
+(elt "abc" 1)
+
+;;; Ne marche pas
+;;; ------------
+
+(nil)
+(nth 1 "abc")
+
+;;; Functions
+;;; ------------------------------
+
+(unintern "f")
+(defun f (arg) (message "coucou %s" arg))
+(f "toto")
+(funcall 'f "toto")
+(symbol-name 'f)
+(symbol-function 'f)
+(symbol-value 'f)
+
+(unintern "f")
+(fset 'f '+)
+(symbol-function 'f)
+(f 2 4)
+(funcall 'f 2 3)
+;; Ne marche pas
+(symbol-value 'f)
+(funcall f 2 3)
+
+(unintern "f")
+(setq f '+)
+(funcall f 2 3)
+(symbol-value 'f)
+(symbol-function 'f)
+;; Ne marche pas
+(f 2 4)
+(funcall 'f 2 3)
+
+(unintern "f")
+(fset 'f (lambda (a b) (+ a b)))
+(symbol-function 'f)
+(f 2 4)
+(funcall 'f 2 3)
+;; Ne marche pas
+(funcall f 2 3)
+(symbol-value 'f)
+
+(unintern "f")
+(setq f (lambda (a b) (+ a b)))
+(symbol-value 'f)
+(symbol-function 'f)
+(funcall f 2 3)
+;; Ne marche pas
+(f 2 4)
+(funcall 'f 2 3)
+
+(setq l '(1 2 3 4 5 6 7))
+(defun f (l)
+  (let ((fun (lambda (a) (+ a 3))))
+    (duo-map l fun)))
+(f l)
+
+(defun g (arg) (message arg))
+(apply 'g (list "un message : bla bla"))
+
+(setq var 1)
+(defun h (msg var) (message msg var))
+(apply 'h "var : %s" (list var))
+
+;;; Arguments
+;;; ------------
+
+(unintern "f")
+(defun f (arg &optional opt) (append arg opt))
+(f '(1 2))
+(f '(1 2) '(3 4 5 6 7))
+
+(unintern "f")
+(defun f (&rest arg) (message "coucou %s" arg))
+(funcall 'f "toto")
+(funcall 'f "toto" "tutu")
+(apply 'f (list "toto" "tutu"))
+(apply 'f (list "toto" "tutu") (list "bla" "bla"))
+(apply 'f (list "toto" "tutu") (list "bla" "bla") (list "abc" "cba"))
+
+(unintern "ap")
+(setq ap (apply-partially '+ 3))
+(funcall ap 2)
+(funcall (symbol-value 'ap) 2)
+;; Ne marche pas
+(funcall 'ap 2)
+
+(unintern "ap")
+(setq ap (apply-partially '+ 3 2))
+(funcall ap)
+(funcall ap 2)
+
+(unintern "fap")
+(fset 'fap (apply-partially '+ 3 2))
+(fap)
+(fap 2)
+
+(setq l '(1 2 3))
+(defun f (l)
+  (let ((p (cdr l)))
+    (setcar p 4)))
+(f l)
+
+(setq l '(1 2))
+(defun f (l)
+  (setq l '(2 3))
+  (message "%s" l))
+(f l)
+
+(defun setval (var val)
+  (setq var val))
+
+(defun setsym (sym val)
+  (set sym val))
+
+(defun set-deref (p v)
+  (setcar p (car v))
+  (setcdr p (cdr v))
+  p)
+
+(defun locality (arg)
+  (setq arg 123))
+
+(setq a "abc")
+(locality a)
+
+;; Atoms arg
+
+(setq a 1)
+(setval a 2)
+a
+
+(setq a 1)
+(setsym 'a 2)
+a
+
+;; Ne marche pas
+(setq a 1)
+(set-deref a 2)
+a
+
+;; List arg
+
+(setq l '(1 2))
+(setval l '(3 4))
+l
+
+(setq l '(1 2))
+(setsym 'l '(3 4))
+l
+
+(setq l '(1 2))
+(set-deref l '(3 4))
+l
+
+(defun f (list)
+  (push 1 list))
+(setq l '(1 2 3))
+(f l)
+l
+
+(defun f (list)
+  (pop list))
+(setq l '(1 2 3))
+(f l)
+l
+
+;;; Prefix
+;;; ------------
+
+(defun pa ()
+  (interactive)
+  current-prefix-arg)
+
+(pa)
+
+;;; Func refs
+;;; ------------
+
+(setq a #'<)
+(funcall a 1 2)
+(funcall a 3 2)
+
+;;; Functionals (closure)
+;;; ------------
+
+(defun constant (f a) (lambda (x) (funcall f x a)))
+(setq fun (constant #'+ 3))
+(funcall fun 4)
+(funcall (constant #'+ 3) 4)
+
+;; Ne marcha pas
+;; (defun un (f a) #'(defun g (x) (funcall f x a)))
+
+;;; Inline
+;;; ------------
+
+(defsubst f (e) (1+ e))
+(mapcar #'f '(1 2 3))
+
+;;; Macros
+;;; ------------------------------
+
+(defmacro setvar (var value)
+  (list 'setq var value))
+
+(setvar a 3)
+
+(macroexpand '(setvar a 2))
+
+(defmacro varval (var value)
+  `(setq ,var ,value))
+
+(varval b 5)
+
+(macroexpand '(varval a 2))
+
+;; Ne marche pas
+
+(setq l '(1 3 2))
+
+(defmacro maximum (list)
+  `(max ,@list))
+
+(maximum l)
+
+(defmacro plain (fun list)
+  `(funcall ,fun ,@list))
+
+(plain 'max l)
+
+;;; Recursive
+;;; ------------
+
+(defmacro recursive-macro (fun list)
+  (if (> (length list) 1)
+      `(,fun ,(car list)
+             (recursive-macro ,fun ,(cdr list)))
+    (car list)))
+
+
+(macroexpand '(recursive-macro max (1 2 4 5 3)))
+(macroexpand-all '(recursive-macro max (1 2 4 5 3)))
+
+(recursive-macro max (1 4 5 3 2))
+
+;;; Arguments
+;;; ------------------------------
+
+(setq l '(1 3 2))
+`(max ,@l)
+(eval `(max ,@l))
+
+(defmacro fun-splice-arg (fun-name list-name)
+  (car (read-from-string
+	(string-join (list "(eval " "`(" fun-name " ,@" list-name "))")))))
+
+(macroexpand '(fun-splice-arg "max" "l"))
+
+(setq l '(1 3 2))
+(fun-splice-arg "max" "l")
+
+;; Ne marche pas
+(defmacro fun-splice-arg (fun list)
+  (car (read-from-string
+	(string-join (list "(eval " "`(" (symbol-name fun) " ,@" (symbol-name list) "))")))))
+(setq l '(1 3 2))
+(fun-splice-arg 'max 'l)
+
+;;; Keywords
+;;; ------------------------------
+
+(setq a :motclef)
+(setq b :motclef)
+(eq a :motclef)
+(eq a b)
+
+(setq a :vide)
+(setq b :vide)
+(eq a :vide)
+(eq a b)
+
+(setq a :vide)
+(setq b (list :vide))
+a
+b
+(eq a (car b))
+
+(setq a '((:un 1) (:deux 2)))'
+(cdr (assoc :un a))
+(setq b :un)
+(eq b (car (assoc :un a)))
+(equal b (car (assoc :un a)))
+(symbol-name :un)
+(symbol-value :un)
+(symbol-function :un)
+
+(setq :un 2)
+
+(defun f (&optional arg)
+  (if (eq arg :show)
+      (message "show")
+    (message "no show")))
+(f :show)
+(f :not-a-show)
+
+;;; Conditions
+;;; ------------------------------
+
+;; If elseif else
+(cond
+   ((equal current-prefix-arg '(4))
+    (split-window-below)
+    (other-window 1))
+   ((equal current-prefix-arg '(16))
+    (split-window-right)
+    (other-window 1)))
+
+;; Case
+(setq a 2)
+(setq a '(1 2))
+(setq a '(1 . 2))
+(setq a "toto")
+(setq a 'b)
+(let ((a '(1 2))
+      (b))
+  (pcase a
+    (2 "deux")
+    ('b "symbol")
+    (`(,a . ,b)
+     (setq b "liste")
+     (list b "car" a "cdr" b))
+    (`(a b) "liste")
+    ((pred (string> "abc")) "abc > ...")
+    ((pred (string> "xyz")) "xyz > ...")))
+
+(setq coc '(("un" . "deux") . ("trois" . "quatre")))
+(setq coc '(("un" . "deux") "trois" . "quatre"))
+(pcase coc (`((,un . ,deux) . (,trois . ,quatre)) (list un deux trois quatre)))
+
+(setq coc '(("un" . 2) "trois" . "quatre"))
+(pcase coc (`((,(and (pred stringp) un) . ,(and (pred integerp) deux)) .
+	      (,(and (pred stringp) trois) . ,(and (pred stringp)quatre)))
+	    (list un deux trois quatre)))
+
+;; pcase-let
+(setq c '(1 . 2))
+(setq l '(3 4 5 6 7))
+(setq coc '(("un" . "deux") . ("trois" . "quatre")))
+(setq coc '(("un" . "deux") "trois" . "quatre"))
+(pcase-let
+    ((`(,one . ,two) c)
+     (`(,premier . ,reste) l)
+     (`((,un . ,deux) . (,trois . ,quatre)) coc)
+     (local "coucou"))
+  (message "%s %s %s %s %s %s %s %s %s"
+	   local one two premier reste un deux trois quatre))
+
+(setq c '(1 . 2))
+(setq c '(3))
+(pcase-let
+    ((`(,one . ,two) c)
+     (`(,one) c))
+  (print one))
+
+(setq a 2)
+(pcase a
+  ((pred (<= 1)) (setq b "un")
+     (print b))
+  ((pred (<= 2)) (setq b "deux")
+     (print b))
+  ((pred (<= 3)) (setq b "liste un")
+     (print b)))
+
+(setq a "1")
+(setq b '(2 3))
+(setq c '(4 5))
+(setq varlist '(a b c))
+(symbol-value (nth 1 varlist))
+
+(setq s "toto")
+(setq a `(coucou ,s !))
+(print a)
+(type-of a)
+(seqp a)
+(listp a)
+
+(setq toto "toto")
+(setq nums '(1 2 3))
+(setq a `(toto = ,toto & nums = ,nums))
+(setq ref 'nums)
+(setq b (list 'setq ref (list 'quote (symbol-value ref))))
+(print a)
+(print b)
+
+(seq-intersection '(1 2 3 4 5 6 7) '(5 6 7 8 9 10 11 12))
 
 (setq a '((1 (2 . 3) (4 . 5)) (6 (7 . 8) (9 . 10))))
 (setq al (cdr (car a)))
@@ -6,26 +986,217 @@
 (rassoc 3 al)
 (second (car a))
 
-(setq l '((1 2) (3 4) ("a" "b") ("c" "d")))
+(setq a '(("a" . "b") . "c"))
+(setq b '(("a" . "b") . "c"))
+(setq c '(("a" . "b") . "d"))
+(equal a b)
+(equal a c)
+
+(setq a '(nil))
+(when a (message "coucou"))
+
+(setq l '((1 2) (3 4) (1 2) ("a" "b") ("c" "d") (1 3)))
+(setf (alist-get 3 l) 5)
+(print l)
+(setq b (car l))
+(setf b '(5 6))
+(print l)
 (position '(1 2) l :test #'equal)
 (position '(3 4) l :test #'equal)
 (position '("a" "b") l :test #'equal)
 (position '(5 6) l :test #'equal)
 
+;;; Iteration
+;;; ------------------------------
+
+(setq l '((1 2) (3 4) ("a" "b") ("c" "d")))
+(mapcar #'car l)
+(seq-do #'car l)
+(setq a nil)
+(dolist (c l) (push (car c) a))
+(dolist (el l) (setcdr el "nouveau"))
+(print l)
+(setq a (seq-do #'nreverse l))
+(print l)
+(print a)
+
+(setq l (make-list 5 3))
+(dolist (e l)
+  (setq e 0))
+(dolist (e l)
+  (setf e 0))
+
+(setq l '((1 2) (3 4) ("a" "b") ("c" "d")))
+(setq r nil)
+(pcase-dolist (`(,a ,b) l)
+  (push (cons b a) r))
+
+;;; Files
+;;; ------------------------------
+
+(setq b (get-buffer "torus*.el"))
+(kill-buffer b)
+(buffer-live-p b)
+
+(setq m (make-marker))
+(setq m (point-marker))
+(marker-buffer m)
+(marker-position m)
+
+;;; Divers
+;;; ------------------------------
+
+(setq a "(1 2 3)")
+(setq b (car (read-from-string a)))
+(length b)
+
+(setq a '(1 . 2))
+(setq b '(3 . 4))
+(setq c (cons a b))
+(setcar (car c) 5)
+
+(setq equal-car (lambda ( a b) (equal (car a) (car b))))
+(setq equal-cdr (lambda ( a b) (equal (cdr a) (cdr b))))
+(equal-car '(1 . 2) '(3 . 4))
+(funcall (symbol-value 'equal-car) '(1 . 2) '( . 4))
+
+(setq a nil)
+(push 1 a)
+a
+
+(setq a 1)
+(setq b (unless a 2))
+b
+(setq a 1)
+
+(integerp ?a)
+(characterp ?a)
+
+(integerp 1)
+(characterp 1)
+
+(setq a '(1))
+(setq b (cdr (cdr (assoc 1 a))))
+
+(global-set-key (kbd "s-/") nil)
+
+(defun f (x)
+  (interactive "P")
+  (message "%s" x))
+(call-interactively 'f)
+
+(defun g (x)
+  (interactive "p")
+  (message "%s" x))
+(call-interactively 'g)
+
+(setq l (cl-remove 1 l :test 'equal :key 'car))
+(defun a-d-a (el al)
+    "Remove all elements matching EL in the alist AL."
+    (setq al (cl-remove el al :test 'equal)))
+(a-d-a '(1 2) l)
+(setq l (assoc-delete-all '(1 2) l))
+(setq l (a-d-a '(1 2) l))
+(print l)
+(fboundp 'toto)
+(fboundp '+)
+
+(number-sequence 0 10)
+(reverse (number-sequence 0 10))
+
+(split-string "toto/tutu/titi" "/")
+(string-join '("1" "2" "3") "-")
+(concatenate 'list (list "abc" "def") (list "ghi" "jkl"))
+
+(defun f (&optional a)
+
+  (unless a (setq a "defaut"))
+  (print a)
+  )
+
+(setq a 1)
+(setq a 2)
+(if (= a 1)
+    (print "if")
+  (print "else")
+  (print "..."))
+
+(f)
+(f 2)
+
+(setq a '(1 2))
+(setq b '(3 4))
+(setq varlist (list 'a 'b))
+(dolist (var varlist)
+  (set var "change")
+  (message "%s = %s" (symbol-name var) (symbol-value var))
+  )
+
+(setq a '(1 2))
+(setq b '(3 4))
+(setq varlist (list 'a 'b))
+(dolist (var varlist)
+  (setf (symbol-value var) "change")
+  (message "%s = %s" (symbol-name var) (symbol-value var))
+  )
+
+(concat "ab" "cd")
+
+(setq l '((1 2) (3 4) ("a" "b") ("c" "d")))
 (nth 0 l)
+(nthcdr 2 l)
 (elt l 0)
 (subseq l 0 3)
+(subseq l 0 0)
+(subseq l 1 1)
 (subseq l 1 3)
 (append l nil)
 (append nil l)
 
-(type-of l)
-(type-of (subseq l 1 3))
+(format "coucou %s" l)
+
+(setq dir "~/Documents/toto")
+(unless (file-exists-p dir) (make-directory dir))
 
 (+ 1 2)
 (funcall '+ 1 2)
 
-(mapcar #'car torus/torus)
+(defun f (a)
+  (message "%S" a))
+
+(defun sn (a)
+  (symbol-name a))
+
+(defun sv (a)
+  (symbol-value a))
+
+(defun sf (a)
+  (symbol-function a))
+
+(sn 'torus/torus)
+(sv 'torus/torus)
+(sf '+)
+(funcall (sf '+) 2 3)
+
+(append '(1 2) '(3 4 5))
+(pp (mapcar #'cdr torus-torus))
+(mapcar (lambda (elem) (torus--inside-p (window-buffer elem))) (window-list))
+
+(setq a nil)
+(dolist (circle (mapcar #'cdr torus-torus))
+  (setq a (append a circle)))
+(pp a)
+
+(defun f (nom)
+  (setq a (symbol-value nom))
+  (print a)
+  (print (symbol-name nom))
+  a)
+
+(f 'l)
+
+(type-of l)
+(type-of (subseq l 1 3))
 
 (setq l (quote (1 2)))
 (mapcar '1+ l)
@@ -33,7 +1204,8 @@
 (mapcar (quote 1+) l)
 (mapcar (function 1+) l)
 (setq a `("a" ,@l ,@l))
-
+(eval '(+ 1 2))
+(eval (quote (+ 1 2)))
 
 (equal 1 1)
 (equal 1.0 1.00)
@@ -49,9 +1221,12 @@
 (global-set-key (kbd "<f8> <") '(lambda () (interactive) (insert "⟻")))
 (global-set-key (kbd "<f8> <") (lambda () (interactive) (insert "⟻")))
 
+(duo-at-index (torus--location-index) (torus--location-list))
+
+(substring-no-properties (torus--dashboard))
 
       ;; (print torus/torus buffer)
-
+      ;; (print torus-cur-location (current-buffer))
       ;; Better with pretty print : pp
 
 (puthash
@@ -66,61 +1241,3193 @@
        (pointmark (point-marker))
        (buffer (current-buffer))
 
-;; TOOLS
-;; ------------------------------
+(switch-to-buffer "*scratch*")
 
-;; Credit : https://emacs.stackexchange.com/questions/36486/how-do-i-rotate-list-elements
+(make-directory "~/Documents/toto")
+(file-name-as-directory "~/Documents/toto")
+(file-name-as-directory "~/Documents/abc/")
 
-;; Rotation <-
-(setq liste '(1 2 3 4 5))
-(setq l (cdr liste))
-(setq l '(1 2 3 4 5))
-(setf l (nconc (cdr l) (cons (car l) nil)))
-(setf l (append (cdr l) (list (car l))))
-(setf l (append (cdr l) (cons (car l) nil)))
-(print liste)
-(setf (cdr liste) l)
-(append (cdr l) (cons (car l) nil))
+(frame-text-cols)
+(frame-text-lines)
+(frame-total-cols)
+(frame-total-lines)
 
-;; Rotation ->
-(setq l '(1 2 3 4 5))
-(print (last l))
-(setf l (nconc (last l) (butlast l)))
-(setf l (append (last l) (butlast l)))
-(append (last l) (butlast l))
+(window-text-height)
+(window-text-width)
+
+(window-absolute-pixel-position)
+(window-absolute-pixel-position (point))
+(window-absolute-pixel-position (point))
+
+;;; Duo
+;;; ------------------------------------------------------------
+
+;;; Common
+;;; ------------------------------
+
+(duo-x-match-caar-p 1 '((1 . 2) (3 . 4)))
+
+(duo-< '(1 2) '(1 2))
+(duo-< '(1 2) '(1 2 3))
+(duo-< '(1 2 3 4) '(1 2 3))
+(duo-< '(1 2 3) '(1 2 3))
+
+(duo-<= '(1) '(3 . 4))
+(duo-<= '(1 . 2) '(3))
+
+(duo-<= '(1 2) '(1 2))
+(duo-<= '(1 2) '(1 2 3))
+(duo-<= '(1 2 3 4) '(1 2 3))
+(duo-<= '(1 2 3) '(1 2 3))
+
+(setq l '(1 2 3 4 5 6 7))
+(nthcdr 1 l)
+(nthcdr -1 l)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-last l)
+(duo-last l 3)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-at-index 3 l)
+(duo-at-index 0 l)
+(duo-at-index -1 l)
+(duo-at-index -3 l)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-range l 3)
+(duo-range l -3)
+(duo-range l 3 -1)
+(duo-range l 3 -2)
+(duo-range l 3 -4)
+(duo-range l 3 -5)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-slice l 3)
+(duo-slice l -3)
+(duo-slice l 3 6)
+(duo-slice l 3 -1)
+(duo-slice l 3 -2)
+(duo-slice l 3 -4)
+(duo-slice l 3 -8)
+
+(setq al '((1 . 2) (3 . 4) (3 . 2) ("a" . "b") ("c" . "d") (1 . 3)))
+(car (duo-assoc 3 al))
+
+(setq al '((1 . 2) (3 . 4) (3 . 2) ("a" . "b") ("c" . "d") (1 . 3)))
+(duo-index-assoc 1 al)
+(duo-index-assoc 3 al)
+(duo-index-assoc "a" al)
+
+(setq al '((1 . 2) (3 . 4) (3 . 2) ("a" . "b") ("c" . "d") (1 . 3)))
+(duo-reverse-assoc-index-of 2 al)
+(duo-reverse-assoc-index-of "d" al)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-previous (nthcdr 3 l) l)
+(duo-previous (nthcdr 3 l) l 2)
+(duo-previous nil l)
+
+(setq l '(1 2 3 4 5 6 7 1 1))
+(duo-replace-all 1 2 l)
+
+(setq al '((1 . 2) (3 . 4) (3 . 2) ("a" . "b") ("c" . "d") (1 . 3)))
+(duo-replace-all-car 1 2 al)
+(duo-replace-all-cdr 2 4 al)
+(pp al)
+
+(setq al '(((1 . 2) . (3 . 4)) ((5 . 6) . (7 . 8))))
+(duo-replace-all-caar 1 9 al)
+(duo-replace-all-cadr 3 9 al)
+(duo-replace-all-cdar 2 9 al)
+(duo-replace-all-cddr 8 9 al)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-circ-previous (nthcdr 3 l) l)
+(duo-circ-previous (nthcdr 3 l) l 4)
+
+(setq l '(1 2 3 4))
+(duo-before 3 l)
+(duo-before 5 l)
+
+(setq un '(("a" . "b") . ("c" . 1)))
+(setq deux '(("d" . "e") . ("f" . Z)))
+(setq trois '(("a" . "b") . ("c" . 3)))
+(setq quatre '(("d" . "e") . ("f" . 4)))
+(setq l (list un deux))
+(duo-replace un trois l)
+(duo-replace deux quatre l)
+
+(setq l '(1 2 3 nil 5))
+(duo-filter l)
+
+(defun f (e) (= (mod e 3) 0))
+(setq l '(1 2 3 4 5 0))
+(duo-filter l #'f)
+
+(setq al '((1 . 2) (1 . 3) (3 . 4) (3 . 5) (1 . 4) (2 . 6)))
+(duo-in-group '(1 5) al 'duo-equal-car-p)
+(duo-in-group 1 al 'duo-x-match-car-p)
+(duo-in-group 4 al 'duo-x-match-cdr-p)
+
+(setq al '((1 . 2) (1 . 3) (3 . 4) (3 . 5) (1 . 4) (2 . 6)))
+(duo-after-in-group '(1 . 2) al #'duo-equal-car-p)
+(duo-after-not-in-group '(1 . 2) al #'duo-equal-car-p)
+(duo-before-in-group '(3 . 5) al #'duo-equal-car-p)
+(duo-before-not-in-group '(3 . 5) al #'duo-equal-car-p)
+
+(setq al '((1 . 2) (1 . 3) (3 . 4) (3 . 5) (1 . 4) (2 . 6)))
+(duo-circ-after-in-group '(1 . 2) al #'duo-equal-car-p)
+(duo-circ-after-not-in-group '(1 . 2) al #'duo-equal-car-p)
+(duo-circ-before-in-group '(1 . 2) al #'duo-equal-car-p)
+(duo-circ-before-not-in-group '(1 . 2) al #'duo-equal-car-p)
+
+(defun f (e) (prin1-to-string (mod e 3)))
+(setq l '(1 2 3 4 5 6 7 8 9 1 2 3))
+(setq al (duo-partition l #'f))
+(setq al (duo-partition l))
+
+(defun f (e) (prin1-to-string (mod e 3)))
+(setq l '(1 2 3 4 5 6 7 8 9 1 2 3))
+(setq al (duo-partition-unique l #'f))
+(setq al (duo-partition-unique l))
+
+(setq v (make-vector 5 3))
+(setq l `(12 ?a "abc" (1 . 2) (1 2 3) ,v
+	       ((1 . 2) (3 . 4)) (:a "a" :b "b") +))
+(setq al (duo-partition l #'duo-type-of))
+
+;;; Symbol
+;;; ------------------------------
+
+(setq l nil)
+(duo-sym-push-cons '(1) 'l)
+(duo-sym-push-cons '(2) 'l)
+
+(setq l nil)
+(duo-sym-push-new-cons '(1) 'l)
+(duo-sym-push-new-cons '(2) 'l)
+(duo-sym-push-new-cons (nthcdr 1 l) 'l)
+
+(setq l nil)
+(duo-sym-add-cons '(1) 'l)
+(duo-sym-add-cons '(2) 'l)
+
+(setq l nil)
+(duo-sym-add-new-cons '(1) 'l)
+(duo-sym-add-new-cons '(2) 'l)
+(duo-sym-add-new-cons (nthcdr 1 l) 'l)
+
+(setq l nil)
+(duo-sym-push 1 'l)
+(duo-sym-push 2 'l)
+
+(setq l nil)
+(duo-sym-push-new 1 'l)
+(duo-sym-push-new 2 'l)
+
+(setq l nil)
+(duo-sym-add-new 1 'l)
+(duo-sym-add-new 2 'l)
+
+(setq l nil)
+(duo-sym-add 1 'l)
+(duo-sym-add 2 'l)
+
+(setq l '(1 2 3))
+(duo-sym-pop 'l)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-rotate-left 'l)
+(duo-sym-rotate-right 'l)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-roll-cons-to-beg nil 'l)
+(duo-sym-roll-cons-to-beg (nthcdr 2 l) 'l)
+(duo-sym-roll-cons-to-beg (nthcdr 2 l) 'l (nthcdr 1 l))
+;; False previous
+(duo-sym-roll-cons-to-beg (nthcdr 2 l) 'l (nthcdr 4 l))
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-roll-to-beg 3 'l)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-roll-to-beg 3 'l 'equal)
+(duo-sym-roll-to-beg 3 'l nil)
+(duo-sym-roll-to-beg 3 'l 'duo-x-match-car-p)
+(duo-sym-roll-to-beg 3 'l 'duo-x-match-car-p nil)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-roll-to-end 3 'l)
+(duo-sym-roll-to-end 3 'l 'equal)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-reverse 'l)
+(let ((l '(1 2 3)))
+  (duo-sym-reverse 'l))
+
+(unintern "l")
+(let ((l (make-symbol "l")))
+  (print l)
+  (set l (list 1 2 3 4 5 6 7))
+  (duo-sym-reverse l))
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-reverse-previous (nthcdr 3 l) 'l)
+(duo-sym-reverse-next (nthcdr 3 l) 'l)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-reverse-before 4 'l)
+(duo-sym-reverse-after 4 'l)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-insert-cons-previous nil '(4) 'l (nthcdr 2 l))
+(duo-sym-insert-cons-previous (nthcdr 2 l) nil 'l (nthcdr 2 l))
+(duo-sym-insert-cons-previous (nthcdr 2 l) '(4) 'l)
+(duo-sym-insert-cons-previous (nthcdr 2 l) '(4) 'l (nthcdr 1 l))
+;; False previous
+(duo-sym-insert-cons-previous (nthcdr 2 l) '(4) 'l (nthcdr 4 l))
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-insert-cons-next nil '(4))
+(duo-sym-insert-cons-next (nthcdr 2 l) nil)
+(duo-sym-insert-cons-next (nthcdr 2 l) '(4))
+(duo-sym-insert-cons-next (nthcdr 2 l) '(4))
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-insert-cons-before 3 '((8 . 9)) 'l 'duo-x-match-car-p)
+(duo-sym-insert-cons-before 3 '((8 . 9)) 'l 'duo-x-match-car-p (nthcdr 1 l))
+;; False previous
+(duo-sym-insert-cons-before 3 '((8 . 9)) 'l 'duo-x-match-car-p (nthcdr 4 l))
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-insert-cons-before 3 '(8) 'l)
+(duo-sym-insert-cons-before 3 '(8) 'l nil)
+(duo-sym-insert-cons-before 3 '(8) 'l 'duo-x-match-car-p)
+(duo-sym-insert-cons-before 3 '(8) 'l 'duo-x-match-car-p nil)
+(duo-sym-insert-cons-before 3 '(8) 'l nil 'duo-x-match-car-p)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-insert-before 3 '(8 . 9) 'l)
+(duo-sym-insert-before 3 '(8 . 9) 'l 'duo-x-match-car-p)
+(duo-sym-insert-before 3 '(8 . 9) 'l 'duo-x-match-car-p (nthcdr 1 l))
+;; False previous
+(duo-sym-insert-before 3 '(8 . 9) 'l 'duo-x-match-car-p (nthcdr 4 l))
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-insert-before 3 8 'l)
+(duo-sym-insert-after 3 9 'l)
+(duo-sym-insert-before 1 8 'l)
+(duo-sym-insert-after 7 9 'l)
+(duo-sym-insert-before 7 8 'l)
+(duo-sym-insert-after 1 9 'l)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-remove nil 'l (nthcdr 1 l))
+(duo-sym-remove (nthcdr 2 l) 'l)
+(duo-sym-remove (nthcdr 2 l) 'l (nthcdr 1 l))
+;; False previous
+(duo-sym-remove (nthcdr 2 l) 'l (nthcdr 3 l))
+
+(setq l '(1 1 2 3 1 4 5 6 1 1 7 1))
+(setq l '(2 3 4 5 6 7))
+(duo-sym-delete 2 'l)
+(duo-sym-delete-all 1 'l)
+(duo-sym-delete-all 9 'l)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-delete 3 'l)
+(duo-sym-delete nil 'l)
+(duo-sym-delete 3 'l nil)
+(duo-sym-delete 3 'l 'duo-x-match-car-p)
+(duo-sym-delete 3 'l 'duo-x-match-car-p nil)
+(duo-sym-delete 3 'l nil 'duo-x-match-car-p)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-teleport-cons-previous (nthcdr 3 l) (nthcdr 1 l) 'l)
+(duo-sym-teleport-cons-previous nil (nthcdr 1 l) 'l)
+(duo-sym-teleport-cons-previous (nthcdr 3 l) nil 'l)
+(duo-sym-teleport-cons-previous nil nil 'l)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-teleport-cons-next (nthcdr 3 l) (nthcdr 1 l) 'l)
+(duo-sym-teleport-cons-next nil (nthcdr 1 l) 'l)
+(duo-sym-teleport-cons-next (nthcdr 3 l) nil 'l)
+(duo-sym-teleport-cons-next nil nil 'l)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-teleport-previous nil 2 'l 'duo-x-match-car-p)
+(duo-sym-teleport-previous (nthcdr 3 l) 2 'l 'duo-x-match-car-p)
+(duo-sym-teleport-previous (nthcdr 3 l) 2 'l 'duo-x-match-car-p (nthcdr 2 l))
+(duo-sym-teleport-previous (nthcdr 3 l) 2 'l 'duo-x-match-car-p (nthcdr 0 l) (nthcdr 2 l))
+(duo-sym-teleport-previous (nthcdr 3 l) 2 'l 'duo-x-match-car-p (nthcdr 1 l) (nthcdr 3 l))
+(duo-sym-teleport-previous (nthcdr 3 l) 2 'l nil 'duo-x-match-car-p)
+(duo-sym-teleport-previous (nthcdr 3 l) 2 'l nil nil 'duo-x-match-car-p)
+(duo-sym-teleport-previous (nthcdr 3 l) 2 'l 'duo-x-match-car-p nil nil)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-teleport-next (nthcdr 3 l) 2 'l 'duo-x-match-car-p)
+(duo-sym-teleport-next (nthcdr 3 l) 2 'l 'duo-x-match-car-p (nthcdr 2 l))
+(duo-sym-teleport-next (nthcdr 3 l) 2 'l 'duo-x-match-car-p (nthcdr 4 l))
+(duo-sym-teleport-next (nthcdr 3 l) 2 'l nil 'duo-x-match-car-p)
+(duo-sym-teleport-next (nthcdr 3 l) 2 'l 'duo-x-match-car-p nil)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-teleport-cons-before 3 (nthcdr 3 l) 'l 'duo-x-match-car-p)
+(duo-sym-teleport-cons-before 3 (nthcdr 3 l) 'l 'duo-x-match-car-p (nthcdr 2 l) (nthcdr 1 l))
+(duo-sym-teleport-cons-before 3 (nthcdr 3 l) 'l 'duo-x-match-car-p (nthcdr 1 l) (nthcdr 2 l))
+(duo-sym-teleport-cons-before 3 (nthcdr 3 l) 'l nil 'duo-x-match-car-p nil)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-teleport-cons-after 1 (nthcdr 3 l) 'l 'duo-x-match-car-p)
+(duo-sym-teleport-cons-after 1 (nthcdr 3 l) 'l 'duo-x-match-car-p (nthcdr 2 l))
+(duo-sym-teleport-cons-after 1 (nthcdr 3 l) 'l 'duo-x-match-car-p (nthcdr 3 l))
+(duo-sym-teleport-cons-after 1 (nthcdr 3 l) 'l nil 'duo-x-match-car-p nil)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-teleport-before 3 5 'l 'duo-x-match-car-p)
+(duo-sym-teleport-before 3 5 'l 'duo-x-match-car-p nil nil)
+(duo-sym-teleport-before 3 5 'l 'duo-x-match-car-p (nthcdr 3 l) (nthcdr 1 l))
+(duo-sym-teleport-before 3 5 'l 'duo-x-match-car-p (nthcdr 2 l) (nthcdr 4 l))
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-sym-teleport-after 3 5 'l 'duo-x-match-car-p)
+(duo-sym-teleport-after 3 5 'l 'duo-x-match-car-p (nthcdr 3 l))
+(duo-sym-teleport-after 3 5 'l 'duo-x-match-car-p (nthcdr 2 l))
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-teleport-before 3 5 'l)
+(duo-sym-teleport-after 3 6 'l)
+(duo-sym-teleport-before 1 5 'l)
+(duo-sym-teleport-after 7 6 'l)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-move-before 3 'l)
+(duo-sym-move-after 3 'l)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-circ-move-before 3 'l)
+(duo-sym-circ-move-after 3 'l)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-sym-exchange 3 1 'l)
+
+(setq l nil)
+(setq elems '(3 8 2 7 2 7 9 0))
+(dolist (e elems l)
+  (duo-sym-insert-in-sorted-list e 'l))
+
+(setq l nil)
+(setq elems '(3 8 2 7 2 7 9 0))
+(dolist (e elems l)
+  (duo-sym-insert-in-sorted-list e 'l '>))
+
+(setq l nil)
+(duo-sym-insert-at-group-beg '(1 . 1) 'l #'duo-equal-car-p)
+(duo-sym-insert-at-group-beg '(1 . 2) 'l #'duo-equal-car-p)
+(duo-sym-insert-at-group-beg '(1 . 3) 'l #'duo-equal-car-p)
+(duo-sym-insert-at-group-end '(2 . 1) 'l #'duo-equal-car-p)
+(duo-sym-insert-at-group-end '(2 . 2) 'l #'duo-equal-car-p)
+(duo-sym-insert-at-group-end '(2 . 3) 'l #'duo-equal-car-p)
+
+(setq l (number-sequence 1 12))
+(fset 'f (lambda (e) (mod e 2)))
+(fset 'g (lambda (e) (mod e 3)))
+(duo-sym-partition 'l 'f)
+(duo-sym-partition 'l 'g)
+
+;;; Reference
+;;; ------------------------------
+
+(setq r '((1 2 3)))
+(duo-deref r)
+(duo-ref-set r '(4 5 6))
+(duo-ref-set r nil)
+
+(setq r '(nil 1 2 3))
+(duo-deref r)
+(duo-ref-set r '(4 5 6))
+(duo-ref-set r nil)
+
+(setq r '((1 1 2 3 1 4 5 6 1 1 7 1)))
+(setq r '((2 3 4 5 6 7)))
+(duo-ref-delete-all 1 r)
+
+(setq r (list '(1 2 3 4 5)))
+(duo-ref-reverse r)
+(duo-deref r)
+
+(setq r '(nil 1))
+(setq l (duo-deref r))
+
+(setq r '((1 2 3)))
+(duo-ref-pop r)
+
+(setq r '((1 2 3 4 5 6 7)))
+(duo-ref-roll-cons-to-beg nil r)
+(duo-ref-roll-cons-to-beg (nthcdr 2 (car r)) r)
+(duo-ref-roll-cons-to-beg (nthcdr 2 (car r)) r (nthcdr 1 (car r)))
+;; False previous
+(duo-ref-roll-cons-to-beg (nthcdr 2 (car r)) r (nthcdr 4 (car r)))
+
+(setq r '(((1 3) (2 4) (3 5) (4 7))))
+(duo-ref-roll-to-beg 2 r)
+(duo-ref-roll-to-beg 2 r 'duo-x-match-car-p)
+
+(setq r '((1 2 3 4 5 6 7)))
+(duo-ref-roll-to-end 3 r)
+
+(setq r '((1 2 3 4 5 6 7)))
+(duo-ref-insert-cons-previous nil '(4) r)
+(duo-ref-insert-cons-previous (nthcdr 2 (car r)) nil r)
+(duo-ref-insert-cons-previous nil '(4) r (nthcdr 2 (car r)))
+(duo-ref-insert-cons-previous (nthcdr 2 (car r)) '(4) r)
+(duo-ref-insert-cons-previous (nthcdr 2 (car r)) '(4) r (nthcdr 1 (car r)))
+;; False previous
+(duo-ref-insert-cons-previous (nthcdr 2 (car r)) '(4) r (nthcdr 4 (car r)))
+
+(setq r '((1 2 3 4 5 6 7)))
+(duo-ref-insert-cons-next nil '(4))
+(duo-ref-insert-cons-next (nthcdr 2 (car r)) nil)
+(duo-ref-insert-cons-next (nthcdr 2 (car r)) '(4))
+(duo-ref-insert-cons-next (nthcdr 2 (car r)) '(4))
+
+(setq r '(((1 3) (2 4) (3 5) (4 7))))
+(duo-ref-insert-cons-before 3 '((0 1)) r 'duo-x-match-car-p)
+(duo-ref-insert-cons-before 3 '((0 1)) r 'duo-x-match-car-p (nthcdr 1 (car r)))
+;; False previous
+(duo-ref-insert-cons-before 3 '((0 1)) r 'duo-x-match-car-p (nthcdr 4 (car r)))
+
+(setq r '(((1 3) (2 4) (3 5) (4 7))))
+(duo-ref-insert-cons-before 3 '(0) r 'duo-x-match-car-p)
+(duo-ref-insert-cons-before 3 '(0) r nil 'duo-x-match-car-p)
+
+(setq r '(((1 3) (2 4) (3 5) (4 7))))
+(duo-ref-insert-before 3 '(0 1) r 'duo-x-match-car-p)
+(duo-ref-insert-before 3 '(0 1) r 'duo-x-match-car-p (nthcdr 1 (car r)))
+;; False previous
+(duo-ref-insert-before 3 '(0 1) r 'duo-x-match-car-p (nthcdr 4 (car r)))
+
+(setq r '(((1 3) (2 4) (3 5) (4 7))))
+(duo-ref-insert-before 3 0 r 'duo-x-match-car-p)
+
+(setq r '((1 2 3 4 5 6 7)))
+(duo-ref-remove (nthcdr 2 (car r)) r)
+(duo-ref-remove (nthcdr 2 (car r)) r (nthcdr 1 (car r)))
+;; False previous
+(duo-ref-remove (nthcdr 2 (car r)) r (nthcdr 4 (car r)))
+
+(setq r '((1 2 3 1 2 3 4)))
+(duo-ref-remove nil r (nthcdr 1 (car r)))
+(duo-ref-remove (car r) r)
+
+(setq r '(((1 3) (2 4) (3 5) (4 7))))
+(duo-ref-delete nil r)
+(duo-ref-delete 2 r)
+(duo-ref-delete 2 r 'duo-x-match-car-p)
+(duo-ref-delete 2 r 'duo-x-match-car-p nil)
+(duo-ref-delete 2 r 'duo-x-match-car-p (car r))
+
+(setq r '((1 2 3 1 2 3 4)))
+(duo-ref-delete 1 r)
+
+(setq r '((1 2 3 1 2 3 4)))
+(duo-ref-delete-all 1 r)
+(duo-ref-delete-all 2 r)
+(duo-ref-delete-all 3 r)
+(duo-ref-delete-all 4 r)
+
+(setq r '(((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3))))
+(duo-ref-teleport-cons-previous (nthcdr 3 (car r)) (nthcdr 1 (car r)) r)
+(duo-ref-teleport-cons-previous nil (nthcdr 1 (car r)) r)
+(duo-ref-teleport-cons-previous (nthcdr 3 (car r)) nil r)
+(duo-ref-teleport-cons-previous nil nil r)
+
+(setq r '(((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3))))
+(duo-ref-teleport-cons-next (nthcdr 3 (car r)) (nthcdr 1 (car r)) r)
+(duo-ref-teleport-cons-next nil (nthcdr 1 (car r)) r)
+(duo-ref-teleport-cons-next (nthcdr 3 (car r)) nil r)
+(duo-ref-teleport-cons-next nil nil r)
+
+(setq r '(((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3))))
+(duo-ref-teleport-previous nil 2 r 'duo-x-match-car-p)
+(duo-ref-teleport-previous (nthcdr 3 (car r)) 2 r 'duo-x-match-car-p)
+(duo-ref-teleport-previous (nthcdr 3 (car r)) 2 r 'duo-x-match-car-p (nthcdr 0 (car r)) (nthcdr 2 (car r)))
+(duo-ref-teleport-previous (nthcdr 3 (car r)) 2 r 'duo-x-match-car-p (nthcdr 1 (car r)) (nthcdr 3 (car r)))
+(duo-ref-teleport-previous (nthcdr 3 (car r)) 2 r 'duo-x-match-car-p nil)
+(duo-ref-teleport-previous (nthcdr 3 (car r)) 2 r nil 'duo-x-match-car-p)
+
+(setq r '(((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3))))
+(duo-ref-teleport-next (nthcdr 3 (car r)) 2 r 'duo-x-match-car-p (nthcdr 2 (car r)))
+(duo-ref-teleport-next (nthcdr 3 (car r)) 2 r 'duo-x-match-car-p (nthcdr 3 (car r)))
+(duo-ref-teleport-next (nthcdr 3 (car r)) 2 r 'duo-x-match-car-p)
+(duo-ref-teleport-next (nthcdr 3 (car r)) 2 r 'duo-x-match-car-p nil)
+(duo-ref-teleport-next (nthcdr 3 (car r)) 2 r nil 'duo-x-match-car-p)
+
+(setq r '(((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3))))
+(duo-ref-teleport-cons-before 3 (nthcdr 3 (car r)) r 'duo-x-match-car-p)
+(duo-ref-teleport-cons-before 3 (nthcdr 3 (car r)) r 'duo-x-match-car-p (nthcdr 2 (car r)) (nthcdr 1 l))
+(duo-ref-teleport-cons-before 3 (nthcdr 3 (car r)) r 'duo-x-match-car-p (nthcdr 4 (car r)) (nthcdr 3 l))
+(duo-ref-teleport-cons-before 3 (nthcdr 3 (car r)) r nil 'duo-x-match-car-p nil)
+
+(setq r '(((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3))))
+(duo-ref-teleport-cons-after 2 (nthcdr 3 (car r)) r 'duo-x-match-car-p)
+(duo-ref-teleport-cons-after 2 (nthcdr 3 (car r)) r 'duo-x-match-car-p (nthcdr 2 l))
+(duo-ref-teleport-cons-after 2 (nthcdr 3 (car r)) r 'duo-x-match-car-p (nthcdr 3 l))
+(duo-ref-teleport-cons-after 2 (nthcdr 3 (car r)) r nil 'duo-x-match-car-p nil)
+
+(setq r '(((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3))))
+(duo-ref-teleport-before 2 4 r 'duo-x-match-car-p)
+(duo-ref-teleport-before 2 4 r 'duo-x-match-car-p (nthcdr 2 l) (nthcdr 0 l))
+(duo-ref-teleport-before 2 4 r 'duo-x-match-car-p (nthcdr 2 l) (nthcdr 2 l))
+(duo-ref-teleport-before 2 4 r nil 'duo-x-match-car-p nil)
+
+(setq r '(((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3))))
+(duo-ref-teleport-after 2 4 r 'duo-x-match-car-p)
+(duo-ref-teleport-after 2 4 r nil 'duo-x-match-car-p nil)
+(duo-ref-teleport-after 2 4 r 'duo-x-match-car-p (nthcdr 2 l))
+(duo-ref-teleport-after 2 4 r 'duo-x-match-car-p (nthcdr 1 l))
+
+(setq r (list nil))
+(setq l '(3 8 2 7 2 7 9 0))
+(dolist (e l r)
+  (duo-ref-insert-in-sorted-list e r))
+
+(setq r '(nil))
+(duo-ref-insert-at-group-beg '(1 . 1) r #'duo-equal-car-p)
+(duo-ref-insert-at-group-beg '(1 . 2) r #'duo-equal-car-p)
+(duo-ref-insert-at-group-beg '(1 . 3) r #'duo-equal-car-p)
+(duo-ref-insert-at-group-end '(2 . 1) r #'duo-equal-car-p)
+(duo-ref-insert-at-group-end '(2 . 2) r #'duo-equal-car-p)
+(duo-ref-insert-at-group-end '(2 . 3) r #'duo-equal-car-p)
+
+;;; Return
+;;; ------------------------------
+
+(setq l '(1 2 3 4 5 6 7))
+(setq l (duo-return-roll-cons-to-beg nil l))
+(setq l (duo-return-roll-cons-to-beg (nthcdr 2 l) l))
+(setq l (duo-return-roll-cons-to-beg (nthcdr 2 l) l (nthcdr 1 l)))
+;; False previous
+(setq l (duo-return-roll-cons-to-beg (nthcdr 2 l) l (nthcdr 4 l)))
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(setq l (duo-return-roll-to-beg 3 l))
+(setq l (duo-return-roll-to-beg 3 l 'duo-x-match-car-p))
+(setq l (duo-return-roll-to-beg 3 l 'duo-x-match-car-p nil))
+(setq l (duo-return-roll-to-beg 3 l nil 'duo-x-match-car-p))
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-return-roll-to-end 3 l)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-return-insert-cons-previous nil '(4) l)
+(duo-return-insert-cons-previous (nthcdr 2 l) nil l)
+(duo-return-insert-cons-previous nil '(4) l (nthcdr 2 l))
+(duo-return-insert-cons-previous (nthcdr 2 l) '(4) l)
+(duo-return-insert-cons-previous (nthcdr 2 l) '(4) l (nthcdr 1 l))
+;; False previous
+(duo-return-insert-cons-previous (nthcdr 2 l) '(4) l (nthcdr 4 l))
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-insert-cons-before 3 '((8 . 9)) l 'duo-x-match-car-p)
+(duo-return-insert-cons-before 3 '((8 . 9)) l 'duo-x-match-car-p (nthcdr 1 l))
+;; False previous
+(duo-return-insert-cons-before 3 '((8 . 9)) l 'duo-x-match-car-p (nthcdr 4 l))
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-insert-cons-before 3 '(8) l)
+(duo-return-insert-cons-before 3 '(8) l nil)
+(duo-return-insert-cons-before 3 '(8) l 'duo-x-match-car-p)
+(duo-return-insert-cons-before 3 '(8) l 'duo-x-match-car-p nil)
+(duo-return-insert-cons-before 3 '(8) l nil 'duo-x-match-car-p)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-insert-before 3 '(8 . 9) l 'duo-x-match-car-p)
+(duo-return-insert-before 3 '(8 . 9) l 'duo-x-match-car-p (nthcdr 1 l))
+;; False previous
+(duo-return-insert-before 3 '(8 . 9) l 'duo-x-match-car-p (nthcdr 4 l))
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-insert-before 3 8 l)
+(duo-return-insert-before 3 8 l nil)
+(duo-return-insert-before 3 8 l 'duo-x-match-car-p)
+(duo-return-insert-before 3 8 l 'duo-x-match-car-p nil)
+(duo-return-insert-before 3 8 l nil 'duo-x-match-car-p)
+
+(setq l '(1 2 3 4 5 6 7))
+(duo-return-remove nil l (nthcdr 2 l))
+(duo-return-remove (nthcdr 2 l) l)
+(duo-return-remove (nthcdr 2 l) l (nthcdr 1 l))
+;; False previous
+(duo-return-remove (nthcdr 2 l) l (nthcdr 4 l))
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-delete nil l)
+(duo-return-delete 3 l)
+(duo-return-delete 3 l nil)
+(duo-return-delete 3 l 'duo-x-match-car-p)
+(duo-return-delete 3 l 'duo-x-match-car-p nil)
+(duo-return-delete 3 l nil 'duo-x-match-car-p)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-teleport-cons-previous (nthcdr 3 l) (nthcdr 1 l) l)
+(duo-return-teleport-cons-previous nil (nthcdr 1 l) l)
+(duo-return-teleport-cons-previous (nthcdr 3 l) nil l)
+(duo-return-teleport-cons-previous nil nil l)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-teleport-cons-next (nthcdr 3 l) (nthcdr 1 l) l)
+(duo-return-teleport-cons-next nil (nthcdr 1 l) l)
+(duo-return-teleport-cons-next (nthcdr 3 l) nil l)
+(duo-return-teleport-cons-next nil nil l)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-teleport-previous nil 2 l 'duo-x-match-car-p)
+(duo-return-teleport-previous (nthcdr 3 l) 2 l 'duo-x-match-car-p)
+(duo-return-teleport-previous (nthcdr 3 l) 2 l 'duo-x-match-car-p (nthcdr 0 l) (nthcdr 2 l))
+(duo-return-teleport-previous (nthcdr 3 l) 2 l 'duo-x-match-car-p (nthcdr 1 l) (nthcdr 3 l))
+(duo-return-teleport-previous (nthcdr 3 l) 2 l 'duo-x-match-car-p nil)
+(duo-return-teleport-previous (nthcdr 3 l) 2 l nil 'duo-x-match-car-p)
+(duo-return-teleport-previous (nthcdr 3 l) 2 l nil nil 'duo-x-match-car-p)
+(duo-return-teleport-previous (nthcdr 3 l) 2 l 'duo-x-match-car-p nil nil)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-teleport-next (nthcdr 3 l) 2 l 'duo-x-match-car-p)
+(duo-return-teleport-next (nthcdr 3 l) 2 l 'duo-x-match-car-p (nthcdr 2 l))
+(duo-return-teleport-next (nthcdr 3 l) 2 l 'duo-x-match-car-p (nthcdr 4 l))
+(duo-return-teleport-next (nthcdr 3 l) 2 l 'duo-x-match-car-p nil)
+(duo-return-teleport-next (nthcdr 3 l) 2 l nil 'duo-x-match-car-p)
+(duo-return-teleport-next (nthcdr 3 l) 2 l nil nil 'duo-x-match-car-p)
+(duo-return-teleport-next (nthcdr 3 l) 2 l 'duo-x-match-car-p nil nil)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-teleport-cons-before 3 (nthcdr 3 l) l 'duo-x-match-car-p)
+(duo-return-teleport-cons-before 3 (nthcdr 3 l) l 'duo-x-match-car-p (nthcdr 2 l) (nthcdr 1 l))
+(duo-return-teleport-cons-before 3 (nthcdr 3 l) l 'duo-x-match-car-p (nthcdr 1 l) (nthcdr 2 l))
+(duo-return-teleport-cons-before 3 (nthcdr 3 l) l nil 'duo-x-match-car-p nil)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-teleport-cons-after 2 (nthcdr 3 l) l 'duo-x-match-car-p)
+(duo-return-teleport-cons-after 2 (nthcdr 3 l) l 'duo-x-match-car-p (nthcdr 2 l))
+(duo-return-teleport-cons-after 2 (nthcdr 3 l) l 'duo-x-match-car-p (nthcdr 4 l))
+(duo-return-teleport-cons-after 2 (nthcdr 3 l) l nil 'duo-x-match-car-p nil)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-teleport-before 3 5 l 'duo-x-match-car-p)
+(duo-return-teleport-before 3 5 l 'duo-x-match-car-p (nthcdr 3 l) (nthcdr 1 l))
+(duo-return-teleport-before 3 5 l 'duo-x-match-car-p (nthcdr 4 l) (nthcdr 3 l))
+(duo-return-teleport-before 3 5 l 'duo-x-match-car-p nil nil)
+
+(setq l '((1 . 2) (2 . 4) (3 . 6) (4 . 2) (5 . 3)))
+(duo-return-teleport-after 3 5 l 'duo-x-match-car-p)
+(duo-return-teleport-after 3 5 l 'duo-x-match-car-p nil nil)
+(duo-return-teleport-after 3 5 l 'duo-x-match-car-p (nthcdr 3 l))
+(duo-return-teleport-after 3 5 l 'duo-x-match-car-p (nthcdr 1 l))
+
+(setq pair (cons nil '(1 1 2 3 1 4 5 6 1 1 7 1)))
+(setq pair (duo-return-delete-all 1 (cdr pair)))
+(setq pair (duo-return-delete-all 10 (cdr pair)))
+
+(setq pair '(nil . (1 2 3)))
+(setq pair (duo-return-pop (cdr pair)))
+
+;;; Torus Wheel
+;;; ------------------------------------------------------------
+
+(setq torus-binding-level 3)
+(setq torus-verbosity 1)
+(setq torus-display-tab-bar nil)
+(setq torus-display-tab-bar t)
+
+(car (duo-assoc (car torus-cur-location) (duo-deref torus-line-col)))
+
+(duo-partition (duo-map (duo-in-group (torus--torus-name)
+				      (duo-deref torus-helix)
+				      #'duo-x-match-caar-p)
+			#'cdr)
+	       #'torus--one-directory)
+(duo-partition (duo-map (duo-in-group (torus--torus-name)
+				      (duo-deref torus-helix)
+				      #'duo-x-match-caar-p)
+			#'cdr)
+	       #'torus--all-directories)
+(duo-partition (duo-map (duo-in-group (torus--torus-name)
+				      (duo-deref torus-helix)
+				      #'duo-x-match-caar-p)
+			#'cdr)
+	       #'torus--extension-description)
+
+(dotimes (i 3)
+  (print i))
+
+(substring "abc" -1)
+
+(string-to-number
+ (substring (replace-regexp-in-string ":[^:]*$" "" "0:abc 1:toto 2:tutu") -1))
+
+(replace-regexp-in-string "^.*[^0-9]\\([0-9]+\\)[^0-9]*$" "\\1\\1" "0:abc 1:toto 2")
+(replace-regexp-in-string "\\(abc\\)" "coucou" "0:abc 12:toto 2")
+
+(replace-regexp-in-string ":[^:]*$" "" before)
+
+(replace-regexp-in-string "^.*[^0-9]\\([0-9]+\\)[^0-9]*$" "\\1" "0:abc 12:toto@35 ")
+
+(replace-regexp-in-string "\\`.*[^0-9]\\(?1:[0-9]+\\)[^0-9]*\\(?:[@(][0-9]+\\)?[^0-9]*\\'" "\\1" "0:abc 12:toto@34 3:cb(04)")
+
+(duo-member (torus--tree-template "plain") (torus--torus-list) #'duo-equal-car-p)
+
+(pp (car torus-cur-torus))
+
+(string-to-char "a")
+
+(when (string-match "[0-9]" "a") (message "coucou"))
+(when (string-match "[0-9]" "3") (message "coucou"))
+
+(eq (cdr (torus--make-pathway)) (torus--root-location))
+
+(torus--pathway-to-string '("a" . ("b" . 4)))
+(torus--pathway-to-string '("a" . "b"))
+(torus--pathway-to-string '("a" . 3))
+(torus--pathway-to-string '(("a" . "d") . ("b" . 4)))
+
+(pp (torus--spiral-to-torus))
+(pp (torus--spiral-to-torus nil :trim))
+(pp (torus--spiral-to-torus "plain"))
+(pp (torus--spiral-to-torus "plain" :trim))
+
+(torus--file-position)
+(torus--file-position 10)
+(torus--jump)
+
+(torus-reset-menu ?a :quiet)
+
+(torus--make-entry)
+
+(torus--wheel-status)-
+(torus--torus-status)
+
+(mapcar #'car (torus--torus-list))
+(mapcar #'car (torus--circle-list))
+(car (duo-assoc "torus" (torus--circle-list)))
+
+(pp (duo-index-assoc "plain" (torus--torus-list)))
+
+(torus--make-entry)
+
+(torus--tune-torus "tore" :recursive)
+(torus--tune-torus "donut" :recursive)
+(torus--tune-torus "tore" :not-recursive)
+(ttorus--jump)
+
+(torus--make-line-col)
+(torus--make-line-col '("/home/user_name/racine/public/torus/torus.el" . 65376))
+(torus--make-line-col '(("/home/user_name/racine/public/torus/torus.el" . 65376) . (3 . 4)))
+
+(consp '("/home/user_name/racine/public/torus/torus.el" . 65376))
+
+(torus--entry-to-string '(("a" . "b") . ("c" . 3)))
+(torus--entry-to-string '("a" . "b"))
+(torus--entry-to-string '("b" . ("c" . 3)))
+(torus--entry-to-string '("c" . 3))
+
+(duo-index-of '("/home/user_name/racine/public/torus/torus.el" . 65376) (torus--location-list))
+(duo-index-of '("/home/user_name/racine/public/torus/torus.el" . 65389) (torus--location-list))
+(duo-at-index 0 (torus--location-list))
+(duo-at-index 1 (torus--location-list))
+
+(torus--build-helix)
+(torus--build-grid)
+(length (duo-deref torus-history))
+
+(torus--convert-version-1-variables)
+
+(torus--one-directory "~/sub/dir/file")
+(torus--one-directory "~/file")
+(torus--one-directory "/sub/dir/file")
+(torus--all-directories "/sub/dir/file")
+(torus--all-directories "~/sub/dir/file")
+(torus--all-directories "~/file")
+
+(torus--complete-filename torus-autoread-file)
+(torus--complete-filename "file")
+(torus--complete-filename "file.el")
+(torus--complete-filename "file.el.1")
+(torus--complete-filename "file.el.toto")
+(torus--complete-filename "dir/file")
+(torus--complete-filename "dir/file.el")
+(torus--complete-filename "/path/dir/file")
+(torus--complete-filename "/path/dir/file.el")
+(torus--complete-filename "/path/dir/file.el.1")
+(torus--complete-filename "/path/dir/file.el.toto")
+
+;;; Grenier
+;;; ------------------------------
+
+(defun torus--concise-element (element)
+
+  "Return ELEMENT (file . position) in a concise format."
+
+  (if (consp element)
+      (cons (file-name-nondirectory (car element)) (cdr element))
+    (error "torus--concise-element : bad format for %s" element)))
+
+(defun torus--concise-element-string (element)
+
+  "Return ELEMENT (file . position) in a concise string format."
+
+  (if (stringp element)
+      element
+      (prin1-to-string (torus--concise-element element))))
+
+(defun torus--concise-elt-circle (element-circle)
+
+  "Return ELEMENT-CIRCLE in a concise format."
+
+  (print element-circle)
+
+  (if (consp element-circle)
+      (let* ((element (car element-circle))
+             (circle (cdr element-circle)))
+        (if (consp element)
+            (cons (cons (file-name-nondirectory (car element)) (cdr element)) circle)
+          (error "torus--concise-elt-circle : bad format for %s" element-circle)))
+    (error "torus--concise-elt-circle : bad format for %s" element-circle)))
+
+(defun torus--concise-elt-circle-string (element-circle)
+
+  "Return ELEMENT-CIRCLE in a concise string format."
+
+  (if (stringp element-circle)
+      element-circle
+    (prin1-to-string (torus--concise-elt-circle element-circle))))
+
+(defun torus-go-to-circle (arg)
+
+  "Go to a given circle of the torus. Universal ARG is used to split.
+
+With prefix argument \\[universal-argument], open the buffer in a
+horizontal split.
+
+With prefix argument \\[universal-argument] \\[universal-argument], open the
+buffer in a vertical split."
+
+  (interactive "P")
+
+  (cond
+   ((equal current-prefix-arg '(4))
+    (split-window-below)
+    (other-window 1))
+   ((equal current-prefix-arg '(16))
+    (split-window-right)
+    (other-window 1)))
+  (call-interactively 'torus-switch-circle))
+
+(defun torus-go-to-element (arg)
+
+  "Go to a given element of the current circle. Universal ARG is used to split.
+
+With prefix argument \\[universal-argument], open the buffer in a
+horizontal split.
+
+With prefix argument \\[universal-argument] \\[universal-argument], open the
+buffer in a vertical split."
+
+  (interactive "P")
+
+  (cond
+   ((equal current-prefix-arg '(4))
+    (split-window-below)
+    (other-window 1))
+   ((equal current-prefix-arg '(16))
+    (split-window-right)
+    (other-window 1)))
+  (call-interactively 'torus-switch-element))
+
+(defvar torus-last nil
+  "Last visited buffer (location) in the torus. Useful to alternate last two files.
+
+It has the form :
+
+\((file . position) . circle)
+
+Same format as in `torus-index'.")
+
+(unless (equal location-circle torus-last)
+  (setq torus-last location-circle))
+
+(torus-switch-circle circle)
+    (torus-switch-location (torus--concise location))
+
+      (message "i = %d" i)
+
+(defun torus-newer-circle ()
+
+  "Go to newer circle in history."
+
+  (interactive)
 
 
-Credit : https://stackoverflow.com/questions/2321904/elisp-how-to-save-data-in-a-file
 
-;; This 'dump-vars-to-file routine will create some expressions that can be read by simply evaluating the expressions later (via a 'load command or 'read):
+  )
 
-(defun dump-vars-to-file (varlist filename)
-  "simplistic dumping of variables in VARLIST to a file FILENAME"
-  (save-excursion
-    (let ((buf (find-file-noselect filename)))
-      (set-buffer buf)
+(defun torus-older-circle ()
+
+  "Go to older circle in history."
+
+  (interactive)
+
+
+  )
+
+(defun torus-newer-in-same-circle ()
+
+  "Go to newer location in history belonging to the current circle."
+
+  (interactive)
+
+
+    )
+
+(defun torus-older-in-same-circle ()
+
+  "Go to older location in history belonging to the current circle."
+
+  (interactive)
+
+
+  )
+
+    (define-key torus-map (kbd "J") 'torus-older-circle)
+    (define-key torus-map (kbd "K") 'torus-newer-circle)
+    (define-key torus-map (kbd "M-j") 'torus-older-in-same-circle)
+    (define-key torus-map (kbd "M-k") 'torus-newer-in-same-circle)
+
+(mapcar
+           #'(lambda (el)
+               (append
+                (list (concat prefix torus-prefix-separator (car el)))
+                (cdr el)))
+           my-torus)
+
+(torus-add-torus "default" torus-torus torus-history torus-input-history)
+
+(setq torus-torus
+                (remove-duplicates
+                 torus-torus
+                 :test #'torus--equal-car-p))
+
+(defun torus-read-append ()
+  "Read torus from a file and append it to the existing one.
+Ask for a prefix to apply to the names of the existing circles,
+then for another prefix to apply to the names of the added
+circles.
+An input history is available."
+  (interactive)
+  (torus--update-position)
+  (setq torus-filename
+        (read-file-name
+         "Torus file : "
+         (file-name-as-directory torus-dirname)))
+  (let*
+      ((file-basename (file-name-nondirectory torus-filename))
+       (file-extension  ".torus")
+       (minus-len-ext (- (length file-extension)))
+       (buffer))
+    (unless (member file-basename torus-input-history)
+      (push file-basename torus-input-history))
+    (unless (equal (subseq torus-filename minus-len-ext) file-extension)
+      (setq torus-filename (concat torus-filename file-extension)))
+    (if (file-exists-p torus-filename)
+        (progn
+          (setq buffer (find-file-noselect torus-filename))
+          (setq torus-added (read buffer))
+          (kill-buffer buffer)
+          (torus-prefix-circles 'torus-torus)
+          (torus-prefix-circles 'torus-added)
+          (if (seq-intersection torus-torus torus-added #'torus--equal-car-p)
+              (message torus--message-circle-name-collision)
+            (setq torus-torus (append torus-torus torus-added))))
+      (message "File %s does not exist." torus-filename)))
+  (torus--build-index)
+  (torus--jump))
+
+(defun torus-read-append-all ()
+  "Read main torus variables from a file and append it to the existing one."
+  (interactive)
+  (torus--update-position)
+  (setq torus-filename
+        (read-file-name
+         "Torus file : "
+         (file-name-as-directory torus-dirname)))
+  (let*
+      ((file-basename (file-name-nondirectory torus-filename))
+       (old-torus torus-torus)
+       (old-history torus-history)
+       (old-input torus-input-history)
+       (file-extension  ".el")
+       (minus-len-ext (- (length file-extension)))
+       (buffer))
+    (unless (member file-basename torus-input-history)
+      (push file-basename torus-input-history))
+    (unless (equal (subseq torus-filename minus-len-ext) file-extension)
+      (setq torus-filename (concat torus-filename file-extension)))
+    (if (file-exists-p torus-filename)
+        (progn
+          (setq buffer (find-file-noselect torus-filename))
+          (eval-buffer buffer)
+          (kill-buffer buffer)
+          (setq torus-added torus-torus)
+          (setq torus-added-history torus-history)
+          (setq torus-torus old-torus)
+          (setq torus-history old-history)
+          (torus-prefix-circles 'torus-torus 'torus-history)
+          (torus-prefix-circles 'torus-added 'torus-added-history)
+          (if (seq-intersection torus-torus torus-added #'torus--equal-car-p)
+              (message torus--message-circle-name-collision)
+            (setq torus-torus (append torus-torus torus-added))
+            (setq torus-history (append torus-history torus-added-history))
+            (setq torus-input-history (append old-input torus-input-history))))
+      (message "File %s does not exist." torus-filename)))
+  ;; Rebuild with the added torus
+  (torus--build-index)
+  (torus--jump))
+
+(define-key torus-map (kbd "a") 'torus-read-append-all)
+
+(define-key torus-map (kbd "C-a") 'torus-read-append)
+
+        (my-torus (symbol-value quoted-torus))
+        (my-history (symbol-value quoted-history))
+
+(if bookmark
+              (progn
+                (when (> torus-verbosity 1)
+                  (message "Update position : bookmark = %s" bookmark))
+                (setcdr (assoc location torus-markers) (point-marker)))
+            )
+
+(defun torus-write ()
+  "Write torus to a file.
+A \".torus\" extension is added if needed."
+  (interactive)
+  (torus--update-position)
+  (setq torus-filename
+        (read-file-name
+         "Torus file : "
+         (file-name-as-directory torus-dirname)))
+  (let*
+      ((file-basename (file-name-nondirectory torus-filename))
+       (file-extension  ".torus")
+       (minus-len-ext (- (length file-extension)))
+       (buffer))
+    (torus--update-input-history file-basename)
+    (unless (equal (subseq torus-filename minus-len-ext) file-extension)
+      (setq torus-filename (concat torus-filename file-extension)))
+    (setq buffer (find-file-noselect torus-filename))
+    (with-current-buffer buffer
       (erase-buffer)
-      (dump varlist buf)
+      (pp torus-torus buffer)
       (save-buffer)
       (kill-buffer))))
 
-(defun dump (varlist buffer)
-  "insert into buffer the setq statement to recreate the variables in VARLIST"
-  (loop for var in varlist do
-        (print (list 'setq var (list 'quote (symbol-value var)))
-               buffer)))
+(defun torus-read ()
+  "Read torus from a file. Replace the old Torus.
+A \".torus\" extension is added if needed."
+  (interactive)
+  (setq torus-filename
+        (read-file-name
+         "Torus file : "
+         (file-name-as-directory torus-dirname)))
+  (let*
+      ((file-basename (file-name-nondirectory torus-filename))
+       (file-extension  ".torus")
+       (minus-len-ext (- (length file-extension)))
+       (buffer))
+    (torus--update-input-history file-basename)
+    (unless (equal (subseq torus-filename minus-len-ext) file-extension)
+      (setq torus-filename (concat torus-filename file-extension)))
+    (if (file-exists-p torus-filename)
+        (progn
+          (setq buffer (find-file-noselect torus-filename))
+          (setq torus-torus (read buffer))
+          (kill-buffer buffer))
+      (message "File %s does not exist." torus-filename)))
+  (torus--build-index)
+  (torus--jump))
 
-;; I'm sure I'm missing some built-in routine that does a nicer job or is more flexible.
+(define-key torus-map (kbd "C-r") 'torus-read)
 
-;; I tested it with this little routine:
+(define-key torus-map (kbd "C-w") 'torus-write)
 
-(defun checkit ()
-  (let ((a '(1 2 3 (4 5)))
-        (b '(a b c))
-        (c (make-vector 3 'a)))
-    (dump-vars-to-file '(a b c) "/some/path/to/file.el")))
-Which produced the output:
+(when torus-meta
+    (setf (alist-get "torus"
+                     (cdr (car torus-meta))
+                     nil nil 'equal)
+          (copy-tree torus-torus))
+    (setf (alist-get "history"
+                     (cdr (car torus-meta))
+                     nil nil 'equal)
+          (copy-tree torus-history))
+    (setf (alist-get "input history"
+                     (cdr (car torus-meta))
+                     nil nil 'equal)
+          (copy-seq torus-input-history)))
 
-(setq a (quote (1 2 3 (4 5))))
-(setq b (quote (a b c)))
-(setq c (quote [a a a]))
+(defvar torus-added nil
+  "Last torus added from a file.")
+
+(defvar torus-added-history nil
+  "Last history added from a file.")
+
+ARGUMENTS is either :
+\()
+\(torus-name)
+\(`torus-torus' `torus-history' `torus-input-history')
+\(torus-name `torus-torus' `torus-history' `torus-input-history')
+If no torus name is given, prompts for one.
+If no torus, history, input history is given, take the current ones.
+
+(lenarg (length arguments))
+        (args)
+        (name)
+        (prompt
+
+    (pcase lenarg
+      (0 (setq name )
+         (setq args ))
+      (1 (setq name (car arguments))
+         (setq args (list torus-torus torus-history torus-input-history)))
+      (3 (setq args arguments))
+      (4 (setq name (car arguments))
+         (setq args (subseq arguments 1))))
+
+      (let ((varlist (list torus-torus
+                           torus-history
+                           torus-input-history)))
+
+(let ((window (view-echo-area-messages)))
+    (pcase choice
+      (?m (message "torus-meta")
+          (pp torus-meta))
+      (?t (message "torus-torus")
+          (pp torus-torus))
+      (?i (message "torus-index")
+          (pp torus-index))
+      (?h (message "torus-history")
+          (pp torus-history))
+      (?\^m (message "torus-markers")
+            (pp torus-markers))
+      (?n (message "torus-input-history")
+          (pp torus-input-history))
+      (?a (dolist (var '(torus-meta
+                         torus-torus
+                         torus-index
+                         torus-history
+                         torus-markers
+                         torus-input-history))
+            ))
+      (?\a (delete-window window)
+           (message "Print cancelled by Ctrl-G."))
+      (_ (message "Invalid key."))))
+
+  ;; (torus-reset ?a)
+
+(defvar torus-meta-extension ".meta.el"
+  "Extension for meta torus files.")
+
+(define-key torus-map (kbd "R") 'torus-read-meta)
+(define-key torus-map (kbd "W") 'torus-write-meta)
+
+(defun torus-write-meta (filename)
+  "Write `torus-meta' to FILENAME as Lisp code.
+An adequate extension is added if needed."
+  (interactive
+   (list
+    (read-file-name
+     "Meta Torus file : "
+     (file-name-as-directory torus-dirname))))
+  (torus--update-position)
+  (let*
+      ((file-basename (file-name-nondirectory filename))
+       (minus-len-ext (- (min (length torus-meta-extension)
+                              (length filename))))
+       (buffer))
+    (torus--update-input-history file-basename)
+    (unless (equal (subseq filename minus-len-ext) torus-meta-extension)
+      (setq filename (concat filename torus-meta-extension)))
+    (torus--update-meta)
+    (if torus-meta
+        (progn
+          (setq buffer (find-file-noselect filename))
+          (with-current-buffer buffer
+            (erase-buffer)
+            (insert (concat
+                     "(setq "
+                     (symbol-name 'torus-meta)
+                     " (quote \n"))
+            (pp torus-meta buffer)
+            (insert "))\n\n")
+            (save-buffer)
+            (kill-buffer)))
+      (message "I don’t write nil variables to files."))))
+
+(defun torus-read-meta (filename)
+  "Read `torus-meta' from FILENAME as Lisp code."
+  (interactive
+   (list
+    (read-file-name
+     "Meta Torus file : "
+     (file-name-as-directory torus-dirname))))
+  (let*
+      ((file-basename (file-name-nondirectory filename))
+       (minus-len-ext (- (min (length torus-meta-extension)
+                              (length filename))))
+       (buffer))
+    (when (or (and (not torus-meta) (not torus-torus))
+              (y-or-n-p torus--message-replace-torus-meta))
+      (torus--update-input-history file-basename)
+      (unless (equal (subseq filename minus-len-ext) torus-meta-extension)
+        (setq filename (concat filename torus-meta-extension)))
+      (if (file-exists-p filename)
+          (progn
+            (setq buffer (find-file-noselect filename))
+            (eval-buffer buffer)
+            (kill-buffer buffer))
+        (message "File %s does not exist." filename))))
+  (torus--update-from-meta)
+  (torus--build-index)
+  (torus--jump))
+
+(defun torus-write-switch (filename)
+  "Decide whether to write torus or meta torus on FILENAME."
+  (let* ((minus-meta-ext (- (min (length torus-meta-extension)
+                                 (length filename))))
+         (minus-plain-ext (- (min (length torus-plain-extension)
+                                  (length filename)))))
+    (cond
+     ((equal (subseq filename minus-meta-ext) torus-meta-extension)
+      (torus-write-meta filename))
+     ((equal (subseq filename minus-plain-ext) torus-plain-extension)
+      (torus-write filename))
+     (t (message "File must end either with -meta.el or .el")))))
+
+(defun torus-read-switch (filename)
+  "Decide whether to read torus or meta torus on FILENAME."
+  (let* ((minus-meta-ext (- (min (length torus-meta-extension)
+                                 (length filename))))
+         (minus-lisp-ext (- (min (length torus-plain-extension)
+                                 (length filename)))))
+    (cond
+     ((equal (subseq filename minus-meta-ext) torus-meta-extension)
+      (torus-read-meta filename))
+     ((equal (subseq filename minus-lisp-ext) torus-plain-extension)
+      (torus-read filename))
+     (t (message "File must end either with -meta.el or .el")))))
+
+(when (and torus-torus torus-history torus-input-history)
+  (torus-add-torus file-basename))
+
+(unless torus-meta
+  (torus-add-torus file-basename))
+
+    (if (assoc file-basename torus-meta)
+        (progn
+          (message "Torus %s already exists in torus-meta" (file-name-nondirectory filename))
+          (torus-switch-torus (file-name-nondirectory filename))))
+
+        (when (y-or-n-p "Write Meta Torus before resetting variables ? "))
+
+	(call-interactively 'torus-write-meta))
+
+        (let* ((circle (cdar torus-torus))
+        (return-value (concat "["
+                              (torus--buffer-or-filename (car circle))
+                              ":"
+                              (prin1-to-string (line-number-at-pos (cdar circle)))
+                              "]")))
+    (dolist (elem (cdr circle))
+      (setq return-value (concat return-value
+                                 " "
+                                 (torus--buffer-or-filename elem)
+                                 ":"
+                                 (prin1-to-string (line-number-at-pos (cdr elem))))))
+    return-value)
+
+	  ;; (add-hook 'after-init-hook 'torus-start)
+	  ;; (advice-add #'find-file :before #'torus-advice-switch-buffer)
+
+	(defsubst torus--build-layout ()
+	  "Build `torus-layout'."
+	  (setq torus-layout nil)
+	  (torus--fil))
+
+	(let* ((circle (car torus-torus))
+                 (prettylist
+                  (mapcar
+                   (lambda (elem)
+                     (cons
+                      (torus--buffer-or-filename elem)
+                      (cdr elem)))
+                   (cdr circle))))
+            (message "%s : %s" (car circle) prettylist))
+
+	(let* ((location (car (cdr (car torus-torus)))))
+        )
+
+	(when (and (car torus-torus) (> (length (car torus-torus)) 1))
+      (dolist (circle (mapcar #'cdr torus-torus))
+        (setq locations (append locations circle)))
+      (setq locations (mapcar #'car locations))
+      (when (> torus-verbosity 2)
+        (message "my-buffer : %s" my-buffer)
+        (message "buffer : %s" (buffer-file-name my-buffer)))
+      (dolist (elem locations)
+        (when (> torus-verbosity 2)
+          (message "location : %s" elem))
+        (when (equal elem (buffer-file-name my-buffer))
+          (when (> torus-verbosity 2)
+            (message "buffer found in torus : %s" elem))
+          (setq is-in t))))
+
+	    (setq main (car (seq-intersection main-lin main-col)))
+
+	    (unless main
+      (setq main (car main-lin)))
+
+	          (when (torus--inside-p)
+        (setq header-line-format nil))
+
+
+		    (unless (and torus-torus (listp torus-torus))
+    (error "Function torus--update-history : bad torus"))
+  (let ((circle (car torus-torus)))
+    (unless (and circle (listp circle) (> (length circle) 1))
+      (error "Function torus--update-history : bad circle")))
+
+    (unless (and torus-torus (listp torus-torus))
+    (error "Function torus--update-history : bad torus"))
+  (let ((circle (car torus-torus)))
+    (unless (and circle (listp circle) (> (length circle) 1))
+      (error "Function torus--update-history : bad circle")))
+
+    (unless (and torus-meta (listp torus-meta) (listp (car torus-meta)))
+    (error "Function torus--update-from-meta : bad meta torus"))
+
+      (unless (and torus-torus (listp torus-torus))
+    (error "Function torus--jump : bad torus"))
+  (let ((circle (car torus-torus)))
+    (unless (and circle (listp circle) (> (length circle) 1))
+      (error "Function torus--jump : bad circle")))
+
+  (defun torus--concise (object)
+  "Return OBJECT in concise string format.
+If OBJECT is a string : simply returns OBJECT.
+If OBJECT is \(File . Position) : returns \"File at Position.\"
+If OBJECT is \((File . Position) . Circle) : returns
+\"Circle > File at Position.\""
+  (if (stringp object)
+      object
+    (when (consp object)
+      (if (consp (car object))
+          (let* ((location (car object))
+                 (file (torus--buffer-or-filename location))
+                 (position (prin1-to-string (cdr location)))
+                 (circle (cdr object)))
+            (concat circle
+                    torus-separator-circle-location
+                    file
+                    " at "
+                    position))
+        (let ((file (torus--buffer-or-filename object))
+              (position (prin1-to-string (cdr object))))
+          (concat file " at " position))))))
+
+  (defvar torus--message-write-choice
+  "Write [a] all (default) [m] meta [t] torus \n\
+      [i] index [h] history [l] layout [n] input history")
+
+  (when (called-interactively-p 'interactive)
+          (pcase (read-key torus--message-write-choice)
+            (?m (setq varlist (list 'torus-meta)))
+            (?t (setq varlist (list 'torus-torus)))
+            (?i (setq varlist (list 'torus-index)))
+            (?h (setq varlist (list 'torus-history)))
+            (?l (setq varlist (list 'torus-layout)))
+            (?n (setq varlist (list 'torus-input-history)))
+            (?\a (setq varlist nil))
+            (_ (message "All variables will be written."))))
+
+    (if (stringp object)
+      object
+    (when (consp object)
+      (if (consp (car object))
+          (let* ((location (car object))
+                 (file (torus--buffer-or-filename location))
+                 (position (prin1-to-string (cdr location)))
+                 (circle (cdr object)))
+            (concat circle
+                    torus-separator-circle-location
+                    file
+                    " at "
+                    position))
+        (let ((file (torus--buffer-or-filename object))
+              (position (prin1-to-string (cdr object))))
+          (concat file " at " position)))))
+
+         (when (> torus-verbosity 2)
+          (message "torus circle file position %s %s %s %s" torus circle file position))
+
+	     (when (> torus-verbosity 1)
+      (message "move location index : %s" index)
+      (message "current : %s" current)
+      (message "before : %s" before)
+      (message "after : %s" after)
+      (message "car torus : %s" (car torus-torus))))
+
+    (define-key torus-map (kbd "C-M-m") 'torus-move-all-locations-to-circle)
+
+;;;###autoload
+(defun torus-move-all-locations-to-circle (circle-name)
+  "Move all locations of the current circle to CIRCLE-NAME."
+  (interactive
+   (list (completing-read
+          "Move all locations of current circle to circle : "
+          (mapcar #'car torus-torus) nil t)))
+  (torus--update-position)
+  (while (> (length (car torus-torus)) 1)
+    (let* ((location (pop (cdr (car torus-torus))))
+           (circle (cdr (assoc circle-name torus-torus)))
+           (old-name (car (car torus-torus)))
+           (old-pair (cons location old-name)))
+      (setcdr (assoc circle-name torus-torus)
+              (push location circle))
+      (dolist (location-circle torus-index)
+        (when (equal location-circle old-pair)
+          (setcdr location-circle circle-name)))
+      (dolist (location-circle torus-history)
+        (when (equal location-circle old-pair)
+          (setcdr location-circle circle-name)))))
+  (torus--jump)
+  (torus-delete-current-circle)
+  (torus-switch-circle circle-name))
+
+(width (window-text-width (selected-window)))
+
+(tab-bar (split-string dashboard " | "))
+
+(when (> torus-verbosity 2)
+      (message "dashboard : %s" dashboard))
+    (while (> (length (string-join tab-bar " | ")) width)
+      (setq tab-bar (cl-subseq tab-bar 0 -1))
+      (when (> torus-verbosity 2)
+        (message "tab-bar : %s" tab-bar)))
+    (string-join tab-bar " | ")
+
+(force-mode-line-update)
+
+(dolist (filepos (cdar torus-torus))
+    (when (> torus-verbosity 1)
+      (message "Applying %s to %s" command filepos))
+    (with-current-buffer (find-file-noselect (car filepos))
+      (funcall command)))
+
+  ;; (delete-dups torus-input-history)
+  (unless (or (= (length name) 0) (member name torus-input-history))
+    (push name torus-input-history))
+
+(defun torus--build-meta-table ()
+  "Build `torus-meta-table'."
+  (setq torus-meta-table nil)
+  (let ((torus-name)
+        (torus)
+        (circle-torus)
+        (index-entry))
+    (dolist (elem torus-meta)
+      (setq torus-name (car elem))
+      (setq torus (cdr (assoc "torus" elem)))
+      (dolist (circle torus)
+        (setq circle-torus (cons (car circle) torus-name))
+        (dolist (location (cdr circle))
+          (setq index-entry (cons location circle-torus))
+          (unless (member index-entry torus-meta-table)
+            (push index-entry torus-meta-table))))))
+  (setq torus-meta-table (reverse torus-meta-table)))
+
+(defvar torus-meta-table nil
+  "Alist giving circles and toruses corresponding to torus locations.
+Each element has the form :
+\((file . position) . (circle . torus))
+Allows to search among all files of the meta torus.")
+
+
+(defun torus--build-table ()
+  "Build `torus-table'."
+  (setq torus-table nil)
+  (dolist (circle torus-torus)
+    (dolist (location (cdr circle))
+      (let ((location-circle (cons location (car circle))))
+        (unless (member location-circle torus-table)
+          (push location-circle torus-table)))))
+  (setq torus-table (reverse torus-table)))
+
+(defun torus--update-history ()
+  "Add current location to `torus-history'."
+  (when (and torus-torus
+             (listp torus-torus)
+             (car torus-torus)
+             (listp (car torus-torus))
+             (> (length (car torus-torus)) 1))
+    (let* ((circle (car torus-torus))
+           (circle-name (car circle))
+           (location (car (cdr circle)))
+           (location-circle (cons location circle-name)))
+      (push location-circle torus-history)
+      (delete-dups torus-history)
+      (setq torus-history
+            (cl-subseq torus-history 0
+                       (min (length torus-history)
+                            torus-history-maximum-elements))))))
+
+(defun torus--update-meta-history ()
+  "Add current location to `torus-meta-history'."
+  (when (and torus-meta
+             (listp torus-meta)
+             (car torus-meta)
+             (listp (car torus-meta))
+             (> (length (car torus-meta)) 1))
+    (let* ((circle (car torus-torus))
+           (circle-name (car circle))
+           (torus-name (caar torus-meta))
+           (location (car (cdr circle)))
+           (location-circle-torus (cons location
+                                        (cons circle-name torus-name))))
+      (when (> torus-verbosity 2)
+        (message "Loc circ tor %s" location-circle-torus))
+      (push location-circle-torus torus-meta-history)
+      (delete-dups torus-meta-history)
+      (setq torus-meta-history
+            (cl-subseq torus-meta-history 0
+                       (min (length torus-meta-history)
+                            torus-history-maximum-elements))))))
+
+(defvar torus-history nil
+  "Alist containing the history of locations in all toruses.
+Each element is of the form :
+\((file . position) . (circle . torus))")
+
+(defvar torus-table nil
+  "Alist giving circles corresponding to torus locations.
+Each element has the form :
+\((file . position) . circle)
+Allow to search among all files of the torus.")
+
+(defvar torus-history nil
+  "Alist containing the history of locations in the torus.
+Each element is of the form :
+\((file . position) . circle)")
+
+(defvar torus-layout nil
+  "Alist containing split layout of circles.
+Each element is of the form:
+\(circle . layout)")
+
+(defvar torus-minibuffer-history nil
+  "History of user input.")
+
+(defvar torus-meta nil
+  "List of existing toruses.
+You can create new torus with `torus-add-torus'or `torus-add-copy-of-torus'.
+Some functions also create a new torus to work with.")
+
+(defun torus--not-empty-torus-p (&optional torus-name)
+  "Whether TORUS-NAME contains at least one circle.
+Default TORUS-NAME matches current torus."
+  (cdr (if torus-name
+           (torus--assoc-value torus-name torus-tree)
+         torus-cur-torus)))
+
+(defun torus--not-empty-circle-p (&optional torus-name circle-name)
+  "Whether CIRCLE-NAME contains at least one location.
+Default TORUS-NAME matches current torus.
+Default CIRCLE-NAME matches current circle."
+  (cdr (if (and torus-name
+                circle-name)
+           (torus--assoc-value circle-name
+                               (torus--assoc-value torus-name torus-tree))
+         torus-cur-circle)))
+
+(if (member location (cdr circle))
+            (message torus--message-existent-location
+                     (torus--concise location) (car circle))
+          (message "Adding %s to circle %s" location (car circle))
+          (if (> (length circle) 1)
+              (setcdr circle (append (list location) (cdr circle)))
+            (setf circle (append circle (list location))))
+          (setf (car torus-cur-torus) circle)
+          (unless (member location-circle torus-table)
+            (push location-circle torus-table))
+          (torus--update-history)
+          (torus--update-meta-history)
+          (unless (member location-line-col torus-line-col)
+            (push location-line-col torus-line-col))
+          (unless (member location-marker torus-markers)
+            (push location-marker torus-markers))
+          (torus--tab-bar))
+
+  (if (and torus-meta
+           torus-cur-torus)
+
+    (message "Please add at least a first torus and a first circle.")))
+
+(when torus-cur-index
+    (let ((entry (if entry
+                     entry
+                   torus-cur-index)))
+      (when (> torus-verbosity 2)
+        (message "Tor Cir Loc %s" entry))
+      (push entry torus-history)
+      (delete-dups torus-history)
+      (setq torus-history
+            (cl-subseq torus-history 0
+                       (min (length torus-history)
+                            torus-history-maximum-elements)))))
+
+
+(defun torus--push-history (&optional entry)
+  "Add ENTRY to `torus-history'.
+Argument ENTRY nil means push `torus-cur-index'."
+  (when torus-cur-index
+    (let ((entry (if entry
+                     entry
+                   torus-cur-index)))
+      (when (> torus-verbosity 2)
+        (message "Tor Cir Loc %s" entry))
+      (push entry torus-history)
+      (delete-dups torus-history)
+      (setq torus-history
+            (cl-subseq torus-history 0
+                       (min (length torus-history)
+                            torus-history-maximum-elements))))))
+
+
+(defun torus--push-minibuffer-history (string)
+  "Add STRING to `torus-minibuffer-history' if not already there."
+  (push string torus-minibuffer-history)
+  (delete-dups torus-minibuffer-history)
+  (setq torus-minibuffer-history
+        (cl-subseq torus-minibuffer-history 0
+                   (min (length torus-minibuffer-history)
+                        torus-history-maximum-elements))))
+
+(defun torus--update-meta ()
+  "Update current torus in `torus-meta'."
+  (torus--update-position)
+  (when torus-meta
+    (let ((entry (cdar torus-meta)))
+      (if (equal '("torus" "history" "layout" "input history")
+                 (mapcar 'car entry))
+          (progn
+            (if (assoc "input history" entry)
+                (setcdr (assoc "input history" (cdar torus-meta)) (cl-copy-seq torus-minibuffer-history))
+              (push (cons "input history" torus-minibuffer-history) (cdar torus-meta)))
+            (if (assoc "layout" entry)
+                (setcdr (assoc "layout" (cdar torus-meta)) (copy-tree torus-layout))
+              (push (cons "layout" torus-layout) (cdar torus-meta)))
+            (if (assoc "history" entry)
+                (setcdr (assoc "history" (cdar torus-meta)) (copy-tree torus-old-history))
+              (push (cons "history" torus-old-history) (cdar torus-meta)))
+            (if (assoc "torus" entry)
+                (setcdr (assoc "torus" (cdar torus-meta)) (copy-tree torus-cur-torus))
+              (push (cons "torus" torus-cur-torus) (cdar torus-meta))))
+        ;; Reordering if needed
+        (push (cons "input history" torus-minibuffer-history) (cdar torus-meta))
+        (push (cons "layout" torus-layout) (cdar torus-meta))
+        (push (cons "history" torus-old-history) (cdar torus-meta))
+        (push (cons "torus" torus-cur-torus) (cdar torus-meta))
+        (setf (cdar torus-meta) (cl-subseq (cdar torus-meta) 0 4))))))
+
+(defun torus--update-from-meta ()
+  "Update main torus variables from `torus-meta'."
+  (when (and torus-meta
+             (listp torus-meta)
+             (listp (car torus-meta)))
+    (let ((entry (cdr (car torus-meta))))
+      (if (assoc "torus" entry)
+          (setq torus-cur-torus (copy-tree (cdr (assoc "torus" entry))))
+        (setq torus-cur-torus nil))
+      (if (assoc "history" entry)
+          (setq torus-old-history (copy-tree (cdr (assoc "history" entry))))
+        (setq torus-old-history nil))
+      (if (assoc "layout" entry)
+          (setq torus-layout (copy-tree (cdr (assoc "layout" entry))))
+        (setq torus-layout nil))
+      (if (assoc "input history" entry)
+          (setq torus-minibuffer-history (cl-copy-seq (cdr (assoc "input history" entry))))
+        (setq torus-minibuffer-history nil)))))
+
+(if (and torus-cur-torus torus-old-history torus-minibuffer-history)
+      (progn
+        (torus--update-input-history torus-name)
+        (if (assoc torus-name torus-meta)
+            (message "Torus %s already exists in torus-meta" torus-name)
+          (message "Creating torus %s" torus-name)
+          (push (list torus-name) torus-meta)
+          (push (cons "input history" torus-minibuffer-history) (cdr (car torus-meta)))
+          (push (cons "layout" torus-layout) (cdr (car torus-meta)))
+          (push (cons "history" torus-old-history) (cdr (car torus-meta)))
+          (push (cons "torus" torus-cur-torus) (cdr (car torus-meta)))))
+  (message "Cannot create an empty torus. Please add at least a location."))
+
+(defvar torus-sublist-torus nil
+  "Sublist from current torus to the end of `torus-tree'.")
+
+(defvar torus-sublist-circle nil
+  "Sublist from current circle to the end of `torus-cur-torus'.")
+
+(defvar torus-sublist-location nil
+  "Sublist from current location to the end of `torus-cur-circle'.")
+
+(defvar torus-sublist-index nil
+  "Sublist from current index entry to the end of `torus-index'.")
+
+(defvar torus-sublist-history nil
+  "Sublist from current history entry to the end of `torus-history'.")
+
+   ;; Current & Sublist
+   (eq torus-cur-torus (car torus-sublist-torus))
+   (eq torus-cur-circle (car torus-sublist-circle))
+   (eq torus-cur-location (car torus-sublist-location))
+   (eq torus-cur-index (car torus-sublist-index))
+   (eq torus-cur-history (car torus-sublist-history))
+
+    (setq torus-sublist-torus (member torus-cur-torus torus-tree))
+    (setq torus-sublist-circle (member torus-cur-circle torus-cur-torus))
+    (setq torus-sublist-location (member torus-cur-location torus-cur-circle))
+    ;; Index & History
+    (setq torus-sublist-index (member entry torus-index))
+    (setq torus-sublist-history (member entry torus-history))
+    (setq torus-cur-index (car torus-sublist-index))
+(setq torus-cur-history (car torus-sublist-history))
+
+(defun torus--synced-state-p ()
+  "Whether torus variables are synced."
+  (and
+   ;; Index & History
+   (equal torus-cur-index torus-cur-history)
+   ;; Tree & Index
+   (equal (car torus-cur-torus) (caar torus-cur-index))
+   (equal (car torus-cur-circle) (cdar torus-cur-index))
+(equal torus-cur-location (cdr torus-cur-index))))
+
+;;; Sync
+;;; ------------------------------
+
+(defun torus--sync (&optional entry)
+  "Sync current variables from index-like ENTRY."
+  (let ((entry (if entry
+                   entry
+                 torus-cur-entry)))
+    ;; Tree variables
+    (setq torus-cur-torus (assoc (caar entry) torus-tree))
+    (setq torus-cur-circle (assoc (cdar entry) torus-cur-torus))
+    (setq torus-cur-location (assoc (cdr entry) torus-cur-circle))))
+
+;; (defun torus--sync-from-tree ()
+;;   "Sync current variables from current torus, circle & location.")
+
+;; (defun torus--sync-from-index ()
+;;   "Sync current variables from current index entry.")
+
+;; (defun torus--sync-from-history ()
+;;   "Sync current variables from current history entry.")
+
+(defun torus--add-and-sort (elem list predicate)
+  "Add ELEM to the end of LIST and sort it with PREDICATE.
+Return the sorted list."
+  (torus--add elem list)
+  (sort list predicate))
+
+(defun torus--add-new-and-sort (elem list predicate)
+  "Add ELEM to the end of LIST if not already there, and sort it with PREDICATE.
+Return the sorted list."
+  (when (torus--add-new elem list)
+    (sort list predicate)))
+
+(defun torus--less-concise-p (one two)
+  "Whether the concise representations of ONE is less that of TWO."
+  (string< (torus--concise one)
+           (torus--concise two)))
+
+(defun duo-store-beg-exchange (cons list)
+  "Store CONS at the beginning of LIST. Return LIST.
+Modifies LIST : values of first and second element are exchanged,
+then the second cons is added. See the docstring of
+`duo-naive-pop' to know why.
+Modifies LIST."
+  (let* ((value (car list)))
+    (setcar list (car cons))
+    (setcar cons value)
+    (setcdr cons (cdr list))
+    (setcdr list cons)
+    list))
+
+(defun duo-push-exchange (elem list)
+  "Add ELEM at the beginning of LIST. Return LIST.
+Modifies LIST."
+  (let* ((duo (cons (car list) (cdr list))))
+    (setcar list elem)
+    (setcdr list duo))
+  list)
+
+(defun duo-pop-exchange (list)
+  "Remove first element of LIST. Return cons of removed element.
+Modifies LIST : values of first and second element are exchanged,
+then the second cons is removed. See the docstring of
+`duo-naive-pop' to know why."
+  (let ((value (car list))
+        (next (cdr list)))
+    (if next
+        (progn
+          (setcar list (car next))
+          (setcdr list (cdr next))
+          (setcar next value)
+          (setcdr next nil))
+      (setq next (cons (car list) nil))
+      (setcar list nil))
+    next))
+
+(defun duo-move-previous (cons list)
+  "Move CONS to previous place in LIST. Return CONS.
+CONS must reference a cons in LIST."
+  (if (eq cons (cdr list))
+      ;; If cons = second in list, exchange the values
+      ;; of first and second
+      ;; See why in docstring of duo-naive-pop
+      ;; and duo-pop
+      (let ((value (car list)))
+        (setcar list (car cons))
+        (setcar cons value)
+        list)
+    (let* ((before (duo-previous cons list 2))
+           (after (cdr before)))
+      (when (and before
+                 after)
+        (setcdr after (cdr cons))
+        (setcdr cons after)
+        (setcdr before cons)
+        cons))))
+
+(defun duo-jump-cons-previous (cons moved list)
+  "Move MOVED before CONS in LIST. Return MOVED.
+MOVED is the cons (moved-element . next-in-list)
+TEST-EQUAL takes two arguments and return t if they are considered equals.
+TEST-EQUAL defaults do `equal'.
+Modifies LIST."
+  (unless (eq cons moved)
+    (let ((duo (duo-remove moved list)))
+      (when duo
+        (when (eq cons duo)
+          ;; If moved was at the head of list, pop has been used
+          ;; to remove it and the roles of first and second cons of list
+          ;; have been exchanged.
+          ;; If cons is eq to duo, it means it was the old second cons in list.
+          ;; With the old first cons removed, it should now be
+          ;; the first cons of the list
+          (setq cons list))
+        (duo-insert-cons-previous cons duo list)))))
+
+(defun duo-jump-cons-next (cons moved list)
+  "Move MOVED after CONS in LIST. Return MOVED.
+MOVED is the cons (moved-element . next-in-list)
+TEST-EQUAL takes two arguments and return t if they are considered equals.
+TEST-EQUAL defaults do `equal'.
+Modifies LIST."
+  (unless (eq cons moved)
+    (let ((duo (duo-remove moved list)))
+      (when duo
+        (when (eq cons duo)
+          ;; If moved was at the head of list, pop has been used
+          ;; to remove it and the roles of first and second cons of list
+          ;; have been exchanged.
+          ;; If cons is eq to duo, it means it was the old second cons in list.
+          ;; With the old first cons removed, it should now be
+          ;; the first cons of the list
+          (setq cons list))
+        (duo-insert-cons-next cons duo)))))
+
+(defun duo-pop-deref (reflist)
+  "Remove first element of the list in the car of REFLIST. Return popped cons.
+REFLIST must be a cons (list . whatever-you-want)
+See the docstring of `duo-naive-pop' to know why you
+can’t use the list itself in argument.
+Common usage :
+;; Create reflist
+(setq reflist (list mylist))          ; this
+(setq reflist (cons mylist nil))      ; or that
+(setq reflist (cons mylist whatever)) ; or that
+;; Pop
+(setq popped (duo-pop-deref reflist))
+;; Update list
+(setq list (car reflist))
+That’s all folks."
+  (let ((list (car reflist)))
+    (setcar reflist (cdr list))
+    (setq return list)
+    (setcdr return nil)
+    return))
+
+(defun duo-insert-previous (cons new list)
+  "Insert NEW before CONS in LIST. Return cons of NEW.
+CONS must reference a cons in LIST.
+NEW is the value of the element inserted.
+If the new cons is inserted at the beginning of the list,
+the actual new list must be recovered using new LIST = NEW.
+See the docstring of `duo-naive-push' to know why.
+Common usage :
+\(setq return (duo-insert-previous cons new list))
+\(when (eq (cdr return) list)
+  (setq list return))
+Modifies LIST."
+  (if (eq cons list)
+      (duo-push new list)
+    (let* ((previous (duo-previous cons list))
+           (duo))
+      (if previous
+          (progn
+            (setq duo (cons new (cdr previous)))
+            (setcdr previous duo)
+            duo)
+        nil))))
+
+(defun duo-insert-next (cons new)
+  "Insert NEW after CONS in list. Return cons of NEW.
+CONS must reference a cons in LIST.
+NEW is the value of the element inserted.
+Modifies LIST."
+  (let ((duo (cons new (cdr cons))))
+    (setcdr cons duo)
+    duo))
+
+(defun duo-insert-cons-before (elem new list &optional test-equal)
+  "Insert NEW before ELEM in LIST. Return NEW.
+ELEM must be present in list.
+NEW is the cons inserted.
+TEST-EQUAL takes two arguments and return t if they are considered equals.
+TEST-EQUAL defaults do `equal'.
+If the new cons is inserted at the beginning of the list,
+the actual new list must be recovered using new LIST = NEW.
+See the docstring of `duo-naive-push' to know why.
+Common usage :
+\(setq return (duo-insert-before cons new list))
+\(when (eq (cdr return) list)
+  (setq list return))
+Modifies LIST."
+  (let ((test-equal (if test-equal
+                        test-equal
+                      #'equal)))
+    (if (funcall test-equal (car list) elem)
+        (duo-push-cons new list)
+      (let* ((previous (duo-before elem list 1 test-equal)))
+        (if previous
+            (progn
+              (setcdr new (cdr previous))
+              (setcdr previous new)
+              new)
+          nil)))))
+
+(defun duo-ref-insert-previous (cons new reflist)
+  "Insert NEW before CONS in car of REFLIST. Return cons of NEW.
+CONS must reference a cons in LIST.
+NEW is the value of the element inserted.
+REFLIST must be a cons (list . whatever-you-want)
+See the docstring of `duo-naive-push' to know why it doesn’t
+use the list itself in argument.
+Common usage :
+;; Create reflist
+\(setq reflist (list mylist))
+;; Insert
+\(duo-ref-insert-previous cons new reflist)
+;; Update list
+\(setq mylist (car reflist))
+Modifies LIST."
+  (let ((list (car reflist)))
+    (if (eq cons list)
+        (car (duo-ref-push new reflist))
+      (let* ((previous (duo-previous cons list))
+             (duo))
+        (if previous
+            (progn
+              (setq duo (cons new (cdr previous)))
+              (setcdr previous duo)
+              duo)
+          nil)))))
+
+(defun duo-teleport-before (elem moved list &optional test-equal)
+  "Move MOVED before ELEM in LIST. Return (cons of MOVED . LIST).
+ELEM must be present in list.
+MOVED is the value of the moved element.
+TEST-EQUAL takes two arguments and return t if they are considered equals.
+TEST-EQUAL defaults do `equal'.
+The actual new list must be recovered using the returned list.
+See the docstring of `duo-naive-push' to know why.
+Common usage :
+\(setq pair (duo-teleport-before elem moved list))
+\(setq cons-moved (car pair))
+\(setq list (cdr pair))
+Modifies LIST."
+  (let ((duo)
+        (newlist list)
+        (test-equal (if test-equal
+                        test-equal
+                      #'equal)))
+    (unless (funcall test-equal moved elem)
+      (let ((pair (duo-delete moved newlist test-equal))
+            (member)
+            (return))
+        (setq duo (car pair))
+        (setq newlist (cdr pair))
+        (setq member (duo-member elem newlist test-equal))
+        (setq return (duo-insert-cons-previous member duo newlist))
+        (when (eq (cdr return) newlist)
+          (setq newlist return))))
+    (cons duo newlist)))
+
+(defun duo-teleport-after (elem moved list &optional test-equal)
+  "Move MOVED after ELEM in LIST. Return (cons of MOVED . LIST).
+ELEM must be present in list.
+MOVED is the value of the moved element.
+TEST-EQUAL takes two arguments and return t if they are considered equals.
+TEST-EQUAL defaults do `equal'.
+The actual new list must be recovered using the returned list.
+See the docstring of `duo-naive-pop' to know why.
+Common usage :
+\(setq pair (duo-teleport-after elem moved list))
+\(setq cons-moved (car pair))
+\(setq list (cdr pair))
+Modifies LIST."
+  (let ((duo)
+        (newlist list)
+        (test-equal (if test-equal
+                        test-equal
+                      #'equal)))
+    (unless (funcall test-equal moved elem)
+      (let ((pair (duo-delete moved newlist test-equal))
+            (member)
+            (return))
+        (setq duo (car pair))
+        (setq newlist (cdr pair))
+        (setq member (duo-member elem newlist test-equal))
+        (duo-insert-cons-next member duo)))
+    (cons duo newlist)))
+
+(defun duo-ref-teleport-before (elem moved reflist &optional test-equal)
+  "Move MOVED before ELEM in car of REFLIST. Return cons of MOVED.
+ELEM must be present in list.
+MOVED is the value of the moved element.
+TEST-EQUAL takes two arguments and return t if they are considered equals.
+TEST-EQUAL defaults do `equal'.
+REFLIST must be a cons (list . whatever-you-want)
+See the docstring of `duo-naive-pop' to know why it doesn’t
+use the list itself in argument.
+Common usage :
+;; Create reflist
+\(setq reflist (list mylist))
+;; Insert
+\(duo-ref-teleport-before elem moved reflist)
+;; Update list
+\(setq mylist (car reflist))
+Modifies LIST."
+  (let ((list (car reflist))
+        (test-equal (if test-equal
+                        test-equal
+                      #'equal)))
+    (unless (funcall test-equal moved elem)
+      (let ((duo (duo-ref-delete moved reflist test-equal))
+            (member)
+            (return))
+        (setq list (car reflist))
+        (setq member (duo-member elem list test-equal))
+        (duo-ref-insert-cons-previous member duo reflist)
+        (setq list (car reflist))
+        duo))))
+
+(defun duo-ref-teleport-after (elem moved reflist &optional test-equal)
+  "Move MOVED after ELEM in car of REFLIST. Return cons of MOVED.
+ELEM must be present in list.
+MOVED is the value of the moved element.
+TEST-EQUAL takes two arguments and return t if they are considered equals.
+TEST-EQUAL defaults do `equal'.
+REFLIST must be a cons (list . whatever-you-want)
+See the docstring of `duo-naive-pop' to know why it doesn’t
+use the list itself in argument.
+Common usage :
+;; Create reflist
+\(setq reflist (list mylist))
+;; Insert
+\(duo-ref-teleport-after elem moved reflist)
+;; Update list
+\(setq mylist (car reflist))
+Modifies LIST."
+  (let ((list (car reflist))
+        (test-equal (if test-equal
+                        test-equal
+                      #'equal)))
+    (unless (funcall test-equal moved elem)
+      (let ((duo (duo-ref-delete moved reflist test-equal))
+            (member)
+            (return))
+        (setq list (car reflist))
+        (setq member (duo-member elem list test-equal))
+        (duo-insert-cons-next member duo)
+        duo))))
+
+(defun duo-insert-cons-before (elem new list &optional previous test-equal)
+  "Insert NEW before ELEM in LIST. Return NEW.
+ELEM must be present in list.
+NEW is the cons inserted.
+If non nil, PREVIOUS is used to speed up the process.
+TEST-EQUAL takes two arguments and return t if they are considered equals.
+TEST-EQUAL defaults do `equal'.
+If the new cons is inserted at the beginning of the list,
+the actual new list must be recovered using new LIST = NEW.
+See the docstring of `duo-naive-push' to know why.
+Common usage :
+\(setq return (duo-insert-before cons new list))
+\(when (eq (cdr return) list)
+  (setq list return))
+Modifies LIST."
+  (let ((test-equal (if test-equal
+                        test-equal
+                      #'equal)))
+    (if (funcall test-equal (car list) elem)
+        (duo-push-cons new list)
+      (let* ((previous (duo-before elem list 1 test-equal)))
+        (if previous
+            (progn
+              (setcdr new (cdr previous))
+              (setcdr previous new)
+              new)
+          nil)))))
+
+(defun duo-insert-cons-after (elem new list &optional test-equal)
+  "Insert NEW after ELEM in LIST. Return NEW.
+ELEM must be present in list.
+NEW is the cons inserted.
+TEST-EQUAL takes two arguments and return t if they are considered equals.
+TEST-EQUAL defaults do `equal'.
+Modifies LIST."
+  (let* ((member (duo-member elem list test-equal)))
+    (if member
+        (progn
+          (setcdr new (cdr member))
+          (setcdr member new)
+          new)
+      nil)))
+
+(defun duo-insert-before (elem new list &optional previous test-equal)
+  "Insert NEW before ELEM in LIST. Return cons of NEW.
+ELEM must be present in list.
+NEW is the value of the element inserted.
+If non nil, PREVIOUS inserted is used to speed up the process.
+TEST-EQUAL takes two arguments and return t if they are considered equals.
+TEST-EQUAL defaults do `equal'.
+If the new cons is inserted at the beginning of the list,
+the actual new list must be recovered using new LIST = NEW.
+See the docstring of `duo-naive-push' to know why.
+Common usage :
+\(setq return (duo-insert-before cons new list))
+\(when (eq (cdr return) list)
+  (setq list return))
+Modifies LIST."
+  (let ((test-equal (if test-equal
+                        test-equal
+                      #'equal)))
+    (if (funcall test-equal (car list) elem)
+        (duo-push new list)
+      (let* ((previous (duo-before elem list 1 test-equal))
+             (duo))
+        (if previous
+            (progn
+              (setq duo (cons new (cdr previous)))
+              (setcdr previous duo)
+              duo)
+          nil)))))
+
+(defun duo-ref-insert-previous (cons new reflist)
+  "Insert NEW before CONS in car of REFLIST. Return cons of NEW.
+CONS must reference a cons in LIST.
+NEW is the value of the element inserted.
+REFLIST must be a cons (list . whatever-you-want)
+See the docstring of `duo-naive-push' to know why it doesn’t
+use the list itself in argument.
+Common usage :
+;; Create reflist
+\(setq reflist (list mylist))
+;; Insert
+\(duo-ref-insert-previous cons new reflist)
+;; Update list
+\(setq mylist (car reflist))
+Modifies LIST."
+  (let ((duo (list new)))
+    (duo-ref-insert-cons-previous cons duo reflist)))
+
+(defun duo-ref-insert-cons-before (elem new reflist &optional test-equal)
+  "Insert NEW before ELEM in car of REFLIST. Return NEW.
+ELEM must be present in list.
+NEW is the cons inserted.
+TEST-EQUAL takes two arguments and return t if they are considered equals.
+TEST-EQUAL defaults do `equal'.
+REFLIST must be a cons (list . whatever-you-want)
+See the docstring of `duo-naive-push' to know why it doesn’t
+use the list itself in argument.
+Common usage :
+;; Create reflist
+\(setq reflist (list mylist))
+;; Insert
+\(duo-ref-insert-cons-before elem new reflist)
+;; Update list
+\(setq mylist (car reflist))
+Modifies LIST."
+  (let ((list (car reflist))
+        (test-equal (if test-equal
+                        test-equal
+                      #'equal)))
+    (if (funcall test-equal (car list) elem)
+        (car (duo-ref-push-cons new reflist))
+      (let* ((previous (duo-before elem list 1 test-equal)))
+        (if previous
+            (progn
+              (setcdr new (cdr previous))
+              (setcdr previous new)
+              new)
+          nil)))))
+
+(defun duo-ref-insert-before (elem new reflist &optional test-equal)
+  "Insert NEW before ELEM in car of REFLIST. Return cons of NEW.
+ELEM must be present in list.
+NEW is the value of the element inserted.
+TEST-EQUAL takes two arguments and return t if they are considered equals.
+TEST-EQUAL defaults do `equal'.
+REFLIST must be a cons (list . whatever-you-want)
+See the docstring of `duo-naive-push' to know why it doesn’t
+use the list itself in argument.
+Common usage :
+;; Create reflist
+\(setq reflist (list mylist))
+;; Insert
+\(duo-ref-insert-before elem new reflist)
+;; Update list
+\(setq mylist (car reflist))
+Modifies LIST."
+  (let ((list (car reflist))
+        (test-equal (if test-equal
+                        test-equal
+                      #'equal)))
+    (if (funcall test-equal (car list) elem)
+        (car (duo-ref-push new reflist))
+      (let* ((previous (duo-before elem list 1 test-equal))
+             (duo))
+        (if previous
+            (progn
+              (setq duo (cons new (cdr previous)))
+              (setcdr previous duo)
+              duo)
+          nil)))))
+
+(defsubst ttorus--assoc-value (key alist)
+  "Return value associated with KEY in ALIST."
+  (cdr (assoc key alist)))
+
+(defsubst ttorus--rassoc-key (value alist)
+  "Return key associated with VALUE in ALIST."
+  (car (rassoc value alist)))
+
+(defun duo-reverse (list)
+  "Reverse LIST. Return LIST.
+Modifies LIST."
+  (let* ((begin list)
+         (end (duo-last list))
+         (value)
+         (middle))
+    (while (not middle)
+      (if (or (eq begin end)
+              (eq begin (cdr end)))
+          (setq middle t)
+        (setq value (car begin))
+        (setcar begin (car end))
+        (setcar end value)
+        (setq begin (cdr begin))
+        (setq end (duo-previous end list)))))
+  list)
+
+(defvar torus-tree nil
+  "The tree is a list of ttoruses.
+Each ttorus has a name and a list of circles :
+\(\"ttorus name\" . list-of-circles)
+Each circle has a name and a list of locations :
+\(\"circle name\" . list-of-locations)
+Each location contains a filename and a position :
+\(filename . position)")
+
+;;; Assoc
+;;; ------------------------------
+
+(defsubst ttorus--assoc-delete-all (key alist)
+  "Remove all elements with key matching KEY in ALIST."
+  (cl-remove key alist :test 'equal :key 'car))
+
+(when (fboundp 'assoc-delete-all)
+  (defalias 'ttorus--assoc-delete-all 'assoc-delete-all))
+
+(defsubst ttorus--reverse-assoc-delete-all (value alist)
+  "Remove all elements with value matching VALUE in ALIST."
+  (cl-remove value alist :test 'equal :key 'cdr))
+
+;;; Requires
+;;; ------------------------------------------------------------
+
+(eval-when-compile
+  (require 'duo)
+  (require 'cl-lib)
+  (require 'cl-extra)
+  (require 'seq)
+  (require 'subr-x))
+
+(declare-function cl-copy-seq "cl-lib")
+
+(declare-function cl-subseq "cl-extra")
+
+(declare-function cl-position "cl-lib")
+(declare-function cl-find "cl-lib")
+(declare-function cl-remove "cl-lib")
+
+(declare-function seq-intersection "seq")
+(declare-function seq-filter "seq")
+(declare-function seq-group-by "seq")
+
+(declare-function string-join "subr-x")
+
+(`((,(and (pred stringp) file) . ,(and (pred integerp) position)) .
+         (,(and (pred stringp) circle) . ,(and (pred stringp) ttorus)))
+       (setq location (cons file position))
+       (concat ttorus
+               ttorus-separator-torus-circle
+               circle
+               ttorus-separator-circle-location
+               (ttorus--buffer-or-filename location)
+(ttorus--position location)))
+
+(`((,(and (pred stringp) file) . ,(and (pred integerp) position)) .
+         ,(and (pred stringp) circle))
+       (setq location (cons file position))
+       (concat circle
+               ttorus-separator-circle-location
+               (ttorus--buffer-or-filename location)
+(ttorus--position location)))
+
+(`(,(and (pred stringp) circle) .
+         (,(and (pred stringp) file) . ,(and (pred integerp) position)))
+       (setq location (cons file position))
+       (concat circle
+               ttorus-separator-circle-location
+               (ttorus--buffer-or-filename location)
+               (ttorus--position location)))
+
+;;;###autoload
+(defun ttorus-install-default-bindings ()
+  "Install default keybindings."
+  (interactive)
+  ;; Keymap
+  (if (stringp ttorus-prefix-key)
+      (global-set-key (kbd ttorus-prefix-key) 'ttorus-map)
+    (global-set-key ttorus-prefix-key 'ttorus-map))
+  (when (>= ttorus-binding-level 0)
+    (define-key ttorus-map (kbd "i") 'ttorus-info)
+    (define-key ttorus-map (kbd "c") 'ttorus-add-circle)
+    (define-key ttorus-map (kbd "l") 'ttorus-add-location)
+    (define-key ttorus-map (kbd "f") 'ttorus-add-file)
+    (define-key ttorus-map (kbd "+") 'ttorus-add-torus)
+    (define-key ttorus-map (kbd "*") 'ttorus-add-copy-of-torus)
+    (define-key ttorus-map (kbd "<left>") 'ttorus-previous-circle)
+    (define-key ttorus-map (kbd "<right>") 'ttorus-next-circle)
+    (define-key ttorus-map (kbd "<up>") 'ttorus-previous-location)
+    (define-key ttorus-map (kbd "<down>") 'ttorus-next-location)
+    (define-key ttorus-map (kbd "C-p") 'ttorus-previous-torus)
+    (define-key ttorus-map (kbd "C-n") 'ttorus-next-torus)
+    (define-key ttorus-map (kbd "SPC") 'ttorus-switch-circle)
+    (define-key ttorus-map (kbd "=") 'ttorus-switch-location)
+    (define-key ttorus-map (kbd "@") 'ttorus-switch-torus)
+    (define-key ttorus-map (kbd "s") 'ttorus-search)
+    (define-key ttorus-map (kbd "S") 'ttorus-meta-search)
+    (define-key ttorus-map (kbd "d") 'ttorus-delete-location)
+    (define-key ttorus-map (kbd "D") 'ttorus-delete-circle)
+    (define-key ttorus-map (kbd "-") 'ttorus-delete-torus)
+    (define-key ttorus-map (kbd "r") 'ttorus-read)
+    (define-key ttorus-map (kbd "w") 'ttorus-write)
+    (define-key ttorus-map (kbd "e") 'ttorus-edit))
+  (when (>= ttorus-binding-level 1)
+    (define-key ttorus-map (kbd "<next>") 'ttorus-history-older)
+    (define-key ttorus-map (kbd "<prior>") 'ttorus-history-newer)
+    (define-key ttorus-map (kbd "h") 'ttorus-search-history)
+    (define-key ttorus-map (kbd "H") 'ttorus-search-meta-history)
+    (define-key ttorus-map (kbd "a") 'ttorus-alternate-menu)
+    (define-key ttorus-map (kbd "^") 'ttorus-alternate-in-same-torus)
+    (define-key ttorus-map (kbd "<") 'ttorus-alternate-circles)
+    (define-key ttorus-map (kbd ">") 'ttorus-alternate-in-same-circle)
+    (define-key ttorus-map (kbd "n") 'ttorus-rename-circle)
+    (define-key ttorus-map (kbd "N") 'ttorus-rename-torus)
+    (define-key ttorus-map (kbd "m") 'ttorus-move-location)
+    (define-key ttorus-map (kbd "M") 'ttorus-move-circle)
+    (define-key ttorus-map (kbd "M-m") 'ttorus-move-torus)
+    (define-key ttorus-map (kbd "v") 'ttorus-move-location-to-circle)
+    (define-key ttorus-map (kbd "V") 'ttorus-move-circle-to-torus)
+    (define-key ttorus-map (kbd "y") 'ttorus-copy-location-to-circle)
+    (define-key ttorus-map (kbd "Y") 'ttorus-copy-circle-to-torus)
+    (define-key ttorus-map (kbd "j") 'ttorus-join-circles)
+    (define-key ttorus-map (kbd "J") 'ttorus-join-toruses)
+    (define-key ttorus-map (kbd "#") 'ttorus-layout-menu))
+  (when (>= ttorus-binding-level 2)
+    (define-key ttorus-map (kbd "o") 'ttorus-reverse-menu)
+    (define-key ttorus-map (kbd ":") 'ttorus-prefix-circles-of-current-torus)
+    (define-key ttorus-map (kbd "g") 'ttorus-autogroup-menu)
+    (define-key ttorus-map (kbd "!") 'ttorus-batch-menu))
+  (when (>= ttorus-binding-level 3)
+    (define-key ttorus-map (kbd "p") 'ttorus-print-menu)
+    (define-key ttorus-map (kbd "z") 'ttorus-reset-menu)
+    (define-key ttorus-map (kbd "C-d") 'ttorus-delete-current-location)
+    (define-key ttorus-map (kbd "M-d") 'ttorus-delete-current-circle))
+  ;; Mouse
+  (define-key ttorus-map-mouse-torus [header-line mouse-1] 'ttorus-switch-torus)
+  (define-key ttorus-map-mouse-torus [header-line mouse-2] 'ttorus-alternate-toruses)
+  (define-key ttorus-map-mouse-torus [header-line mouse-3] 'ttorus-meta-search)
+  (define-key ttorus-map-mouse-torus [header-line mouse-4] 'ttorus-previous-torus)
+  (define-key ttorus-map-mouse-torus [header-line mouse-5] 'ttorus-next-torus)
+  (define-key ttorus-map-mouse-circle [header-line mouse-1] 'ttorus-switch-circle)
+  (define-key ttorus-map-mouse-circle [header-line mouse-2] 'ttorus-alternate-circles)
+  (define-key ttorus-map-mouse-circle [header-line mouse-3] 'ttorus-search)
+  (define-key ttorus-map-mouse-circle [header-line mouse-4] 'ttorus-previous-circle)
+  (define-key ttorus-map-mouse-circle [header-line mouse-5] 'ttorus-next-circle)
+  (define-key ttorus-map-mouse-location [header-line mouse-1] 'ttorus-tab-mouse)
+  (define-key ttorus-map-mouse-location [header-line mouse-2] 'ttorus-alternate-in-meta)
+  (define-key ttorus-map-mouse-location [header-line mouse-3] 'ttorus-switch-location)
+  (define-key ttorus-map-mouse-location [header-line mouse-4] 'ttorus-previous-location)
+  (define-key ttorus-map-mouse-location [header-line mouse-5] 'ttorus-next-location))
+
+          (setq torus-cur-location member)
+          (setq torus-cur-index
+                (duo-member
+                 (torus--make-entry location)
+                 (duo-deref ttorus-index)))
+          (setq torus-cur-history
+                (duo-member (torus--make-entry location)
+                            (duo-deref ttorus-history)))
+
+(if ttorus-meta
+      (if (> (length (car torus-cur-torus)) 1)
+          (let*
+              ((locations (string-join (mapcar #'ttorus--needle
+                                               (cdar torus-cur-torus)) " | ")))
+            (format (concat " %s"
+                            torus-separator-torus-circle
+                            "%s"
+                            torus-separator-circle-location
+                            "%s")
+                    (caar ttorus-meta)
+                    (caar torus-cur-torus)
+                    locations))
+        (message ttorus--msg-empty-circle (car (car torus-cur-torus))))
+    (message ttorus--msg-empty-lace))
+
+(defun ttorus--eval-tab ()
+  "Build tab bar."
+  (when ttorus-meta
+      (let*
+          ((locations (mapcar #'ttorus--needle (cdar torus-cur-torus)))
+           (tab-string))
+        (setq tab-string
+              (propertize (format (concat " %s"
+                                          torus-separator-torus-circle)
+                                  (caar ttorus-meta))
+                          'keymap ttorus-map-mouse-torus))
+        (setq tab-string
+              (concat tab-string
+                      (propertize (format (concat "%s"
+                                                  torus-separator-circle-location)
+                                          (caar torus-cur-torus))
+                                  'keymap ttorus-map-mouse-circle)))
+        (dolist (filepos locations)
+          (setq tab-string
+                (concat tab-string (propertize filepos
+                                               'keymap ttorus-map-mouse-location)))
+          (setq tab-string (concat tab-string torus-location-separator)))
+        tab-string)))
+
+(defun torus--status-bar ()
+  "Display status bar, as tab bar or as info in echo area."
+  (let* ((main-windows (ttorus--main-windows))
+         (current-window (selected-window))
+         (buffer (current-buffer))
+         (original (assoc buffer ttorus-original-header-lines))
+         (eval-tab '(:eval (ttorus--eval-tab))))
+    (when (> torus-verbosity 2)
+      (pp ttorus-original-header-lines)
+      (message "original : %s" original)
+      (message "cdr original : %s" (cdr original)))
+    (if (and ttorus-display-tab-bar
+             (member current-window main-windows))
+        (progn
+          (unless original
+            (push (cons buffer header-line-format)
+                  ttorus-original-header-lines))
+          (unless (equal header-line-format eval-tab)
+            (when (> torus-verbosity 2)
+              (message "Set :eval in header-line-format."))
+            (setq header-line-format eval-tab)))
+      (when original
+        (setq header-line-format (cdr original))
+        (setq ttorus-original-header-lines
+              (ttorus--assoc-delete-all buffer
+                                       ttorus-original-header-lines)))
+      (message (ttorus--dashboard)))))
+
+      (when (> torus-verbosity 2)
+        (message "toruw windows : %s" windows)
+        (message "columns : %s" columns)
+        (message "max-columns : %s" max-columns)
+        (message "widest : %s" widest)
+        (message "lines : %s" lines)
+        (message "max-line : %s" max-lines)
+        (message "biggest : %s" biggest))
+
+    (when (> torus-verbosity 1)
+      (message "filename extension : %s %s" filename extension))
+
+    (when (> torus-verbosity 2)
+      (pp ttorus-original-header-lines)
+      (message "original : %s" original)
+      (message "cdr original : %s" (cdr original)))
+
+            (when (> torus-verbosity 2)
+              (message "Set :eval in header-line-format."))
+
+;; Make entry
+    (`(,(pred stringp) . ,(pred stringp))
+     (let ((location (car torus-cur-location)))
+       (cons object location)))
+
+;;; Tables : helix & history
+;;; ------------------------------
+
+(defun torus--update-entry (old new)
+  "Update OLD linked entries to NEW in main tables variables.
+The update process depends on the nature of OLD & NEW :
+Update all entries of the given torus  : \"torus name\"
+Update all entries of the given circle : (torus-name . circle-name)
+Update entry                           : ((torus-name . circle-name) . location)
+Update entry in current torus          : (circle-name . location)
+Update entry in current torus & circle : location
+Affected variables : `torus-helix', `torus-history', `torus-split-layout',
+`torus-line-col', `torus-markers'."
+  )
+
+(let* ((circle-name (caar torus-cur-torus))
+         (ttorus-name (caar ttorus-meta))
+         (circle-torus (cons circle-name ttorus-name))
+         (location-circle (cons location circle-name))
+         (location-circle-torus (cons location circle-torus))
+         (bookmark (cdr (assoc location ttorus-markers)))
+         (buffer (when bookmark
+                   (marker-buffer bookmark))))
+    (if (and bookmark buffer (buffer-live-p buffer))
+        (progn
+          (when (> torus-verbosity 2)))
+      (when (> torus-verbosity 2)
+        (message "Found %s in ttorus" location))
+      (when bookmark
+        (setq ttorus-markers (ttorus--assoc-delete-all location ttorus-markers)))
+      (if (file-exists-p file)
+          (progn
+            (when (> torus-verbosity 1)
+              )
+            )
+        (message (format ttorus--msg-file-does-not-exist file))
+        (setcdr (car torus-cur-torus) (cl-remove location (cdr (car torus-cur-torus))))
+        (setq ttorus-line-col (ttorus--assoc-delete-all location ttorus-line-col))
+        (setq ttorus-markers (ttorus--assoc-delete-all location ttorus-markers))
+        (setq ttorus-table (cl-remove location-circle ttorus-table))
+        (setq torus-helix (cl-remove location-circle-torus torus-helix))
+        (setq ttorus-old-history (cl-remove location-circle ttorus-old-history))
+        (setq ttorus-history (cl-remove location-circle-torus ttorus-history))))
+    (ttorus--update-history)
+    (ttorus--update-meta-history)
+    (torus--status-bar))
+
+    (when (torus--empty-lace-p)
+      (setq torus-cur-torus nil))
+    (when (torus--empty-torus-p)
+      (setq torus-cur-circle nil))
+    (when (torus--empty-circle-p)
+      (setq torus-cur-location nil))
+    (when (equal ttorus-history (list nil))
+      (setq torus-cur-history nil))
+
+(defun torus--entry-less-p (one two)
+  "Whether entry ONE is less than entry TWO.
+Used to sort entries in `torus-helix' and `torus-grid'.
+ONE and TWO must be either :
+\((torus-name . circle-name) . (file . position))
+or :
+\(torus-name . circle-name)"
+  (let* ((car-one (car one))
+         (cdr-one (cdr one))
+         (car-two (car two))
+         (cdr-two (cdr two)))
+    (cond ((and (consp car-one)
+                (consp cdr-one)
+                (consp car-two)
+                (consp cdr-two))
+           (cond ((string< (car car-one) (car car-two)) t)
+                 ((string< (car car-two) (car car-one)) nil)
+                 ((string< (cdr car-one) (cdr car-two)) t)
+                 ((string< (cdr car-two) (cdr car-one)) nil)
+                 ((string< (car cdr-one) (car cdr-two)) t)
+                 ((string< (car cdr-two) (car cdr-one)) nil)
+                 ((< (cdr cdr-one) (cdr cdr-two)) t)
+                 ((< (cdr cdr-two) (cdr cdr-one)) nil)
+                 (t nil)))
+          (t
+           (cond ((string< car-one car-two) t)
+                 ((string< car-two car-one) nil)
+                 ((string< cdr-one cdr-two) t)
+                 ((string< cdr-two cdr-one) nil)
+                 (t nil))))))
+
+(grandpa (file-name-directory
+                   (directory-file-name
+                    (file-name-directory
+(directory-file-name filename)))))
+
+(relative (file-relative-name filename grandpa))
+
+(directory-file-name (file-name-directory relative))
+
+      (when (> torus-verbosity 2)
+        (message "files %s %s" file-src file-dest))
+
+(let ((relative (file-relative-name filename torus-dirname)))
+        )
+
+(defun torus--parent-directory (object)
+  "Return parent directory of OBJECT.
+OBJECT can be a filename or a location."
+  (let* ((filename
+          (pcase object
+            (`(,(and (pred stringp) one) . ,(pred integerp)) one)
+            ((pred stringp) object))))
+    (file-name-directory (directory-file-name filename))))
+
+(let*
+      ((file-basename (file-name-nondirectory filename))
+       (minus-len-ext (- (min (length torus-file-extension)
+                              (length filename))))
+       (buffer))
+    (unless (equal (cl-subseq filename minus-len-ext) torus-file-extension)
+      (setq filename (concat filename torus-file-extension)))
+    (when (or (not torus-wheel)
+              (y-or-n-p ttorus--msg-replace-torus))
+      (ttorus--update-input-history file-basename)
+      ))
+
+;;;###autoload
+(defun ttorus-search (location-name)
+  "Search LOCATION-NAME in the ttorus.
+Go to the first matching circle and location."
+  (interactive
+   (list
+    (completing-read
+     "Search location in ttorus : "
+     (mapcar #'ttorus--concise ttorus-table) nil t)))
+  (torus--prefix-argument-split current-prefix-arg)
+  (let* ((location-circle
+          (cl-find
+           location-name ttorus-table
+           :test #'ttorus--equal-concise-p)))
+    (ttorus--switch location-circle)))
+
+      ;; (duo-ref-reverse-previous torus-cur-history ttorus-history)
+
+(when (> torus-verbosity 2)
+      (message "filename : %s" filename)
+      (message "filename directory : %s" directory)
+      (message "torus directory : %s" torus-folder))
+
+    :hook ((emacs-startup . torus--hello)
+           (kill-emacs . torus--bye))
+
+;;; Switch
+;;; ------------------------------------------------------------
+
+(defun torus--switch (location-circle)
+  "Jump to circle and location countained in LOCATION-CIRCLE."
+  (unless (and location-circle
+               (consp location-circle)
+               (consp (car location-circle)))
+    (error "In torus--switch : wrong type argument"))
+  (torus--update-position)
+  (let* ((circle-name (cdr location-circle))
+         (circle (assoc circle-name torus-cur-torus))
+         (index (cl-position circle torus-cur-torus :test #'equal))
+         (before (cl-subseq torus-cur-torus 0 index))
+         (after (cl-subseq torus-cur-torus index)))
+    (if index
+        (setq torus-cur-torus (append after before))
+      (message "Circle not found.")))
+  (let* ((circle (cdr (car torus-cur-torus)))
+         (location (car location-circle))
+         (index (cl-position location circle :test #'equal))
+         (before (cl-subseq circle 0 index))
+         (after (cl-subseq circle index)))
+    (if index
+        (setcdr (car torus-cur-torus) (append after before))
+      (message "Location not found.")))
+  (torus--jump)
+  (torus--apply-or-push-layout))
+
+(defun torus--meta-switch (entry)
+  "Jump to torus, circle and location countained in ENTRY."
+  (unless (and entry
+               (consp entry)
+               (consp (car entry))
+               (consp (cdr entry)))
+    (error "In torus--switch : wrong type argument"))
+  (when (> torus-verbosity 2)
+    (message "meta switch entry : %s" entry))
+  (torus--update-meta)
+  (let* ((torus-name (caar entry))
+         (torus (assoc torus-name torus-meta))
+         (index (cl-position torus torus-meta :test #'equal))
+         (before (cl-subseq torus-meta 0 index))
+         (after (cl-subseq torus-meta index)))
+    (if index
+        (setq torus-meta (append after before))
+      (message "torus not found.")))
+  (torus--update-from-meta)
+  (torus--build-table)
+  (setq torus-helix (torus--build-helix))
+  (torus--complete-and-clean-layout)
+  (let* ((circle-name (cdar entry))
+         (circle (assoc circle-name torus-cur-torus))
+         (index (cl-position circle torus-cur-torus :test #'equal))
+         (before (cl-subseq torus-cur-torus 0 index))
+         (after (cl-subseq torus-cur-torus index)))
+    (if index
+        (setq torus-cur-torus (append after before))
+      (message "Circle not found.")))
+  (let* ((circle (cdr (car torus-cur-torus)))
+         (location (cdr entry))
+         (index (cl-position location circle :test #'equal))
+         (before (cl-subseq circle 0 index))
+         (after (cl-subseq circle index)))
+    (if index
+        (setcdr (car torus-cur-torus) (append after before))
+      (message "Location not found.")))
+  (torus--jump)
+  (torus--apply-or-push-layout))
+
+;;; Print
+;;; ------------------------------------------------------------
+
+;;;###autoload
+(defun torus-info ()
+  "Print local info : circle name and locations."
+  (interactive)
+  (message (torus--dashboard)))
+
+  ;; To be sure they will be nil at startup, even if some plugin saved
+  ;; global variables
+  (torus-reset-menu ?a)
+
+;;;###autoload
+(defun torus-delete-current-circle ()
+  "Delete current circle."
+  (interactive)
+  (torus-delete-circle (torus--concise (car (car torus-cur-torus)))))
+
+;;;###autoload
+(defun torus-delete-current-location ()
+  "Remove current location from current circle."
+  (interactive)
+  (torus-delete-location (torus--concise (car (cdr (car torus-cur-torus))))))
+
+        ;; Done by set-visited-file-name
+        ;; (rename-buffer file-name t)
+
+      (when (> torus-verbosity 2)
+        (message "location %s location-marker %s" location location-marker)
+        (message "marker %s buffer %s" marker buffer))
+
+;;; Tables
+;;; ------------------------------------------------------------
+
+(defun torus--narrow-to-torus (&optional torus-name index)
+  "Narrow an index-like table to entries of TORUS-NAME.
+Argument TORUS-NAME nil means narrow to current torus.
+Argument INDEX nil means using `torus-helix'.
+Can be used with `torus-helix' and `torus-history'."
+  (let ((index (or index torus-helix))
+        (torus-name (if torus-name
+                        torus-name
+                      (car (car torus-cur-torus)))))
+    (seq-filter (lambda (elem) (equal (caar elem) torus-name))
+                index)))
+
+(defun torus--narrow-to-circle (&optional torus-name circle-name index)
+  "Narrow an index-like table to entries of TORUS-NAME and CIRCLE-NAME.
+Argument TORUS-NAME nil means narrow using current torus.
+Argument CIRCLE-NAME nil means narrow to current circle.
+Argument INDEX nil means using `torus-helix'.
+Can be used with `torus-helix' and `torus-history'."
+  (let ((index (or index torus-helix))
+        (torus-name (if torus-name
+                        torus-name
+                      (car (car torus-cur-torus))))
+        (circle-name (if circle-name
+                         circle-name
+                       (car (car torus-cur-circle)))))
+    (seq-filter (lambda (elem) (and (equal (caar elem) torus-name)
+                               (equal (cdar elem) circle-name)))
+                index)))
+
+;;;###autoload
+(defun torus-search-history (location-name)
+  "Search LOCATION-NAME in `torus-history'."
+  (interactive
+   (list
+    (completing-read
+     "Search location in history : "
+     (mapcar #'torus--concise torus-history) nil t)))
+  (torus--prefix-argument-split current-prefix-arg)
+  (when torus-history
+    (let* ((index (cl-position location-name torus-history
+                            :test #'torus--equal-concise-p))
+           (before (cl-subseq torus-history 0 index))
+           (element (nth index torus-history))
+           (after (cl-subseq torus-history (1+ index))))
+      (setq torus-history (append (list element) before after)))
+    (torus--switch (car torus-history))))
+
+;;; Reverse
+;;; ------------------------------------------------------------
+
+;;;###autoload
+(defun torus-reverse-circles ()
+  "Reverse order of the circles."
+  (interactive)
+  (torus--update-position)
+  (setq torus-cur-torus (reverse torus-cur-torus))
+  (torus--jump))
+
+;;;###autoload
+(defun torus-reverse-locations ()
+  "Reverse order of the locations in the current circles."
+  (interactive)
+  (torus--update-position)
+  (setcdr (car torus-cur-torus) (reverse (cdr (car torus-cur-torus))))
+  (torus--jump))
+
+;;;###autoload
+(defun torus-deep-reverse ()
+  "Reverse order of the locations in each circle."
+  (interactive)
+  (torus--update-position)
+  (setq torus-cur-torus (reverse torus-cur-torus))
+  (dolist (circle torus-cur-torus)
+    (setcdr circle (reverse (cdr circle))))
+  (torus--jump))
+
+(defvar torus--msg-reverse-menu
+  "Reverse [l] locations [c] circle [d] deep : locations & circles")
+
+;;;###autoload
+(defun torus-reverse-menu (choice)
+  "Split according to CHOICE."
+  (interactive
+   (list (read-key torus--msg-reverse-menu)))
+  (pcase choice
+    (?c (funcall 'torus-reverse-circles))
+    (?l (funcall 'torus-reverse-locations))
+    (?d (funcall 'torus-deep-reverse))
+    (?\a (message "Reverse operation cancelled by Ctrl-G."))
+    (_ (message "Invalid key."))))
+
+;;;###autoload
+(defun torus-rename-menu (choice)
+  "Rename object from torus variables according to CHOICE."
+  (interactive
+   (list (read-key torus--msg-rename-menu)))
+    (pcase choice
+      (?f (call-interactively 'torus-rename-file))
+      (?c (call-interactively 'torus-rename-circle))
+      (?t (call-interactively 'torus-rename-torus))
+      (?\a (message "Rename cancelled by Ctrl-G."))
+      (_ (message "Invalid key."))))
+
+;;;###autoload
+(defun torus-delete-menu (choice)
+  "Delete object from torus variables according to CHOICE."
+  (interactive
+   (list (read-key torus--msg-delete-menu)))
+    (pcase choice
+      (?l (call-interactively 'torus-delete-location))
+      (?c (call-interactively 'torus-delete-circle))
+      (?t (call-interactively 'torus-delete-torus))
+      (?\a (message "Delete cancelled by Ctrl-G."))
+      (_ (message "Invalid key."))))
+
+;;; Modifications
+;;; ------------------------------------------------------------
+
+(defun torus--prefix-circles (prefix torus-name)
+  "Return vars of TORUS-NAME with PREFIX to the circle names."
+  (unless (and (stringp prefix) (stringp torus-name))
+    (error "In torus--prefix-circles : wrong type argument"))
+  (let* ((entry (cdr (assoc torus-name torus-wheel)))
+         (torus (copy-tree (cdr (assoc "torus" entry))))
+         (history (copy-tree (cdr (assoc "history" entry)))))
+    (if (> (length prefix) 0)
+        (progn
+          (message "Prefix is %s" prefix)
+          (dolist (elem torus)
+            (setcar elem
+                    (concat prefix torus-prefix-separator (car elem))))
+          (dolist (elem history)
+            (setcdr elem
+                    (concat prefix torus-prefix-separator (cdr elem)))))
+      (message "Prefix is blank"))
+    (list torus history)))
+
+;;; Add
+;;; ------------------------------------------------------------
+
+;;;###autoload
+(defun torus-add-copy-of-torus (torus-name)
+  "Create a new torus named TORUS-NAME as copy of the current torus."
+  (interactive
+   (list (read-string "Name of the new torus : "
+                      nil
+                      'torus-user-input-history)))
+  (setq torus-cur-torus (copy-tree torus-cur-torus))
+  (if torus-cur-torus
+      (setcar torus-cur-torus torus-name)
+    (setq torus-cur-torus (list torus-name)))
+  (if torus-wheel
+      (push torus-cur-torus torus-wheel)
+    (setq torus-wheel (list torus-cur-torus))))
+
+;;;###autoload
+(defun torus-search-meta-history (location-name)
+  "Search LOCATION-NAME in `torus-history'."
+  (interactive
+   (list
+    (completing-read
+     "Search location in history : "
+     (mapcar #'torus--concise torus-history) nil t)))
+  (torus--prefix-argument-split current-prefix-arg)
+  (when torus-history
+    (let* ((index (cl-position location-name torus-history
+                            :test #'torus--equal-concise-p))
+           (before (cl-subseq torus-history 0 index))
+           (element (nth index torus-history))
+           (after (cl-subseq torus-history (1+ index))))
+      (setq torus-history (append (list element) before after)))
+    (torus--meta-switch (car torus-history))))
+
+;;; Partition
+;;; ------------------------------------------------------------
+
+(defun duo-sym-partition (symlist &optional fn-key)
+  "Partition SYMLIST using FN-KEY to fill the alist SYMASSOC.
+SYMKEY holds the current assoc in the loop.
+The result is an alist whose keys are given by the values of FN-KEY
+applied to the elements of LIST.
+Each element of the alist is of the form :
+\(key elem-1 elem-2 ... elem-N)
+where all the elem-* verify (FN-KEY elem-?) = key.
+FN-KEY defaults to `identity'."
+  (let* ((list (symbol-value symlist))
+         (fn-key (or fn-key #'identity))
+         (sym-assoc-list (make-symbol "assoc-list"))
+         (sym-key-list (make-symbol "key-list"))
+         (duo list)
+         (key))
+    (set sym-assoc-list nil)
+    (while duo
+      (setq key (funcall fn-key (car duo)))
+      (set sym-key-list (car (duo-assoc key (symbol-value sym-assoc-list))))
+      (if (symbol-value sym-key-list)
+          (duo-sym-add (car duo) sym-key-list)
+        (duo-sym-add (list key (car duo)) sym-assoc-list))
+      (setq duo (cdr duo)))
+    (symbol-value sym-assoc-list)))
+
+;;; Partition
+;;; ------------------------------------------------------------
+
+(defun duo-ref-partition (reflist &optional fn-key)
+  "Partition list referenced in REFLIST using FN-KEY.
+The result is an alist whose keys are given by the values of FN-KEY
+applied to the elements of LIST.
+Each element of the alist is of the form :
+\(key elem-1 elem-2 ... elem-N)
+where all the elem-* verify (FN-KEY elem-?) = key.
+FN-KEY defaults to `identity'."
+  (let* ((list (duo-deref reflist))
+         (fn-key (or fn-key #'identity))
+         (duo list)
+         (assoc-list (list nil))
+         (key)
+         (key-list))
+    (while duo
+      (setq key (funcall fn-key (car duo)))
+      (setq key-list (duo-assoc key (duo-deref assoc-list)))
+      (if key-list
+          (duo-ref-add (car duo) key-list)
+        (duo-ref-add (list key (car duo)) assoc-list))
+      (setq duo (cdr duo)))
+    (duo-deref assoc-list)))
+
+(defvar torus--msg-delete-menu
+  "Delete [l] location [c] circle [t] torus")
+
+(defvar torus--msg-rename-menu
+  "Rename [f] file [c] circle [t] torus")
+
+(marker-position (point-marker))
+
+          (torus--add-or-replace-entry old-location-line-col
+                                       new-location-line-col
+                                       torus-line-col)
+
+(new-location-line-col (cons new-location new-line-col))
+
+               (new-line-col (cons (line-number-at-pos) (current-column)))
+
+               (old-location-line-col (car (duo-assoc
+                                            old-location
+(duo-deref torus-line-col))))
+
+(file (car old-location))
+
+;;;###autoload
+(defun torus-prefix-circles-of-current-torus (prefix)
+  "Add PREFIX to circle names of `torus-cur-torus'."
+  (interactive
+   (list
+    (read-string (format torus--msg-prefix-circle
+                         (car (car torus-wheel)))
+                 nil
+                 'torus-user-input-history)))
+  (let ((varlist))
+    (setq varlist (torus--prefix-circles prefix (car (car torus-wheel))))
+    (setq torus-cur-torus (car varlist))
+    (setq torus-history (car (cdr varlist))))
+  (torus--build-table)
+  (setq torus-helix (torus--build-helix)))
+
+;;;###autoload
+(defun torus-join-toruses (torus-name)
+  "Join current torus with TORUS-NAME in `torus-wheel'."
+  (interactive
+   (list
+    (completing-read "Join current torus with torus : "
+                     (mapcar #'car torus-wheel) nil t)))
+  (torus--prefix-argument-split current-prefix-arg)
+  (torus--update-meta)
+  (let* ((current-name (car (car torus-wheel)))
+         (join-name (concat current-name torus-join-separator torus-name))
+         (user-choice
+          (read-string (format "Name of the joined torus [%s] : " join-name)))
+         (prompt-current
+          (format torus--msg-prefix-circle current-name))
+         (prompt-added
+          (format torus--msg-prefix-circle torus-name))
+         (prefix-current
+          (read-string prompt-current nil 'torus-user-input-history))
+         (prefix-added
+          (read-string prompt-added nil 'torus-user-input-history))
+         (varlist)
+         (torus-added)
+         (history-added)
+         (input-added))
+    (when (> (length user-choice) 0)
+      (setq join-name user-choice))
+    (torus--update-input-history prefix-current)
+    (torus--update-input-history prefix-added)
+    (torus-add-copy-of-torus join-name)
+    (torus-prefix-circles-of-current-torus prefix-current)
+    (setq varlist (torus--prefix-circles prefix-added torus-name))
+    (setq torus-added (car varlist))
+    (setq history-added (car (cdr varlist)))
+    (setq input-added (car (cdr (cdr varlist))))
+    (if (seq-intersection torus-cur-torus torus-added #'torus--equal-car-p)
+        (message torus--msg-circle-name-collision)
+      (setq torus-cur-torus (append torus-cur-torus torus-added))
+      (setq torus-history (append torus-history history-added))
+      (setq torus-user-input-history (append torus-user-input-history input-added))))
+  (torus--update-meta)
+  (torus--build-table)
+  (setq torus-helix (torus--build-helix))
+  (torus--jump))
+
+  (let* ((current-name (car (car torus-cur-torus)))
+         (join-name (concat current-name torus-join-separator circle-name))
+         (user-choice
+          (read-string (format "Name of the joined torus [%s] : " join-name))))
+    (when (> (length user-choice) 0)
+      (setq join-name user-choice))
+    (torus-add-circle join-name)
+    (setcdr (car torus-cur-torus)
+            (append (cdr (assoc current-name torus-cur-torus))
+                    (cdr (assoc circle-name torus-cur-torus))))
+    (delete-dups (cdr (car torus-cur-torus))))
+  (torus--update-meta)
+  (torus--build-table)
+  (setq torus-helix (torus--build-helix))
+
+(defun torus--needle (&optional location)
+  "Return LOCATION in short string format.
+Used for dashboard and tabs."
+  (let* ((cur-location (torus--root-location))
+         (location (or location cur-location))
+         (entry (car (duo-assoc location
+                                (duo-deref torus-line-col))))
+         (position (if entry
+                       (format ":%s" (car (cdr entry)))
+                     (format "·%s" (cdr location))))
+         (needle (concat (torus--buffer-or-file-name location) position)))
+    (when (equal location cur-location)
+      (setq needle (concat torus-current-pre needle torus-current-post)))
+    needle))
+
+;;;###autoload
+(defun torus-mouse-on-tab (event)
+  "Manage click EVENT on locations part of tab line."
+  (interactive "@e")
+  (let* ((index (cdar (nthcdr 4 (cadr event))))
+        (before (substring-no-properties
+                 (caar (nthcdr 4 (cadr event))) 0 index))
+        (clues 0))
+    (when (> torus-verbosity 2)
+      (message "Mouse on tab : %s" before))
+    (dotimes (index (length before))
+      (when (or (equal (elt before index) (char-from-name "MIDDLE DOT"))
+               (equal (elt before index) ?:))
+        (setq clues (1+ clues))))
+    (when (> torus-verbosity 2)
+      (message "Clues : %s" clues))
+    (if (equal clues (torus--location-index))
+        (torus-alternate-in-same-circle)
+      (torus--update-position)
+      (torus--seek-location clues)
+      (torus--jump))))
