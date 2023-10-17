@@ -145,9 +145,10 @@ pw groupmod audio -m user_name # doas
 pw groupmod operator -m user_name # doas
 pw groupmod video -m user_name # doas
 pw groupmod wheel -m user_name # doas
-pw usermod user_name -G wheel,operator,video,audio # doas
 pw usermod toor -u 0 # doas
+pw usermod user_name -G wheel,operator,video,audio # doas
 python3 -m ensurepip --user
+rcorder /etc/rc.d/* /usr/local/etc/rc.d/*
 restic restore -r /media/da0s1/restic latest --target ~
 restic restore -r /media/da0s1/restic latest --target ~ --include ~/racine/self
 sade

@@ -3,15 +3,32 @@
 
 # Terminal {{{1
 
-# }}}1
 
 # Shell {{{1
+
+# Jobs {{{2
+
+sleep 500 # long running program
+^Z
+	zsh: suspended  sleep 500
+jobs
+	[1]  + suspended  sleep 500
+bg
+jobs
+	[1]  + running    sleep 500
+fg
+^C
+	zsh: interrupt  sleep 500
+	zsh: exit 130
+
+sleep 500 & # long running program
+jobs
+	[1]  + running    sleep 500
 
 # Aliases {{{2
 
 alias psgrep='ps auxww | /bin/grep -v grep | /bin/grep --color=auto'
 
-# }}}2
 
 # Pipe heredoc {{{2
 
@@ -29,7 +46,6 @@ cat <<- 'FIN' | ed fichier
 	w
 FIN
 
-# }}}2
 
 # While < fichier {{{2
 
@@ -39,7 +55,6 @@ do
 
 done < $fichier
 
-# }}}2
 
 # Commande | while {{{2
 
@@ -50,7 +65,6 @@ do
 	mv $fichier ${racine}.png
 done
 
-# }}}2
 
 # Example of ed script {{{2
 
@@ -69,7 +83,6 @@ cat <<- 'FIN' | ed toto
 	w
 FIN
 
-# }}}2
 
 # Variable contenant le nom d’une autre variable {{{2
 
@@ -81,7 +94,6 @@ FIN
 
 	echo nom=$nom
 
-# }}}2
 
 # Dialog output -> var via exec M>&N {{{2
 
@@ -101,7 +113,6 @@ exec 3>&1
 choix=$(dialog --menu "Liste" 80 80 80 $=tagitem 1>&2 2>&3)
 exec 3>&-
 
-# }}}2
 
 # Dialog output -> var via named pipe {{{2
 
@@ -111,20 +122,17 @@ dialog --menu "Liste" 0 0 0 $=tagitem 2> $tube &
 
 read choix < $tube
 
-# }}}2
 
 # Stopper / Reprendre un groupe de processus {{{2
 
 kill -STOP -- -$groupe
 kill -CONT -- -$groupe
 
-# }}}2
 
 # Groupe d’un processus {{{2
 
 groupe=($(ps -eo "%r %p" | awk '{ if ( $2 == '$processus' ) print $1 }'))
 
-# }}}2
 
 # Processus appartenant à un groupe {{{2
 
@@ -143,13 +151,11 @@ arbre=($(ps -eo "%r %p" |
 echo $arbre
 echo
 
-# }}}2
 
 # Arbre d’un processus {{{2
 
 pstree -p $processus
 
-# }}}2
 
 # Arbre de processus & Feuilles {{{2
 
@@ -190,7 +196,6 @@ done
 echo Feuilles : $feuilles
 echo
 
-# }}}2
 
 # Envoyer un signal à un arbre de processus {{{2
 
@@ -215,7 +220,6 @@ signal-arbre () {
     kill -$signal $iden
 }
 
-# }}}2
 
 # Traps pour les signaux {{{2
 
@@ -262,9 +266,7 @@ sleep 300
 sleep 300 &
 wait $!
 
-# }}}2
 
-# }}}1
 
 # Zsh {{{1
 
@@ -283,7 +285,6 @@ setopt null_glob
 setopt no_match
 unsetopt null_glob
 
-# }}}2
 
 # Bindinges {{{2
 
@@ -438,13 +439,11 @@ unsetopt null_glob
 "!"-"~" self-insert
 "^?" backward-delete-char
 "\M-^@"-"\M-^?" self-insert
-# }}}2
 
 # Modules {{{2
 
 zmodload zsh/regex
 
-# }}}2
 
 # Tableaux {{{2
 
@@ -498,13 +497,11 @@ ${(A)=var::=liste}
 # To remove any occurence of b: a=("${(@)a:#b}")
 # :# is the hieroglyph to remove matching elements; "" and (@) is to operate correctly on arrays even if they contain empty elements.
 
-# }}}2
 
 # Dictionnaires {{{2
 
 ${(AA)=var::=cle1 val1 cle2 val2 ...}
 
-# }}}2
 
 # Complétion {{{2
 
@@ -527,14 +524,12 @@ a.j --> arbre.js
 AS --> AlainSouchon
 
 
-# }}}2
 
 # Précommandes {{{2
 
 noglob : désactive la génération de fichiers
 nocorrect : désactive la correction
 
-# }}}2
 
 # Placer les lignes d’un fichier dans un tableau {{{2
 
@@ -544,21 +539,17 @@ identifiants=( ${(f)"$(< $runfile)"} )
 
 identifiants=( ${(f)"$(< $runfile | awk '{print $1}')"} )
 
-# }}}3
 
 # Lignes inversées & uniques {{{3
 
 dirstack=( ${(fuOa)"$(< $REPERTOIRES_FICHIER)"} )
 
-# }}}3
 
-# }}}2
 
 # Placer les lignes de la sortie d’une commande dans un tableau {{{2
 
 processi=("${(f)$(psgrep minuterie.zsh)}")
 
-# }}}2
 
 # L’élément est-il dans le tableau ? {{{2
 
@@ -574,12 +565,9 @@ processi=("${(f)$(psgrep minuterie.zsh)}")
   && echo "it's in" \
   || echo "it's somewhere else maybe"
 
-# }}}2
 
 # La sortie d’une commande comme fichier virtuel en argument {{{2
 
 volume=$(awk -F"[][]" '/dB/ { print $2 }' <(amixer -c 0 sget Master))
 
-# }}}2
 
-# }}}1
