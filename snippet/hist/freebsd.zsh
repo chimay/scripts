@@ -22,7 +22,9 @@ bastille verify 13.2-RELEASE # doas
 beadm create new-snapshot # doas
 beadm destroy new-snapshot # doas
 beadm list # doas
+bectl activate vanilla
 bectl list # doas
+bectl mount vanilla /mnt # doas
 bsdconfig # doas
 bsdinstall auto # doas
 bsdinstall netconfig # doas
@@ -202,12 +204,14 @@ vidcontrol -i mode
 vidcontrol red # syscons, console virtuelle, root
 vidfont # syscons, console virtuelle, root
 vmstat
+zfs create -o canmount=noauto -o mountpoint=/ zroot/ROOT/vanilla # doas
 zfs create -o mountpoint=/usr/local/poudriere zroot/poudriere # doas
 zfs create cle-usb/compressed # doas
 zfs diff cle-usb/compressed@initial # doas
 zfs list
 zfs list -rt all # doas
 zfs set compression=gzip cle-usb/compressed # doas
+zfs snapshot -r zroot/ROOT/vanilla@tarballs
 zfs snapshot cle-usb/compressed@initial # doas
 zfs unmount cle-usb # doas
 zfs unmount cle-usb/compressed # doas
