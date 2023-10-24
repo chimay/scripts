@@ -18,7 +18,7 @@ sudo pacman -Syy
 
 # new keys
 
-sudo pacman -S archlinux-keyring
+sudo pacman -S manjaro-keyring
 
 # update
 

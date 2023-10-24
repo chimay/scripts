@@ -1,0 +1,12 @@
+/bind end command /sb end
+/bind home command /sb home
+/list *ubuntu*
+/list >1000
+/msg alis list gen -min 100 -max 200
+/msg alis list gentoo
+/quote help list
+/run scriptassist
+/script autorun vim_mode
+/script load vim_mode
+/script unload vim_mode
+/window goto #vim

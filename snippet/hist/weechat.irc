@@ -1,0 +1,10 @@
+/autojoin add
+/fset
+/fset =red
+/fset delim
+/fset weechat.bar.*
+/help key
+/key bind (alt-k) (your-key) commande
+/key list
+/script
+/set

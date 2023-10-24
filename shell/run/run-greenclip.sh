@@ -5,4 +5,4 @@ config=$hOME/racine/config/windenv/greenclip/greenclip.cfg
 
 cp -f "$backup" "$config"
 
-greenclip daemon &
+greenclip daemon
