@@ -1,10 +1,61 @@
+/alias add /j /join
 /autojoin add
+/away singing in the rain
+/ban pseudo
+/close
+/connect -all
+/connect libera
+/exec ls
+/filter add irc_smart * irc_smart_filter *
 /fset
 /fset =red
 /fset delim
 /fset weechat.bar.*
+/help
+/help commande
 /help key
+/help some-option
+/ignore add pseudo-spammer
+/invite pseudo
 /key bind (alt-k) (your-key) commande
+/key bind @bar(input):button2 (même chose que pour alt-k, mais avec la souris)
+/key bind meta-k /input grab_key_command
 /key list
+/kick pseudo
+/leave
+/list >1000
+/logger flush
+/me action
+/mode #channel +t
+/mode pseudo +i
+/msg alis list gen -min 100 -max 200
+/msg alis list gentoo
+/msg nickserv identity pass_word
+/msg nickserv register pass_word mail@example
+/msg pseudo message
+/nick pseudo
+/part
+/query pseudo message
+/save
+/say /commande truc
 /script
+/script install go.py
+/script search motif
+/server add libera irc.libera.chat/6667
+/server add libera irc.libera.chat/6697 -tls
 /set
+/set irc.look.server_buffer independent
+/set irc.look.smart_filter "on"
+/set irc.server.default.nicks "pseudo1,pseudo2"
+/set irc.server.libera.command "/msg nickserv identify xxxxxxx"
+/set irc.server.libera.sasl_password "xxxxxxx"
+/set irc.server.libera.sasl_username "pseudo"
+/set irc.server.libera.username "user_name"
+/set irc.server.oftc.command "/msg nickserv identify xxxxxxx"
+/set irc.server.oftc.command_delay 5
+/set irc.server_default.autojoin_dynamic on
+/set logger.file.mask "$plugin-$name-%Y-%m"
+/set logger.level.irc 3
+/set logger.look.backlog 420
+/unset irc.server.libera.nicks
+/upgrade

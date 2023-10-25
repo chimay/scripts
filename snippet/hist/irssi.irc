@@ -1,12 +1,32 @@
+# /server add -ssl -ssl_verify -ssl_capath /etc/ssl/certs -network liberachat -port 6697 irc.libera.chat
+/away singing in the rain
+/ban pseudo
 /bind end command /sb end
 /bind home command /sb home
+/channel add -auto #archlinux liberachat
+/close
+/connect liberachat
+/ignore * joins parts quits
+/invite pseudo
+/kick pseudo
+/leave
 /list *ubuntu*
 /list >1000
+/me action
 /msg alis list gen -min 100 -max 200
 /msg alis list gentoo
+/msg pseudo message
+/network add -sasl_mechanism plain -sasl_username user_name -sasl_password pass_word liberachat
+/part
+/query pseudo message
 /quote help list
 /run scriptassist
-/script autorun vim_mode
-/script load vim_mode
-/script unload vim_mode
+/save
+/say /commande truc
+/script autorun mouse.pl
+/script install mouse.pl
+/script load mouse.pl
+/script unload mouse.pl
+/server add -auto -tls -tls_verify -network liberachat -port 6697 irc.libera.chat
+/set autolog on
 /window goto #vim
