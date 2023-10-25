@@ -1,10 +1,12 @@
 /alias add /j /join
+/allserv away
 /autojoin add
 /away singing in the rain
 /ban pseudo
 /close
 /connect -all
 /connect libera
+/dcc chat
 /exec ls
 /filter add irc_smart * irc_smart_filter *
 /fset
@@ -17,22 +19,29 @@
 /help some-option
 /ignore add pseudo-spammer
 /invite pseudo
+/join #libera-cloak ; ! cloakme # libera
 /key bind (alt-k) (your-key) commande
 /key bind @bar(input):button2 (même chose que pour alt-k, mais avec la souris)
 /key bind meta-k /input grab_key_command
 /key list
 /kick pseudo
-/leave
+/kickban
 /list >1000
 /logger flush
 /me action
 /mode #channel +t
 /mode pseudo +i
+/msg * /commande truc
 /msg alis list gen -min 100 -max 200
 /msg alis list gentoo
-/msg nickserv identity pass_word
+/msg nickserv ghost pseudo
+/msg nickserv group
+/msg nickserv identity pseudo pass_word
 /msg nickserv register pass_word mail@example
+/msg nickserv reverify # oftc
+/msg nickserv set cloak on # oftc
 /msg pseudo message
+/names channel
 /nick pseudo
 /part
 /query pseudo message
@@ -41,6 +50,8 @@
 /script
 /script install go.py
 /script search motif
+/secure passphrase pass_phrase
+/secure set libera pass_word
 /server add libera irc.libera.chat/6667
 /server add libera irc.libera.chat/6697 -tls
 /set
@@ -57,5 +68,10 @@
 /set logger.file.mask "$plugin-$name-%Y-%m"
 /set logger.level.irc 3
 /set logger.look.backlog 420
+/set sec.crypt.passphrase_command "/usr/bin/pass show software/weechat-passphrase"
+/unban
 /unset irc.server.libera.nicks
 /upgrade
+/wc
+/whowas
+/window refresh

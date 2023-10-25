@@ -8,13 +8,19 @@
 /connect liberachat
 /ignore * joins parts quits
 /invite pseudo
+/join #libera-cloak ; ! cloakme # libera
 /kick pseudo
-/leave
 /list *ubuntu*
 /list >1000
 /me action
 /msg alis list gen -min 100 -max 200
 /msg alis list gentoo
+/msg nickserv ghost pseudo
+/msg nickserv group
+/msg nickserv identity pseudo pass_word
+/msg nickserv register pass_word mail@example
+/msg nickserv reverify # oftc
+/msg nickserv set cloak on # oftc
 /msg pseudo message
 /network add -sasl_mechanism plain -sasl_username user_name -sasl_password pass_word liberachat
 /part
@@ -29,4 +35,5 @@
 /script unload mouse.pl
 /server add -auto -tls -tls_verify -network liberachat -port 6697 irc.libera.chat
 /set autolog on
+/wc
 /window goto #vim

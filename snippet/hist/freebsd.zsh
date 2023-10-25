@@ -149,6 +149,7 @@ pw groupmod video -m user_name # doas
 pw groupmod wheel -m user_name # doas
 pw usermod toor -u 0 # doas
 pw usermod user_name -G wheel,operator,video,audio # doas
+pwait processus-id
 python3 -m ensurepip --user
 rcorder /etc/rc.d/* /usr/local/etc/rc.d/*
 restic restore -r /media/da0s1/restic latest --target ~
@@ -217,5 +218,10 @@ zfs unmount cle-usb # doas
 zfs unmount cle-usb/compressed # doas
 zpool create cle-usb /dev/da4 # doas
 zpool list
+zpool scrub -s zroot # doas
+zpool scrub -w zroot # doas
+zpool scrub zroot # doas
+zpool resilver zroot # doas
+zpool status -v zroot
 zpool upgrade -a # doas
 zpool upgrade pool-name # doas
