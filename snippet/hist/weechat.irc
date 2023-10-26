@@ -1,4 +1,5 @@
 /alias add /j /join
+/alias add /ns /msg nickserv
 /allserv away
 /autojoin add
 /away singing in the rain
@@ -39,6 +40,7 @@
 /msg nickserv identity pseudo pass_word
 /msg nickserv register pass_word mail@example
 /msg nickserv reverify # oftc
+/msg nickserv confirm # rizon
 /msg nickserv set cloak on # oftc
 /msg pseudo message
 /names channel
