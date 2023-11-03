@@ -69,6 +69,7 @@ efibootmgr -b 05 -B # sudo, delete boot entry
 efibootmgr -c -d /dev/sda -p 1 -L "Gentoo" -l '\efi\boot\bootx64.efi' # sudo, create boot entry
 efibootmgr -v
 emacs=byte-comp-dir ; emacs --batch --eval '(byte-recompile-directory "~/racine/plugin/manager/el-get/mtorus-user_name")'
+faillock --user user_name --reset
 fallocate -l 8G swapfile # sudo
 feh=wallpaper ; feh --bg-max ~wallpaper/artisan/A-intoTheVoid.jpg
 file --mime-type Bonhomme_hiver_2018.docx
@@ -325,6 +326,7 @@ w 181.html | sed -n '/Yogani/,/The guru is in you/p' | festival --tts
 w fundamental.php | festival --tts
 w fundamental.php | text2wave | lame - ~/audio/festival/fundamental.mp3
 wget-blog.zsh 1 vermaden.wordpress.com,vermaden.filesys.wordpress.com https://vermaden.wordpress.com/
+wifi-menu
 xdg-mime default org.qutebrowser.qutebrowser.desktop text/html
 xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
 xdg=filetype ; xdg-mime query filetype ~plain/alimen/courses.org

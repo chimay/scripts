@@ -26,6 +26,7 @@ bectl activate vanilla
 bectl list # doas
 bectl mount vanilla /mnt # doas
 bsdconfig # doas
+bsdinfo
 bsdinstall auto # doas
 bsdinstall netconfig # doas
 camcontrol devlist # cd, dvd, usb key
@@ -45,6 +46,7 @@ cp /boot/loader.efi /boot/efi/EFI/boot/bootx64.efi
 debootstrap focal /compat/ubuntu # doas
 demonte=cleusb ; umount /media/da0s1
 devinfo -rv
+dmesg
 doas -s
 ext4fuse /dev/da4s1 ~/tremplin/usbdrive
 ezjail-admin create yinyang.antra 'lo1|127.0.1.1,fxp0|192.168.1.100' # doas
@@ -217,11 +219,12 @@ zfs snapshot cle-usb/compressed@initial # doas
 zfs unmount cle-usb # doas
 zfs unmount cle-usb/compressed # doas
 zpool create cle-usb /dev/da4 # doas
+zpool iostat
 zpool list
+zpool resilver zroot # doas
 zpool scrub -s zroot # doas
 zpool scrub -w zroot # doas
 zpool scrub zroot # doas
-zpool resilver zroot # doas
 zpool status -v zroot
 zpool upgrade -a # doas
 zpool upgrade pool-name # doas

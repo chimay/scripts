@@ -7,6 +7,8 @@
 /close
 /connect -all
 /connect libera
+/connect oftc
+/connect rizon
 /dcc chat
 /exec ls
 /filter add irc_smart * irc_smart_filter *
@@ -32,17 +34,19 @@
 /me action
 /mode #channel +t
 /mode pseudo +i
+/motd
 /msg * /commande truc
 /msg alis list gen -min 100 -max 200
 /msg alis list gentoo
+/msg nickserv confirm # rizon
 /msg nickserv ghost pseudo
 /msg nickserv group
 /msg nickserv identity pseudo pass_word
 /msg nickserv register pass_word mail@example
 /msg nickserv reverify # oftc
-/msg nickserv confirm # rizon
 /msg nickserv set cloak on # oftc
 /msg pseudo message
+/names
 /names channel
 /nick pseudo
 /part
@@ -71,6 +75,7 @@
 /set logger.level.irc 3
 /set logger.look.backlog 420
 /set sec.crypt.passphrase_command "/usr/bin/pass show software/weechat-passphrase"
+/topic
 /unban
 /unset irc.server.libera.nicks
 /upgrade

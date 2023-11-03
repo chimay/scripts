@@ -13,6 +13,7 @@
 /list *ubuntu*
 /list >1000
 /me action
+/motd
 /msg alis list gen -min 100 -max 200
 /msg alis list gentoo
 /msg nickserv ghost pseudo
@@ -21,7 +22,9 @@
 /msg nickserv register pass_word mail@example
 /msg nickserv reverify # oftc
 /msg nickserv set cloak on # oftc
+/msg chanserv chan_nel pass_word
 /msg pseudo message
+/names
 /network add -sasl_mechanism plain -sasl_username user_name -sasl_password pass_word liberachat
 /part
 /query pseudo message
@@ -35,5 +38,6 @@
 /script unload mouse.pl
 /server add -auto -tls -tls_verify -network liberachat -port 6697 irc.libera.chat
 /set autolog on
+/topic
 /wc
 /window goto #vim

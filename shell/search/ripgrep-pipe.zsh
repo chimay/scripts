@@ -16,6 +16,14 @@ elif [[ $type_fichier = *:*OpenDocument* ]]
 then
 	exec odt2txt $fichier
 
+elif [[ $type_fichier = *:*XZ*compressed* ]]
+then
+	exec xzcat $fichier
+
+elif [[ $type_fichier = *:*Zstandard*compressed* ]]
+then
+	exec zstdcat $fichier
+
 elif [[ $type_fichier = *:*(PNG|JPEG|GIF)*image* ]]
 then
 	exec exiv2 pr $fichier

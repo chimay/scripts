@@ -33,7 +33,7 @@ fanions=(
 	--reject .mid,.midi,.mp3,.ogg,.wav,.ogv,.mp4,.m4v,.avi,.webm,.swf,.flv,.zip,.tar.gz,.tar.bz2
 	--backups=0
 	--user-agent=firefox
-	--wait=3
+	--wait=1
 	--random-wait
 	--tries=4
 	--timeout=12

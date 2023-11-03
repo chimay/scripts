@@ -1,6 +1,6 @@
 #! /usr/bin/env zsh
 
-# {{{ Options
+# Options {{{1
 
 emulate -R zsh
 
@@ -8,9 +8,8 @@ setopt extended_glob
 
 setopt clobber
 
-# }}}
 
-# {{{ Documentation
+# Documentation {{{1
 
 # Utile pour les extensions
 # Plus nécessaire avec file <fichier>
@@ -25,7 +24,6 @@ setopt clobber
 # pour demander une correspondance insensible à la casse
 # (requiert l’activation de extended_glob)
 
-# }}}
 
 export PROFONDEUR=${PROFONDEUR:-0}
 
@@ -35,7 +33,7 @@ fichier=$1
 
 type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 
-# {{{ Non existant
+# Non existant {{{1
 
 [[ -e $fichier ]] || {
 
@@ -45,9 +43,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exit 1
 }
 
-# }}}
 
-# {{{ Liens symboliques
+# Liens symboliques {{{1
 
 [[ -L $fichier ]] && {
 
@@ -79,9 +76,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exit 0
 }
 
-# }}}
 
-# {{{ Répertoire
+# Répertoire {{{1
 
 [[ -d $fichier ]] && {
 
@@ -91,9 +87,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec tree -C -A $fichier
 }
 
-# }}}
 
-# {{{ PDF
+# PDF {{{1
 
 [[ $type_fichier = *:*PDF* ]] && {
 
@@ -103,9 +98,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec pdftotext $fichier -
 }
 
-# }}}
 
-# {{{ PDF compressed with XZ
+# PDF compressed with XZ {{{1
 
 [[ $fichier = *.pdf.xz ]] && {
 
@@ -117,9 +111,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec pdftotext <(xz -dc $fichier) -
 }
 
-# }}}
 
-# {{{ Html
+# Html {{{1
 
 [[ $fichier = *.html ]] && {
 
@@ -129,9 +122,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec w3m -dump $fichier
 }
 
-# }}}
 
-# {{{ OpenDocument
+# OpenDocument {{{1
 
 [[ $type_fichier = *:*OpenDocument* ]] && {
 
@@ -141,9 +133,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec odt2txt $fichier
 }
 
-# }}}
 
-# {{{ Word
+# Word {{{1
 
 [[ $fichier = *.doc ]] && {
 
@@ -153,9 +144,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec antiword $fichier
 }
 
-# }}}
 
-# {{{ Docx
+# Docx {{{1
 
 [[ $fichier = *.docx ]] && {
 
@@ -165,7 +155,6 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec docx2txt $fichier -
 }
 
-# }}}
 
 #  {{{ RTF
 
@@ -177,9 +166,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec catdoc -a $fichier
 }
 
-#  }}}
 
-# {{{ Images
+# Images {{{1
 
 [[ $type_fichier = *:*(PNG|JPEG|GIF)*image* ]] && {
 
@@ -191,9 +179,7 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec exiv2 pr $fichier
 }
 
-# }}}
-
-# {{{ Tar.gzip
+# Tar.gzip {{{1
 
 [[ $fichier = *.tar.gz ]] && {
 
@@ -203,9 +189,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec tar tzvf $fichier
 }
 
-# }}}
 
-# {{{ Tar.bzip
+# Tar.bzip {{{1
 
 [[ $type_fichier = *:*tar*archive*bzip*compressed* ]] && {
 
@@ -215,9 +200,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec tar tjvf $fichier
 }
 
-# }}}
 
-# {{{ Tar.lzma
+# Tar.lzma {{{1
 
 [[ $fichier = *.(tar.lzma|tlz) ]] && {
 
@@ -227,9 +211,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec tar tvf $fichier --lzma
 }
 
-# }}}
 
-# {{{ Tar.xz
+# Tar.xz {{{1
 
 [[ $type_fichier = *:*tar*archive*XZ*compressed* ]] && {
 
@@ -239,9 +222,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec tar tJvf $fichier
 }
 
-# }}}
 
-# {{{ Tar.zst
+# Tar.zst {{{1
 
 [[ $fichier = *.tar.zst ]] && {
 
@@ -251,9 +233,7 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec tar tvf $fichier
 }
 
-# }}}
-
-# {{{ Cpio.xz
+# Cpio.xz {{{1
 
 [[ $fichier = *.cpio.xz ]] && {
 
@@ -265,9 +245,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exit 0
 }
 
-# }}}
 
-# {{{ Ar
+# Ar {{{1
 
 [[ $type_fichier = *:*[^A-Za-z]ar*archive* ]] && {
 
@@ -277,9 +256,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec ar tv $fichier
 }
 
-# }}}
 
-# {{{ Tar
+# Tar {{{1
 
 [[ $type_fichier = *:*tar*archive* ]] && {
 
@@ -289,9 +267,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec tar tvf $fichier
 }
 
-# }}}
 
-# {{{ Cpio
+# Cpio {{{1
 
 [[ $type_fichier = *:*cpio*archive* ]] && {
 
@@ -301,9 +278,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec cpio -it < $fichier
 }
 
-# }}}
 
-# {{{ Pax
+# Pax {{{1
 
 [[ $fichier = *.pax ]] && {
 
@@ -313,9 +289,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec pax < $fichier
 }
 
-# }}}
 
-# {{{ Gzip
+# Gzip {{{1
 
 [[ $type_fichier = *:*gzip*compressed* ]] && {
 
@@ -325,9 +300,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec zcat $fichier
 }
 
-# }}}
 
-# {{{ Bzip
+# Bzip {{{1
 
 [[ $type_fichier = *:*bzip*compressed* ]] && {
 
@@ -337,9 +311,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec bzcat $fichier
 }
 
-# }}}
 
-# {{{ Lzma
+# Lzma {{{1
 
 [[ $type_fichier = *:*LZMA*compressed* ]] && {
 
@@ -349,9 +322,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec lzcat $fichier
 }
 
-# }}}
 
-# {{{ Xz
+# Xz {{{1
 
 [[ $type_fichier = *:*XZ*compressed* ]] && {
 
@@ -361,9 +333,18 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec xzcat $fichier
 }
 
-# }}}
 
-# {{{ Zip & dérivés
+# Zst {{{1
+
+[[ $type_fichier = *:*Zstandard*compressed* ]] && {
+
+	echo "exec zstdcat $fichier"
+	echo
+
+	exec zstdcat $fichier
+}
+
+# Zip & dérivés {{{1
 
 [[ $type_fichier = *:*Zip*archive* ]] && {
 
@@ -373,9 +354,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec zipinfo $fichier
 }
 
-# }}}
 
-# {{{ 7z
+# 7z {{{1
 
 [[ $type_fichier = *:*7-zip*archive* ]] && {
 
@@ -385,9 +365,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec 7z l $fichier
 }
 
-# }}}
 
-# {{{ Z (compress)
+# Z (compress) {{{1
 
 [[ $fichier = *.Z ]] && {
 
@@ -397,9 +376,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec uncompress -c $fichier
 }
 
-# }}}
 
-# {{{ RAR
+# RAR {{{1
 
 [[ $fichier = *.rar ]] && {
 
@@ -409,9 +387,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec unrar -l $fichier
 }
 
-# }}}
 
-# {{{ FLAC
+# FLAC {{{1
 
 [[ $type_fichier = *:*FLAC*audio* ]] && {
 
@@ -421,9 +398,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec metaflac --list $fichier
 }
 
-# }}}
 
-# {{{ JAR
+# JAR {{{1
 
 [[ $fichier = *.jar ]] && {
 
@@ -433,9 +409,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec fastjar -x $fichier
 }
 
-# }}}
 
-# {{{ OGG / VORBIS
+# OGG / VORBIS {{{1
 
 [[ $type_fichier = *:*Ogg*Vorbis*audio* ]] && {
 
@@ -445,9 +420,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec ogginfo $fichier
 }
 
-# }}}
 
-# {{{ MP3
+# MP3 {{{1
 
 [[ $type_fichier = *:*MPEG*ADTS*layer*III* ]] && {
 
@@ -463,9 +437,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 
 }
 
-# }}}
 
-# {{{ Matroska
+# Matroska {{{1
 
 [[ $type_fichier = *:*Matroska* ]] && {
 
@@ -481,9 +454,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec mkvinfo $fichier
 }
 
-# }}}
 
-# {{{ Emacs byte-compiled
+# Emacs byte-compiled {{{1
 
 [[ $type_fichier = *:*Emacs*byte-compiled* ]] && {
 
@@ -505,9 +477,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec hexdump -C $fichier
 }
 
-# }}}
 
-# {{{ Berkeley DB
+# Berkeley DB {{{1
 
 [[ $type_fichier = *:*Berkeley*DB* ]] && {
 
@@ -529,9 +500,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec hexdump -C $fichier
 }
 
-# }}}
 
-# {{{ ID utils
+# ID utils {{{1
 
 [[ $type_fichier = *:*ID*tags*data* ]] && {
 
@@ -553,9 +523,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec hexdump -C $fichier
 }
 
-# }}}
 
-# {{{ Binaires
+# Binaires {{{1
 
 [[ $type_fichier = *:*ELF*executable* ]] && {
 
@@ -594,9 +563,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec hexdump -C $fichier
 }
 
-# }}}
 
-# {{{ Data
+# Data {{{1
 
 [[ $type_fichier = *:*data* ]] && {
 
@@ -618,9 +586,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exec hexdump -C $fichier
 }
 
-# }}}
 
-# {{{ Empty
+# Empty {{{1
 
 [[ $type_fichier = *:*empty* ]] && {
 
@@ -629,9 +596,8 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exit 0
 }
 
-# }}}
 
-# {{{ Plain text
+# Plain text {{{1
 
 [[ $type_fichier = *:*text* ]] && {
 
@@ -643,11 +609,9 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 	exit 1
 }
 
-# }}}
 
-# {{{ Indéfini
+# Indéfini {{{1
 
 echo 'Could not find an adequate filetype' >&2
 echo >&2
 
-# }}}
