@@ -16,6 +16,18 @@ elif [[ $type_fichier = *:*OpenDocument* ]]
 then
 	exec odt2txt $fichier
 
+elif [[ $type_fichier = *:*gzip*compressed* ]]
+then
+	exec zcat $fichier
+
+elif [[ $type_fichier = *:*bzip*compressed* ]]
+then
+	exec bzcat $fichier
+
+elif [[ $type_fichier = *:*lzma*compressed* ]]
+then
+	exec lzcat $fichier
+
 elif [[ $type_fichier = *:*XZ*compressed* ]]
 then
 	exec xzcat $fichier

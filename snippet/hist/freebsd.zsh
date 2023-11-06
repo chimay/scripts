@@ -62,6 +62,7 @@ freebsd-update fetch # doas
 freebsd-update install # doas
 freebsd-version
 gem install --user-install neovim
+getfacl fichier
 git clone https://git.freebsd.org/ports.git --branch main /usr/ports # doas
 gitup ports # doas
 gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 ada0 # legacy bios ???
@@ -207,6 +208,8 @@ vidcontrol -i mode
 vidcontrol red # syscons, console virtuelle, root
 vidfont # syscons, console virtuelle, root
 vmstat
+xfce4-keyboard-shortcuts
+xfce4-settings-editor
 zfs create -o canmount=noauto -o mountpoint=/ zroot/ROOT/vanilla # doas
 zfs create -o mountpoint=/usr/local/poudriere zroot/poudriere # doas
 zfs create cle-usb/compressed # doas
