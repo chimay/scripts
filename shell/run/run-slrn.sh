@@ -1,8 +1,8 @@
-#! /usr/bin/env zsh
+#! /usr/bin/env sh
 
-cd ~/racine/config/news
+cd ~/racine/config/news || exit
+cp -f newsrc.slrnpull jnewsrc
 
-cp newsrc jnewsrc
-cp newsrc ~/.newsrc
+run-slrnpull.sh
 
 exec slrn "$@"

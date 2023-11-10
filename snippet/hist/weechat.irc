@@ -33,6 +33,16 @@
 /logger flush
 /me action
 /mode #channel +t
+/mode +a pseudo
+/mode +h pseudo
+/mode +o pseudo
+/mode +q pseudo
+/mode +v pseudo
+/mode -a pseudo
+/mode -h pseudo
+/mode -o pseudo
+/mode -q pseudo
+/mode -v pseudo
 /mode pseudo +i
 /motd
 /msg * /commande truc

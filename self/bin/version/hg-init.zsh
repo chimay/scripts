@@ -23,33 +23,26 @@ else
 	dossiers+=(fun)
 	dossiers+=(hist)
 	dossiers+=(hub)
-	dossiers+=(humour)
 	dossiers+=(index)
-	dossiers+=(install)
 	dossiers+=(litera)
 	dossiers+=(log)
-	dossiers+=(multics)
 	dossiers+=(musica)
 	dossiers+=(news)
 	dossiers+=(omni)
 	dossiers+=(pack/bin)
-	dossiers+=(papier)
 	dossiers+=(pictura)
 	dossiers+=(plain)
 	dossiers+=(plugin/data)
 	dossiers+=(refer)
-	dossiers+=(repo)
-	dossiers+=(scien)
+	dossiers+=(science)
 	dossiers+=(self)
+	dossiers+=(session)
 	dossiers+=(shell)
 	dossiers+=(snippet)
-	dossiers+=(system)
-	dossiers+=(template)
-	dossiers+=(void)
 
 	# Via hub
 
-	dossiers+=(hub/log)
+	#dossiers+=(hub/log)
 fi
 
 #  Boucle {{{1

@@ -1,19 +1,7 @@
-#! /usr/bin/env zsh
+#! /usr/bin/env sh
 
-repertoire=~/nouvelles/spool
+folder=~/racine/news/spool
+server=news.eternal-september.org
 
-serveur=news.gmane.org
-
-slrnpull=/usr/local/bin/slrnpull
-
-# Make sure that all files will be readable by others
-
-#umask 022
-
-# Before getting new articles, perform expiration.
-
-$slrnpull -d $repertoire --expire
-
-# On télécharge les nouveaux articles
-
-$slrnpull -d $repertoire -h $serveur
+slrnpull -d $folder --expire
+slrnpull -d $folder -h $server --new-groups

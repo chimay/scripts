@@ -13,16 +13,26 @@
 /list *ubuntu*
 /list >1000
 /me action
+/mode +a pseudo
+/mode +h pseudo
+/mode +o pseudo
+/mode +q pseudo
+/mode +v pseudo
+/mode -a pseudo
+/mode -h pseudo
+/mode -o pseudo
+/mode -q pseudo
+/mode -v pseudo
 /motd
 /msg alis list gen -min 100 -max 200
 /msg alis list gentoo
+/msg chanserv chan_nel pass_word
 /msg nickserv ghost pseudo
 /msg nickserv group
 /msg nickserv identity pseudo pass_word
 /msg nickserv register pass_word mail@example
 /msg nickserv reverify # oftc
 /msg nickserv set cloak on # oftc
-/msg chanserv chan_nel pass_word
 /msg pseudo message
 /names
 /network add -sasl_mechanism plain -sasl_username user_name -sasl_password pass_word liberachat

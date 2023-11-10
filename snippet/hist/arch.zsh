@@ -132,6 +132,8 @@ image=compresse ; img-compresse.zsh 2048 .
 image=gray_to_black_and_white ; convert -type GrayScale -depth 1 IMG_20201112_091222.jpg vakantie.jpg
 image=grille ; montage -tile 2x2 160px-Méduse_Le_Bernin.jpg Okéanos-Mosaique-Petra-Jordanie.jpg narcisse.jpg nymphee.jpg montage.jpg
 image=tri ; img-triParDate.zsh ~/photo/import ~/photo/numerique/archives
+ionice -c 2 -n 7 ls
+ionice -c 3 ls
 ip addr
 joue=random-U ; y $(e ~aclassique/**/[P-Z]-* | shuf | head -n 1)
 journalctl -k
@@ -181,6 +183,7 @@ mpv=fifo ; mpv --idle --input-file=~/racine/run/fifo/mpv &!
 mv orgmode.tar.xz ~archive/eclats2vers-`date +%Y-%m-%d`.tar.xz
 nf ~pack/aged/* ; echo ; nf /media/cleusb/archive/*
 nf ~pack/aged/* ; echo ; nf /media/cleusb/archive/*
+nice -n 10 ls
 nmcli dev wifi
 pacman -S --force ttf-dejavu # sudo
 pacman=get-pkg ; pacman -Qqe > liste-paquets
@@ -229,6 +232,7 @@ qemu-system-x86_64 -m 2G -boot menu=on -usb -hdb /media/virtual/image.iso/TrueOS
 qrencode -o toto.jpg coucou
 qute=reddit ; gv $qute ~dotdir/qutebrowser/$HOST
 reflector --latest 12 --sort rate --save /etc/pacman.d/mirrorlist # arch, sudo
+renice -n 12 -p process_id
 restic find -r /media/cleusb/restic -s latest unison
 restic init -r sftp:user_name@shari.local:$HOME/backup/restic
 restic init -r ~/backup/restic
