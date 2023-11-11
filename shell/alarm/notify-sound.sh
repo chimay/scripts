@@ -16,7 +16,9 @@ echo "icon    : $icon"
 echo "urgency : $urgency"
 echo
 
-[ "$summary" = Reminder ] || exit 0
+[ "$summary" = Reminder ] || \
+	[ "$summary" = "New mail" ] || \
+	exit 0
 
 mpvsocket=~/racine/shell/multimedia/mpv-socket.bash
 $mpvsocket add ~/audio/bell/ding/aether.ogg

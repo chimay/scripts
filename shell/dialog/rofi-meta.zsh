@@ -14,6 +14,7 @@ menu=(
 	"§ Bureaux"
 	"^ Fenêtres"
 	"X Fermer une fenêtre"
+	"! Disposition du clavier"
 	"µ Combinaison"
 	"IO Éteindre"
 )
@@ -68,6 +69,9 @@ case $choix in
 		;;
 	"X Fermer une fenêtre")
 		~/racine/shell/dialog/rofi-fermer.zsh & disown
+		;;
+	"! Disposition du clavier")
+		~/racine/shell/dialog/rofi-clavier.zsh & disown
 		;;
 	"IO Éteindre")
 		~/racine/shell/dialog/rofi-eteindre.zsh & disown
