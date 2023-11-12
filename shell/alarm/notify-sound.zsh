@@ -1,6 +1,6 @@
-#!/usr/bin/env sh
+#!/usr/bin/env zsh
 
-exec >> ~/log/notify-sound.sh
+exec >> ~/log/notify-sound.log
 exec 2>&1
 
 appname=$1
@@ -16,12 +16,22 @@ echo "icon    : $icon"
 echo "urgency : $urgency"
 echo
 
+[ "$urgency" = CRITICAL ] || \
 [ "$summary" = Reminder ] || \
 	[ "$summary" = "New mail" ] || \
+	[[ $summary = *mentioned*you* ]] || \
 	exit 0
 
 mpvsocket=~/racine/shell/multimedia/mpv-socket.bash
-$mpvsocket add ~/audio/bell/ding/aether.ogg
+
+if [ "$urgency" = CRITICAL ]
+then
+	soundfile=~/audio/bell/ding/bol-tibetain.ogg
+else
+	soundfile=~/audio/bell/ding/aether.ogg
+fi
+
+$mpvsocket add $soundfile
 
 if [ "$HOST" = taijitu ]
 then
