@@ -18,13 +18,15 @@ echo
 
 [ "$urgency" = CRITICAL ] || \
 [ "$summary" = Reminder ] || \
-	[ "$summary" = "New mail" ] || \
 	[[ $summary = *mentioned*you* ]] || \
 	exit 0
 
 mpvsocket=~/racine/shell/multimedia/mpv-socket.bash
 
 if [ "$urgency" = CRITICAL ]
+then
+	soundfile=~/audio/bell/ding/alarm-bell.ogg
+elif [ "$summary" = Reminder ]
 then
 	soundfile=~/audio/bell/ding/bol-tibetain.ogg
 else
