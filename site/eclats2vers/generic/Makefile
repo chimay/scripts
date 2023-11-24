@@ -4,7 +4,7 @@ include Makefile.inc
 
 .DEFAULT_GOAL := sync-html
 
-#  {{{  phony
+#  phony {{{1
 
 .PHONY: debug
 
@@ -22,8 +22,6 @@ include Makefile.inc
 
 .PHONY: clean clean-html clean-epub wipe
 
-#  }}}
-
 # debug {{{1
 
 debug:
@@ -31,9 +29,7 @@ debug:
 	@echo $(EPUB_FILES)
 	@echo $(LY_MEL_FILES)
 
-# }}}1
-
-#  {{{  org -> html
+#  org -> html {{{1
 
 $(HTML_SUBDIRS):
 	$(MAKE) -C ${@:html-%=%} html
@@ -46,9 +42,7 @@ $(HTML_SUBDIRS):
 
 html: $(HTML_SUBDIRS) $(HTML_FILES)
 
-#  }}}
-
-#  {{{  org -> epub
+#  org -> epub {{{1
 
 $(EPUB_SUBDIRS):
 	$(MAKE) -C ${@:epub-%=%} epub
@@ -60,8 +54,6 @@ $(EPUB_SUBDIRS):
 
 epub: $(EPUB_SUBDIRS) $(EPUB_FILES)
 
-#  }}}
-
 # sync -> html dir {{{1
 
 dry-sync-html: html
@@ -71,8 +63,6 @@ dry-sync-html: html
 sync-html: html
 	$(RSYNC) $(ROOT_GENERIC)/ $(ROOT_HTML)
 	@$(ECHO)
-
-# }}}1
 
 # sync -> epub dir {{{1
 
@@ -84,23 +74,17 @@ sync-epub: epub
 	$(SYNC) $(ROOT_GENERIC)/ $(ROOT_EPUB)
 	@$(ECHO)
 
-# }}}1
-
-# {{{ sync all
+#sync all {{{1
 
 dry-sync: dry-sync-html dry-sync-epub
 
 sync: sync-html sync-epub
-
-# }}}
 
 # all, install {{{1
 
 all: sync-html
 
 install: sync-html
-
-# }}}1
 
 # clean, wipe {{{1
 
@@ -135,5 +119,3 @@ wipe: $(WIPE_SUBDIRS)
 	rm -f ?*.html
 	rm -f ?*.epub
 	rm -f ?*~
-
-# }}}1

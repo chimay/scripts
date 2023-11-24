@@ -65,6 +65,8 @@ gem install --user-install neovim
 getfacl fichier
 git clone https://git.freebsd.org/ports.git --branch main /usr/ports # doas
 gitup ports # doas
+gmirror label -v gm0 /dev/da0 /dev/da1
+gmirror load
 gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 ada0 # legacy bios ???
 gpart bootcode -p /boot/boot1.efi -i 1 ada0 # efi ???
 gpart show
@@ -98,6 +100,7 @@ mount_vboxvfs -w virtualbox-share /mnt # doas
 mpliste=Detente ; droits-audio.zsh ; mpc --wait update ; mpc crop ; mpc load $mpliste ; mpc play
 mpliste=Meditation ; droits-audio.zsh ; mpc --wait update ; mpc crop ; mpc load $mpliste ; mpc play
 mpliste=Tout ; droits-audio.zsh ; mpc --wait update ; mpc crop ; mpc load $mpliste ; mpc play
+netstat -rn
 networkmgr # doas
 networkmgr &
 nmcli dev wifi
@@ -198,6 +201,7 @@ sysrc bastille_enable=YES # doas
 sysrc cloned_interfaces="lo1" # doas
 sysrc ezjail_enable="YES" # doas
 sysrc ifconfig_wlan0="WPA DHCP" # doas
+sysrc keymap="us.kbd" # doas
 sysrc powerd_enable=YES # doas
 sysrc wlans_ath0="wlan0" # doas
 systat
@@ -222,6 +226,7 @@ zfs snapshot cle-usb/compressed@initial # doas
 zfs unmount cle-usb # doas
 zfs unmount cle-usb/compressed # doas
 zpool create cle-usb /dev/da4 # doas
+zpool create zmirror /dev/da0 /dev/da1 # doas
 zpool iostat
 zpool list
 zpool resilver zroot # doas

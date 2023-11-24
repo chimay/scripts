@@ -42,6 +42,14 @@ service wpa_supplicant start # su
 service xdm restart # su
 sysctl hw.disknames
 sysinst # su
+sysupgrade auto https://cdn.NetBSD.org/pub/NetBSD/NetBSD-9.2/amd64
+sysupgrade clean
+sysupgrade etcupdate
+sysupgrade fetch https://cdn.NetBSD.org/pub/NetBSD/NetBSD-9.2/amd64
+sysupgrade kernel
+sysupgrade modules
+sysupgrade postinstall
+sysupgrade sets
 url2pkg https://repo-url
 vipw
 wpa_cli scan
