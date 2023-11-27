@@ -13,6 +13,7 @@ bastille bootstrap 13.2-RELEASE update # doas
 bastille cmd ALL ps aux # doas
 bastille console tower # doas
 bastille create tower 13.2-RELEASE 192.168.1.250 wlan0 # doas
+bastille create -B tower-dhcp 14.0-RELEASE 0.0.0.0 bridge0
 bastille list # doas
 bastille list release  # doas
 bastille start tower # doas

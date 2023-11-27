@@ -27,7 +27,8 @@ include ../../../Makefile.inc
 
 debug:
 	@echo $(SUBDIRS)
-
+	@echo $(INC_FILES)
+	@ls -l $(LY_MEL_FILES)
 
 #  org -> html {{{1
 
@@ -90,7 +91,6 @@ sync: sync-html sync-epub
 all: sync-html
 
 install: sync-html
-
 
 # clean, wipe {{{1
 
