@@ -5,5 +5,5 @@ end=$2
 shift ; shift
 arguments="$*"
 
-echo timidity -G"$begin"-"$end"m "$arguments"
-timidity -G"$begin"-"$end"m "$arguments"
+echo timidity -G "$begin"-"$end"m "$arguments"
+timidity -G "$begin"-"$end"m "$arguments"
