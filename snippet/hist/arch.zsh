@@ -291,6 +291,7 @@ sync=laozu-force ; unison remote $HOME ssh://user_name@laozu.local//$HOME -force
 sync=pack-essentiel ; sn -n ~pack/aged/*(/om[1]) /media/cleusb/archive
 sync=quigonjinn-auto ; unison remote $HOME ssh://user_name@quigonjinn.local//$HOME
 sync=tixu-auto ; unison remote $HOME ssh://user_name@tixu.local//$HOME
+systemctl --user import-environment DISPLAY
 systemctl enable nmb.service --now # sudo
 systemctl enable smb.service --now # sudo
 systemctl enable wsdd.service --now # sudo

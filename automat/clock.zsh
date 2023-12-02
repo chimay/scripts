@@ -319,7 +319,11 @@ do
 	# bell ?
 	intmin=minute
 	(( intmin = intmin - first ))
-	(( intmin % interval == 0 )) && bell=1
+	(( intmodulo = intmin % interval ))
+	(( intmodulo == 0 )) && bell=1
+	echo intmin : $intmin
+	echo intmodulo : $intmodulo
+	echo
 	# ante / post
 	(( (intmin + ante) % interval == 0 )) && bell=1
 	(( (intmin - post) % interval == 0 )) && bell=1

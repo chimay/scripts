@@ -19,21 +19,16 @@ menu=(
 	"IO Éteindre"
 )
 
-# Rofi dmenu {{{1
+# Rofi in dmenu mode {{{1
 
 choix=$(print -l $menu | rofi -dmenu -p "Menu " -i)
-
-# }}}1
 
 # Affichage {{{1
 
 echo choix : $choix
 echo
 
-# }}}1
-
 case $choix in
-
 	"! Applications")
 		~/racine/shell/dialog/rofi-run.zsh & disown
 		;;
@@ -56,7 +51,8 @@ case $choix in
 		~/racine/shell/dialog/rofi-buku.zsh & disown
 		;;
 	"ç Presse-papier")
-		~/racine/shell/dialog/rofi-greenclip.zsh & disown
+		#~/racine/shell/dialog/rofi-greenclip.zsh & disown
+		~/racine/shell/dialog/rofi-clipmenu.zsh & disown
 		;;
 	"§ Bureaux")
 		~/racine/shell/dialog/rofi-bureau.zsh & disown
