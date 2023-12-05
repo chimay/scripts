@@ -142,7 +142,7 @@ ring-bell () {
 	local hour=$1
 	local minute=$2
 	(( pause > 0 )) && return 0
-	echo ringing at $hour:$minute
+	echo "ringing at $hour:$minute + ($first)"
 	echo
 	(( chime == 2 )) && {
 		cloche=$audiodir/chime-$hour-$minute.ogg
@@ -317,17 +317,20 @@ do
 	hour=`date +%H`
 	minute=`date +%M`
 	# bell ?
-	(( intmin = minute - first ))
+	(( intmin = (minute - first) % 60 ))
+	minute=$(printf '%.2d' intmin)
 	(( intmodulo = intmin % interval ))
 	(( intmodulo == 0 )) && bell=1
 	echo intmin : $intmin
 	echo intmodulo : $intmodulo
 	echo
+	echo "time + first : $hour:$minute"
+	echo
 	# ante / post
 	(( (intmin + ante) % interval == 0 )) && bell=1
 	(( (intmin - post) % interval == 0 )) && bell=1
 	# main bell
-	(( bell == 1 )) && ring-bell $hour $intmin
+	(( bell == 1 )) && ring-bell $hour $minute
 	# sync with minute start
 	wait-until-next-minute
 done

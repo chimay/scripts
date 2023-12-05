@@ -24,6 +24,7 @@ updatedb -v -l 0 -U ~/racine -o "$DB_DIR/racine.db" \
 	$RACINE/varia
 	"
 
+updatedb -v -l 0 -U ~/graphix -o "$DB_DIR"/graphix.db
 updatedb -v -l 0 -U ~/audio -o "$DB_DIR"/audio.db
 updatedb -v -l 0 -U ~/photo -o "$DB_DIR"/photo.db
 
