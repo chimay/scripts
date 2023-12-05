@@ -239,7 +239,7 @@ integer volume=100
 integer pause=0
 integer stop=0
 
-integer intmin
+integer intmin intmodulo
 
 audiodir=~/audio/bell/clock
 
@@ -317,8 +317,7 @@ do
 	hour=`date +%H`
 	minute=`date +%M`
 	# bell ?
-	intmin=minute
-	(( intmin = intmin - first ))
+	(( intmin = minute - first ))
 	(( intmodulo = intmin % interval ))
 	(( intmodulo == 0 )) && bell=1
 	echo intmin : $intmin
@@ -328,7 +327,7 @@ do
 	(( (intmin + ante) % interval == 0 )) && bell=1
 	(( (intmin - post) % interval == 0 )) && bell=1
 	# main bell
-	(( bell == 1 )) && ring-bell $hour $minute
+	(( bell == 1 )) && ring-bell $hour $intmin
 	# sync with minute start
 	wait-until-next-minute
 done
