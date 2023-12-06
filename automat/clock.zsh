@@ -18,7 +18,7 @@ help () {
 	echo "Available variables"
 	echo
 	echo 'interval : time in minutes between chimes'
-	echo 'first    : number of minutes of the first chime in the hour (defaults to zero)'
+	echo 'phase    : the clock is shifted phase minutes from real time (defaults to zero)'
 	echo 'ante     : number of minutes of the pre-chime ; 0 means no pre-chime'
 	echo 'post     : number of minutes of the post-chime ; 0 means no post-chime'
 	echo 'chime    : complexity of the instrumental chime : 2 means full, 1 simple, 0 for none'
@@ -72,7 +72,7 @@ wait-until-next-minute () {
 
 echo-status-vars () {
 	echo interval   : $interval
-	echo first      : $first
+	echo phase      : $phase
 	echo ante       : $ante
 	echo post       : $post
 	echo chime      : $chime
@@ -90,7 +90,7 @@ write-status-file () {
 	echo
 	cat <<- fin >| $statusfile
 		interval = $interval
-		first = $first
+		phase = $phase
 		ante = $ante
 		post = $post
 		chime = $chime
@@ -105,6 +105,7 @@ write-status-file () {
 read-status-file () {
 	local statusfile=$1
 	local stamp=$2
+	[ $statusfile -nt $stamp ] || return 0
 	echo "reading status file"
 	echo
 	touch $stamp
@@ -138,11 +139,48 @@ halt () {
 	break
 }
 
+what-time-is-it () {
+	# format 00 .. 23 & 00 .. 59
+	hour=$(date +%H)
+	minute=$(date +%M)
+}
+
+shift-clock () {
+	(( minute += phase ))
+	(( minute < 0 )) && {
+		(( hour -= 1 ))
+		(( minute += 60 ))
+	}
+	(( minute >= 60 )) && {
+		(( hour += 1 ))
+		(( minute -= 60 ))
+	}
+	hour=$(printf '%.2d' hour)
+	minute=$(printf '%.2d' minute)
+	echo time shifted $phase minutes : $hour:$minute
+	echo
+}
+
+check-interval () {
+	bell=0
+	(( modulo = minute % interval ))
+	(( moduloante = (minute + ante) % interval ))
+	(( modulopost = (minute - post) % interval ))
+	(( modulo == 0 )) && bell=1
+	(( moduloante == 0 )) && bell=1
+	(( modulopost == 0 )) && bell=1
+	echo minute modulo interval : $modulo
+	echo minute + ante modulo interval : $moduloante
+	echo minute - post modulo interval : $modulopost
+	echo
+	echo bell : $bell
+	echo
+}
+
 ring-bell () {
-	local hour=$1
-	local minute=$2
+	(( bell == 1 )) || return 0
 	(( pause > 0 )) && return 0
-	echo "ringing at $hour:$minute + ($first)"
+	echo "ringing at $hour:$minute (shifted $phase minutes)"
 	echo
 	(( chime == 2 )) && {
 		cloche=$audiodir/chime-$hour-$minute.ogg
@@ -230,7 +268,7 @@ ps auxww | $=grep -v grep | $=grep -v $$ | $=grep clock.zsh && {
 statusfile=~/racine/run/clock/clock.status
 
 integer interval=15
-integer first=0
+integer phase=0
 integer ante=0
 integer post=0
 integer chime=2
@@ -307,31 +345,14 @@ wait-until-next-minute
 while true
 do
 	horodate
-	[ $statusfile -nt $stamp ] && read-status-file $statusfile $stamp
+	read-status-file $statusfile $stamp
 	echo-status-vars
 	rest $pause
 	halt $stop
-	# variables
-	bell=0
-	# format 00 .. 23 & 00 .. 59
-	hour=`date +%H`
-	minute=`date +%M`
-	# bell ?
-	(( intmin = (minute - first) % 60 ))
-	minute=$(printf '%.2d' intmin)
-	(( intmodulo = intmin % interval ))
-	(( intmodulo == 0 )) && bell=1
-	echo intmin : $intmin
-	echo intmodulo : $intmodulo
-	echo
-	echo "time + first : $hour:$minute"
-	echo
-	# ante / post
-	(( (intmin + ante) % interval == 0 )) && bell=1
-	(( (intmin - post) % interval == 0 )) && bell=1
-	# main bell
-	(( bell == 1 )) && ring-bell $hour $minute
-	# sync with minute start
+	what-time-is-it
+	shift-clock
+	check-interval
+	ring-bell
 	wait-until-next-minute
 done
 
