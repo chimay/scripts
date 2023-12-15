@@ -13,6 +13,8 @@ archlinux-java fix
 archlinux-java help
 archlinux-java set java-8-openjdk # sudo
 archlinux-java status
+aria2c -x 2 some-url
+aria2c mirrors-urls
 blkid # sudo
 borg extract ~/backup/borg::taijitu-2023-08-25T20:10:22.264263
 borg list ~/backup/borg
@@ -322,6 +324,16 @@ touchpad=list-options ; xinput list-props 15
 touchpad=tap ; xinput set-prop 15 289 1
 tri=audio ; e ~/audio/**/0-*.* | shuf >! ~/racine/musica/list/triage.m3u
 truncate -s 8G swapfile # sudo
+ts -C
+ts -D 0,1,3 sleep 10  # runs after jobs 0, 1 and 3
+ts -K
+ts -L label sleep 10
+ts -S 7
+ts -W 0,2,3 sleep 10  # to run this job, jobs 0, 2 and 3 need to finish well
+ts -c 0
+ts -d sleep 10  # does not care about exit code
+ts -k 0
+ts sleep 300
 update=1 ; teste-connexion.zsh && pk cln && sync && sleep 3 && pk sf && sleep 3 && w https://archlinux.org && pk ++
 usermod -aG wheel,adm,sys,log,network,video,audio,power,lp,autologin user_name # sudo
 var=( ${(f)"$(< fichier )"} )
