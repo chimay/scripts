@@ -4,7 +4,7 @@ setopt null_glob
 
 date +" [=] %A %d %B %Y  (o) %H:%M  | %:z | "
 
-directory=${1:-~/racine/source}
+directory=${1:-.}
 
 cd $directory
 
