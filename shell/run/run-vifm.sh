@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
 
-# vifmrun wrapper : to be able to preview images
 kitty vifmrun
 
 cd ~/racine/config/fileman/vifm

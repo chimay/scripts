@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-redshift-gtk >>! ~/log/redshift.log 2>&1
+redshift-gtk >> ~/log/redshift.log 2>&1
