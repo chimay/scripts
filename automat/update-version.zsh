@@ -8,7 +8,7 @@ directory=${1:-.}
 
 cd $directory
 
-# {{{ Git
+# Git {{{1
 
 for folder in */.git(:h)
 do
@@ -27,9 +27,7 @@ do
 	cd -
 done
 
-# }}}
-
-# {{{ Mercurial
+# Mercurial {{{1
 
 for folder in */.hg(:h)
 do
@@ -48,9 +46,7 @@ do
 	cd -
 done
 
-# }}}
-
-# {{{ Bazaar
+# Bazaar {{{1
 
 for folder in */.bzr(:h)
 do
@@ -69,9 +65,7 @@ do
 	cd -
 done
 
-# }}}
-
-# {{{ Concurrent Version System
+# Concurrent Version System {{{1
 
 for folder in */CVS(:h)
 do
@@ -90,7 +84,7 @@ do
 	cd -
 done
 
-# }}}
+# Fin {{{1
 
 	echo ""
 	echo "===================================="
