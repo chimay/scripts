@@ -1,0 +1,41 @@
+# vim: set filetype=zsh :
+
+# {{{ Options de zsh
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+zmodload zsh/regex
+
+setopt null_glob
+
+# }}}
+
+local note racine nom repertoire
+
+note='0'
+racine=~/audio
+
+# {{{ Morceau actuellement joué
+
+nom=`mpc -f "%file%" | awk '{ if ( NR == 1 ) print $0 }'`
+
+nom=${racine}/${nom}
+
+# }}}
+
+# {{{ Changement de répertoire
+
+repertoire=${nom%/?*}
+
+[[ $repertoire = $nom ]] && repertoire=.
+
+echo "cd $repertoire"
+echo
+
+cd $repertoire || { echo "Le répertoire $repertoire n’existe pas !" ; return 1 }
+
+# }}}

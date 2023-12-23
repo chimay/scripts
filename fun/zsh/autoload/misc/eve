@@ -1,0 +1,114 @@
+# vim: set filetype=zsh :
+
+# {{{ Options de zsh
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+zmodload zsh/regex
+
+setopt null_glob
+
+# }}}
+
+# {{{ Variables
+
+local note argumen
+local nom repertoire fichier
+local titre nouveauNom essai
+local tentative
+
+# }}}
+
+note='NONE'
+argumen=()
+
+# {{{ Boucle arguments
+
+while true
+do
+	case $1 in
+		[0-9a-zA-Z])
+			note=$1
+			shift
+			;;
+		?*)
+			argumen+=$1
+			shift
+			;;
+		*)
+			break
+			;;
+	esac
+done
+
+# }}}
+
+# {{{ Format de la note
+
+# Minuscules ?
+#note=${note:l}
+
+# Majuscules ?
+note=${note:u}
+
+# }}}
+
+# {{{ Evaluation
+
+for nom in $argumen
+do
+	# Très lent dans une boucle
+	#repertoire=`dirname $nom`
+	#fichier=`basename $nom`
+
+	repertoire=${nom%/?*}
+	fichier=${nom##?*/}
+
+	[[ $repertoire = $nom ]] && repertoire=.
+
+	echo "Répertoire : $repertoire"
+	echo
+
+	if [[ $fichier = [0-9a-zA-Z]-* ]]
+	then
+		titre=${fichier#?-}
+	else
+		titre=$fichier
+	fi
+
+	if [[ $note != 'NONE' ]]
+	then
+		nouveauNom=${note}-${titre}
+	else
+		nouveauNom=$titre
+	fi
+
+	if [[ -e $repertoire/$fichier && $fichier != $nouveauNom ]]
+	then
+		echo "mv $fichier $nouveauNom"
+		echo
+
+		mv $repertoire/$fichier $repertoire/$nouveauNom
+	else
+		for tentative in $repertoire/?-${titre} $repertoire/$titre
+		do
+			essai=${tentative##?*/}
+
+			if [[ -e $repertoire/$essai && $essai != $nouveauNom ]]
+			then
+				echo "mv $essai $nouveauNom"
+				echo
+
+				mv $repertoire/$essai $repertoire/$nouveauNom
+
+				break
+			fi
+		done
+	fi
+done
+
+# }}}

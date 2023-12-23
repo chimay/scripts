@@ -1,0 +1,13 @@
+# vim: set filetype=zsh :
+
+# {{{ Options de zsh
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+# }}}
+
+command ping "$@" | sed 's/^/pong ... /'

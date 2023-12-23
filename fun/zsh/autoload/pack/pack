@@ -1,0 +1,1759 @@
+# vim: set filetype=zsh :
+
+# {{{ Options
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+setopt extended_glob
+
+#setopt null_glob
+
+#zmodload zsh/regex
+
+# }}}
+
+# {{{ Variables
+
+local commande
+local argumen
+local operasys
+
+# }}}
+
+# {{{ Arguments
+
+commande=sync
+
+argumen=()
+
+# {{{ Commande
+
+case $1 in
+	help|h|man)
+		commande=help
+		shift
+		;;
+
+	sync|sy|=)
+		commande=sync
+		shift
+		;;
+	sync-files|sf|f=)
+		commande=sync-files
+		shift
+		;;
+	sync-ports|sp|p=)
+		commande=sync-ports
+		shift
+		;;
+	sync-keys|sk|k=)
+		commande=sync-keys
+		shift
+		;;
+
+	install|ins|in|+)
+		commande=install
+		shift
+		;;
+	reinstall|reins|rein)
+		commande=reinstall
+		shift
+		;;
+	local-install|localinstall|locins|locin|lin)
+		commande=local-install
+		shift
+		;;
+	source-compile-install|source-install|source|src)
+		commande=source-compile-install
+		shift
+		;;
+
+	remove|rm|delete|del|out|ou|x)
+		commande=remove
+		shift
+		;;
+	purge|xx)
+		commande=purge
+		shift
+		;;
+
+	update|upgrade|up|+=)
+		commande=update
+		shift
+		;;
+	full-update|full-upgrade|fulup|dist-upgrade|++)
+		commande=full-update
+		shift
+		;;
+	bin-src-update|+++)
+		commande=bin-src-update
+		shift
+		;;
+
+	remove-orphan|ro|autoremove|ar)
+		commande=remove-orphan
+		shift
+		;;
+
+	clean-cache|clean|cln|c)
+		commande=clean
+		shift
+		;;
+
+	search|s|:)
+		commande=search
+		shift
+		;;
+	search-file|file|f|/)
+		commande=search-file
+		shift
+		;;
+
+	info|i|show|sh|description|desc|d)
+		commande=info
+		shift
+		;;
+	list-files|ls|l|files|fil|content|cont)
+		commande=list-files
+		shift
+		;;
+
+	depends|depend|dep)
+		commande=depends
+		shift
+		;;
+	reverse-depends|rdepends|rdepend|rdep)
+		commande=reverse-depends
+		shift
+		;;
+
+
+	list-group-members|list-group|lsgrp|lg|group|g)
+		commande=list-group-members
+		shift
+		;;
+
+	?*)
+		commande=search
+		;;
+esac
+
+# }}}
+
+while true
+do
+	case $1 in
+		?*)
+			argumen+=$1
+			shift
+			;;
+		*)
+			break
+			;;
+	esac
+done
+
+# }}}
+
+# {{{ Valeurs par défaut
+
+(( $#commande == 0 )) && commande=sync
+
+# }}}
+
+# {{{ Distribution
+
+if which pacman &>>/dev/null
+then
+	operasys=archlinux
+
+elif which apt &>>/dev/null
+then
+	operasys=debian
+
+elif which pkg &>>/dev/null
+then
+	operasys=freebsd
+
+elif which yum &>>/dev/null
+then
+	operasys=fedora
+
+elif which zypper &>>/dev/null
+then
+	operasys=suse
+
+elif which emerge &>>/dev/null
+then
+	operasys=gentoo
+fi
+
+(( $#operasys == 0 )) && {
+
+	echo "Impossible de déterminer la distribution !"
+
+	return 1
+}
+
+# }}}
+
+# {{{ Affichage
+
+echo "Distribution : $operasys"
+echo
+echo "Commande : $commande"
+echo
+
+# }}}
+
+# {{{ Aide
+
+[[ $commande = help ]] && {
+
+echo 'pack help, pack man : this help'
+echo
+echo 'pack sync|sy|= : sync local cache with repositories (default action)'
+echo
+echo 'pack sync-files|sf|f= : sync package contents (files) with repositories'
+echo
+echo 'pack sync-ports|sp|p= : sync local ports with repositories'
+echo
+echo 'pack install|ins|in|+ <package(s)> : install a package'
+echo
+echo 'pack reinstall|reins|rein <package(s)> : reinstall a package'
+echo
+echo 'pack local-install|localinstall|locins|locin|lin <package(s)> : install a local package'
+echo
+echo 'pack source-compile-install|source-install|source|src <package(s)> : fetch, compile & install a local package'
+echo
+echo 'pack remove|rm|delete|del|out|ou|x <package(s)> : remove a package'
+echo
+echo 'pack purge|xx <package(s)> : purge a package (remoe package and configuration files)'
+echo
+echo 'pack update|upgrade|up|+= : update packages'
+echo
+echo 'pack full-update|full-upgrade|fulup|dist-upgrade|++ : full-update packages, including changes in dependancies'
+echo
+echo 'pack bin-src-update|+++ : full-update binary and source packages, including changes in dependancies'
+echo
+echo 'pack clean|cln|c : clean local cache'
+echo
+echo 'pack search|s|: <pattern> : search in package name & description'
+echo
+echo 'pack <pattern> : search in package name & description'
+echo '  (shortcut for pack search <pattern>, <pattern> must NOT be identical to a pack subcommand)'
+echo
+echo 'pack search-file|file|f|/ <file> : search file in packages'
+echo
+echo 'pack info|i|show|sh|description|desc|d <package> : info about a package'
+echo
+echo 'pack list-files|ls|l|files|fil|content|cont <package> : list content of a package'
+echo
+echo 'pack depends|depend|dep <package> : show the dependancies of a package'
+echo
+echo 'pack reverse-depends|rdepends|rdepend|rdep <package> : show the reverse dependancies of a package'
+echo
+echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list content of a group of packages'
+
+} | sed 's/^/  /'
+
+# }}}
+
+# ------------------------------------
+
+# {{{ Archlinux
+
+[[ $operasys = archlinux ]] && {
+
+# {{{ Sync
+
+[[ $commande = sync ]] && {
+
+	echo "sudo pacman -Syy"
+	echo
+
+	sudo pacman -Syy
+}
+
+# }}}
+
+# {{{ Sync-files
+
+[[ $commande = sync-files ]] && {
+
+	echo "sudo pkgfile -u"
+	echo
+
+	sudo pkgfile -u
+
+	echo "sudo pacman -Fy"
+	echo
+
+	sudo pacman -Fy
+}
+
+# }}}
+
+# {{{ Sync-ports
+
+[[ $commande = sync-ports ]] && {
+
+	echo "asp update"
+	echo
+
+	asp update
+}
+
+# }}}
+
+# {{{ Sync-keys
+
+[[ $commande = sync-keys ]] && {
+
+	echo "sudo pacman-key --refresh-keys"
+	echo
+
+	sudo pacman-key --refresh-keys
+}
+
+# }}}
+
+# {{{ Install
+
+[[ $commande = install ]] && {
+
+	echo "sudo pacman -S $=argumen"
+	echo
+
+	sudo pacman -S $=argumen
+}
+
+# }}}
+
+# {{{ Reinstall
+
+[[ $commande = reinstall ]] && {
+
+	echo "sudo pacman -S $=argumen"
+	echo
+
+	sudo pacman -S $=argumen
+}
+
+# }}}
+
+# {{{ Local-install
+
+[[ $commande = local-install ]] && {
+
+	echo "sudo pacman -U $=argumen"
+	echo
+
+	sudo pacman -U $=argumen
+}
+
+# }}}
+
+# {{{ Source-compile-install
+
+[[ $commande = source-compile-install ]] && {
+
+# 	echo "trizen -S $=argumen"
+# 	echo
+#
+# 	trizen -S $=argumen
+
+	echo "paru $=argumen"
+	echo
+
+	paru $=argumen
+}
+
+# }}}
+
+# {{{ Remove
+
+[[ $commande = remove ]] && {
+
+	echo "sudo pacman -Rns $=argumen"
+	echo
+
+	sudo pacman -Rns $=argumen
+}
+
+# }}}
+
+# {{{ Update
+
+[[ $commande = update ]] && {
+
+	echo "sudo pacmatic -Syyu"
+	echo
+
+	sudo pacmatic -Syyu
+}
+
+# }}}
+
+# {{{ Full-update
+
+[[ $commande = full-update ]] && {
+
+	echo "sudo pacmatic -Syyu"
+	echo
+
+	sudo pacmatic -Syyu
+}
+
+# }}}
+
+# {{{ Bin-src-update
+
+[[ $commande = bin-src-update ]] && {
+
+# 	echo "yaourt -Syua --devel"
+# 	echo
+#
+# 	yaourt -Syua --devel
+
+	echo "trizen -Syyu"
+	echo
+
+	trizen -Syyu
+}
+
+# }}}
+
+# Remove orphans {{{2
+
+[[ $commande = remove-orphan ]] && {
+
+	echo "pacman -Qdtq | sudo pacman -Rns -"
+	echo
+
+	pacman -Qdtq | sudo pacman -Rns -
+}
+
+# }}}2
+
+# {{{ Clean cache
+
+[[ $commande = clean ]] && {
+
+	echo "sudo pacman -Scc"
+	echo
+
+	sudo pacman -Scc
+
+	sleep 1 ; sync ; sleep 1
+
+# 	echo
+# 	echo "sudo pacman-optimize"
+# 	echo
+
+# 	sudo pacman-optimize
+
+}
+
+# }}}
+
+# {{{ Search
+
+[[ $commande = search ]] && {
+
+	#echo "pacman -Ss $=argumen"
+	#echo
+
+	#pacman -Ss $=argumen
+
+	echo "pacsearch $=argumen"
+	echo
+
+	pacsearch $=argumen
+}
+
+# }}}
+
+# {{{ Search-file
+
+[[ $commande = search-file ]] && {
+
+	echo "pkgfile $=argumen"
+	echo
+
+	pkgfile $=argumen
+
+	echo
+	echo "pacman -Qo $=argumen"
+	echo
+
+	pacman -Qo $=argumen
+
+	echo
+	echo "pacman -F $=argumen"
+	echo
+
+	pacman -F $=argumen
+}
+
+# }}}
+
+# {{{ Info
+
+[[ $commande = info ]] && {
+
+	echo "pacman -Si $=argumen"
+	echo
+
+	pacman -Si $=argumen
+}
+
+# }}}
+
+# {{{ List-files
+
+[[ $commande = list-files ]] && {
+
+	#echo "pacman -Ql $=argumen"
+	#echo
+
+	#pacman -Ql $=argumen
+
+	echo "pkgfile -l $=argumen"
+	echo
+
+	pkgfile -l $=argumen
+}
+
+# }}}
+
+# {{{ Depends
+
+[[ $commande = depends ]] && {
+
+	echo "pactree $=argumen"
+	echo
+
+	pactree $=argumen
+}
+
+# }}}
+
+# {{{ Reverse-depends
+
+[[ $commande = reverse-depends ]] && {
+
+	# Différence avec
+	# whoneeds $=argumen ?
+
+	echo "pacman -Sii $=argumen"
+	echo
+
+	pacman -Sii $=argumen
+}
+
+# }}}
+
+# {{{ List-group-members
+
+[[ $commande = list-group-members ]] && {
+
+	echo "pacman -Sg $=argumen"
+	echo
+
+	pacman -Sg $=argumen
+}
+
+# }}}
+
+}
+
+# }}}
+
+# {{{ Debian
+
+[[ $operasys = debian ]] && {
+
+# {{{ Sync
+
+[[ $commande = sync ]] && {
+
+	echo "sudo apt-get update"
+	echo
+
+	sudo apt-get update
+}
+
+# }}}
+
+# {{{ Sync-files
+
+[[ $commande = sync-files ]] && {
+
+	echo "sudo apt-file update"
+	echo
+
+	sudo apt-file update
+}
+
+# }}}
+
+# {{{ Sync-ports
+
+[[ $commande = sync-ports ]] && {
+
+
+}
+
+# }}}
+
+# {{{ Sync-keys
+
+[[ $commande = sync-keys ]] && {
+
+	echo ""
+	echo
+
+
+}
+
+# }}}
+
+# {{{ Install
+
+[[ $commande = install ]] && {
+
+	echo "sudo apt-get install $=argumen"
+	echo
+
+	sudo apt-get install $=argumen
+}
+
+# }}}
+
+# {{{ Reinstall
+
+[[ $commande = reinstall ]] && {
+
+	echo "sudo apt-get install --reinstall $=argumen"
+	echo
+
+	sudo apt-get install --reinstall $=argumen
+}
+
+# }}}
+
+# {{{ Local-install
+
+[[ $commande = local-install ]] && {
+
+	echo "sudo dpkg -i $=argumen"
+	echo
+
+	sudo dpkg -i $=argumen
+}
+
+# }}}
+
+# {{{ Source-compile-install
+
+[[ $commande = source-compile-install ]] && {
+
+}
+
+# }}}
+
+# {{{ Remove
+
+[[ $commande = remove ]] && {
+
+	echo "sudo apt-get remove $=argumen"
+	echo
+
+	sudo apt-get remove $=argumen
+}
+
+# }}}
+
+# {{{ Purge
+
+[[ $commande = purge ]] && {
+
+	echo "sudo apt-get purge $=argumen"
+	echo
+
+	sudo apt-get purge $=argumen
+}
+
+# }}}
+
+# {{{ Update
+
+[[ $commande = update ]] && {
+
+	echo "sudo apt-get update && sudo apt-get upgrade"
+	echo
+
+	sudo apt-get update && sudo apt-get upgrade
+}
+
+# }}}
+
+# {{{ Full-update
+
+[[ $commande = full-update ]] && {
+
+	echo "sudo apt-get update && sudo apt-get dist-upgrade"
+	echo
+
+	sudo apt-get update && sudo apt-get dist-upgrade
+}
+
+# }}}
+
+# {{{ Bin-src-update
+
+[[ $commande = bin-src-update ]] && {
+
+}
+
+# }}}
+
+# Remove orphans {{{2
+
+[[ $commande = remove-orphan ]] && {
+
+	echo "apt autoremove"
+	echo
+
+	apt autoremove
+}
+
+# }}}2
+
+# {{{ Clean cache
+
+[[ $commande = clean ]] && {
+
+	echo "sudo apt-get autoclean"
+	echo
+
+	sudo apt-get autoclean
+}
+
+# }}}
+
+# {{{ Search
+
+[[ $commande = search ]] && {
+
+	echo "apt-cache search $=argumen"
+	echo
+
+	apt-cache search $=argumen
+}
+
+# }}}
+
+# {{{ Search-file
+
+[[ $commande = search-file ]] && {
+
+	echo "apt-file search $=argumen"
+	echo
+
+	apt-file search $=argumen
+}
+
+# }}}
+
+# {{{ Info
+
+[[ $commande = info ]] && {
+
+	echo "apt-cache show $=argumen"
+	echo
+
+	apt-cache show $=argumen
+}
+
+# }}}
+
+# {{{ List-files
+
+[[ $commande = list-files ]] && {
+
+	echo "apt-file list $=argumen"
+	echo
+
+	apt-file list $=argumen
+}
+
+# }}}
+
+# {{{ Depends
+
+[[ $commande = depends ]] && {
+
+	echo "apt-cache depends $=argumen"
+	echo
+
+	apt-cache depends $=argumen
+}
+
+# }}}
+
+# {{{ Reverse-depends
+
+[[ $commande = reverse-depends ]] && {
+
+	echo "apt-cache rdepends $=argumen"
+	echo
+
+	apt-cache rdepends $=argumen
+}
+
+# }}}
+
+# {{{ List-group-members
+
+[[ $commande = list-group-members ]] && {
+
+}
+
+# }}}
+
+}
+
+# }}}
+
+# {{{ Freebsd
+
+[[ $operasys = freebsd ]] && {
+
+# {{{ Sync
+
+[[ $commande = sync ]] && {
+
+	echo "sudo pkg update"
+	echo
+
+	sudo pkg update
+}
+
+# }}}
+
+# {{{ Sync-files
+
+[[ $commande = sync-files ]] && {
+
+	echo "Not defined"
+	echo
+}
+
+# }}}
+
+# {{{ Sync-ports
+
+[[ $commande = sync-ports ]] && {
+
+	echo "sudo portsnap fetch update"
+	echo
+
+	sudo portsnap fetch update
+}
+
+# }}}
+
+# {{{ Sync-keys
+
+[[ $commande = sync-keys ]] && {
+
+	echo "Not defined"
+	echo
+}
+
+# }}}
+
+# {{{ Install
+
+[[ $commande = install ]] && {
+
+	echo "sudo pkg install $=argumen"
+	echo
+
+	sudo pkg install $=argumen
+}
+
+# }}}
+
+# {{{ Reinstall
+
+[[ $commande = reinstall ]] && {
+
+	echo "Not defined"
+	echo
+}
+
+# }}}
+
+# {{{ Local-install
+
+[[ $commande = local-install ]] && {
+
+	echo "Not defined"
+	echo
+}
+
+# }}}
+
+# {{{ Source-compile-install
+
+[[ $commande = source-compile-install ]] && {
+
+	echo "cd /usr/ports ; make search name=$=argumen"
+	echo
+
+	cd /usr/ports ; make search name=$=argumen
+}
+
+# }}}
+
+# {{{ Remove
+
+[[ $commande = remove ]] && {
+
+	echo "sudo pkg delete $=argumen"
+	echo
+
+	sudo pkg delete $=argumen
+}
+
+# }}}
+
+# {{{ Update
+
+[[ $commande = update ]] && {
+
+	echo "sudo pkg upgrade"
+	echo
+
+	sudo pkg upgrade
+}
+
+# }}}
+
+# {{{ Full-update
+
+[[ $commande = full-update ]] && {
+
+	echo sudo pkg upgrade""
+	echo
+
+	sudo pkg upgrade
+}
+
+# }}}
+
+# {{{ Bin-src-update
+
+[[ $commande = bin-src-update ]] && {
+
+	echo "Not defined"
+	echo
+}
+
+# }}}
+
+# Remove orphans {{{2
+
+[[ $commande = remove-orphan ]] && {
+
+	echo "sudo pkg autoremove"
+	echo
+
+	sudo pkg autoremove
+}
+
+# }}}2
+
+# {{{ Clean cache
+
+[[ $commande = clean ]] && {
+
+}
+
+# }}}
+
+# {{{ Search
+
+[[ $commande = search ]] && {
+
+	echo "pkg search $=argumen"
+	echo
+
+	pkg search $=argumen
+}
+
+# }}}
+
+# {{{ Search-file
+
+[[ $commande = search-file ]] && {
+
+	echo "pkg which $=argumen"
+	echo
+
+	pkg which $=argumen
+}
+
+# }}}
+
+# {{{ Info
+
+[[ $commande = info ]] && {
+
+	echo "pkg info $=argumen"
+	echo
+
+	pkg info $=argumen
+}
+
+# }}}
+
+# {{{ List-files
+
+[[ $commande = list-files ]] && {
+
+	echo "Not defined"
+	echo
+}
+
+# }}}
+
+# {{{ Depends
+
+[[ $commande = depends ]] && {
+
+	echo "Not defined"
+	echo
+}
+
+# }}}
+
+# {{{ Reverse-depends
+
+[[ $commande = reverse-depends ]] && {
+
+	echo "Not defined"
+	echo
+}
+
+# }}}
+
+# {{{ List-group-members
+
+[[ $commande = list-group-members ]] && {
+
+	echo "Not defined"
+	echo
+}
+
+# }}}
+
+}
+
+# }}}
+
+# Less used
+
+# {{{ Fedora
+
+[[ $operasys = fedora ]] && {
+
+# {{{ Sync
+
+[[ $commande = sync ]] && {
+
+	# Note : yum vérifie la synchronisation de son cache par rapport aux dépôts
+	# avant de faire quoi que ce soit
+
+	echo "sudo yum clean expire-cache && sudo yum check-update"
+	echo
+
+	sudo yum clean expire-cache && sudo yum check-update
+}
+
+# }}}
+
+# {{{ Sync-files
+
+[[ $commande = sync-files ]] && {
+
+}
+
+# }}}
+
+# {{{ Sync-ports
+
+[[ $commande = sync-ports ]] && {
+
+
+}
+
+# }}}
+
+# {{{ Sync-keys
+
+[[ $commande = sync-keys ]] && {
+
+	echo ""
+	echo
+
+
+}
+
+# }}}
+
+# {{{ Install
+
+[[ $commande = install ]] && {
+
+	echo "sudo yum install $=argumen"
+	echo
+
+	sudo yum install $=argumen
+}
+
+# }}}
+
+# {{{ Reinstall
+
+[[ $commande = reinstall ]] && {
+
+	echo "sudo yum reinstall $=argumen"
+	echo
+
+	sudo yum reinstall $=argumen
+}
+
+# }}}
+
+# {{{ Local-install
+
+[[ $commande = local-install ]] && {
+
+	echo "sudo yum localinstall $=argumen"
+	echo
+
+	sudo yum localinstall $=argumen
+}
+
+# }}}
+
+# {{{ Source-compile-install
+
+[[ $commande = source-compile-install ]] && {
+
+}
+
+# }}}
+
+# {{{ Remove
+
+[[ $commande = remove ]] && {
+
+	echo "sudo yum remove $=argumen"
+	echo
+
+	sudo yum remove $=argumen
+}
+
+# }}}
+
+# {{{ Update
+
+[[ $commande = update ]] && {
+
+	echo "sudo yum update"
+	echo
+
+	sudo yum update
+}
+
+# }}}
+
+# {{{ Full-update
+
+[[ $commande = full-update ]] && {
+
+	echo "sudo yum distro-sync"
+	echo
+
+	sudo yum distro-sync
+}
+
+# }}}
+
+# {{{ Bin-src-update
+
+[[ $commande = bin-src-update ]] && {
+
+}
+
+# }}}
+
+# {{{ Clean cache
+
+[[ $commande = clean ]] && {
+
+	echo "sudo yum clean"
+	echo
+
+	sudo yum clean
+}
+
+# }}}
+
+# {{{ Search
+
+[[ $commande = search ]] && {
+
+	echo "yum search $=argumen"
+	echo
+
+	yum search $=argumen
+}
+
+# }}}
+
+# {{{ Search-file
+
+[[ $commande = search-file ]] && {
+
+	echo "yum whatprovides $=argumen"
+	echo
+
+	yum whatprovides $=argumen
+}
+
+# }}}
+
+# {{{ Info
+
+[[ $commande = info ]] && {
+
+	echo "yum info $=argumen"
+	echo
+
+	yum info $=argumen
+}
+
+# }}}
+
+# {{{ List-files
+
+[[ $commande = list-files ]] && {
+
+	echo "repoquery -l $=argumen"
+	echo
+
+	repoquery -l $=argumen
+}
+
+# }}}
+
+# {{{ Depends
+
+[[ $commande = depends ]] && {
+
+	echo "yum deplist $=argumen"
+	echo
+
+	yum deplist $=argumen
+}
+
+# }}}
+
+# {{{ Reverse-depends
+
+[[ $commande = reverse-depends ]] && {
+
+	echo "yum resolvedep $=argumen"
+	echo
+
+	yum resolvedep $=argumen
+}
+
+# }}}
+
+# {{{ List-group-members
+
+[[ $commande = list-group-members ]] && {
+
+	echo "yum grouplist $=argumen"
+	echo
+
+	yum grouplist $=argumen
+}
+
+# }}}
+
+}
+
+# }}}
+
+# {{{ Suse
+
+[[ $operasys = suse ]] && {
+
+# {{{ Sync
+
+[[ $commande = sync ]] && {
+
+	# Note : avant de faire quoi que ce soit, zypper vérifie la synchronisation
+	# de son cache par rapport aux dépôts où l’option autorefresh est activée
+
+	echo "sudo zypper refresh"
+	echo
+
+	sudo zypper refresh
+}
+
+# }}}
+
+# {{{ Sync-files
+
+[[ $commande = sync-files ]] && {
+
+}
+
+# }}}
+
+# {{{ Sync-ports
+
+[[ $commande = sync-ports ]] && {
+
+
+}
+
+# }}}
+
+# {{{ Sync-keys
+
+[[ $commande = sync-keys ]] && {
+
+	echo ""
+	echo
+
+
+}
+
+# }}}
+
+# {{{ Install
+
+[[ $commande = install ]] && {
+
+	echo "sudo zypper install $=argumen"
+	echo
+
+	sudo zypper install $=argumen
+}
+
+# }}}
+
+# {{{ Reinstall
+
+[[ $commande = reinstall ]] && {
+
+	echo "sudo zypper install --force $=argumen"
+	echo
+
+	sudo zypper install --force $=argumen
+}
+
+# }}}
+
+# {{{ Local-install
+
+[[ $commande = local-install ]] && {
+
+	echo "sudo zypper in $=argumen"
+	echo
+
+	sudo zypper in $=argumen
+}
+
+# }}}
+
+# {{{ Source-compile-install
+
+[[ $commande = source-compile-install ]] && {
+
+}
+
+# }}}
+
+# {{{ Remove
+
+[[ $commande = remove ]] && {
+
+	echo "sudo zypper remove $=argumen"
+	echo
+
+	sudo zypper remove $=argumen
+}
+
+# }}}
+
+# {{{ Update
+
+[[ $commande = update ]] && {
+
+	echo "sudo zypper update"
+	echo
+
+	sudo zypper update
+}
+
+# }}}
+
+# {{{ Full-update
+
+[[ $commande = full-update ]] && {
+
+	echo "sudo zypper dup"
+	echo
+
+	sudo zypper dup
+}
+
+# }}}
+
+# {{{ Bin-src-update
+
+[[ $commande = bin-src-update ]] && {
+
+}
+
+# }}}
+
+# {{{ Clean cache
+
+[[ $commande = clean ]] && {
+
+	echo "sudo zypper clean"
+	echo
+
+	sudo zypper clean
+}
+
+# }}}
+
+# {{{ Search
+
+[[ $commande = search ]] && {
+
+	echo "zypper search $=argumen"
+	echo
+
+	zypper search $=argumen
+}
+
+# }}}
+
+# {{{ Search-file
+
+[[ $commande = search-file ]] && {
+
+	echo "zypper what-provides $=argumen"
+	echo
+
+	zypper what-provides $=argumen
+}
+
+# }}}
+
+# {{{ Info
+
+[[ $commande = info ]] && {
+
+	echo "zypper info $=argumen"
+	echo
+
+	zypper info $=argumen
+}
+
+# }}}
+
+# {{{ List-files
+
+[[ $commande = list-files ]] && {
+
+}
+
+# }}}
+
+# {{{ Depends
+
+[[ $commande = depends ]] && {
+
+}
+
+# }}}
+
+# {{{ Reverse-depends
+
+[[ $commande = reverse-depends ]] && {
+
+}
+
+# }}}
+
+# {{{ List-group-members
+
+[[ $commande = list-group-members ]] && {
+
+}
+
+# }}}
+
+}
+
+# }}}
+
+# {{{ Gentoo
+
+[[ $operasys = gentoo ]] && {
+
+# {{{ Sync
+
+[[ $commande = sync ]] && {
+
+	echo "sudo layman -f"
+	echo
+
+	sudo layman -f
+}
+
+# }}}
+
+# {{{ Sync-files
+
+[[ $commande = sync-files ]] && {
+
+}
+
+# }}}
+
+# {{{ Sync-ports
+
+[[ $commande = sync-ports ]] && {
+
+
+}
+
+# }}}
+
+# {{{ Sync-keys
+
+[[ $commande = sync-keys ]] && {
+
+	echo ""
+	echo
+
+
+}
+
+# }}}
+
+# {{{ Install
+
+[[ $commande = install ]] && {
+
+	echo "sudo emerge $=argumen"
+	echo
+
+	sudo emerge $=argumen
+}
+
+# }}}
+
+# {{{ Reinstall
+
+[[ $commande = reinstall ]] && {
+
+	echo "sudo emerge $=argumen"
+	echo
+
+	sudo emerge $=argumen
+}
+
+# }}}
+
+# {{{ Local-install
+
+[[ $commande = local-install ]] && {
+
+	echo "sudo emerge $=argumen"
+	echo
+
+	sudo emerge $=argumen
+}
+
+# }}}
+
+# {{{ Source-compile-install
+
+[[ $commande = source-compile-install ]] && {
+
+}
+
+# }}}
+
+# {{{ Remove
+
+[[ $commande = remove ]] && {
+
+	echo "sudo emerge -C $=argumen"
+	echo
+
+	sudo emerge -C $=argumen
+}
+
+# }}}
+
+# {{{ Update
+
+[[ $commande = update ]] && {
+
+	echo "sudo emerge -u world"
+	echo
+
+	sudo emerge -u world
+}
+
+# }}}
+
+# {{{ Full-update
+
+[[ $commande = full-update ]] && {
+
+	echo "sudo emerge -uDN world"
+	echo
+
+	sudo emerge -uDN world
+}
+
+# }}}
+
+# {{{ Bin-src-update
+
+[[ $commande = bin-src-update ]] && {
+
+}
+
+# }}}
+
+# {{{ Clean cache
+
+[[ $commande = clean ]] && {
+
+	echo "sudo eclean distfiles"
+	echo
+
+	sudo eclean distfiles
+}
+
+# }}}
+
+# {{{ Search
+
+[[ $commande = search ]] && {
+
+	echo "emerge -S $=argumen"
+	echo
+
+	emerge -S $=argumen
+}
+
+# }}}
+
+# {{{ Search-file
+
+[[ $commande = search-file ]] && {
+
+	echo "equery belongs $=argumen"
+	echo
+
+	equery belongs $=argumen
+}
+
+# }}}
+
+# {{{ Info
+
+[[ $commande = info ]] && {
+
+	echo "emerge -S $=argumen"
+	echo
+
+	emerge -S $=argumen
+}
+
+# }}}
+
+# {{{ List-files
+
+[[ $commande = list-files ]] && {
+
+	echo "equery files $=argumen"
+	echo
+
+	equery files $=argumen
+}
+
+# }}}
+
+# {{{ Depends
+
+[[ $commande = depends ]] && {
+
+	echo "emerge -ep $=argumen"
+	echo
+
+	emerge -ep $=argumen
+}
+
+# }}}
+
+# {{{ Reverse-depends
+
+[[ $commande = reverse-depends ]] && {
+
+	echo "equery depends $=argumen"
+	echo
+
+	equery depends $=argumen
+}
+
+# }}}
+
+# {{{ List-group-members
+
+[[ $commande = list-group-members ]] && {
+
+}
+
+# }}}
+
+}
+
+# }}}
+
+return 0

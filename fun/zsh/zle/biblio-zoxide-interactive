@@ -1,0 +1,22 @@
+# vim: set filetype=zsh :
+
+# {{{ Options de zsh
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+setopt extended_glob
+
+setopt pushd_ignore_dups
+setopt pushd_minus
+
+unsetopt chase_links
+
+# }}}
+
+zi
+
+zle accept-line

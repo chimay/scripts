@@ -1,0 +1,110 @@
+# vim: set filetype=zsh :
+
+# {{{ Options de zsh
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+zmodload zsh/regex
+
+setopt null_glob
+
+# }}}
+
+# {{{ Variables
+
+local note
+local racine
+local nom
+local repertoire
+local candidats
+
+# }}}
+
+note='NONE'
+racine=~/audio
+
+# {{{ Boucle arguments
+
+while true
+do
+	case $1 in
+		[0-9a-zA-Z])
+			note=$1
+			shift
+			;;
+		?*)
+			racine=$1
+			shift
+			;;
+		*)
+			break
+			;;
+	esac
+done
+
+# }}}
+
+# {{{ Format de la note
+
+# Minuscules ?
+#note=${note:l}
+
+# Majuscules ?
+note=${note:u}
+
+# }}}
+
+# {{{ Morceau actuellement joué
+
+nom=`mpc -f "%file%" | awk '{ if ( NR == 1 ) print $0 }'`
+
+nom=${racine}/${nom}
+
+# }}}
+
+# {{{ Fichier d’évaluation
+
+repertoire=${nom%/?*}
+
+pushd $repertoire >&/dev/null || { echo "Le répertoire $repertoire n’existe pas !" ; return 1 }
+
+echo "pushd ${repertoire}"
+echo
+
+candidats=( ?-evaluation )
+
+[[ $note = 'NONE' ]] && {
+
+	if (( $#candidats > 0 ))
+	then
+		echo "rm -i ?-evaluation"
+		echo
+		rm -i $candidats
+	fi
+
+	popd >&/dev/null
+
+	return 0
+}
+
+if (( $#candidats > 0 ))
+then
+	echo "eve $note $candidats[1]"
+	echo
+	eve $note $candidats[1]
+else
+	echo "touch ${note}-evaluation"
+	echo
+	touch ${note}-evaluation
+fi
+
+popd >&/dev/null
+
+echo "popd --> " $PWD
+echo
+
+# }}}

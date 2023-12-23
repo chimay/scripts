@@ -18,4 +18,4 @@ nvim-qt \
 
 which nvr || exit 0
 sleep 1
-nvr --remote-send '<cmd>call biblio#equal_windows()<cr>'
+nvr --remote-send '<cmd>call library#equal_windows()<cr>'

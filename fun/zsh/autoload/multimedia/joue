@@ -1,0 +1,173 @@
+# vim: set filetype=zsh :
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+local fanions autres
+local fichiers fich Nfichiers argument lignes
+local depart nom
+local lecteur dormir
+
+lecteur=mpv
+dormir=0
+
+# {{{ Arguments
+
+fanions=()
+autres=()
+
+while true
+do
+	case $1 in
+		lect*=?*)
+			lecteur=${1#*\=}
+			shift
+			;;
+		dor*=?*)
+			dormir=${1#*\=}
+			shift
+			;;
+		-?*)
+			fanions=($fanions $1)
+			shift
+			;;
+		?*)
+			autres=($autres $1)
+			shift
+			;;
+		*)
+			break
+			;;
+	esac
+done
+
+(( ${#autres} == 0 )) && autres=(.)
+
+# }}}
+
+# {{{ Liste des fichiers
+
+depart=$PWD
+
+fichiers=()
+
+for argument in $autres
+do
+	if [[ -d $argument ]]
+	then
+		fichiers=($fichiers ${argument}/**/*(.))
+	else
+
+		# {{{ if command file $argument | command grep 'text' >& /dev/null
+
+		if command file $argument | command grep 'text' >& /dev/null
+		then
+			lignes=${(f)"$(< ${argument})"}
+
+			for nom in ${=lignes}
+			do
+				[[ -f $nom ]] || {
+					[[ -f ${depart}/${nom} ]] && nom=${depart}/${nom}
+				}
+
+				[[ -f $nom ]] || {
+					[[ -f ${HOME}/${nom} ]] && nom=${HOME}/${nom}
+				}
+
+				[[ -f $nom ]] || {
+					[[ -f ${HOME}/audio/${nom} ]] && nom=${HOME}/audio/${nom}
+				}
+
+				[[ -f $nom ]] || {
+					[[ -f /${nom} ]] && nom=/${nom}
+				}
+
+				if [[ -f $nom ]]
+				then
+					echo "Correct : $nom" 1>&2
+
+					fichiers=($fichiers $nom)
+				else
+					echo "Incorrect : $nom" 1>&2
+				fi
+			done
+
+			# }}}
+
+		# {{{ else
+
+		else
+			[[ -f $argument ]] || {
+				[[ -f ${depart}/${argument} ]] && argument=${depart}/${argument}
+			}
+
+			[[ -f $argument ]] || {
+				[[ -f ${HOME}/${argument} ]] && argument=${HOME}/${argument}
+			}
+
+			[[ -f $argument ]] || {
+				[[ -f ${HOME}/audio/${argument} ]] && argument=${HOME}/audio/${argument}
+			}
+
+			[[ -f $argument ]] || {
+				[[ -f /${argument} ]] && argument=/${argument}
+			}
+
+			if [[ -f $argument ]]
+			then
+				echo "Correct : $argument" 1>&2
+
+				fichiers=($fichiers $argument)
+			else
+				echo "Incorrect : $argument" 1>&2
+			fi
+		fi
+
+		# }}}
+
+	fi
+done
+
+# }}}
+
+# {{{ Affichage
+
+Nfichiers=${#fichiers}
+
+echo ""
+echo "Lecteur : " $lecteur
+echo ""
+echo "Dormir : " $dormir
+echo ""
+echo "Options : " $fanions
+echo ""
+echo "Depart : " $depart
+echo ""
+echo "Nfichiers : " $Nfichiers
+echo ""
+
+print -l $fichiers
+echo ""
+
+# }}}
+
+if (( dormir == 0 ))
+then
+	echo "command $lecteur $=fanions <fichiers>"
+
+	command $lecteur $=fanions $fichiers
+else
+	for fich in $fichiers
+	do
+		echo "command $lecteur $=fanions $fich"
+
+		command $lecteur $=fanions $fich
+
+		sleep $dormir
+	done
+fi
+
+# }}}

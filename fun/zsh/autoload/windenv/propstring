@@ -1,0 +1,17 @@
+# vim: set filetype=zsh :
+
+# {{{ Options
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+setopt extended_glob
+
+# }}}
+
+echo -n 'Property '
+xprop WM_CLASS | sed 's/.*"\(.*\)", "\(.*\)".*/= "\1,\2" {/g'
+echo '}'

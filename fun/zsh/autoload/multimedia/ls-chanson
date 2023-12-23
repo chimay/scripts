@@ -1,0 +1,43 @@
+# vim: set filetype=zsh :
+
+# {{{ Options de zsh
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+zmodload zsh/regex
+
+setopt null_glob
+
+# }}}
+
+local note racine fanions nom repertoire
+
+note='0'
+racine=~/audio
+
+fanions=($*)
+
+# {{{ Morceau actuellement joué
+
+nom=`mpc -f "%file%" | awk '{ if ( NR == 1 ) print $0 }'`
+
+nom=${racine}/${nom}
+
+# }}}
+
+# {{{ Contenu du répertoire
+
+repertoire=${nom%/?*}
+
+[[ $repertoire = $nom ]] && repertoire=.
+
+echo "ls $=fanions $repertoire"
+echo
+
+ls $=fanions $repertoire
+
+# }}}

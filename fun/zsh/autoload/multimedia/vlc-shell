@@ -1,0 +1,33 @@
+# vim: set filetype=zsh :
+
+# Interface de type CLI (Command Line Interface)
+# avec complétion & historique (grâce à rlwrap)
+# pour vlc en mode serveur
+
+# {{{ Options de zsh
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+# }}}
+
+local completion oublie
+
+#oublie='^ '
+
+completion="rlwrap \
+	--no-children \
+	--complete-filenames \
+	--remember \
+	--prompt-colour=red \
+	--multi-line \
+	--case-insensitive \
+	--wait-before-prompt=-40
+	--history-no-dupes 2 \
+	--histsize 84127 \
+	--command-name $0"
+
+$=completion netcat localhost 8080 "$@"

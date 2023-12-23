@@ -1,0 +1,620 @@
+# vim: set filetype=zsh :
+
+# {{{ Documentation
+
+# remove the ith element with
+#
+# foo[$i] =()
+#
+# instead.
+
+# To remove element with content "b" from array:
+#
+# foo=(a b c)
+# foo=(${foo#b})
+
+# To remove element number $i: a=("${(@)a[1,$i-1]}" "${(@)a[$i+1,$#a]}")
+#
+# (The simpler construct a=($a[1,$i-1] $a[$i+1,$#a]) also removes empty elements.)
+#
+# ADDED:
+#
+# To remove any occurence of b: a=("${(@)a:#b}")
+# :# is the hieroglyph to remove matching elements; "" and (@) is to operate correctly on arrays even if they contain empty elements.
+
+# }}}
+
+# {{{ Options
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+setopt extended_glob
+
+# }}}
+
+# {{{ Variables
+
+local variete argumen
+local extension type_arch arch
+local arch_decomp
+
+# }}}
+
+# {{{ Initialisation
+
+variete=''
+
+argumen=()
+
+arch=''
+
+type_arch=''
+
+# }}}
+
+# {{{ Arguments & Variété
+
+while true
+do
+	if (( $#variete == 0 ))
+	then
+		case $1 in
+			ar)
+				variete=ar
+				shift
+				;;
+			tar)
+				variete=tar
+				shift
+				;;
+			cpio)
+				variete=cpio
+				shift
+				;;
+			pax)
+				variete=pax
+				shift
+				;;
+
+			gzip|gz)
+				variete=gzip
+				shift
+				;;
+			bzip|bz|bzip2|bz2)
+				variete=bzip
+				shift
+				;;
+			lzma)
+				variete=lzma
+				shift
+				;;
+			xz)
+				variete=xz
+				shift
+				;;
+
+			zip)
+				variete=zip
+				shift
+				;;
+			7z)
+				variete=7z
+				shift
+				;;
+
+			tar.gzip|tar.gz|tgz)
+				variete=tar.gzip
+				shift
+				;;
+			tar.bzip|tar.bz|tbz|tar.bzip2|tar.bz2|tbz2)
+				variete=tar.bzip
+				shift
+				;;
+			tar.lzma|tlz)
+				variete=tar.lzma
+				shift
+				;;
+			tar.xz|txz)
+				variete=tar.xz
+				shift
+				;;
+			cpio.xz)
+				variete=cpio.xz
+				shift
+				;;
+
+			?*)
+				argumen+=$1
+				shift
+				;;
+			*)
+				break
+				;;
+		esac
+	else
+		argumen+=($*)
+
+		break
+	fi
+done
+
+# }}}
+
+# {{{ Archive non nécessaire ?
+
+# Certains archiveurs déduisent automatiquement le nom de l’archive
+# du nom des fichiers / répertoires en argument. Dans ce cas, le nom
+# de l’archive n’est évidemment pas nécessaire dans ce script.
+
+[[ $variete = (gzip|bzip|lzma|xz) ]] && arch='NONE'
+
+# }}}
+
+# {{{ Archive = argument avec extension correspondante ?
+
+(( $#arch == 0 )) && {
+
+	for mot in $argumen
+	do
+		[[ $mot = *.* ]] || continue
+
+		extension=${mot#*.}
+
+		case $extension in
+			ar)
+				type_arch=ar
+				;;
+			tar)
+				type_arch=tar
+				;;
+			cpio)
+				type_arch=cpio
+				;;
+			pax)
+				type_arch=pax
+				;;
+
+			gzip|gz)
+				type_arch=gzip
+				;;
+			bzip|bz|bzip2|bz2)
+				type_arch=bzip
+				;;
+			lzma)
+				type_arch=lzma
+				;;
+			xz)
+				type_arch=xz
+				;;
+
+			zip)
+				type_arch=zip
+				;;
+			7z)
+				type_arch=7z
+				;;
+
+			tar.gzip|tar.gz|tgz)
+				type_arch=tar.gzip
+				;;
+			tar.bzip|tar.bz|tbz|tar.bzip2|tar.bz2|tbz2)
+				type_arch=tar.bzip
+				;;
+			tar.lzma|tlz)
+				type_arch=tar.lzma
+				;;
+			tar.xz|txz)
+				type_arch=tar.xz
+				;;
+			cpio.xz)
+				type_arch=cpio.xz
+				;;
+		esac
+
+		(( $#type_arch > 0 )) && {
+
+			arch=$mot
+
+			argumen[(i)$mot]=()
+
+			break
+		}
+	done
+}
+
+# }}}
+
+# {{{ Variété non explicite
+
+# Si la variété n’est pas donnée explicitement en argument,
+# on la déduit d’après l’extension du nom de l’archive
+
+(( $#variete == 0 && $#type_arch > 0 )) && variete=$type_arch
+
+# }}}
+
+# {{{ Archive non trouvée ?
+
+# Si l’archive n’est toujours pas déterminée, on suppose que l’archive est le
+# premier argument donné (hors variété) et on ajoute l’extension
+
+(( $#arch == 0 )) && {
+
+	arch=$argumen[1]
+
+	(( $#argumen > 1 )) && argumen[1]=()
+
+	case $variete in
+		ar)
+			arch+=.ar
+			;;
+		tar)
+			arch+=.tar
+			;;
+		cpio)
+			arch+=.cpio
+			;;
+		pax)
+			arch+=.pax
+			;;
+
+		gzip|gz)
+			arch+=.gz
+			;;
+		bzip|bz|bzip2|bz2)
+			arch+=.bz
+			;;
+		lzma)
+			arch+=.lzma
+			;;
+		xz)
+			arch+=.xz
+			;;
+
+		zip)
+			arch+=.zip
+			;;
+		7z)
+			arch+=.7z
+			;;
+
+		tar.gzip|tar.gz|tgz)
+			arch+=.tar.gz
+			;;
+		tar.bzip|tar.bz|tbz|tar.bzip2|tar.bz2|tbz2)
+			arch+=.tar.bz
+			;;
+		tar.lzma|tlz)
+			arch+=.tar.lzma
+			;;
+		tar.xz|txz)
+			arch+=.tar.xz
+			;;
+	esac
+}
+
+# }}}
+
+# {{{ L’extension ne correspond pas à la variété
+
+# Si l’extension de l’archive ne correspond pas à la variété demandée,
+# on ajoute cette extension au nom de l’archive
+
+(( $#variete > 0 && $#type_arch > 0 )) && [[ $variete != $type_arch ]] && {
+
+	affiche-erreur 'W : Archive type & extension mismatch'
+	affiche-erreur 'W : Corresponding extension will be added'
+
+	case $variete in
+		ar)
+			arch+=.ar
+			;;
+		tar)
+			arch+=.tar
+			;;
+		cpio)
+			arch+=.cpio
+			;;
+		pax)
+			arch+=.pax
+			;;
+
+		gzip|gz)
+			arch+=.gz
+			;;
+		bzip|bz|bzip2|bz2)
+			arch+=.bz
+			;;
+		lzma)
+			arch+=.lzma
+			;;
+		xz)
+			arch+=.xz
+			;;
+
+		zip)
+			arch+=.zip
+			;;
+		7z)
+			arch+=.7z
+			;;
+
+		tar.gzip|tar.gz|tgz)
+			arch+=.tar.gz
+			;;
+		tar.bzip|tar.bz|tbz|tar.bzip2|tar.bz2|tbz2)
+			arch+=.tar.bz
+			;;
+		tar.lzma|tlz)
+			arch+=.tar.lzma
+			;;
+		tar.xz|txz)
+			arch+=.tar.xz
+			;;
+	esac
+}
+
+# }}}
+
+# {{{ Extension composite pour les tar.*
+
+case $variete in
+
+	tar.gzip)
+		arch=${arch%%.*}.tar.gz
+		;;
+	tar.bzip)
+		arch=${arch%%.*}.tar.bz2
+		;;
+	tar.lzma)
+		arch=${arch%%.*}.tar.lzma
+		;;
+	tar.xz)
+		arch=${arch%%.*}.tar.xz
+		;;
+esac
+
+# }}}
+
+# {{{ Le fichier existe ?
+
+[[ -f $arch ]] || {
+
+	affiche-erreur "Le fichier d’archive $arch n’existe pas"
+
+	return 0
+}
+
+# }}}
+
+# {{{ Affichage
+
+echo
+echo "+------------------------------------------------------------------------+"
+echo "|                                                                        |"
+echo "|                              arch-add                                  |"
+echo "|                                                                        |"
+echo "+------------------------------------------------------------------------+"
+echo
+echo "Date & Heure : `date +'%A %d %B %Y  --  %H:%M'`"
+echo
+echo "Variété : $variete"
+echo
+echo "Archive : $arch"
+echo
+echo "Arguments : $argumen"
+echo
+
+# }}}
+
+# Opérations
+
+# {{{ Ar
+
+[[ $variete = ar ]] && {
+
+	echo "ar rv $arch $argumen"
+	echo
+
+	ar rv $arch $argumen
+}
+
+# }}}
+
+# {{{ Tar
+
+[[ $variete = tar ]] && {
+
+	echo "tar rvf $arch $argumen"
+	echo
+
+	tar rvf $arch $argumen
+}
+
+# }}}
+
+# {{{ Cpio
+
+[[ $variete = cpio ]] && {
+
+}
+
+# }}}
+
+# {{{ Pax
+
+[[ $variete = pax ]] && {
+
+}
+
+# }}}
+
+# {{{ Gzip
+
+[[ $variete = gzip ]] && {
+
+}
+
+# }}}
+
+# {{{ Bzip
+
+[[ $variete = bzip ]] && {
+
+}
+
+# }}}
+
+# {{{ Lzma
+
+[[ $variete = lzma ]] && {
+
+}
+
+# }}}
+
+# {{{ Xz
+
+[[ $variete = xz ]] && {
+
+}
+
+# }}}
+
+# {{{ Zip
+
+[[ $variete = zip ]] && {
+
+	echo "zip -r $arch $argumen"
+	echo
+
+	zip -r $arch $argumen
+}
+
+# }}}
+
+# {{{ 7z
+
+[[ $variete = 7z ]] && {
+
+	echo "7z a $arch $argumen"
+	echo
+
+	7z a $arch $argumen
+}
+
+# }}}
+
+# {{{ Tar.gzip
+
+[[ $variete = tar.gzip ]] && {
+
+	arch_decomp=${arch%.*}
+
+	echo "gunzip $arch"
+	echo
+
+	gunzip $arch
+
+	echo "tar rvf $arch_decomp $argumen"
+	echo
+
+	tar rvf $arch_decomp $argumen
+
+	echo
+	echo "gzip $arch_decomp"
+	echo
+
+	gzip $arch_decomp
+}
+
+# }}}
+
+# {{{ Tar.bzip
+
+[[ $variete = tar.bzip ]] && {
+
+	arch_decomp=${arch%.*}
+
+	echo "bunzip2 $arch"
+	echo
+
+	bunzip2 $arch
+
+	echo "tar rvf $arch_decomp $argumen"
+	echo
+
+	tar rvf $arch_decomp $argumen
+
+	echo
+	echo "bzip2 $arch_decomp"
+	echo
+
+	bzip2 $arch_decomp
+}
+
+# }}}
+
+# {{{ Tar.lzma
+
+[[ $variete = tar.lzma ]] && {
+
+	arch_decomp=${arch%.*}
+
+	echo "unlzma $arch"
+	echo
+
+	unlzma $arch
+
+	echo "tar rvf $arch_decomp $argumen"
+	echo
+
+	tar rvf $arch_decomp $argumen
+
+	echo
+	echo "lzma $arch_decomp"
+	echo
+
+	lzma $arch_decomp
+}
+
+# }}}
+
+# {{{ Tar.xz
+
+[[ $variete = tar.xz ]] && {
+
+	arch_decomp=${arch%.*}
+
+	echo "unxz $arch"
+	echo
+
+	unxz $arch
+
+	echo "tar rvf $arch_decomp $argumen"
+	echo
+
+	tar rvf $arch_decomp $argumen
+
+	echo
+	echo "xz $arch_decomp"
+	echo
+
+	xz $arch_decomp
+}
+
+# }}}
+
+# {{{ Cpio.xz
+
+[[ $variete = cpio.xz ]] && {
+
+}
+
+# }}}
+
+return 0

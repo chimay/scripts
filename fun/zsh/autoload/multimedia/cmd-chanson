@@ -1,0 +1,37 @@
+
+# vim: set filetype=zsh :
+
+# {{{ Options de zsh
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+setopt null_glob
+
+# }}}
+
+local note racine commande nom fichier
+
+note='0'
+racine=~/audio
+
+commande=${*:-file}
+#commande=${@:-file}
+
+commande=($=commande)
+
+# {{{ Morceau actuellement joué
+
+nom=`mpc -f "%file%" | awk '{ if ( NR == 1 ) print $0 }'`
+
+fichier=${racine}/${nom}
+
+# }}}
+
+echo $commande $fichier
+echo
+
+$commande $fichier

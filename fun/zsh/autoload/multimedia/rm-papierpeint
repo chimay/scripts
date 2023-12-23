@@ -1,0 +1,27 @@
+# vim: set filetype=zsh :
+
+# {{{ Options de zsh
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+setopt extended_glob
+
+# }}}
+
+# {{{ Remplacé par rm -i
+
+# echo -n 'Sur de vouloir effacer le morceau actuellement joué ? (o/oui/y/yes // n/no/non) '
+# read reponse
+
+# if [[ $reponse = (o|oui|y|yes) ]]
+# then
+# 	cmd-pic rm
+# fi
+
+# }}}
+
+cmd-papierpeint command rm -i

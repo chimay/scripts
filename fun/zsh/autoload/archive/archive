@@ -1,0 +1,178 @@
+# vim: set filetype=zsh :
+
+# {{{ Options
+
+emulate -R zsh
+
+setopt local_options
+
+setopt warn_create_global
+
+# }}}
+
+# {{{ Variables
+
+local mode argumen
+
+# }}}
+
+# {{{ Arguments
+
+mode=''
+
+argumen=()
+
+while true
+do
+	if (( $#mode == 0 ))
+	then
+		case $1 in
+
+			help|h)
+				mode=help
+				shift
+				;;
+			create|c)
+				mode=create
+				shift
+				;;
+			add|a)
+				mode=add
+				shift
+				;;
+			update|up|u)
+				mode=update
+				shift
+				;;
+			delete|d)
+				mode=delete
+				shift
+				;;
+			list|ls|l)
+				mode=list
+				shift
+				;;
+			extract|x)
+				mode=extract
+				shift
+				;;
+
+			?*)
+				argumen+=$1
+				shift
+				;;
+			*)
+				break
+				;;
+		esac
+	else
+		argumen+=($*)
+
+		break
+	fi
+done
+
+# }}}
+
+# {{{ Valeurs par défaut
+
+(( $#mode == 0 )) && mode=(list)
+
+# }}}
+
+# {{{ Affichage
+
+echo
+echo "+========================================================================+"
+echo "|                                                                        |"
+echo "|                              archive                                   |"
+echo "|                                                                        |"
+echo "+========================================================================+"
+echo
+echo "Date & Heure : `date +'%A %d %B %Y  --  %H:%M'`"
+echo
+echo "Mode : $mode"
+echo
+echo "Arguments : $argumen"
+echo
+
+# }}}
+
+# Opérations
+# ------------------------------------
+
+# {{{ Help
+
+if (( $mode[(i)help] <= $#mode ))
+then
+	echo "			help / h"
+	echo "			create"
+	echo "			add"
+	echo "			update / up / u"
+	echo "			delete / d"
+	echo "			list / ls / l"
+	echo "			extract / x"
+	echo
+fi
+
+# }}}
+
+# {{{ Create
+
+if (( $mode[(i)create] <= $#mode ))
+then
+	echo "{-- archive --> arch-create --}"
+	echo
+
+	arch-create $=argumen
+fi
+
+# }}}
+
+# {{{ Add
+
+if (( $mode[(i)add] <= $#mode ))
+then
+	echo "{-- archive --> arch-add --}"
+	echo
+
+	arch-add $=argumen
+fi
+
+# }}}
+
+# {{{ Update
+
+if (( $mode[(i)update] <= $#mode ))
+then
+	echo "{-- archive --> arch-update --}"
+	echo
+
+	arch-update $=argumen
+fi
+
+# }}}
+
+# {{{ List
+
+if (( $mode[(i)list] <= $#mode ))
+then
+	echo "{-- archive --> arch-list --}"
+	echo
+
+	arch-list $=argumen
+fi
+
+# }}}
+
+# {{{ Extract
+
+if (( $mode[(i)extract] <= $#mode ))
+then
+	echo "{-- archive --> arch-extract --}"
+	echo
+
+	arch-extract $=argumen
+fi
+
+# }}}
