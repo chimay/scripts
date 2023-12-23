@@ -15,7 +15,6 @@ sortie=$(\
 
 (( $? != 0 )) && exit 1
 
-
 echo Sortie : $sortie
 echo Longueur sortie : $#sortie
 echo
