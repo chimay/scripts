@@ -1,5 +1,7 @@
 #! /usr/bin/env sh
 
+# necessary because ~/racine/index/backup/restic/include
+# contains paths relative to home directory
 cd || exit 0
 
 repo=${1:-$RESTIC_REPOSITORY}
@@ -19,3 +21,4 @@ restic \
 	"$@" | tee -a ~/log/restic.log
 
 restic-forget-prune.sh "$repo"
+restic-check.sh "$repo"

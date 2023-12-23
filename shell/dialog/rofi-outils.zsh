@@ -2,25 +2,29 @@
 
 setopt extended_glob
 
+source ~/racine/config/shell/zsh/zprofile
+
 menu=(
-	": Gvim (Editor)"
-	"; Neovim Qt (Editor)"
-	"x Emacs (Editor)"
-	"§ Vifm (File manager)"
-	"3 Ranger (File manager)"
-	"# Sc-im (Spreadsheet Calculator)"
-	"+ Calcurse (Calendar and Tasks)"
-	"& Abook (adress book)"
-	"ŧ Vit (Tasks)"
-	"$ Lazygit (Git TUI)"
-	"@ Nmtui (Connection Manager)"
-	"< W3m (Web browser)"
-	"> Elinks (Web browser)"
-	"µ Neomutt (Mail)"
-	"µ Newsboat (Rss)"
-	"£ Ncmpcpp (Music)"
-	"£ Cmus (Music)"
-	"£ Mocp (Music)"
+	": gvim (editor)"
+	"; neovim qt (editor)"
+	", kak (editor)"
+	", helix (editor)"
+	"x emacs (editor)"
+	"§ vifm (file manager)"
+	"3 ranger (file manager)"
+	"# sc-im (spreadsheet calculator)"
+	"+ calcurse (calendar and tasks)"
+	"& abook (adress book)"
+	"$ lazygit (git tui)"
+	"@ nmtui (connection manager)"
+	"< w3m (web browser)"
+	"µ neomutt (mail)"
+	"µ aerc (mail)"
+	"  slrn (usenet)"
+	"µ newsboat (rss)"
+	"£ ncmpcpp (music)"
+	"£ cmus (music)"
+	"£ mocp (music)"
 )
 
 # Rofi dmenu {{{1
@@ -37,58 +41,61 @@ echo
 # }}}1
 
 case $choix in
-	": Gvim"*)
-		~/racine/shell/run/run-gvim.zsh & disown
+	": gvim"*)
+		run-gvim.sh & disown
 		;;
-	"; Neovim Qt"*)
-		~/racine/shell/run/run-neovim.zsh & disown
+	"; neovim qt"*)
+		run-neovim.sh & disown
 		;;
-	"x Emacs"*)
-		~/racine/shell/run/run-emacs.zsh & disown
+	", kak"*)
+		urxvtc -e kak & disown
 		;;
-	"§ Vifm"*)
+	", helix"*)
+		urxvtc -e helix & disown
+		;;
+	"x emacs"*)
+		run-emacs.sh & disown
+		;;
+	"§ vifm"*)
 		urxvtc -e vifm & disown
 		;;
-	"3 Ranger"*)
+	"3 ranger"*)
 		urxvtc -e ranger & disown
 		;;
-	"# Sc-im"*)
+	"# sc-im"*)
 		urxvtc -e sc-im & disown
 		;;
-	"+ Calcurse"*)
+	"+ calcurse"*)
 		urxvtc -e calcurse & disown
 		;;
-	"& Abook"*)
+	"& abook"*)
 		urxvtc -e abook & disown
 		;;
-	"ŧ Vit"*)
-		urxvtc -e vit & disown
-		;;
-	"$ Lazygit"*)
+	"$ lazygit"*)
 		urxvtc -e lazygit & disown
 		;;
-	"@ Nmtui"*)
+	"@ nmtui"*)
 		urxvtc -e nmtui & disown
 		;;
-	"< W3m"*)
+	"< w3m"*)
 		urxvtc -e w3m & disown
 		;;
-	"> Elinks"*)
-		urxvtc -e elinks & disown
-		;;
-	"µ Neomutt"*)
+	"µ neomutt"*)
 		urxvtc -e neomutt & disown
 		;;
-	"µ Newsboat"*)
+	"µ aerc"*)
+		urxvtc -e aerc & disown
+		;;
+	"µ newsboat"*)
 		urxvtc -e newsboat -c ~/racine/index/newsboat/cache.db & disown
 		;;
-	"£ Ncmpcpp"*)
+	"£ ncmpcpp"*)
 		urxvtc -e ncmpcpp & disown
 		;;
-	"£ Cmus"*)
+	"£ cmus"*)
 		urxvtc -e cmus & disown
 		;;
-	"£ Mocp"*)
+	"£ mocp"*)
 		urxvtc -e mocp & disown
 		;;
 esac
