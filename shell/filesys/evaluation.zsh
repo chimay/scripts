@@ -60,14 +60,14 @@ do
 		echo
 		mv $directory/$file $directory/$newname
 	else
-		for tentative in $directory/?-${corename} $directory/$corename
+		for attempt in $directory/?-${corename} $directory/$corename
 		do
-			essai=${tentative##?*/}
-			if [[ -e $directory/$essai && $essai != $newname ]]
+			essay=${attempt##?*/}
+			if [[ -e $directory/$essay && $essay != $newname ]]
 			then
-				echo "mv $essai $newname"
+				echo "mv $essay $newname"
 				echo
-				mv $directory/$essai $directory/$newname
+				mv $directory/$essay $directory/$newname
 				break
 			fi
 		done

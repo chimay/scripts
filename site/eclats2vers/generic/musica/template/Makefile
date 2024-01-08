@@ -24,12 +24,10 @@ include ../../Makefile.inc
 
 .PHONY: clean clean-html clean-epub wipe
 
-
 # debug {{{1
 
 debug:
 	@echo $(SUBDIRS)
-
 
 # pdf -> png {{{1
 
@@ -37,7 +35,6 @@ debug:
 	make -C ~/racine/musica/lilypond/template install
 	#convert $< $@
 	@$(ECHO)
-
 
 #  org -> html {{{1
 
@@ -52,7 +49,6 @@ $(HTML_SUBDIRS):
 
 html: $(HTML_SUBDIRS) $(HTML_FILES)
 
-
 #  org -> epub {{{1
 
 $(EPUB_SUBDIRS):
@@ -65,7 +61,6 @@ $(EPUB_SUBDIRS):
 
 epub: $(EPUB_SUBDIRS) $(EPUB_FILES)
 
-
 # sync -> html dir {{{1
 
 dry-sync-html: html
@@ -75,7 +70,6 @@ dry-sync-html: html
 sync-html: html
 	$(RSYNC) $(CUR_DIR)/ $(HTML_DIR)
 	@$(ECHO)
-
 
 # sync -> epub dir {{{1
 
@@ -87,20 +81,17 @@ sync-epub: epub
 	$(SYNC) $(CUR_DIR)/ $(EPUB_DIR)
 	@$(ECHO)
 
-
 #sync all {{{1
 
 dry-sync: dry-sync-html dry-sync-epub
 
 sync: sync-html sync-epub
 
-
 # all, install {{{1
 
 all: sync-html
 
 install: sync-html
-
 
 # clean, wipe {{{1
 

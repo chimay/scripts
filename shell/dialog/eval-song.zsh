@@ -28,4 +28,8 @@ name=`mpc -f "%file%" | awk '{ if ( NR == 1 ) print $0 }'`
 
 name=${root}/${name}
 
-evaluation.zsh $evaluation $name >>| ~/log/eval-song.log
+info=$(evaluation.zsh $evaluation $name)
+
+zenity --info --text="$info"
+
+echo $info >>| ~/log/eval-song.log

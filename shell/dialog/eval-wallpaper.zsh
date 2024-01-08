@@ -31,4 +31,8 @@ name=${name// }
 # echo "eve $evaluation $name"
 # echo
 
-evaluation.zsh $evaluation $name >>| ~/log/eval-wallpaper.log
+info=$(evaluation.zsh $evaluation $name)
+
+zenity --info --text="$info"
+
+echo $info >>| ~/log/eval-wallpaper.log
