@@ -1,7 +1,5 @@
 #!/usr/bin/env zsh
 
-# vim: set filetype=zsh:
-
 argumen=($@)
 
 # Aide {{{1
@@ -13,8 +11,6 @@ argumen=($@)
 	exit 0
 }
 
-# }}}1
-
 # Boucle {{{1
 
 for midi in $=argumen
@@ -25,5 +21,3 @@ do
 	echo
 	timidity -Ov -o $ogg $midi
 done
-
-# }}}1

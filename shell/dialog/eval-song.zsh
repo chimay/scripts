@@ -30,6 +30,6 @@ name=${root}/${name}
 
 info=$(evaluation.zsh $evaluation $name)
 
-zenity --info --text="$info"
+#zenity --info --text="$info"
 
 echo $info >>| ~/log/eval-song.log

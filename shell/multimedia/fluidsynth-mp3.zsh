@@ -1,14 +1,12 @@
 #!/usr/bin/env zsh
 
-# vim: set filetype=zsh:
+# does not work
 
 # Variables {{{1
 
 sound=/usr/share/soundfonts/FluidR3_GM.sf2
 #sound=/usr/share/soundfonts/freepats-general-midi.sf2
 #sound=~/racine/musica/soundfont/Unison.sf2
-
-# }}}1
 
 argumen=($@)
 
@@ -21,17 +19,13 @@ argumen=($@)
 	exit 0
 }
 
-# }}}1
-
 # Boucle {{{1
 
 for midi in $=argumen
 do
 	ogg=${midi%.midi}.ogg
 	echo
-	echo "fluidsynth  -nli -r 44100 -o synth.cpu-cores=2 -T oga -F $ogg $sound $midi"
+	echo "fluidsynth -a alsa -nli -r 44100 -o synth.cpu-cores=2 -T raw -F - $sound $midi | lame -q 0 -b 128 - - > $mpthree"
 	echo
-	fluidsynth  -nli -r 44100 -o synth.cpu-cores=2 -T oga -F $ogg $sound $midi
+	fluidsynth -a alsa -nli -r 44100 -o synth.cpu-cores=2 -T raw -F - $sound $midi | lame -q 0 -b 128 - - > $mpthree
 done
-
-# }}}1

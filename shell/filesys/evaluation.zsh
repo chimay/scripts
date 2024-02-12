@@ -58,7 +58,9 @@ do
 	then
 		echo "mv $file $newname"
 		echo
-		mv $directory/$file $directory/$newname
+		# tsp outputs process number
+		echo -n 'tsp id : '
+		tsp mv $directory/$file $directory/$newname
 	else
 		for attempt in $directory/?-${corename} $directory/$corename
 		do
@@ -67,9 +69,15 @@ do
 			then
 				echo "mv $essay $newname"
 				echo
-				mv $directory/$essay $directory/$newname
+				# tsp outputs process number
+				echo -n 'tsp id : '
+				tsp mv $directory/$essay $directory/$newname
 				break
 			fi
 		done
 	fi
 done
+
+echo
+echo '------------------------------'
+echo ' '

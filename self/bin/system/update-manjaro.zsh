@@ -10,7 +10,8 @@ w3m https://archlinux.org
 
 # update mirrors
 
-sudo pacman-mirrors --fasttrack
+#sudo pacman-mirrors --fasttrack
+sudo pacman-mirrors --country Germany --timeout 5
 
 # refresh
 
@@ -18,7 +19,8 @@ sudo pacman -Syy
 
 # new keys
 
-sudo pacman -S manjaro-keyring
+# the manjaro pacman should to it by itself
+#sudo pacman -S manjaro-keyring
 
 # update
 

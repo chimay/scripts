@@ -1,7 +1,5 @@
 #!/usr/bin/env zsh
 
-# vim: set filetype=zsh:
-
 argumen=($@)
 
 # Aide {{{1
