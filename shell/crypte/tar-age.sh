@@ -1,10 +1,11 @@
 #!/usr/bin/env sh
 
-folder=${1:-$(pwd)}
-name=${folder##*/}
+name=$1
+shift
+paths=$@
 
-echo folder : $folder
 echo name : $name
+echo paths : $paths
 echo
 
-tar -cvJf - $folder | age -p - > $name.tar.xz.age
+tar -cvJf - $paths | age -p - > $name.tar.xz.age
