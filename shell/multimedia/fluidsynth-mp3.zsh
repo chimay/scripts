@@ -25,7 +25,7 @@ for midi in $=argumen
 do
 	ogg=${midi%.midi}.ogg
 	echo
-	echo "fluidsynth -a alsa -nli -r 44100 -o synth.cpu-cores=2 -T raw -F - $sound $midi | lame -q 0 -b 128 - - > $mpthree"
+	echo "fluidsynth -a alsa -nli -r 44100 -o synth.cpu-cores=2 -T raw -F - $sound $midi | lame -q 0 -b 128 - $mpthree"
 	echo
-	fluidsynth -a alsa -nli -r 44100 -o synth.cpu-cores=2 -T raw -F - $sound $midi | lame -q 0 -b 128 - - > $mpthree
+	fluidsynth -a alsa -nli -r 44100 -o synth.cpu-cores=2 -T raw -F - $sound $midi | lame -q 0 -b 128 - $mpthree
 done
