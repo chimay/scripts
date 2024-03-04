@@ -36,7 +36,9 @@ INC_FILES  = $(wildcard $(ROOT_GENERIC)/include/*.org)
 # files in ~/racine/musica/lilypond/template
 
 LY_TMPL_FILES = $(wildcard ~/racine/musica/lilypond/template/*.ly)
-LY_MEL_FILES = $(wildcard ~/racine/musica/lilypond/template/melody/*.ly)
+LY_MLD_FILES = $(wildcard ~/racine/musica/lilypond/template/melody/*.ly)
+LY_GLOB_FILES = $(wildcard ~/racine/musica/lilypond/template/global/*.ly)
+
 LY_TMPL_PNG = $(wildcard $(ROOT_GENERIC)/image/musica/template/*.png)
 
 # programs & options {{{1

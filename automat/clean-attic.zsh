@@ -25,8 +25,8 @@ echo
 
 # trash bin {{{1
 
-echo Corbeille
-echo "------------------------------------------------------------"
+echo corbeille
+echo "____________________________________________________________"
 echo
 echo "trash-empty -f $delai_long"
 echo
@@ -37,8 +37,9 @@ trash-empty -f $delai_long
 
 cd ~/racine/trash/vifm
 
+echo
 pwd
-echo "------------------------------------------------------------"
+echo "____________________________________________________________"
 echo
 
 dusty=()
@@ -51,7 +52,6 @@ dusty+=(**/*(.m+$delai))
 	for element in $dusty
 	do
 		echo "trash-put $element"
-		echo
 		trash-put $element
 	done
 }
@@ -60,8 +60,9 @@ dusty+=(**/*(.m+$delai))
 
 cd ~/racine/varia
 
+echo
 pwd
-echo "------------------------------------------------------------"
+echo "____________________________________________________________"
 echo
 
 dusty=()
@@ -79,30 +80,6 @@ dusty+=(undo/**/*(.m+$delai_tres_long))
 	for element in $dusty
 	do
 		echo "trash-put $element"
-		echo
-		trash-put $element
-	done
-}
-
-# tmux resurrect {{{1
-
-cd ~/racine/config/multiplex/tmux/repertoire/resurrect
-
-pwd
-echo "------------------------------------------------------------"
-echo
-
-dusty=()
-
-dusty+=(*(.m+$delai))
-
-(( $#dusty > 0 )) && {
-	ls -l $dusty
-	echo
-	for element in $dusty
-	do
-		echo "trash-put $element"
-		echo
 		trash-put $element
 	done
 }
@@ -111,8 +88,9 @@ dusty+=(*(.m+$delai))
 
 cd ~/racine/config/webrowser/w3m
 
+echo
 pwd
-echo "------------------------------------------------------------"
+echo "____________________________________________________________"
 echo
 
 dusty=()
@@ -126,7 +104,6 @@ dusty+=(w3mtmp*(.m+$delai_tres_court))
 	for element in $dusty
 	do
 		echo "trash-put $element"
-		echo
 		trash-put $element
 	done
 }
@@ -135,8 +112,9 @@ dusty+=(w3mtmp*(.m+$delai_tres_court))
 
 cd ~/racine/config/multimedia/mpv/watch_later
 
+echo
 pwd
-echo "------------------------------------------------------------"
+echo "____________________________________________________________"
 echo
 
 dusty=()
@@ -149,7 +127,6 @@ dusty+=(*(.m+$delai_tres_long))
 	for element in $dusty
 	do
 		echo "trash-put $element"
-		echo
 		trash-put $element
 	done
 }
@@ -158,8 +135,9 @@ dusty+=(*(.m+$delai_tres_long))
 
 cd ~/racine/feder/central/freetube
 
+echo
 pwd
-echo "------------------------------------------------------------"
+echo "____________________________________________________________"
 echo
 
 for folder in *(/)
@@ -167,7 +145,6 @@ do
 	dusty=($folder/**/*(.om[4,1000]))
 	(( $#dusty > 0 )) || continue
 	echo "trash-put $=dusty"
-	echo
 	trash-put $=dusty
 done
 
@@ -175,8 +152,9 @@ done
 
 cd ~/racine/syncron
 
+echo
 pwd
-echo "------------------------------------------------------------"
+echo "____________________________________________________________"
 echo
 
 dusty=()
@@ -189,7 +167,6 @@ dusty+=(spool/**/*(.m+$delai))
 	for element in $dusty
 	do
 		echo "trash-put $element"
-		echo
 		trash-put $element
 	done
 }
@@ -198,8 +175,9 @@ dusty+=(spool/**/*(.m+$delai))
 
 cd ~/log
 
+echo
 pwd
-echo "------------------------------------------------------------"
+echo "____________________________________________________________"
 echo
 
 dusty=()
@@ -213,7 +191,6 @@ dusty+=(**/*(.m+$delai))
 	for element in $dusty
 	do
 		echo "trash-put $element"
-		echo
 		trash-put $element
 	done
 }
@@ -222,8 +199,9 @@ dusty+=(**/*(.m+$delai))
 
 cd ~/.cache
 
+echo
 pwd
-echo "------------------------------------------------------------"
+echo "____________________________________________________________"
 echo
 
 dusty=()
@@ -236,7 +214,6 @@ dusty+=(mutt/**/*(.m+$delai))
 	for element in $dusty
 	do
 		echo "trash-put $element"
-		echo
 		trash-put $element
 	done
 }

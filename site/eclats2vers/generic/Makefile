@@ -8,6 +8,7 @@ include Makefile.inc
 
 .PHONY: debug
 
+.PHONY: lilypond-template
 .PHONY: html
 .PHONY: epub
 
@@ -28,6 +29,11 @@ debug:
 	@echo $(HTML_FILES)
 	@echo $(EPUB_FILES)
 	@echo $(LY_MEL_FILES)
+
+# lilypond template {{{1
+
+lilypond-template:
+	make -C ~/racine/musica/lilypond/template install
 
 #  org -> html {{{1
 
@@ -56,11 +62,11 @@ epub: $(EPUB_SUBDIRS) $(EPUB_FILES)
 
 # sync -> html dir {{{1
 
-dry-sync-html: html
+dry-sync-html: lilypond-template html
 	$(DRY_RSYNC) $(ROOT_GENERIC)/ $(ROOT_HTML)
 	@$(ECHO)
 
-sync-html: html
+sync-html: lilypond-template html
 	$(RSYNC) $(ROOT_GENERIC)/ $(ROOT_HTML)
 	@$(ECHO)
 
@@ -74,7 +80,7 @@ sync-epub: epub
 	$(SYNC) $(ROOT_GENERIC)/ $(ROOT_EPUB)
 	@$(ECHO)
 
-#sync all {{{1
+# sync all {{{1
 
 dry-sync: dry-sync-html dry-sync-epub
 
@@ -82,9 +88,9 @@ sync: sync-html sync-epub
 
 # all, install {{{1
 
-all: sync-html
+all: lilypond-template sync-html
 
-install: sync-html
+install: lilypond-template sync-html
 
 # clean, wipe {{{1
 
