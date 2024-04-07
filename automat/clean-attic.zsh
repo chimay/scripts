@@ -110,7 +110,7 @@ dusty+=(w3mtmp*(.m+$delai_tres_court))
 
 # mpv watch_later  {{{1
 
-cd ~/racine/config/multimedia/mpv/watch_later
+cd ~/racine/local/state/mpv/watch_later
 
 echo
 pwd
@@ -144,6 +144,7 @@ for folder in *(/)
 do
 	dusty=($folder/**/*(.om[4,1000]))
 	(( $#dusty > 0 )) || continue
+	ls -l $=dusty
 	echo "trash-put $=dusty"
 	trash-put $=dusty
 done
