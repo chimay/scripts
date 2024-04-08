@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
-kitty vifmrun
+#xterm -e vifmrun
+urxvtc -e vifmrun
+#kitty vifmrun
 
 cd ~/racine/config/fileman/vifm
 vifm-clean-matchers.sh vifminfo.json
