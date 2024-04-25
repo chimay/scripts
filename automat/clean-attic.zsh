@@ -131,24 +131,6 @@ dusty+=(*(.m+$delai_tres_long))
 	done
 }
 
-#  freetube {{{1
-
-cd ~/racine/feder/central/freetube
-
-echo
-pwd
-echo "____________________________________________________________"
-echo
-
-for folder in *(/)
-do
-	dusty=($folder/**/*(.om[4,1000]))
-	(( $#dusty > 0 )) || continue
-	ls -l $=dusty
-	echo "trash-put $=dusty"
-	trash-put $=dusty
-done
-
 # syncron {{{1
 
 cd ~/racine/syncron
