@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-for page in **/*.html
+for page in "$@"
 do
 	text=${page%.html}.txt
 	[ -e $text ] && continue
