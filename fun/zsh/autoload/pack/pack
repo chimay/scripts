@@ -367,10 +367,10 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 #
 # 	trizen -S $=argumen
 
-	echo "paru $=argumen"
+	echo "yay $=argumen"
 	echo
 
-	paru $=argumen
+	yay $=argumen
 }
 
 # }}}

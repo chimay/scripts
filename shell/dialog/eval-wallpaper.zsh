@@ -18,6 +18,8 @@ evaluation=$(\
 	--add-entry "evaluation" \
 )
 
+[ $#evaluation -gt 0 ] || exit 0
+
 # Minuscules ?
 #evaluation=${evaluation:l}
 
