@@ -2,7 +2,7 @@
 
 setopt extended_glob
 
-#  {{{ Initialisation
+# Initialisation {{{1
 
 persistant=0
 
@@ -13,9 +13,7 @@ script=`basename $0`
 
 fini=$HOME/audio/bell/notification/fini.ogg
 
-#  }}}
-
-# {{{ Arguments
+# Arguments {{{1
 
 while true
 do
@@ -42,9 +40,7 @@ do
 	esac
 done
 
-# }}}
-
-#  {{{ Affichage
+# Affichage {{{1
 
 echo Programme : $programme
 echo
@@ -57,9 +53,7 @@ echo
 echo Volume : $volume
 echo
 
-#  }}}
-
-# {{{ Fonctions
+# Fonctions {{{1
 
 player () {
 
@@ -75,9 +69,7 @@ player () {
 	mpv-socket.bash volume $fu_volume
 }
 
-# }}}
-
-#  {{{ Self
+# Self {{{1
 
 [[ $0 = *${programme}* ]] && {
 
@@ -90,8 +82,6 @@ player () {
 
 	exit 0
 }
-
-#  }}}
 
 alias psgrep="ps auxww | grep -v grep | grep -v $script | grep"
 
