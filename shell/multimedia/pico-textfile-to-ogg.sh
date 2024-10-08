@@ -3,6 +3,8 @@
 [ $# -eq 0 -o x$1 = x-h -o x$1 = x--help ] && {
     echo "Usage : $(basename $0) textfile language"
 	echo
+	echo language is en-US by default
+	echo
 	echo Prerequisites : pico-tts sox ffmpeg
 	echo
 	echo "See https://github.com/Iiridayn/pico-tts for pico-tts. There is also an AUR package."
