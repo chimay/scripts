@@ -24,17 +24,9 @@ echo
 echo "------------------------------"
 echo
 
-echo ffmpeg-audio.zsh ogg $rootname.wav
+echo ffmpeg -i "$rootname.wav" -threads 2 -vn -codec:a libvorbis -q:a 7 -ac 2 "$rootname-tmp.ogg"
 echo
-ffmpeg-audio.zsh ogg $rootname.wav
-
-echo
-echo "------------------------------"
-echo
-
-echo mv $rootname.ogg $rootname-tmp.ogg
-echo
-mv $rootname.ogg $rootname-tmp.ogg
+ffmpeg -i "$rootname.wav" -threads 2 -vn -codec:a libvorbis -q:a 7 -ac 2 "$rootname-tmp.ogg"
 
 echo
 echo "------------------------------"

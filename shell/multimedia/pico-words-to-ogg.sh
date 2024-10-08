@@ -12,17 +12,9 @@ echo
 echo "------------------------------"
 echo
 
-echo ffmpeg-audio.zsh ogg $audiofile.wav
+echo ffmpeg -i "$audiofile.wav" -threads 2 -vn -codec:a libvorbis -q:a 7 -ac 2 "$audiofile-tmp.ogg"
 echo
-ffmpeg-audio.zsh ogg $audiofile.wav
-
-echo
-echo "------------------------------"
-echo
-
-echo mv $audiofile.ogg $audiofile-tmp.ogg
-echo
-mv $audiofile.ogg $audiofile-tmp.ogg
+ffmpeg -i "$audiofile.wav" -threads 2 -vn -codec:a libvorbis -q:a 7 -ac 2 "$audiofile-tmp.ogg"
 
 echo
 echo "------------------------------"
