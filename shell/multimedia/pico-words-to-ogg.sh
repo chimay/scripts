@@ -1,5 +1,13 @@
 #!/usr/bin/env sh
 
+[ $# -eq 0 -o x$1 = x-h -o x$1 = x--help ] && {
+    echo 'Usage : $(basename $0) audiofile "words" language'
+	echo
+	echo Prerequisites : pico2wave sox ffmpeg
+	echo
+    exit 0
+}
+
 audiofile=${1:-"audiofile"}
 text=${2:-"Example text."}
 language=${3:-"en-US"}
