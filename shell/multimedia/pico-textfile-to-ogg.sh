@@ -7,7 +7,7 @@ rootname=${textfile%.*}
 
 echo "pico-tts -l fr-FR < $textfile > $rootname.wav"
 echo
-pico-tts -l fr-FR < $textfile > $rootname.raw
+pico-tts -l $language < $textfile > $rootname.raw
 
 # listen to the result :
 # aplay -q -f S16_LE -r 16 $rootname.wav
@@ -50,4 +50,4 @@ echo
 
 echo rm -rf $rootname.raw $rootname.wav $rootname-tmp.ogg
 echo
-#rm -rf $rootname.raw $rootname.wav $rootname-tmp.ogg
+rm -rf $rootname.raw $rootname.wav $rootname-tmp.ogg
