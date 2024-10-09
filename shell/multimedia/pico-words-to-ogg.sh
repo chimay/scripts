@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 [ $# -eq 0 -o x$1 = x-h -o x$1 = x--help ] && {
-    echo 'Usage : $(basename $0) audiofile "words" language'
+    echo Usage : $(basename $0) audiofile "words" language
 	echo
 	echo language is en-US by default
 	echo

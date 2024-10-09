@@ -23,7 +23,7 @@ player () {
 
 low=${1:-10}
 volume=${2:-100}
-fichier=~/audio/bell/notification/memoire.mp3
+fichier=~/audio/bell/notification/memoire.ogg
 
 zzz=30
 
