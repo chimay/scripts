@@ -11,7 +11,7 @@ integer volume=70
 
 script=`basename $0`
 
-fini=$HOME/audio/bell/notification/fini.ogg
+fini=$HOME/audio/bell/notification/fin-programme.ogg
 
 # Arguments {{{1
 

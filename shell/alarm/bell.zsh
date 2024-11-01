@@ -12,7 +12,7 @@ Nbells=1
 alarms=()
 notifications=()
 
-# {{{ Arguments
+# arguments {{{1
 
 while true
 do
@@ -39,17 +39,13 @@ do
 	esac
 done
 
-# }}}
-
-# {{{ Default
+# default {{{1
 
 # Prefix ~/audio/bell/ added if needed
 
 (( $#alarms == 0 )) && alarms=(notification/generique.ogg)
 
-# }}}
-
-# {{{ Fonctions
+# fonctions {{{1
 
 player () {
 	local fu_volume=$1
@@ -61,9 +57,7 @@ player () {
 	mpv-socket.bash volume $fu_volume
 }
 
-# }}}
-
-# {{{ Affichage
+# affichage {{{1
 
 temps=$(date +" [=] %A %d %B %Y  (o) %H:%M")
 
@@ -81,15 +75,11 @@ echo
 echo notifications : $notifications
 echo
 
-# }}}
-
-# {{{ Notifications
+# notifications {{{1
 
 (( $#notifications > 0 )) && notify "$notifications"
 
-# }}}
-
-# {{{ Bell
+# bell {{{1
 
 for dring in $alarms
 do
@@ -100,5 +90,3 @@ do
 		player $volume $dring
 	done
 done
-
-# }}}

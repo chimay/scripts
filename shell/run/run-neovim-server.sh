@@ -1,7 +1,7 @@
 #! /usr/bin/env sh
 
 pgrep nvim > ~/log/psgrep.log 2>&1 && {
-	echo 'neovim tourne déjà'
+	echo 'neovim is already started'
 	echo
 	exit 0
 }

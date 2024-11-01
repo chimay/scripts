@@ -46,7 +46,7 @@ sudo pacman -Syyu
 
 # playing {{{1
 
-fini=$HOME/audio/bell/notification/fini.ogg
+fini=$HOME/audio/bell/notification/fin-mise-a-jour.ogg
 integer volume=70
 
 player $volume $fini
