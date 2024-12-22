@@ -1,16 +1,19 @@
 #! /usr/bin/env zsh
 
-temps=($1)
+when=($1)
+shift
+voice=${1:-$HOME/audio/bell/notification/generique.ogg}
 shift
 notification="'${*:-Générique}'"
 
-echo Temps : $temps
+echo When : $when
+echo Voice : $voice
 echo Notification : $notification
 echo
 
-cat <<- FIN | at $temps 2> ~/log/at.err
-	bell.zsh $HOME/audio/bell/notification/generique.ogg
-	notify-send Rappel $notification
+cat <<- FIN | at $when 2> ~/log/at.err
+	bell.zsh $voice
+	notify-send 'Remind from at' $notification
 FIN
 
 echo

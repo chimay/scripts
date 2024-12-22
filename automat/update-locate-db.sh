@@ -15,7 +15,6 @@ updatedb -v -l 0 -U ~/racine -o "$DB_DIR/racine.db" \
 	$RACINE/local/share/nvchad
 	$RACINE/local/share/nvim-kickstarter
 	$RACINE/pack/aged
-	$RACINE/papier
 	$RACINE/plugin/manager
 	$RACINE/system/conf
 	$RACINE/source

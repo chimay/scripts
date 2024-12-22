@@ -243,8 +243,8 @@ do
 	[ -z $racine ] && racine=$metaroot
 	racine=$~racine
 
-	echoerr "Fichier : $fichier"
-	echoerr "Racine  : $racine"
+	echoerr "File : $fichier"
+	echoerr "Root  : $racine"
 	echoerr
 
 	while read ligne
@@ -374,7 +374,7 @@ echoerr
 
 # Conversion glob -> fichiers {{{1
 
-echoerr Conversion des motifs glob
+echoerr Glob pattern conversion
 echoerr
 
 liste=()
@@ -386,7 +386,7 @@ done
 
 liste=(${(ou)liste})
 
-# echoerr Liste
+# echoerr List
 # echoerr
 # echoerr-lignes $liste
 # echoerr
@@ -398,14 +398,14 @@ done
 
 soustraction=(${(ou)soustraction})
 
-# echoerr Soustraction
+# echoerr Substraction
 # echoerr
 # echoerr-lignes $soustraction
 # echoerr
 
 liste=($(comm -23 <(print -l $liste) <(print -l $soustraction) ))
 
-# echoerr Liste après soustraction
+# echoerr List after substraction
 # echoerr
 # echoerr-lignes $liste
 # echoerr
@@ -417,7 +417,7 @@ done
 
 liste=(${(ou)liste})
 
-# echoerr Liste après addition
+# echoerr List after addition
 # echoerr
 # echoerr-lignes $liste
 # echoerr
@@ -426,7 +426,7 @@ liste=(${(ou)liste})
 
 # Nombres aléatoires {{{1
 
-echoerr Génération des nombres aléatoires
+echoerr Random numbers generation
 echoerr
 
 alea=($(random.zsh 0.0 $dispersion $#liste))
@@ -435,7 +435,7 @@ alea=($(random.zsh 0.0 $dispersion $#liste))
 
 # Tri de la liste {{{1
 
-echoerr Tri de la liste
+echoerr Sorting list
 echoerr
 
 complet=${principal/.?*/.score}
@@ -444,8 +444,8 @@ complet=${principal/.?*/.score}
 genere=${principal/.?*/.m3u}
 [[ $genere = $principal ]] && genere=${genere}.m3u
 
-echoerr "Liste avec score : $complet"
-echoerr "Liste            : $genere"
+echoerr "List with score : $complet"
+echoerr "List            : $genere"
 echoerr
 
 rm -f $complet $genere

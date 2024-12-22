@@ -80,6 +80,7 @@ echo-status-vars () {
 	echo volume     : $volume
 	echo pause      : $pause
 	echo stop       : $stop
+	echo weekend    : $weekend
 	echo
 }
 
@@ -98,6 +99,7 @@ write-status-file () {
 		volume = $volume
 		pause = $pause
 		stop = $stop
+		weekend = $weekend
 	fin
 	touch $stamp
 }
@@ -143,6 +145,7 @@ what-time-is-it () {
 	# format 00 .. 23 & 00 .. 59
 	hour=$(date +%H)
 	minute=$(date +%M)
+	dayofweek=$(date +%w)
 }
 
 shift-clock () {
@@ -169,6 +172,8 @@ check-interval () {
 	(( modulo == 0 )) && bell=1
 	(( moduloante == 0 )) && bell=1
 	(( modulopost == 0 )) && bell=1
+	(( weekend == 0 )) && (( dayofweek == 6 )) && bell=0
+	(( weekend == 0 )) && (( dayofweek == 0 )) && bell=0
 	echo minute modulo interval : $modulo
 	echo minute + ante modulo interval : $moduloante
 	echo minute - post modulo interval : $modulopost
