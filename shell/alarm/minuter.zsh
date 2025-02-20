@@ -212,7 +212,7 @@ bell.zsh $=arguments
 
 # Notify end
 
-notifie-long "$notify_msg a sonné !" &
+notifie-long "$notify_msg has rung !" &
 
 # Common log end
 

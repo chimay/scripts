@@ -4,28 +4,34 @@ export PATH=$PATH:~/racine/shell/alarm
 
 alias psgrep="ps auxww | grep -v grep | grep --color=never"
 
-sortie=$(\
+output=$(\
 	zenity \
 	--title "Infusion" \
 	--forms --separator ":" \
 	--add-entry "Hours" \
 	--add-entry "Minutes" \
-	--add-entry "Secondes" \
+	--add-entry "Seconds" \
+	--add-entry "Volume" \
 )
 
 (( $? != 0 )) && exit 1
 
-echo Sortie : $sortie
-echo Longueur sortie : $#sortie
+echo output : $output
+echo length output : $#output
 echo
 
-if [[ $sortie = :: ]]
+if [[ $output = :: ]]
 then
 	urxvtc -geometry 120x30+300+70 -e less +G ~/log/minuters.log
 	exit 0
 fi
 
-echo "ding-dong.zsh $sortie"
+duration=${output%:*}
+volume=${output//*:}
+echo duration : $duration
+echo volume : $volume
+
+echo "ding-dong.zsh volume=$volume $duration"
 echo
 
-ding-dong.zsh $sortie
+ding-dong.zsh volume=$volume $duration

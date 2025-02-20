@@ -6,12 +6,12 @@ voice=${1:-$HOME/audio/bell/notification/generique.ogg}
 shift
 notification="'${*:-Générique}'"
 
-echo When : $when
+echo When : $=when
 echo Voice : $voice
 echo Notification : $notification
 echo
 
-cat <<- FIN | at $when 2> ~/log/at.err
+cat <<- FIN | at $=when 2> ~/log/at.err
 	bell.zsh $voice
 	notify-send 'Remind from at' $notification
 FIN
