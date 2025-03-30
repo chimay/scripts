@@ -5,7 +5,7 @@
 	echo
 	echo language is en-US by default
 	echo
-	echo Prerequisites : pico-tts sox ffmpeg
+	echo Prerequisites : readable w3m pico-tts sox ffmpeg
 	echo
 	echo "See https://github.com/Iiridayn/pico-tts for pico-tts. There is also an AUR package."
     exit 0
