@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 [ $# -eq 0 -o x$1 = x-h -o x$1 = x--help ] && {
-    echo "Usage : $(basename $0) textfile language"
+    echo "Usage : $(basename $0) htmlfile language"
 	echo
 	echo language is en-US by default
 	echo
@@ -11,17 +11,33 @@
     exit 0
 }
 
-textfile=${1:-"textfile"}
+htmlfile=${1:-"htmlfile"}
 language=${2:-"en-US"}
 
-rootname=${textfile%.*}
+rootname=${htmlfile%.*}
 
-echo "pico-tts -l $language < $textfile > $rootname.raw"
+echo "readable $htmlfile > $rootname.rdbl.html"
 echo
-pico-tts -l $language < $textfile > $rootname.raw
+readable $htmlfile > $rootname.rdbl.html
+
+echo
+echo "------------------------------"
+echo
+
+echo "w3m -dump $rootname.rdbl.html > $rootname.txt"
+echo
+w3m -dump $rootname.rdbl.html > $rootname.txt
+
+echo
+echo "------------------------------"
+echo
+
+echo "pico-tts -l $language < $rootname.txt > $rootname.raw"
+echo
+pico-tts -l $language < $rootname.txt > $rootname.raw
 
 # listen to the result :
-# aplay -q -f S16_LE -r 16 $rootname.wav
+# aplay -q -f S16_LE -r 16 $rootname.raw
 
 echo
 echo "------------------------------"

@@ -22,7 +22,6 @@ include ../Makefile.inc
 
 .PHONY: clean clean-html clean-epub wipe
 
-
 # debug {{{1
 
 debug:
@@ -35,13 +34,17 @@ $(HTML_SUBDIRS):
 	$(MAKE) -C ${@:html-%=%} html
 	@$(ECHO)
 
+signet-%.html: signet-%.org $(INC_FILES) ~/racine/refer/bookmarks/%.org
+	$(EMACS) $(EMACS_PRE_FLAGS) $< $(EMACS_POST_FLAGS)
+	remove-max-width-from-org-html-export.zsh $(patsubst %.org,%.html,$<)
+	@$(ECHO)
+
 %.html: %.org $(INC_FILES)
 	$(EMACS) $(EMACS_PRE_FLAGS) $< $(EMACS_POST_FLAGS)
 	remove-max-width-from-org-html-export.zsh $(patsubst %.org,%.html,$<)
 	@$(ECHO)
 
 html: $(HTML_SUBDIRS) $(HTML_FILES)
-
 
 #  org -> epub {{{1
 
@@ -54,7 +57,6 @@ $(EPUB_SUBDIRS):
 	@$(ECHO)
 
 epub: $(EPUB_SUBDIRS) $(EPUB_FILES)
-
 
 # sync -> html dir {{{1
 
@@ -78,12 +80,11 @@ sync-epub: epub
 	@$(ECHO)
 
 
-#sync all {{{1
+# sync all {{{1
 
 dry-sync: dry-sync-html dry-sync-epub
 
 sync: sync-html sync-epub
-
 
 # all, install {{{1
 

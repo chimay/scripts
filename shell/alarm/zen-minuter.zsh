@@ -28,6 +28,7 @@ fi
 
 duration=${output%:*}
 volume=${output//*:}
+(( $#volume == 0 )) && volume=100
 echo duration : $duration
 echo volume : $volume
 

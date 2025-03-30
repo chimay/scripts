@@ -7,7 +7,7 @@ setopt extended_glob
 persistant=0
 
 integer quantum=60
-integer volume=70
+integer volume=100
 
 script=`basename $0`
 

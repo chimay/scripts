@@ -6,7 +6,7 @@ setopt extended_glob
 
 alias notify='notify-send -t 10000'
 
-volume=70
+volume=100
 Nbells=1
 
 alarms=()

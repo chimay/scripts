@@ -14,7 +14,7 @@ audiofile=${1:-"audiofile"}
 text=${2:-"Example text."}
 language=${3:-"en-US"}
 
-echo pico2wave -l fr-FR -w $audiofile.wav $text
+echo pico2wave -l $language -w $audiofile.wav $text
 echo
 pico2wave -l $language -w $audiofile.wav "$text"
 

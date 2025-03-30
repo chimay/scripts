@@ -391,10 +391,10 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 
 [[ $commande = update ]] && {
 
-	echo "sudo pacmatic -Syyu"
+	echo "sudo pacman -Syyu"
 	echo
 
-	sudo pacmatic -Syyu
+	sudo pacman -Syyu
 }
 
 # }}}
@@ -403,10 +403,10 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 
 [[ $commande = full-update ]] && {
 
-	echo "sudo pacmatic -Syyu"
+	echo "sudo pacman -Syyu"
 	echo
 
-	sudo pacmatic -Syyu
+	sudo pacman -Syyu
 }
 
 # }}}
