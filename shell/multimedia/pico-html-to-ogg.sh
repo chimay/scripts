@@ -1,9 +1,14 @@
 #!/usr/bin/env sh
 
 [ $# -eq 0 -o x$1 = x-h -o x$1 = x--help ] && {
-    echo "Usage : $(basename $0) htmlfile language"
+    echo "Usage : $(basename $0) htmlfile language options"
 	echo
 	echo language is en-US by default
+	echo
+	echo Options :
+	echo
+	echo "-nr : don't use readable to shorten html page (default)"
+	echo "-r : use readable to shorten html page"
 	echo
 	echo Prerequisites : readable w3m pico-tts sox ffmpeg
 	echo
@@ -13,12 +18,20 @@
 
 htmlfile=${1:-"htmlfile"}
 language=${2:-"en-US"}
+use_readable=${3:-"-nr"}
 
 rootname=${htmlfile%.*}
 
-echo "readable $htmlfile > $rootname.rdbl.html"
-echo
-readable $htmlfile > $rootname.rdbl.html
+if [ $use_readable = "-r" ]
+then
+	echo "readable $htmlfile > $rootname.rdbl.html"
+	echo
+	readable $htmlfile > $rootname.rdbl.html
+else
+	echo "cp $htmlfile $rootname.rdbl.html"
+	echo
+	cp $htmlfile $rootname.rdbl.html
+fi
 
 echo
 echo "------------------------------"
