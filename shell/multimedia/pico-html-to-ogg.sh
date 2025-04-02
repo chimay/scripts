@@ -64,9 +64,9 @@ echo
 echo "------------------------------"
 echo
 
-echo ffmpeg -i "$rootname.wav" -threads 2 -vn -codec:a libvorbis -q:a 7 -ac 2 "$rootname-tmp.ogg"
+echo ffmpeg -i "$rootname.wav" -threads 2 -vn -codec:a libvorbis -q:a 3 -ac 2 "$rootname-tmp.ogg"
 echo
-ffmpeg -i "$rootname.wav" -threads 2 -vn -codec:a libvorbis -q:a 7 -ac 2 "$rootname-tmp.ogg"
+ffmpeg -i "$rootname.wav" -threads 2 -vn -codec:a libvorbis -q:a 3 -ac 2 "$rootname-tmp.ogg"
 
 echo
 echo "------------------------------"
@@ -82,4 +82,4 @@ echo
 
 echo rm -rf $rootname.raw $rootname.wav $rootname-tmp.ogg
 echo
-rm -rf $rootname.raw $rootname.wav $rootname-tmp.ogg
+rm -rf $rootname.rdbl.html $rootname.txt $rootname.raw $rootname.wav $rootname-tmp.ogg
