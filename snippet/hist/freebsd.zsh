@@ -12,8 +12,8 @@ adduser # doas
 bastille bootstrap 13.2-RELEASE update # doas
 bastille cmd ALL ps aux # doas
 bastille console tower # doas
-bastille create tower 13.2-RELEASE 192.168.1.250 wlan0 # doas
 bastille create -B tower-dhcp 14.0-RELEASE 0.0.0.0 bridge0
+bastille create tower 13.2-RELEASE 192.168.1.250 wlan0 # doas
 bastille list # doas
 bastille list release  # doas
 bastille start tower # doas
@@ -44,6 +44,7 @@ cle=agent ; eval $(ssh-agent)
 cle=liste ; ssh-add -l
 cle=ssh-local ; ssh-add ~/racine/config/cmdline/ssh/$HOST/id_rsa
 cp /boot/loader.efi /boot/efi/EFI/boot/bootx64.efi
+dbus-launch waybar
 debootstrap focal /compat/ubuntu # doas
 demonte=cleusb ; umount /media/da0s1
 devinfo -rv
@@ -162,6 +163,7 @@ rcorder /etc/rc.d/* /usr/local/etc/rc.d/*
 restic restore -r /media/da0s1/restic latest --target ~
 restic restore -r /media/da0s1/restic latest --target ~ --include ~/racine/self
 sade
+seatd-launch hyprland
 service -e
 service automount restart # doas
 service automount start # doas

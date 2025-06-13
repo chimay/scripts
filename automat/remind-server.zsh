@@ -81,7 +81,7 @@ start-remind () {
 	echo
 	trap restart-remind SIGUSR1
 	trap 1>&2
-	remind -z$tictac -k'remind-msg.sh %s &' $reminders &
+	remind -z$tictac -k'remind-message.sh %s &' $reminders &
 	remindproc=$!
 	echo remindproc = $remindproc
 	echo

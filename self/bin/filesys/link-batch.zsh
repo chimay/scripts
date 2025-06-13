@@ -127,9 +127,14 @@ do
 		echo $link is not a link
 		continue
 	}
+	linkdir=${link%/*}
+	#echo "cd $linkdir"
+	cd $linkdir
 	target=$targetlist[$index]
 	[ -e $target ] || {
 		echo broken : $link '->' $target
 		continue
 	}
+	#echo "cd -"
+	cd -
 done
