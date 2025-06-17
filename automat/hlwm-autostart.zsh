@@ -21,12 +21,6 @@ alias psgrep='ps auxww | grep -v grep | grep --color=never'
 
 psgrep wallpaper.zsh || wallpaper.zsh ~/racine/run/wall/wallpaper.status >>! ~/log/wallpaper.log 2>&1 &
 
-# Panel {{{2
-
-# must be launched before services that need system tray
-
-polybar.zsh
-
 #  Dock {{{2
 
 #wbar -config ~/racine/config/xwin/dock/wbarrc -pos top-left -vbar -isize 48 -idist 24 -zoomf 2 -jumpf 1 -nanim 5 &

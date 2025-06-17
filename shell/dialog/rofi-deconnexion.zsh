@@ -20,4 +20,7 @@ then
 elif [ $winman = bspwm ]
 then
 	bspc quit
+elif [ $winman = herbstluftwm ]
+then
+	herbstclient quit
 fi
