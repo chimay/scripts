@@ -13,7 +13,7 @@ integer niveau=1
 
 adresse=""
 
-# Fanions {{{1
+# flags {{{1
 
 # Certains fanions peuvent poser problème dans certains cas, notamment :
 #
@@ -30,7 +30,7 @@ fanions=(
 	--convert-links
 	--adjust-extension
 	--ignore-case
-	--reject .mid,.midi,.mp3,.ogg,.wav,.ogv,.mp4,.m4v,.avi,.webm,.swf,.flv,.zip,.tar.gz,.tar.bz2
+	--reject .pdf,.ps,.jpg,.jpeg,.png,.webp,.svg,.gif,.mid,.midi,.mp3,.ogg,.wav,.ogv,.mp4,.m4v,.avi,.webm,.swf,.flv,.zip,.tar.gz,.tar.bz2
 	--backups=0
 	--user-agent=firefox
 	--wait=1
@@ -43,9 +43,7 @@ fanions=(
 	-o wget.log
 )
 
-# }}}1
-
-# {{{ Arguments
+# arguments {{{1
 
 while true
 do
@@ -75,17 +73,13 @@ do
 	esac
 done
 
-# }}}
-
-# Adaptations {{{1
+# adaptations {{{1
 
 (( $#adresse > 0 )) || exit 0
 
 fanions+="--level=${niveau}"
 
-# }}}1
-
-# Affichage {{{1
+# display {{{1
 
 echo Adresse : $adresse
 echo
@@ -96,9 +90,7 @@ echo
 echo "=============================="
 echo
 
-# }}}1
-
-# Solution avec fichier temporaire {{{1
+# solution with temporary fichier {{{1
 
 echo "wget $fanions -- $adresse" > $temporaire
 echo
@@ -122,5 +114,3 @@ echo
 $=ligne
 
 rm $temporaire
-
-# }}}1
