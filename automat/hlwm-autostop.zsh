@@ -16,6 +16,7 @@ HOST=`hostname -s`
 # }}}1
 
 pkill -f redshift-gtk &
+pkill -f redshift &
 pkill -f xcape &
 pkill -f flameshot &
 pkill -f unclutter &
