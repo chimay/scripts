@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
-temps=${1:-30}
+temps=${1:-12}
 
-volume=${2:-70}
+volume=${2:-100}
 
 echo temps = $temps
 echo
