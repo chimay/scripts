@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-xdotool search --class freetube windowactivate && exit 0
+xdotool search --class Freetube windowactivate && exit 0
 
 date >> ~/log/freetube.log 2>&1
 echo >> ~/log/freetube.log 2>&1

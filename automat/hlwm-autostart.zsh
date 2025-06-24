@@ -182,7 +182,7 @@ if psgrep sxhkd
 then
 	pkill -10 sxhkd
 else
-	sxhkd >>! ~/log/sxhkd.log 2>&1  &
+	sxhkd -c ~/racine/config/windenv/sxhkd/hlwm-sxhkdrc >>! ~/log/sxhkd.log 2>&1  &
 fi
 
 psgrep keynav || keynav daemonize
