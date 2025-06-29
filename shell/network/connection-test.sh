@@ -22,7 +22,7 @@ lecteur () {
 
 while true
 do
-	ping -W 1 -c 1 archlinux.org > /dev/null 2>&1 && {
+	ping -W 1 -c 1 www.fedoraproject.org > /dev/null 2>&1 && {
 		echo " [$(date +%H:%M:%S)] Connexion établie"
 		echo
 		lecteur $volume ~/audio/bell/notification/connexion-etablie.ogg
