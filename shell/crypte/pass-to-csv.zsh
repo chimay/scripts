@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
-# put the pass (www.passwordstore.org) database
-# in csv format that can be imported in keepass
+# genrate a csv file from pass (www.passwordstore.org) database
+# in a format that can be imported in keepassxc
 
 store=${1:-~/.password-store}
 
