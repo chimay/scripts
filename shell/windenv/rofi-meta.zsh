@@ -39,7 +39,7 @@ case $choix in
 		~/racine/shell/dialog/rofi-terminal.zsh & disown
 		;;
 	": Outils")
-		~/racine/shell/dialog/rofi-outils.zsh & disown
+		~/racine/shell/dialog/rofi-utils.zsh & disown
 		;;
 	"@ Internet")
 		~/racine/shell/dialog/rofi-internet.zsh & disown
@@ -55,21 +55,21 @@ case $choix in
 		~/racine/shell/dialog/rofi-clipmenu.zsh & disown
 		;;
 	"§ Bureaux")
-		~/racine/shell/dialog/rofi-bureau.zsh & disown
+		~/racine/shell/dialog/rofi-desktop.zsh & disown
 		;;
 	"^ Fenêtres")
-		~/racine/shell/dialog/rofi-fenetres.zsh & disown
+		~/racine/shell/dialog/rofi-windows.zsh & disown
 		;;
 	"µ Combinaison")
 		~/racine/shell/dialog/rofi-combi.zsh & disown
 		;;
 	"X Fermer une fenêtre")
-		~/racine/shell/dialog/rofi-fermer.zsh & disown
+		~/racine/shell/dialog/rofi-close-window.zsh & disown
 		;;
 	"! Disposition du clavier")
-		~/racine/shell/dialog/rofi-clavier.zsh & disown
+		~/racine/shell/dialog/rofi-keyboard.zsh & disown
 		;;
 	"IO Éteindre")
-		~/racine/shell/dialog/rofi-eteindre.zsh & disown
+		~/racine/shell/dialog/rofi-shutdown.zsh & disown
 		;;
 esac

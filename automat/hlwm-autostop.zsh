@@ -30,10 +30,9 @@ pkill -f protonvpn-app &
 pkill -f blueman-applet &
 pkill -f wallpaper.zsh &
 pkill -f sxhkd &
-pkill -f keynav &
+#pkill -f keynav &
 pkill -f picom &
 pkill -f /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-#pkill -f greenclip &
 pkill -f clipmenud &
 pkill -f dunst &
 pkill -f log-notifications.bash &

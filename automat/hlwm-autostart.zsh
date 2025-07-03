@@ -185,7 +185,7 @@ else
 	sxhkd -c ~/racine/config/windenv/sxhkd/hlwm-sxhkdrc >>! ~/log/sxhkd.log 2>&1  &
 fi
 
-psgrep keynav || keynav daemonize
+#psgrep keynav || keynav daemonize
 
 # Compositor {{{2
 
@@ -213,7 +213,6 @@ psgrep urxvtd || urxvtd -q -o -f
 
 # Presse-papier {{{2
 
-#psgrep greenclip || run-greenclip.sh &
 psgrep clipmenud || run-clipmenud.sh &
 
 # Notifications {{{2
