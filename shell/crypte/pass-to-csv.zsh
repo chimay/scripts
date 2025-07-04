@@ -2,6 +2,9 @@
 
 # genrate a csv file from pass (www.passwordstore.org) database
 # in a format that can be imported in keepassxc
+#
+# if you use commas in your passwords, you may have to adapt
+# this script to quote them
 
 store=${1:-~/.password-store}
 
