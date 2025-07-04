@@ -13,7 +13,7 @@
 
 store=${1:-~/.password-store}
 
-output=${2:-passwordstore.csv}
+output=${2:-$store/passwordstore.csv}
 
 [ -d $store ] || {
 	echo Directory $store does not exist
@@ -21,11 +21,15 @@ output=${2:-passwordstore.csv}
 	exit 1
 }
 
+echo store : $store
+echo csv file : $output
+echo
+
 cd $store
 
 rm -i $output
 
-for file in **/*(.)
+for file in **/*.gpg(.)
 do
 	fields=(${(@s:/:)file})
 	group=${(j:/:)fields[1,-3]}
@@ -68,7 +72,9 @@ done
 
 echo "------------------------------------------------------------------------"
 echo
-echo "DO NOT FORGET TO SAFELY REMOVE ~/.password-store/passwordstore.csv"
+echo "DO NOT FORGET TO SAFELY REMOVE"
+echo $output
+echo "AFTER THE KEEPASSXC IMPORT"
 echo
 echo "------------------------------------------------------------------------"
 echo
