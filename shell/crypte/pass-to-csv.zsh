@@ -1,14 +1,25 @@
 #!/usr/bin/env zsh
 
-# genrate a csv file from pass (www.passwordstore.org) database
-# in a format that can be imported in keepassxc
-#
-# if you use commas in your passwords, you may have to adapt
-# this script to quote them
+[ $# -gt 0 ] && {
+	[ $1 = -h -o $1 = --help ] && {
+		echo "Generate a csv file from pass (www.passwordstore.org) database."
+		echo "This csv file can be imported in keepassxc."
+		echo
+		echo "Usage: $(basename $0) password-store-directory csv-file"
+		echo
+		exit 0
+	}
+}
 
 store=${1:-~/.password-store}
 
-output=passwordstore.csv
+output=${2:-passwordstore.csv}
+
+[ -d $store ] || {
+	echo Directory $store does not exist
+	echo
+	exit 1
+}
 
 cd $store
 
@@ -24,6 +35,7 @@ do
 	password=$(pass show ${file%.gpg})
 	lines=(${(f)password})
 	password=${(j:-NEWLINE-:)lines}
+	password=${password:gs:,:\\\\,}
 	if [ $group = sites ]
 	then
 		url=https://$title
@@ -49,9 +61,13 @@ do
 	echo last_modified : $last_modified
 	echo created : $created
 	echo
-	record="$group,$title,$username,$password,$url,$tags,$notes,$totp,$icon,$last_modified,$created"
+	record="\"$group\",\"$title\",\"$username\",\"$password\",\"$url\",\"$tags\",\"$notes\",\"$totp\",\"$icon\",\"$last_modified\",\"$created\""
 	echo $record >>| $output
 done
 
-echo "Don't forget to safely remove ~/.password-store/passwordstore.csv"
+echo "------------------------------------------------------------------------"
+echo
+echo "DO NOT FORGET TO SAFELY REMOVE ~/.password-store/passwordstore.csv"
+echo
+echo "------------------------------------------------------------------------"
 echo
