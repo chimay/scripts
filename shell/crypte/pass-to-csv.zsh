@@ -52,7 +52,8 @@ do
 	echo group : $group
 	echo title : $title
 	echo username : $username
-	echo password : $password
+	#echo password : $password
+	echo password : xxx
 	echo url : $url
 	echo tags : $tags
 	echo notes : $notes
