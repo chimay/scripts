@@ -8,6 +8,13 @@ confirmation=(
 	Oui
 )
 
+if which systemctl
+then
+	powerctl=systemctl
+else
+	powerctl=loginctl
+fi
+
 # Rofi dmenu {{{1
 
 choix=$(print -l $menu | rofi -dmenu -p "que faire " -i)
@@ -30,10 +37,10 @@ sync -f $HOME
 
 	[[ $certain = Oui ]] && {
 
-		echo "systemctl suspend"
+		echo "$powerctl suspend"
 		echo
 
-		systemctl suspend
+		$powerctl suspend
 
 		autowake.zsh &>>! ~/log/autowake.log
 	}
@@ -53,10 +60,10 @@ sync -f $HOME
 
 	[[ $certain = Oui ]] && {
 
-		echo "systemctl poweroff"
+		echo "$powerctl poweroff"
 		echo
 
-		systemctl poweroff
+		$powerctl poweroff
 	}
 }
 

@@ -21,6 +21,12 @@ alias psgrep='ps auxww | grep -v grep | grep --color=never'
 
 psgrep wallpaper.zsh || wallpaper.zsh ~/racine/run/wall/wallpaper.status >>! ~/log/wallpaper.log 2>&1 &
 
+# Panel {{{2
+
+# must be launched before services that need system tray
+
+polybar.zsh
+
 #  Dock {{{2
 
 #wbar -config ~/racine/config/xwin/dock/wbarrc -pos top-left -vbar -isize 48 -idist 24 -zoomf 2 -jumpf 1 -nanim 5 &
@@ -103,11 +109,9 @@ then
 
 elif [ $HOST = mandala ]
 then
-	synclient TapButton1=1
 	# L’id change à chaque démarrage
 	#iden=$(xinput list | grep SynPS | cut -d '=' -f 2 | awk '{print $1}')
 	#xinput set-prop $iden 'libinput Tapping Enabled' 1
-	#xinput set-prop "Synaptics TM3175-002" "Synaptics Tap Action" 0
 
 elif [ $HOST = taijitu ]
 then
@@ -165,9 +169,6 @@ then
 elif [ $HOST = shari ]
 then
 	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
-elif [ $HOST = mandala ]
-then
-	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
 fi
 
 # Bluetooth {{{2
@@ -187,10 +188,10 @@ if psgrep sxhkd
 then
 	pkill -10 sxhkd
 else
-	sxhkd -c ~/racine/config/windenv/sxhkd/hlwm-sxhkdrc >>! ~/log/sxhkd.log 2>&1  &
+	sxhkd -c ~/racine/config/windenv/sxhkd/bspwm-sxhkdrc >>! ~/log/sxhkd.log 2>&1  &
 fi
 
-#psgrep keynav || keynav daemonize
+psgrep keynav || keynav daemonize
 
 # Compositor {{{2
 
@@ -218,6 +219,7 @@ psgrep urxvtd || urxvtd -q -o -f
 
 # Presse-papier {{{2
 
+#psgrep greenclip || run-greenclip.sh &
 psgrep clipmenud || run-clipmenud.sh &
 
 # Notifications {{{2
