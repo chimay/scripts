@@ -1,6 +1,5 @@
-#! /usr/bin/env zsh
+#!/usr/bin/env zsh
 
-# vim: set filetype=sh :
 # vim: set fdm=marker :
 
 # Chemins d’accès {{{1

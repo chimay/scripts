@@ -1,19 +1,16 @@
-#! /usr/bin/env zsh
+#!/usr/bin/env zsh
 
-# vim: set filetype=sh :
 # vim: set fdm=marker :
 
 # Chemins d’accès {{{1
 
 source ~/racine/config/cmdline/zsh/zprofile
 
-# }}}1
-
 # Variables {{{1
 
 HOST=`hostname -s`
 
-# }}}1
+# Clean up {{{1
 
 pkill -f redshift-gtk &
 pkill -f redshift &
