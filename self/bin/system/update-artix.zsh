@@ -54,4 +54,4 @@ sudo pacman -Qdtq | sudo pacman -Rns -
 # update files db {{{1
 
 sudo pacman -Fy
-sudo pkfile -u
+sudo pkgfile -u

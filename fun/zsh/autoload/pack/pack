@@ -1,6 +1,6 @@
 # vim: set filetype=zsh :
 
-# {{{ Options
+# Options {{{1
 
 emulate -R zsh
 
@@ -14,23 +14,20 @@ setopt extended_glob
 
 #zmodload zsh/regex
 
-# }}}
 
-# {{{ Variables
+# Variables {{{1
 
 local commande
 local argumen
 local operasys
 
-# }}}
-
-# {{{ Arguments
+# Arguments {{{1
 
 commande=sync
 
 argumen=()
 
-# {{{ Commande
+# Commande {{{1
 
 case $1 in
 	help|h|man)
@@ -65,6 +62,10 @@ case $1 in
 		;;
 	local-install|localinstall|locins|locin|lin)
 		commande=local-install
+		shift
+		;;
+	reconfigure|reconfig|reconf)
+		commande=reconfigure
 		shift
 		;;
 	source-compile-install|source-install|source|src)
@@ -142,7 +143,6 @@ case $1 in
 		;;
 esac
 
-# }}}
 
 while true
 do
@@ -157,39 +157,24 @@ do
 	esac
 done
 
-# }}}
-
-# {{{ Valeurs par défaut
+# Valeurs par défaut {{{1
 
 (( $#commande == 0 )) && commande=sync
 
-# }}}
-
-# {{{ Distribution
+# Distribution {{{1
 
 if which pacman &>>/dev/null
 then
 	operasys=archlinux
-
+elif which xbps-query &>>/dev/null
+then
+	operasys=voidlinux
 elif which apt &>>/dev/null
 then
 	operasys=debian
-
 elif which pkg &>>/dev/null
 then
 	operasys=freebsd
-
-elif which yum &>>/dev/null
-then
-	operasys=fedora
-
-elif which zypper &>>/dev/null
-then
-	operasys=suse
-
-elif which emerge &>>/dev/null
-then
-	operasys=gentoo
 fi
 
 (( $#operasys == 0 )) && {
@@ -199,18 +184,16 @@ fi
 	return 1
 }
 
-# }}}
 
-# {{{ Affichage
+# Affichage {{{1
 
 echo "Distribution : $operasys"
 echo
 echo "Commande : $commande"
 echo
 
-# }}}
 
-# {{{ Aide
+# Aide {{{1
 
 [[ $commande = help ]] && {
 
@@ -261,15 +244,14 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 
 } | sed 's/^/  /'
 
-# }}}
 
 # ------------------------------------
 
-# {{{ Archlinux
+# Archlinux {{{1
 
 [[ $operasys = archlinux ]] && {
 
-# {{{ Sync
+# Sync {{{2
 
 [[ $commande = sync ]] && {
 
@@ -279,9 +261,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pacman -Syy
 }
 
-# }}}
 
-# {{{ Sync-files
+# Sync-files {{{2
 
 [[ $commande = sync-files ]] && {
 
@@ -296,9 +277,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pacman -Fy
 }
 
-# }}}
 
-# {{{ Sync-ports
+# Sync-ports {{{2
 
 [[ $commande = sync-ports ]] && {
 
@@ -308,9 +288,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	asp update
 }
 
-# }}}
 
-# {{{ Sync-keys
+# Sync-keys {{{2
 
 [[ $commande = sync-keys ]] && {
 
@@ -320,9 +299,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pacman-key --refresh-keys
 }
 
-# }}}
 
-# {{{ Install
+# Install {{{2
 
 [[ $commande = install ]] && {
 
@@ -332,9 +310,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pacman -S $=argumen
 }
 
-# }}}
 
-# {{{ Reinstall
+# Reinstall {{{2
 
 [[ $commande = reinstall ]] && {
 
@@ -344,9 +321,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pacman -S $=argumen
 }
 
-# }}}
 
-# {{{ Local-install
+# Local-install {{{2
 
 [[ $commande = local-install ]] && {
 
@@ -356,9 +332,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pacman -U $=argumen
 }
 
-# }}}
 
-# {{{ Source-compile-install
+# Source-compile-install {{{2
 
 [[ $commande = source-compile-install ]] && {
 
@@ -373,9 +348,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	yay $=argumen
 }
 
-# }}}
 
-# {{{ Remove
+# Remove {{{2
 
 [[ $commande = remove ]] && {
 
@@ -385,9 +359,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pacman -Rns $=argumen
 }
 
-# }}}
 
-# {{{ Update
+# Update {{{2
 
 [[ $commande = update ]] && {
 
@@ -397,9 +370,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pacman -Syyu
 }
 
-# }}}
 
-# {{{ Full-update
+# Full-update {{{2
 
 [[ $commande = full-update ]] && {
 
@@ -409,9 +381,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pacman -Syyu
 }
 
-# }}}
 
-# {{{ Bin-src-update
+# Bin-src-update {{{2
 
 [[ $commande = bin-src-update ]] && {
 
@@ -426,7 +397,6 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	trizen -Syyu
 }
 
-# }}}
 
 # Remove orphans {{{2
 
@@ -438,9 +408,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	pacman -Qdtq | sudo pacman -Rns -
 }
 
-# }}}2
 
-# {{{ Clean cache
+# Clean cache {{{2
 
 [[ $commande = clean ]] && {
 
@@ -459,9 +428,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 
 }
 
-# }}}
 
-# {{{ Search
+# Search {{{2
 
 [[ $commande = search ]] && {
 
@@ -476,9 +444,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	pacsearch $=argumen
 }
 
-# }}}
 
-# {{{ Search-file
+# Search-file {{{2
 
 [[ $commande = search-file ]] && {
 
@@ -500,9 +467,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	pacman -F $=argumen
 }
 
-# }}}
 
-# {{{ Info
+# Info {{{2
 
 [[ $commande = info ]] && {
 
@@ -512,9 +478,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	pacman -Si $=argumen
 }
 
-# }}}
 
-# {{{ List-files
+# List-files {{{2
 
 [[ $commande = list-files ]] && {
 
@@ -529,9 +494,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	pkgfile -l $=argumen
 }
 
-# }}}
 
-# {{{ Depends
+# Depends {{{2
 
 [[ $commande = depends ]] && {
 
@@ -541,9 +505,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	pactree $=argumen
 }
 
-# }}}
 
-# {{{ Reverse-depends
+# Reverse-depends {{{2
 
 [[ $commande = reverse-depends ]] && {
 
@@ -556,9 +519,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	pacman -Sii $=argumen
 }
 
-# }}}
 
-# {{{ List-group-members
+# List-group-members {{{2
 
 [[ $commande = list-group-members ]] && {
 
@@ -568,17 +530,177 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	pacman -Sg $=argumen
 }
 
-# }}}
 
 }
 
-# }}}
 
-# {{{ Debian
+# Voidlinux {{{1
+
+[[ $operasys = voidlinux ]] && {
+
+# Sync {{{2
+
+[[ $commande = sync ]] && {
+	echo "sudo xbps-install -S"
+	echo
+	sudo xbps-install -S
+}
+
+# Sync-files {{{2
+
+[[ $commande = sync-files ]] && {
+	echo "xlocate -S"
+	echo
+	xlocate -S
+}
+
+# Sync-ports {{{2
+
+[[ $commande = sync-ports ]] && {
+
+}
+
+# Sync-keys {{{2
+
+[[ $commande = sync-keys ]] && {
+
+}
+
+# Install {{{2
+
+[[ $commande = install ]] && {
+	echo "sudo xbps-install $=argumen"
+	echo
+	sudo xbps-install $=argumen
+}
+
+# Reinstall {{{2
+
+[[ $commande = reinstall ]] && {
+	echo "sudo xbps-install -f $=argumen"
+	echo
+	sudo xbps-install -f $=argumen
+}
+
+# Reconfigure {{{2
+
+[[ $commande = reconfigure ]] && {
+	echo "sudo xbps-reconfigure $=argumen"
+	echo
+	sudo xbps-reconfigure $=argumen
+}
+
+# Local-install {{{2
+
+[[ $commande = local-install ]] && {
+
+}
+
+# Source-compile-install {{{2
+
+[[ $commande = source-compile-install ]] && {
+
+}
+
+# Remove {{{2
+
+[[ $commande = remove ]] && {
+	echo "xbps-remove $=argumen"
+	echo
+	xbps-remove $=argumen
+}
+
+# Update {{{2
+
+[[ $commande = update ]] && {
+	echo "sudo xbps-install -Su"
+	echo
+	sudo xbps-install -Su
+}
+
+# Full-update {{{2
+
+[[ $commande = full-update ]] && {
+	echo "sudo xbps-install -Su"
+	echo
+	sudo xbps-install -Su
+}
+
+# Bin-src-update {{{2
+
+[[ $commande = bin-src-update ]] && {
+
+}
+
+# Remove orphans {{{2
+
+[[ $commande = remove-orphan ]] && {
+
+}
+
+# Clean cache {{{2
+
+[[ $commande = clean ]] && {
+
+}
+
+# Search {{{2
+
+[[ $commande = search ]] && {
+	echo "xbps-query -Rs $=argumen"
+	echo
+	xbps-query -Rs $=argumen
+}
+
+# Search-file {{{2
+
+[[ $commande = search-file ]] && {
+	echo "xlocate $=argumen"
+	echo
+	xlocate $=argumen
+}
+
+# Info {{{2
+
+[[ $commande = info ]] && {
+	echo "xbps-query $=argument"
+	echo
+	xbps-query $=argument
+}
+
+# List-files {{{2
+
+[[ $commande = list-files ]] && {
+	echo "xbps-query -f $=argumen"
+	echo
+	xbps-query -f $=argumen
+}
+
+# Depends {{{2
+
+[[ $commande = depends ]] && {
+
+}
+
+# Reverse-depends {{{2
+
+[[ $commande = reverse-depends ]] && {
+
+}
+
+# List-group-members {{{2
+
+[[ $commande = list-group-members ]] && {
+
+}
+
+}
+
+# Debian {{{1
 
 [[ $operasys = debian ]] && {
 
-# {{{ Sync
+# Sync {{{2
 
 [[ $commande = sync ]] && {
 
@@ -588,9 +710,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo apt-get update
 }
 
-# }}}
 
-# {{{ Sync-files
+# Sync-files {{{2
 
 [[ $commande = sync-files ]] && {
 
@@ -600,18 +721,16 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo apt-file update
 }
 
-# }}}
 
-# {{{ Sync-ports
+# Sync-ports {{{2
 
 [[ $commande = sync-ports ]] && {
 
 
 }
 
-# }}}
 
-# {{{ Sync-keys
+# Sync-keys {{{2
 
 [[ $commande = sync-keys ]] && {
 
@@ -621,9 +740,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 
 }
 
-# }}}
 
-# {{{ Install
+# Install {{{2
 
 [[ $commande = install ]] && {
 
@@ -633,9 +751,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo apt-get install $=argumen
 }
 
-# }}}
 
-# {{{ Reinstall
+# Reinstall {{{2
 
 [[ $commande = reinstall ]] && {
 
@@ -645,9 +762,15 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo apt-get install --reinstall $=argumen
 }
 
-# }}}
+# Reconfigure {{{2
 
-# {{{ Local-install
+[[ $commande = reconfigure ]] && {
+	echo "sudo dpkg-reconfigure $=argumen"
+	echo
+	sudo dpkg-reconfigure $=argumen
+}
+
+# Local-install {{{2
 
 [[ $commande = local-install ]] && {
 
@@ -657,17 +780,15 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo dpkg -i $=argumen
 }
 
-# }}}
 
-# {{{ Source-compile-install
+# Source-compile-install {{{2
 
 [[ $commande = source-compile-install ]] && {
 
 }
 
-# }}}
 
-# {{{ Remove
+# Remove {{{2
 
 [[ $commande = remove ]] && {
 
@@ -677,9 +798,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo apt-get remove $=argumen
 }
 
-# }}}
 
-# {{{ Purge
+# Purge {{{2
 
 [[ $commande = purge ]] && {
 
@@ -689,9 +809,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo apt-get purge $=argumen
 }
 
-# }}}
 
-# {{{ Update
+# Update {{{2
 
 [[ $commande = update ]] && {
 
@@ -701,9 +820,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo apt-get update && sudo apt-get upgrade
 }
 
-# }}}
 
-# {{{ Full-update
+# Full-update {{{2
 
 [[ $commande = full-update ]] && {
 
@@ -713,15 +831,13 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo apt-get update && sudo apt-get dist-upgrade
 }
 
-# }}}
 
-# {{{ Bin-src-update
+# Bin-src-update {{{2
 
 [[ $commande = bin-src-update ]] && {
 
 }
 
-# }}}
 
 # Remove orphans {{{2
 
@@ -733,9 +849,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	apt autoremove
 }
 
-# }}}2
 
-# {{{ Clean cache
+# Clean cache {{{2
 
 [[ $commande = clean ]] && {
 
@@ -745,9 +860,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo apt-get autoclean
 }
 
-# }}}
 
-# {{{ Search
+# Search {{{2
 
 [[ $commande = search ]] && {
 
@@ -757,9 +871,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	apt-cache search $=argumen
 }
 
-# }}}
 
-# {{{ Search-file
+# Search-file {{{2
 
 [[ $commande = search-file ]] && {
 
@@ -769,9 +882,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	apt-file search $=argumen
 }
 
-# }}}
 
-# {{{ Info
+# Info {{{2
 
 [[ $commande = info ]] && {
 
@@ -781,9 +893,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	apt-cache show $=argumen
 }
 
-# }}}
 
-# {{{ List-files
+# List-files {{{2
 
 [[ $commande = list-files ]] && {
 
@@ -793,9 +904,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	apt-file list $=argumen
 }
 
-# }}}
 
-# {{{ Depends
+# Depends {{{2
 
 [[ $commande = depends ]] && {
 
@@ -805,9 +915,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	apt-cache depends $=argumen
 }
 
-# }}}
 
-# {{{ Reverse-depends
+# Reverse-depends {{{2
 
 [[ $commande = reverse-depends ]] && {
 
@@ -817,25 +926,22 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	apt-cache rdepends $=argumen
 }
 
-# }}}
 
-# {{{ List-group-members
+# List-group-members {{{2
 
 [[ $commande = list-group-members ]] && {
 
 }
 
-# }}}
 
 }
 
-# }}}
 
-# {{{ Freebsd
+# Freebsd {{{1
 
 [[ $operasys = freebsd ]] && {
 
-# {{{ Sync
+# Sync {{{2
 
 [[ $commande = sync ]] && {
 
@@ -845,9 +951,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pkg update
 }
 
-# }}}
 
-# {{{ Sync-files
+# Sync-files {{{2
 
 [[ $commande = sync-files ]] && {
 
@@ -855,9 +960,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	echo
 }
 
-# }}}
 
-# {{{ Sync-ports
+# Sync-ports {{{2
 
 [[ $commande = sync-ports ]] && {
 
@@ -867,9 +971,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo portsnap fetch update
 }
 
-# }}}
 
-# {{{ Sync-keys
+# Sync-keys {{{2
 
 [[ $commande = sync-keys ]] && {
 
@@ -877,9 +980,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	echo
 }
 
-# }}}
 
-# {{{ Install
+# Install {{{2
 
 [[ $commande = install ]] && {
 
@@ -889,9 +991,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pkg install $=argumen
 }
 
-# }}}
 
-# {{{ Reinstall
+# Reinstall {{{2
 
 [[ $commande = reinstall ]] && {
 
@@ -899,9 +1000,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	echo
 }
 
-# }}}
 
-# {{{ Local-install
+# Local-install {{{2
 
 [[ $commande = local-install ]] && {
 
@@ -909,9 +1009,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	echo
 }
 
-# }}}
 
-# {{{ Source-compile-install
+# Source-compile-install {{{2
 
 [[ $commande = source-compile-install ]] && {
 
@@ -921,9 +1020,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	cd /usr/ports ; make search name=$=argumen
 }
 
-# }}}
 
-# {{{ Remove
+# Remove {{{2
 
 [[ $commande = remove ]] && {
 
@@ -933,9 +1031,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pkg delete $=argumen
 }
 
-# }}}
 
-# {{{ Update
+# Update {{{2
 
 [[ $commande = update ]] && {
 
@@ -945,9 +1042,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pkg upgrade
 }
 
-# }}}
 
-# {{{ Full-update
+# Full-update {{{2
 
 [[ $commande = full-update ]] && {
 
@@ -957,9 +1053,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pkg upgrade
 }
 
-# }}}
 
-# {{{ Bin-src-update
+# Bin-src-update {{{2
 
 [[ $commande = bin-src-update ]] && {
 
@@ -967,7 +1062,6 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	echo
 }
 
-# }}}
 
 # Remove orphans {{{2
 
@@ -979,17 +1073,15 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	sudo pkg autoremove
 }
 
-# }}}2
 
-# {{{ Clean cache
+# Clean cache {{{2
 
 [[ $commande = clean ]] && {
 
 }
 
-# }}}
 
-# {{{ Search
+# Search {{{2
 
 [[ $commande = search ]] && {
 
@@ -999,9 +1091,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	pkg search $=argumen
 }
 
-# }}}
 
-# {{{ Search-file
+# Search-file {{{2
 
 [[ $commande = search-file ]] && {
 
@@ -1011,9 +1102,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	pkg which $=argumen
 }
 
-# }}}
 
-# {{{ Info
+# Info {{{2
 
 [[ $commande = info ]] && {
 
@@ -1023,9 +1113,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	pkg info $=argumen
 }
 
-# }}}
 
-# {{{ List-files
+# List-files {{{2
 
 [[ $commande = list-files ]] && {
 
@@ -1033,9 +1122,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	echo
 }
 
-# }}}
 
-# {{{ Depends
+# Depends {{{2
 
 [[ $commande = depends ]] && {
 
@@ -1043,9 +1131,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	echo
 }
 
-# }}}
 
-# {{{ Reverse-depends
+# Reverse-depends {{{2
 
 [[ $commande = reverse-depends ]] && {
 
@@ -1053,9 +1140,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	echo
 }
 
-# }}}
 
-# {{{ List-group-members
+# List-group-members {{{2
 
 [[ $commande = list-group-members ]] && {
 
@@ -1063,697 +1149,9 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	echo
 }
 
-# }}}
 
 }
 
-# }}}
 
 # Less used
 
-# {{{ Fedora
-
-[[ $operasys = fedora ]] && {
-
-# {{{ Sync
-
-[[ $commande = sync ]] && {
-
-	# Note : yum vérifie la synchronisation de son cache par rapport aux dépôts
-	# avant de faire quoi que ce soit
-
-	echo "sudo yum clean expire-cache && sudo yum check-update"
-	echo
-
-	sudo yum clean expire-cache && sudo yum check-update
-}
-
-# }}}
-
-# {{{ Sync-files
-
-[[ $commande = sync-files ]] && {
-
-}
-
-# }}}
-
-# {{{ Sync-ports
-
-[[ $commande = sync-ports ]] && {
-
-
-}
-
-# }}}
-
-# {{{ Sync-keys
-
-[[ $commande = sync-keys ]] && {
-
-	echo ""
-	echo
-
-
-}
-
-# }}}
-
-# {{{ Install
-
-[[ $commande = install ]] && {
-
-	echo "sudo yum install $=argumen"
-	echo
-
-	sudo yum install $=argumen
-}
-
-# }}}
-
-# {{{ Reinstall
-
-[[ $commande = reinstall ]] && {
-
-	echo "sudo yum reinstall $=argumen"
-	echo
-
-	sudo yum reinstall $=argumen
-}
-
-# }}}
-
-# {{{ Local-install
-
-[[ $commande = local-install ]] && {
-
-	echo "sudo yum localinstall $=argumen"
-	echo
-
-	sudo yum localinstall $=argumen
-}
-
-# }}}
-
-# {{{ Source-compile-install
-
-[[ $commande = source-compile-install ]] && {
-
-}
-
-# }}}
-
-# {{{ Remove
-
-[[ $commande = remove ]] && {
-
-	echo "sudo yum remove $=argumen"
-	echo
-
-	sudo yum remove $=argumen
-}
-
-# }}}
-
-# {{{ Update
-
-[[ $commande = update ]] && {
-
-	echo "sudo yum update"
-	echo
-
-	sudo yum update
-}
-
-# }}}
-
-# {{{ Full-update
-
-[[ $commande = full-update ]] && {
-
-	echo "sudo yum distro-sync"
-	echo
-
-	sudo yum distro-sync
-}
-
-# }}}
-
-# {{{ Bin-src-update
-
-[[ $commande = bin-src-update ]] && {
-
-}
-
-# }}}
-
-# {{{ Clean cache
-
-[[ $commande = clean ]] && {
-
-	echo "sudo yum clean"
-	echo
-
-	sudo yum clean
-}
-
-# }}}
-
-# {{{ Search
-
-[[ $commande = search ]] && {
-
-	echo "yum search $=argumen"
-	echo
-
-	yum search $=argumen
-}
-
-# }}}
-
-# {{{ Search-file
-
-[[ $commande = search-file ]] && {
-
-	echo "yum whatprovides $=argumen"
-	echo
-
-	yum whatprovides $=argumen
-}
-
-# }}}
-
-# {{{ Info
-
-[[ $commande = info ]] && {
-
-	echo "yum info $=argumen"
-	echo
-
-	yum info $=argumen
-}
-
-# }}}
-
-# {{{ List-files
-
-[[ $commande = list-files ]] && {
-
-	echo "repoquery -l $=argumen"
-	echo
-
-	repoquery -l $=argumen
-}
-
-# }}}
-
-# {{{ Depends
-
-[[ $commande = depends ]] && {
-
-	echo "yum deplist $=argumen"
-	echo
-
-	yum deplist $=argumen
-}
-
-# }}}
-
-# {{{ Reverse-depends
-
-[[ $commande = reverse-depends ]] && {
-
-	echo "yum resolvedep $=argumen"
-	echo
-
-	yum resolvedep $=argumen
-}
-
-# }}}
-
-# {{{ List-group-members
-
-[[ $commande = list-group-members ]] && {
-
-	echo "yum grouplist $=argumen"
-	echo
-
-	yum grouplist $=argumen
-}
-
-# }}}
-
-}
-
-# }}}
-
-# {{{ Suse
-
-[[ $operasys = suse ]] && {
-
-# {{{ Sync
-
-[[ $commande = sync ]] && {
-
-	# Note : avant de faire quoi que ce soit, zypper vérifie la synchronisation
-	# de son cache par rapport aux dépôts où l’option autorefresh est activée
-
-	echo "sudo zypper refresh"
-	echo
-
-	sudo zypper refresh
-}
-
-# }}}
-
-# {{{ Sync-files
-
-[[ $commande = sync-files ]] && {
-
-}
-
-# }}}
-
-# {{{ Sync-ports
-
-[[ $commande = sync-ports ]] && {
-
-
-}
-
-# }}}
-
-# {{{ Sync-keys
-
-[[ $commande = sync-keys ]] && {
-
-	echo ""
-	echo
-
-
-}
-
-# }}}
-
-# {{{ Install
-
-[[ $commande = install ]] && {
-
-	echo "sudo zypper install $=argumen"
-	echo
-
-	sudo zypper install $=argumen
-}
-
-# }}}
-
-# {{{ Reinstall
-
-[[ $commande = reinstall ]] && {
-
-	echo "sudo zypper install --force $=argumen"
-	echo
-
-	sudo zypper install --force $=argumen
-}
-
-# }}}
-
-# {{{ Local-install
-
-[[ $commande = local-install ]] && {
-
-	echo "sudo zypper in $=argumen"
-	echo
-
-	sudo zypper in $=argumen
-}
-
-# }}}
-
-# {{{ Source-compile-install
-
-[[ $commande = source-compile-install ]] && {
-
-}
-
-# }}}
-
-# {{{ Remove
-
-[[ $commande = remove ]] && {
-
-	echo "sudo zypper remove $=argumen"
-	echo
-
-	sudo zypper remove $=argumen
-}
-
-# }}}
-
-# {{{ Update
-
-[[ $commande = update ]] && {
-
-	echo "sudo zypper update"
-	echo
-
-	sudo zypper update
-}
-
-# }}}
-
-# {{{ Full-update
-
-[[ $commande = full-update ]] && {
-
-	echo "sudo zypper dup"
-	echo
-
-	sudo zypper dup
-}
-
-# }}}
-
-# {{{ Bin-src-update
-
-[[ $commande = bin-src-update ]] && {
-
-}
-
-# }}}
-
-# {{{ Clean cache
-
-[[ $commande = clean ]] && {
-
-	echo "sudo zypper clean"
-	echo
-
-	sudo zypper clean
-}
-
-# }}}
-
-# {{{ Search
-
-[[ $commande = search ]] && {
-
-	echo "zypper search $=argumen"
-	echo
-
-	zypper search $=argumen
-}
-
-# }}}
-
-# {{{ Search-file
-
-[[ $commande = search-file ]] && {
-
-	echo "zypper what-provides $=argumen"
-	echo
-
-	zypper what-provides $=argumen
-}
-
-# }}}
-
-# {{{ Info
-
-[[ $commande = info ]] && {
-
-	echo "zypper info $=argumen"
-	echo
-
-	zypper info $=argumen
-}
-
-# }}}
-
-# {{{ List-files
-
-[[ $commande = list-files ]] && {
-
-}
-
-# }}}
-
-# {{{ Depends
-
-[[ $commande = depends ]] && {
-
-}
-
-# }}}
-
-# {{{ Reverse-depends
-
-[[ $commande = reverse-depends ]] && {
-
-}
-
-# }}}
-
-# {{{ List-group-members
-
-[[ $commande = list-group-members ]] && {
-
-}
-
-# }}}
-
-}
-
-# }}}
-
-# {{{ Gentoo
-
-[[ $operasys = gentoo ]] && {
-
-# {{{ Sync
-
-[[ $commande = sync ]] && {
-
-	echo "sudo layman -f"
-	echo
-
-	sudo layman -f
-}
-
-# }}}
-
-# {{{ Sync-files
-
-[[ $commande = sync-files ]] && {
-
-}
-
-# }}}
-
-# {{{ Sync-ports
-
-[[ $commande = sync-ports ]] && {
-
-
-}
-
-# }}}
-
-# {{{ Sync-keys
-
-[[ $commande = sync-keys ]] && {
-
-	echo ""
-	echo
-
-
-}
-
-# }}}
-
-# {{{ Install
-
-[[ $commande = install ]] && {
-
-	echo "sudo emerge $=argumen"
-	echo
-
-	sudo emerge $=argumen
-}
-
-# }}}
-
-# {{{ Reinstall
-
-[[ $commande = reinstall ]] && {
-
-	echo "sudo emerge $=argumen"
-	echo
-
-	sudo emerge $=argumen
-}
-
-# }}}
-
-# {{{ Local-install
-
-[[ $commande = local-install ]] && {
-
-	echo "sudo emerge $=argumen"
-	echo
-
-	sudo emerge $=argumen
-}
-
-# }}}
-
-# {{{ Source-compile-install
-
-[[ $commande = source-compile-install ]] && {
-
-}
-
-# }}}
-
-# {{{ Remove
-
-[[ $commande = remove ]] && {
-
-	echo "sudo emerge -C $=argumen"
-	echo
-
-	sudo emerge -C $=argumen
-}
-
-# }}}
-
-# {{{ Update
-
-[[ $commande = update ]] && {
-
-	echo "sudo emerge -u world"
-	echo
-
-	sudo emerge -u world
-}
-
-# }}}
-
-# {{{ Full-update
-
-[[ $commande = full-update ]] && {
-
-	echo "sudo emerge -uDN world"
-	echo
-
-	sudo emerge -uDN world
-}
-
-# }}}
-
-# {{{ Bin-src-update
-
-[[ $commande = bin-src-update ]] && {
-
-}
-
-# }}}
-
-# {{{ Clean cache
-
-[[ $commande = clean ]] && {
-
-	echo "sudo eclean distfiles"
-	echo
-
-	sudo eclean distfiles
-}
-
-# }}}
-
-# {{{ Search
-
-[[ $commande = search ]] && {
-
-	echo "emerge -S $=argumen"
-	echo
-
-	emerge -S $=argumen
-}
-
-# }}}
-
-# {{{ Search-file
-
-[[ $commande = search-file ]] && {
-
-	echo "equery belongs $=argumen"
-	echo
-
-	equery belongs $=argumen
-}
-
-# }}}
-
-# {{{ Info
-
-[[ $commande = info ]] && {
-
-	echo "emerge -S $=argumen"
-	echo
-
-	emerge -S $=argumen
-}
-
-# }}}
-
-# {{{ List-files
-
-[[ $commande = list-files ]] && {
-
-	echo "equery files $=argumen"
-	echo
-
-	equery files $=argumen
-}
-
-# }}}
-
-# {{{ Depends
-
-[[ $commande = depends ]] && {
-
-	echo "emerge -ep $=argumen"
-	echo
-
-	emerge -ep $=argumen
-}
-
-# }}}
-
-# {{{ Reverse-depends
-
-[[ $commande = reverse-depends ]] && {
-
-	echo "equery depends $=argumen"
-	echo
-
-	equery depends $=argumen
-}
-
-# }}}
-
-# {{{ List-group-members
-
-[[ $commande = list-group-members ]] && {
-
-}
-
-# }}}
-
-}
-
-# }}}
-
-return 0

@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-[[ $TERM = tmux* ]] || {
+[[ $TERM = tmux* || $TERM = screen* ]] || {
 
 	echo "Not in tmux session"
 	echo
