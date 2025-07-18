@@ -401,13 +401,10 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 # Remove orphans {{{2
 
 [[ $commande = remove-orphan ]] && {
-
 	echo "pacman -Qdtq | sudo pacman -Rns -"
 	echo
-
 	pacman -Qdtq | sudo pacman -Rns -
 }
-
 
 # Clean cache {{{2
 
@@ -490,7 +487,6 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 
 	echo "pkgfile -l $=argumen"
 	echo
-
 	pkgfile -l $=argumen
 }
 
@@ -635,7 +631,9 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 # Remove orphans {{{2
 
 [[ $commande = remove-orphan ]] && {
-
+	echo "sudo xbps-remove -o"
+	echo
+	sudo xbps-remove -o
 }
 
 # Clean cache {{{2
@@ -663,9 +661,9 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 # Info {{{2
 
 [[ $commande = info ]] && {
-	echo "xbps-query $=argument"
+	echo "xbps-query $=argumen"
 	echo
-	xbps-query $=argument
+	xbps-query $=argumen
 }
 
 # List-files {{{2
@@ -674,12 +672,21 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	echo "xbps-query -f $=argumen"
 	echo
 	xbps-query -f $=argumen
+	if which xtree > /dev/null 2>&1
+	then
+		echo
+		echo "xtree $=argumen"
+		echo
+		xtree $=argumen
+	fi
 }
 
 # Depends {{{2
 
 [[ $commande = depends ]] && {
-
+	echo "xdeptree $=argumen"
+	echo
+	xdeptree $=argumen
 }
 
 # Reverse-depends {{{2
@@ -842,13 +849,10 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 # Remove orphans {{{2
 
 [[ $commande = remove-orphan ]] && {
-
 	echo "apt autoremove"
 	echo
-
 	apt autoremove
 }
-
 
 # Clean cache {{{2
 
@@ -897,10 +901,8 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 # List-files {{{2
 
 [[ $commande = list-files ]] && {
-
 	echo "apt-file list $=argumen"
 	echo
-
 	apt-file list $=argumen
 }
 
@@ -1066,13 +1068,10 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 # Remove orphans {{{2
 
 [[ $commande = remove-orphan ]] && {
-
 	echo "sudo pkg autoremove"
 	echo
-
 	sudo pkg autoremove
 }
-
 
 # Clean cache {{{2
 

@@ -8,7 +8,7 @@ source ~/racine/config/cmdline/zsh/zprofile
 
 # Variables {{{1
 
-HOST=`hostname -s`
+HOST=$(hostname -s) || HOST=$(hostname)
 
 # Alias {{{1
 
@@ -83,23 +83,19 @@ xcape -e $chaine
 
 psgrep unclutter || unclutter -display :0.0 -root -jitter 7 -idle 5 &
 
-if [ $HOST = shari ]
+if [ $HOST = taijitu ]
 then
 	synclient TapButton1=1
-
+	# L’id change à chaque démarrage
+	#iden=$(xinput list | grep SynPS | cut -d '=' -f 2 | awk '{print $1}')
+	#xinput set-prop $iden 'libinput Tapping Enabled' 1
+elif [ $HOST = shari ]
+then
+	synclient TapButton1=1
 	#synclient VertEdgeScroll=1
 	synclient HorizEdgeScroll=1
-
 	synclient LBCornerButton=2
 	synclient RBCornerButton=3
-
-elif [ $HOST = quigonjinn ]
-then
-	xinput set-prop 17 289 1
-
-elif [ $HOST = tixu ]
-then
-
 elif [ $HOST = mandala ]
 then
 	synclient TapButton1=1
@@ -107,12 +103,12 @@ then
 	#iden=$(xinput list | grep SynPS | cut -d '=' -f 2 | awk '{print $1}')
 	#xinput set-prop $iden 'libinput Tapping Enabled' 1
 	#xinput set-prop "Synaptics TM3175-002" "Synaptics Tap Action" 0
-
-elif [ $HOST = taijitu ]
+elif [ $HOST = tixu ]
 then
-	# L’id change à chaque démarrage
-	iden=$(xinput list | grep SynPS | cut -d '=' -f 2 | awk '{print $1}')
-	xinput set-prop $iden 'libinput Tapping Enabled' 1
+	synclient TapButton1=1
+elif [ $HOST = quigonjinn ]
+then
+	xinput set-prop 17 289 1
 fi
 
 # Stockage {{{2

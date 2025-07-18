@@ -16,31 +16,25 @@ player () {
 	mpv-socket.bash volume $fu_volume
 }
 
+# refresh {{{1
+
+sudo xbps-install -S
+
 # clean cache {{{1
 
-sudo pacman -Scc
+sudo xbps-remove -O
 
 # check site {{{1
 
-w3m https://archlinux.org
-
-# update mirrors {{{1
-
-#sudo pacman-mirrors --fasttrack
-sudo pacman-mirrors --country Germany --timeout 5
-
-# refresh {{{1
-
-sudo pacman -Syy
+w3m https://voidlinux.org/news/
 
 # new keys {{{1
 
-# the manjaro pacman should to it by itself
-#sudo pacman -S manjaro-keyring
+
 
 # update {{{1
 
-sudo pacman -Syyu
+sudo xbps-install -Su
 
 # playing {{{1
 
@@ -51,13 +45,12 @@ player $volume $fini
 
 # config diff {{{1
 
-sudo pacdiff -s
+
 
 # remove orphans {{{1
 
-sudo pacman -Qdtq | sudo pacman -Rns -
+sudo xbps-remove -o
 
 # update files db {{{1
 
-sudo pacman -Fy
-#sudo pkfile -u
+xlocate -S

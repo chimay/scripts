@@ -51,6 +51,10 @@ integer volume=100
 
 player $volume $fini
 
+# config diff {{{1
+
+sudo pacdiff -s
+
 # remove orphans {{{1
 
 sudo pacman -Qdtq | sudo pacman -Rns -

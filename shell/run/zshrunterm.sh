@@ -26,8 +26,8 @@
 #urxvt -title urxvt_zshrun -geometry 72x50 -e sh -c " zsh"
 # ---------------------------------------------------------------------
 
-export ZDOTDIR=$HOME/racine/config/cmdline/zsh/zshrunterm
-export RACINE_ZSH=$HOME/racine/config/cmdline/zsh
+export ZDOTDIR=$HOME/racine/config/shell/zsh/zshrunterm
+export RACINE_ZSH=$HOME/racine/config/shell/zsh
 
 urxvtc -name zshrunterm -geometry 84x7+200+200 \
 	-e zsh -t -i -d

@@ -43,7 +43,7 @@ integer volume=100
 
 player $volume $fini
 
-# pacnews {{{1
+# config diff {{{1
 
 sudo pacdiff -s
 
