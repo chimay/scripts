@@ -13,15 +13,23 @@ layout=$(\
 	--title "Keyboard layout" \
 	--list --radiolist \
 	--column "Select" --column "Menu Item" \
-	FALSE "custom, with super and hyper" \
+	FALSE "belgian meta super hyper" \
+	FALSE "french meta super hyper" \
 	FALSE "belgian" \
 	FALSE "french" \
 	FALSE "usa" \
 )
 
+echo $layout
+echo
+
 case $layout in
-	 custom*)
+	 "belgian meta super hyper")
 		 setxkbmap be
+		 xmodmap ~/racine/config/windenv/xmodmap/belge-meta-super-hyper
+		;;
+	 "french meta super hyper")
+		 setxkbmap fr
 		 xmodmap ~/racine/config/windenv/xmodmap/belge-meta-super-hyper
 		;;
 	 belgian)
@@ -38,4 +46,4 @@ case $layout in
 		;;
 esac
 
-zenity --info --text="layout changed to $layout"
+#zenity --info --text="layout changed to $layout"

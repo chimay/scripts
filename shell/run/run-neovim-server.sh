@@ -9,7 +9,7 @@ pgrep nvim > ~/log/psgrep.log 2>&1 && {
 # if ! [ -z "$(ls -A ~/racine/varia/autosave/neovim)" ]
 # then
 # 	echo -n "There are autosave files. Continue ?"
-# 	read $answer
+# 	read answer
 # 	[ $answer = y ] || [ $answer = yes ] || exit 0
 # fi
 
