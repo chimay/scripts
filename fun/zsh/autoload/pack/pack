@@ -601,9 +601,9 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 # Remove {{{2
 
 [[ $commande = remove ]] && {
-	echo "xbps-remove $=argumen"
+	echo "sudo xbps-remove $=argumen"
 	echo
-	xbps-remove $=argumen
+	sudo xbps-remove $=argumen
 }
 
 # Update {{{2

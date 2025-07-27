@@ -22,7 +22,7 @@ sudo pacman -Scc
 
 # check site {{{1
 
-w3m https://archlinux.org
+w3m https://artixlinux.org
 
 # refresh {{{1
 

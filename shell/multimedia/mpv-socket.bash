@@ -33,7 +33,8 @@ mpv-msg() {
 	echo $tosend
     # send it along and ignore output.
     # to print output just remove the redirection to /dev/null
-    echo $tosend | socat - $socket &> /dev/null
+	echo $tosend | socat - $socket &> /dev/null
+	#echo $tosend | socat - $socket
 }
 
 # exit mpv

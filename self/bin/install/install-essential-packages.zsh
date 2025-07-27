@@ -2,19 +2,21 @@
 
 packages=(
   linux-lts
-  networkmanager network-manager-applet openssh
+  networkmanager network-manager-applet openssh rsync
   zsh tmux
   xterm rxvt-unicode kitty alacritty
   vim neovim emacs
   vifm yazi
-  tree ncdu dfc
+  tree ncdu dfc socat
   xorg lightdm lightdm-gtk-greeter
-  herbstluftwm polybar rofi dmenu dunst picom xdotool wmctrl xclip xsel
+  herbstluftwm polybar rofi dmenu zenity dunst picom xdotool wmctrl xclip xsel
   xfce4
   feh sxiv vimiv
   qutebrowser firefox
   alsa-utils pipewire wireplumber
+  mpv mplayer
   lilypond timidity fluidsynth freepats-general-midi soundfont-fluid
+  kdeconnect syncthing
 )
 
 echo -n "Distribution or package manager ? "
@@ -27,7 +29,11 @@ case $distribution in
 	ar|arch|artix|pm|pacman)
 		echo "pacman"
 		echo
-		packages+=(pacman-contrib)
+		packages+=(
+			pacman-contrib
+			pacutils pkgfile expac
+			devtools
+		)
 		sudo pacman -Syy
 		sudo pacman -S $=packages
 		;;
