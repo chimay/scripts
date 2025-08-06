@@ -34,6 +34,7 @@ w3m https://voidlinux.org/news/
 
 # update {{{1
 
+sudo xbps-install -Su xbps
 sudo xbps-install -Su
 
 # playing {{{1

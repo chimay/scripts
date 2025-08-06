@@ -199,6 +199,13 @@ psgrep polkit-gnome-authentication-agent || \
 psgrep gnome-keyring-daemon || \
 	eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
 
+# D-Bus : message bus system {{{2
+
+if [ $HOST = mandala ]
+then
+	dbus-update-activation-environment DISPLAY XAUTHORITY
+fi
+
 # Terminal {{{2
 
 psgrep urxvtd || urxvtd -q -o -f
@@ -276,10 +283,6 @@ fi
 #  Téléphone {{{2
 
 psgrep kdeconnect || kdeconnect-indicator &
-
-# Événements {{{1
-
-bspwm-subscribe.zsh >>! ~/log/bspwm-subscribe.log 2>&1
 
 # Message d’accueil {{{1
 

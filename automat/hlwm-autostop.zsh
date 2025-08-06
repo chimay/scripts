@@ -48,3 +48,8 @@ pkill -f quasselclient &
 pkill -f element-desktop &
 pkill -f kdeconnect &
 pkill -f bspwm-subscribe.zsh &
+
+if [ $HOST = mandala ]
+then
+	# ...
+fi

@@ -1,15 +1,22 @@
 #!/usr/bin/env zsh
 
+# during install :
+#
+# networkmanager
+
 packages=(
   linux-lts
-  networkmanager network-manager-applet openssh rsync
+  network-manager-applet openssh rsync
   zsh tmux
   xterm rxvt-unicode kitty alacritty
   vim neovim emacs
   vifm yazi
   tree ncdu dfc socat
   xorg lightdm lightdm-gtk-greeter
-  herbstluftwm polybar rofi dmenu zenity dunst picom xdotool wmctrl xclip xsel
+  herbstluftwm
+  polybar
+  rofi dmenu zenity
+  dunst picom xdotool wmctrl xclip xsel
   xfce4
   feh sxiv vimiv
   qutebrowser firefox
@@ -17,6 +24,7 @@ packages=(
   mpv mplayer
   lilypond timidity fluidsynth freepats-general-midi soundfont-fluid
   kdeconnect syncthing
+  acpi cpupower
 )
 
 echo -n "Distribution or package manager ? "

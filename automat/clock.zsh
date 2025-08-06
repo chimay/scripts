@@ -26,6 +26,7 @@ help () {
 	echo 'volume   : volume of chimes, between 0 and 100'
 	echo 'pause    : whether to pause the clock ; it will only check for waking call every 15 minutes'
 	echo 'stop     : whether to stop the clock'
+	echo 'weekend  : whether to ring in weekend days'
 	echo
 	echo "[Signals]"
 	echo

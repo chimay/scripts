@@ -31,7 +31,11 @@ sudo pacman-mirrors --country Germany --timeout 5
 
 # refresh {{{1
 
-sudo pacman -Syy
+# done in update
+# only needed if manjaro-keyring
+# is not automatically updated
+
+#sudo pacman -Syy
 
 # new keys {{{1
 

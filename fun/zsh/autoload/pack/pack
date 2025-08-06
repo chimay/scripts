@@ -509,10 +509,15 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 	# Différence avec
 	# whoneeds $=argumen ?
 
-	echo "pacman -Sii $=argumen"
+	#echo "pacman -Sii $=argumen"
+	#echo
+
+	#pacman -Sii $=argumen
+
+	echo "pactree -r $=argumen"
 	echo
 
-	pacman -Sii $=argumen
+	pactree -r $=argumen
 }
 
 
