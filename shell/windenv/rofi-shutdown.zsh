@@ -15,54 +15,46 @@ else
 	powerctl=loginctl
 fi
 
-# Rofi dmenu {{{1
-
 choix=$(print -l $menu | rofi -dmenu -p "que faire " -i)
-
-# }}}1
-
-# Affichage {{{1
 
 echo choix : $choix
 echo
-
-# }}}1
 
 sync -f /
 sync -f $HOME
 
 [[ $choix = Veille ]] && {
-
 	certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
-
 	[[ $certain = Oui ]] && {
-
 		echo "$powerctl suspend"
 		echo
-
 		$powerctl suspend
-
 		autowake.zsh &>>! ~/log/autowake.log
 	}
 }
 
 [[ $choix = Hibernation ]] && {
-
-	echo "Non implémenté"
-	echo
-
-	zenity --info --no-wrap --text "Il fait trop chaud pour hiberner."
+	if [[ $powerctl = systemctl ]]
+	then
+		echo "Not implemented"
+		echo
+		zenity --info --no-wrap --text "Il fait trop chaud pour hiberner."
+	elif [[ $powerctl = loginctl ]]
+	then
+		certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
+		[[ $certain = Oui ]] && {
+			echo "$powerctl hibernate"
+			echo
+			$powerctl hibernate
+		}
+	fi
 }
 
 [[ $choix = Éteindre ]] && {
-
 	certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
-
 	[[ $certain = Oui ]] && {
-
 		echo "$powerctl poweroff"
 		echo
-
 		$powerctl poweroff
 	}
 }

@@ -7,6 +7,7 @@
 packages=(
   linux-lts
   network-manager-applet openssh rsync
+  avahi nss-mdns
   zsh tmux
   xterm rxvt-unicode kitty alacritty
   vim neovim emacs
