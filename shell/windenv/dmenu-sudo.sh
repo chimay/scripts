@@ -2,7 +2,7 @@
 
 # Credit: https://www.reddit.com/r/voidlinux/comments/kb4how/how_to_execute_suspend_and_hibernate_from_the/
 
-export SUDO_ASKPASS=~/racine/shell/windenv/askpass-dmenu.sh
+export SUDO_ASKPASS=~/racine/shell/windenv/dmenu-askpass.sh
 
 # echo $SUDO_ASKPASS
 # echo
