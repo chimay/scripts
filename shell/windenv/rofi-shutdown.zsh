@@ -1,6 +1,6 @@
 #! /usr/bin/env zsh
 
-menu=(Annuler Veille Hibernation Éteindre)
+menu=(Annuler Veille Hiberner Éteindre)
 
 confirmation=(
 	Non
@@ -33,7 +33,7 @@ sync -f $HOME
 	}
 }
 
-[[ $choix = Hibernation ]] && {
+[[ $choix = Hiberner ]] && {
 	if [[ $powerctl = systemctl ]]
 	then
 		echo "Not implemented"
