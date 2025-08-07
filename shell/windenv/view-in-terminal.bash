@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-credit: https://www.youtube.com/watch?v=oFCrwS01mDs
+# credit: https://www.youtube.com/watch?v=oFCrwS01mDs
+
+[ $# -eq 0 ] && {
+	echo "Usage : $0 command"
+	exit 0
+}
 
 command="$@"
 
