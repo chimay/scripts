@@ -15,7 +15,7 @@ if [[ -n $WAYLAND_DISPLAY ]]; then
 	xdotool="ydotool type --file -"
 elif [[ -n $DISPLAY ]]; then
 	#dmenu=dmenu
-	dmenu=(dmenu -p 'pass : ' -b -l 35 -nb black -nf '#5b3c11' -sb '#5b3c11' -sf black)
+	dmenu=(dmenu -p 'pass : ' -b -l 35 -fn "DejaVu Sans Mono 12" -nb black -nf '#5b3c11' -sb '#5b3c11' -sf black)
 	xdotool="xdotool type --clearmodifiers --file -"
 else
 	echo "Error: No Wayland or X11 display detected" >&2
