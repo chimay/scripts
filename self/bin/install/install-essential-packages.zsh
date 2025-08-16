@@ -14,7 +14,7 @@ packages=(
 	linux linux-lts linux-firmware
 	acpi acpid
 	network-manager-applet openssh
-	rsync unison syncthing kdeconnect
+	rsync rclone unison syncthing kdeconnect
 	avahi nss-mdns
 	zsh tmux
 	git lazygit
@@ -31,7 +31,7 @@ packages=(
 	xfce4
 	feh sxiv vimiv
 	qutebrowser firefox
-	alsa-utils pipewire pipewire-pulse wireplumber
+	alsa-utils pipewire wireplumber
 	mpv mplayer
 	lilypond timidity fluidsynth soundfont-fluid
 	acpi cpupower
@@ -47,6 +47,7 @@ case $distribution in
 			pacman-contrib
 			pacutils pkgfile expac
 			ttf-dejavu ttf-dejavu-nerd
+			pipewire-pulse
 			freepats-general-midi
 		)
 		sudo pacman -Syy
@@ -59,6 +60,7 @@ case $distribution in
 			base-system linux-base
 			NetworkManager
 			xtools
+			alsa-pipewire
 			freepats
 		)
 		sudo xbps-install $=packages

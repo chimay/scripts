@@ -125,7 +125,7 @@ fi
 
 # Mémoire {{{2
 
-psgrep alarm-memory.zsh || alarm-memory.zsh 9 >>! ~/log/alarm-memory.log 2>&1 &
+psgrep alarm-memory.zsh || alarm-memory.zsh 7 >>! ~/log/alarm-memory.log 2>&1 &
 
 # Température {{{2
 
