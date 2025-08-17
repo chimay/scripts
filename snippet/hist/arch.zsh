@@ -2,11 +2,13 @@
 #vdfuse -f ~/image.iso/ghostbsd-efi.vdi ~filesys/fuse
 ./install --all --key-bindings --completion --update-rc
 CC=/usr/bin/gcc pip install --user --upgrade pip
+GTK_THEME=Adwaita:dark yad --about
 MANPAGER="nvim -c 'set ft=man' -u NORC -" h man
 VBoxManage controlvm freebsd-efi acpipowerbutton
 VBoxManage controlvm freebsd-efi poweroff
 VBoxManage startvm freebsd-efi
 adig archlinux.org
+alacritty -e bash -c "cat ~/log/clock.log ; read -p 'press enter to continue ...'"
 alarm-sensor.zsh +75 ++82 -30 7
 alias G '^[a-z]=' L
 archlinux-java fix
@@ -15,6 +17,9 @@ archlinux-java set java-8-openjdk # sudo
 archlinux-java status
 aria2c -x 2 some-url
 aria2c mirrors-urls
+avahi-browse --all --ignore-local --resolve --terminate
+avahi-discover
+avahi-resolve-host-name mandala.local
 blkid # sudo
 borg extract ~/backup/borg::taijitu-2023-08-25T20:10:22.264263
 borg list ~/backup/borg
@@ -44,6 +49,7 @@ cups=connected ; lpinfo -v
 cups=enable ; cupsenable Officejet_5740
 cups=modeles ; lpinfo -m L
 curl 'http://www.central-fixation.com/perfect-sight-without-glasses/chapter-[1-32].php' -o 'chapter-#1.php'
+dbus-run-session
 dconf=dump ; dconf dump /com/gexperts/Tilix/ > ~config/terminal/tilix.dconf
 dconf=load ; dconf load /com/gexperts/Tilix/ < ~config/terminal/tilix.dconf
 demonte=cleusb ; udevil umount /dev/sdb1
@@ -59,6 +65,7 @@ distrobox enter --root fedora -- /bin/bash # sans le -- /bin/bash, les programme
 distrobox list --root
 distrobox rm --root debian
 distrobox stop --root debian
+dmenu=invisible ; dmenu -nb "#000000" -nf "#000000" -p "sudo password" <&-
 doc=git ; m ~infoman/unix/version/progit.txt
 doc=i3 ; w /usr/share/doc/i3/userguide.html
 doc=mpv ; m /usr/share/doc/mpv/input.conf
@@ -78,6 +85,7 @@ file --mime-type Bonhomme_hiver_2018.docx
 find ~/photo -type f -links +1 L
 find ~/photo -type f -printf '%n %p\n' | awk '$1 > 1 {$1="";print}'
 find ~/photo -type f \! -links 1 L
+firmware=dmesg ; sudo dmesg | grep -i firmware
 fondecran=1 ; killall fond-ecran.zsh ; sleep 1 ; fond-ecran.zsh 12 120 ~/graphix/list/wallpaper.gen >>! ~/log/fond-ecran.log &!
 fondecran=1 ; pkill fond-ecran.zsh ; sleep 1 ; fond-ecran.zsh 12 84 ~/graphix/list/wallpaper.gen >>! ~/log/fond-ecran.log &!
 fossil addremove
@@ -93,6 +101,7 @@ fossil set ignore-glob
 fossil set ignore-glob 'RCS,CVS,.git,.hg,.bzr,_darcs,tags,TAGS,GTAGS,GRTAGS,GPATH,ID,gtags.filesys' --global
 fossil status
 fossil timeline
+fscheck=ext4 ; sudo fsck.ext4 -fvy /dev/sdc1
 fzf=pipe ; var=$(e * | fzf -m --reverse --cycle --color=bw)
 git=checkout ; git checkout adc060c dirs-quigonjinn
 git=clone-using-ssh ; git clone 'ssh://git@github.com/user_name/nb'
@@ -105,7 +114,7 @@ git=push-u ; git push -u origin master
 git=rebase ; git rebase -i HEAD~4
 git=remote-add-github ; git remote add origin git@github.com:user_name/configuration.git
 git=remote-add-gitlab git remote add origin git@gitlab.com:user_name/equa6on.git
-git=remote-show ; git remote get-url origin
+git=remote-show-url ; git remote get-url origin
 git=remote-show ; git remote show origin
 git=reset ; git fetch --all && git reset --hard origin/master
 git_rm_file=file ; git filter-repo --path-match $git_rm_file --invert-paths
@@ -118,7 +127,9 @@ gpg --recv-keys --keyserver hkp://pgp.mit.edu 1EB2638FF56C0C53
 gpg -d flower-4-petals.ggb.gpg > flower-4-petals.ggb
 gpg -e flower-4-petals.ggb
 grep=qute-history ; =grep url qutebrowser.history | sort | uniq | sed 's/     url = //' >! ~/.local/share/qutebrowser/history
+grep_module=btrfs ; zgrep -i $grep_module /proc/config.gz
 groff -ms -D utf8 -T pdf groff.ms >! groff.pdf
+gsettings get org.gnome.desktop.interface gtk-theme
 gv '^(\*|\*\*) ' *.org
 handlr set x-scheme-handler/http org.qutebrowser.qutebrowser.desktop
 hardlink -n -v ~/photo/numerique
@@ -132,20 +143,26 @@ i3=log-dump ; i3-dump-log L
 i3=log-enable ; i3-msg "debuglog on ; shmlog on ; reload"
 image=compresse ; img-compresse.zsh 2048 .
 image=gray_to_black_and_white ; convert -type GrayScale -depth 1 IMG_20201112_091222.jpg vakantie.jpg
+image=grid ; montage *.jpg -mode concatenate -tile 2x2 -page A4 -geometry +20+20 out.pdf
+image=grille ; magick montage IMG* -geometry 450x450+2+2 montage.jpg
 image=grille ; montage -tile 2x2 160px-Méduse_Le_Bernin.jpg Okéanos-Mosaique-Petra-Jordanie.jpg narcisse.jpg nymphee.jpg montage.jpg
 image=tri ; img-triParDate.zsh ~/photo/import ~/photo/numerique/archives
 ionice -c 2 -n 7 ls
 ionice -c 3 ls
 ip addr
 joue=random-U ; y $(e ~aclassique/**/[P-Z]-* | shuf | head -n 1)
-journalctl -k
-journalctl -p err..alert
-journalctl SYSLOG_FACILITY=1
 kitty=fonts ; kitty list-fonts
 lesskey -o ~/racine/built/less/key-natif.out ~/racine/config/visu/less/key-natif
 lignes=1 ; { date ; echo ; wc -l ~eclats2vers/grimoire/*.org ; echo ; wc -l ~site/backup/grimoire/*.org ; echo } >> lignes.log
+linux=command_line ; cat /proc/cmdline
 liste=infegalP-classique ; e ~/audio/Artistes/Classique/**/[P-Z]-*.* | shuf >! ~/racine/musica/list/infegal-P.m3u
+log=firmware ; journalctl -kg 'loaded f'
+log=grep ; sudo journalctl -g sleep
+log=important ; sudo journalctl -r -b -0 -p 0..4
+log=kernel ; journalctl -k
+log=syslog ; journalctl SYSLOG_FACILITY=1
 loginctl show-session
+loginctl terminate-user 1000
 lp=duplex-paysage ; lp -o number-up=2 -o Duplex=DuplexTumble
 lpoptions
 ls -l `find ~/photo -type f -links +1` L
@@ -163,6 +180,7 @@ midi=connect_list_in ; aconnect -i
 midi=connect_list_out ; aconnect -o
 midi=play_alsa ; aplaymidi -p 128 templates/chambre.midi
 midi=play_fluid ; fluidsynth -a alsa -m alsa_seq -i /usr/share/soundfonts/FluidR3_GM.sf2 test.mid
+midi=ports-list ; aplaymidi -l
 midi=server_fluid ; fluidsynth -is -a pulseaudio -m alsa_seq -r 48000 /usr/share/soundfonts/FluidR3_GM.sf2
 midi=server_timidity ; timidity -iA
 midi=to_ogg ; fluidsynth  -nli -r 48000 -o synth.cpu-cores=2 -T oga -F test.ogg /usr/share/soundfonts/FluidR3_GM.sf2 test.mid
@@ -186,8 +204,13 @@ mv orgmode.tar.xz ~archive/eclats2vers-`date +%Y-%m-%d`.tar.xz
 nf ~pack/aged/* ; echo ; nf /media/cleusb/archive/*
 nf ~pack/aged/* ; echo ; nf /media/cleusb/archive/*
 nice -n 10 ls
-nmcli dev wifi
+nmcli device wifi
+nmcli device wifi connect Proximus-Home-6EB5
+nmcli device wifi list
+nmtui
 pacman -S --force ttf-dejavu # sudo
+pacman=browse ; pacman -Slq | fzf --preview 'pacman -Si {}' --layout=reverse
+pacman=browse_installed ; pacman -Qq | fzf --preview 'pacman -Qil {}' --layout=reverse --bind 'enter:execute(pacman -Qil {} | less)'
 pacman=get-pkg ; pacman -Qqe > liste-paquets
 pacman=orphans ; pacman -Qtdq
 pacman=remove-orphans ; sudo pacman -Rns $(pacman -Qtdq)
@@ -210,10 +233,11 @@ pgrep -af vim
 pico2wave -l fr-FR -w cpu-tres-chaud.wav 'Attention, les processeurs ont très chaud.'
 pip install --user --upgrade neovim
 pip install --user --upgrade neovim-gui
-pip2 install --user --upgrade neovim
-pip2 install --user --upgrade pip
-pip3 install --user --upgrade neovim
-pip3 install --user --upgrade pip
+pip install --user --upgrade pip
+pip=requirements-install ; pip install -r ~index/pack/pip-requirements.txt
+pip=requirements-write ; pip freeze --local > ~index/pack/pip-requirements.txt
+pip=upgrade-packages ; pip-review --local --auto
+pip=upgrade-venv ; python -m venv --upgrade ~/.pip
 pk + virtualbox{,-host-modules-arch} net-tools vde2
 pk rm gnome-{perl,vfs-perl} gnomecanvas-perl perl-{gnome2-wnck,goo-canvas,gtk2-imageview,gtk2-unique} shutter
 pk rm plasma-workspace kuiserver plasma-nm plasma-vault powerdevil kdeplasma-addons khotkeys plasma-meta plasma-pa kmenuedit plasma-desktop
@@ -249,6 +273,7 @@ rs ~/audio /media/cleusb
 rs ~pack/aged/ /media/cleusb/archive
 scp=tilde.institute ; scp book* Makefile user_name@tilde.institute:~
 senseurs=1 && sudo sensors && sudo hddtemp /dev/sda
+services=sockets ; sudo ss -tulpn | less
 signal=i3blocks-mpd ; k -36 $(pid i3blocks)
 signal=i3blocks-volume ; k -35 $(pid i3blocks)
 smbclient -L shari
@@ -266,6 +291,7 @@ ssh=dao-efi ; ssh -p 2223 user_name@localhost
 ssh=fingerprint ; ssh-keygen -lf ~/racine/config/crypte/ssh/taijitu/id_rsa
 ssh=fingerprint_all ; for f in ~config/crypte/ssh/**/*.pub; do ssh-keygen -lf $f; done
 ssh=laozu-efi ; rm ~/.ssh/known_hosts ; ssh -p 2223 user_name@localhost
+ssh=livingcomputers ; ssh menu@tty.livingcomputers.org
 ssh=new_comment ; ssh-keygen -c -f ~config/crypte/ssh/ctrl-c.club/id_rsa
 ssh=tilde.club ; ssh user_name@tilde.club
 ssh=tilde.institute ; ssh user_name@tilde.institute
@@ -284,6 +310,10 @@ su -s /bin/sh
 sudo -e /etc/fstab
 sudo -s
 sudo -sE xterm
+sudo blkid /dev/sda1
+sudo locale-gen
+sudo vim /etc/locale.gen
+sudo=unlock ; faillock --user david --reset
 sync=cleusb ; sn ~syncron/cleusb/ /media/cleusb/syncron
 sync=cleusb ; sn ~syncron/cleusb/ /media/cleusb/syncron
 sync=diskext-sdb1 ; unison diskext $HOME /run/media/user_name/sdb1/user_name
@@ -307,6 +337,7 @@ systemd=timesync ; sudo systemctl status systemd-timesyncd
 systemd=user-active-tmux ; systemctl --user enable tmux
 systemd=user-services-persistants ; sudo loginctl enable-linger user_name
 t context delete important
+term=info ; infocmp
 timedatectl list-timezones
 timedatectl set-ntp true
 timedatectl show-timesync --all
@@ -334,18 +365,25 @@ ts -c 0
 ts -d sleep 10  # does not care about exit code
 ts -k 0
 ts sleep 300
+unlock=gnome-keyring-daemon ; gnome-keyring-daemon --unlock
+unlock=gnome-secret-keyring ; unlock-gnome-keyring
 update=1 ; teste-connexion.zsh && pk cln && sync && sleep 3 && pk sf && sleep 3 && w https://archlinux.org && pk ++
 usermod -aG wheel,adm,sys,log,network,video,audio,power,lp,autologin user_name # sudo
+uuid_part=/dev/sda2 ; sudo blkid -s UUID -o value $uuid_part
 var=( ${(f)"$(< fichier )"} )
 var=( ${(fu)"$(< fichier )"} )
 verifie=sdb1 ; sudo fsck /dev/$verifie
+vim=profile-as-arg ; vim +'profile start ~/log/vim-profile.log | profile func * | call wheel#disc#read_wheel () | profile stop'
+vim=profile-startup ; vim --startuptime ~/log/vim-startuptime.log ~shell/alarm/Grenier
 w 181.html | sed -n '/Yogani/,/The guru is in you/p' | festival --tts
 w fundamental.php | festival --tts
 w fundamental.php | text2wave | lame - ~/audio/festival/fundamental.mp3
 wget-blog.zsh 1 vermaden.wordpress.com,vermaden.filesys.wordpress.com https://vermaden.wordpress.com/
 wifi-menu
+wifi_bluetooth=1 ; rfkill list
 xdg-mime default org.qutebrowser.qutebrowser.desktop text/html
 xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
+xdg-settings set default-web-browser qutebrowser.desktop
 xdg=filetype ; xdg-mime query filetype ~plain/alimen/courses.org
 xdg=help-mime ; xdg-mime --help
 xdg=open ; xdg-open alimen/courses.org
@@ -358,6 +396,7 @@ xplanet -wait 300 -projection rectangular &
 xrdb=load ; xrdb -load ~/.Xresources
 xrdb=merge ; xrdb -merge ~/.Xresources
 xset +fp "$user_fonts_dir" && xset fp rehash
+xterm -hold ls
 xzgv **/*(om.)
 zbarimg de71a55ef7d3eba4.png
 zcat /var/lib/pacman/sync/* | awk 'f { print ; f = 0 } /%NAME%/{ f = 1 }' > ~index/pack/pacman.liste-packages

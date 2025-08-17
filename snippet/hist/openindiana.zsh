@@ -14,6 +14,7 @@ ifconfig iprb0 plump up
 ipadm create-addr -T dhcp iprb0
 ipadm create-if iprb0
 ipadm show-addr
+nwam-manager
 nwamadm enable home
 nwamadm enable office
 nwamadm list
@@ -21,8 +22,6 @@ nwamcfg create ncp home
 nwamcfg create ncp office
 pkg -R /mnt update
 pkg update
-pkgin update
-pkgin upgrade
 reboot -- -r
 rmformat -l
 svcadm disable network/physical:default

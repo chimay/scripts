@@ -1,0 +1,2 @@
+pkgin update
+pkgin upgrade

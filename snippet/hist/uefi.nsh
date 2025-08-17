@@ -13,5 +13,6 @@ ls
 shellx64.efi
 cd EFI
 cd boot
+cd EFI/boot
 edit FS0:\EFI\refind\refind.conf
 bootx64.efi
