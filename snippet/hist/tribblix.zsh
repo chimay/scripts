@@ -1,1 +1,1 @@
-zap
+zap help

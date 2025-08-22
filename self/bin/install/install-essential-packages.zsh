@@ -10,6 +10,10 @@ echo
 # linux linux-lts linux-firmware
 # networkmanager
 
+# aur :
+#
+# abook
+
 packages=(
 	linux linux-lts linux-firmware
 	acpi acpid
@@ -30,6 +34,7 @@ packages=(
 	dunst picom xdotool wmctrl xclip xsel
 	xfce4
 	feh sxiv vimiv
+	neomutt
 	qutebrowser firefox
 	alsa-utils pipewire wireplumber
 	mpv mplayer

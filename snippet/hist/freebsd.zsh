@@ -7,7 +7,6 @@ VBoxClient --display
 VBoxClient-all
 acpiconf -i 0
 acpiconf -s 3 # sleep
-bastille create -B tower-dhcp 14.0-RELEASE 0.0.0.0 bridge0
 bectl activate vanilla
 bsdinfo
 camcontrol devlist # cd, dvd, usb key
@@ -29,6 +28,7 @@ doas adduser
 doas bastille bootstrap 13.2-RELEASE update
 doas bastille cmd ALL ps aux
 doas bastille console tower
+doas bastille create -B tower-dhcp 14.0-RELEASE 0.0.0.0 bridge0
 doas bastille create tower 13.2-RELEASE 192.168.1.250 wlan0
 doas bastille list
 doas bastille list release
@@ -37,7 +37,7 @@ doas bastille stop tower
 doas bastille update 13.2-RELEASE
 doas bastille verify 13.2-RELEASE
 doas beadm create new-snapshot
-doas beadm destroy new-snapshot
+doas beadm destroy old-snapshot
 doas beadm list
 doas bectl list
 doas bectl mount vanilla /mnt
