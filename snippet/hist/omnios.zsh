@@ -1,5 +1,6 @@
-pkg install brand/sparse
+pfexec pkg install brand/sparse
 sttydefs -a ttya -i '115200 hupcl opost onlcr ofill' -f '115200'
+sudo bootadm  install-bootloader -Mfv
 sudo bootadm update-archive
 sudo zfs create -o mountpoint=/zone rpool/zone
 sudo zlogin firstzone

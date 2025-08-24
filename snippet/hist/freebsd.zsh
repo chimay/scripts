@@ -7,13 +7,14 @@ VBoxClient --display
 VBoxClient-all
 acpiconf -i 0
 acpiconf -s 3 # sleep
-bectl activate vanilla
+bectl list
 bsdinfo
 camcontrol devlist # cd, dvd, usb key
 cd /usr/local/share/bastille
 chanson=local && mpc -f "%file%"
 chflags -v noschg /usr/jails/yinyang.antra/var/empty
 chpass user
+chsh -s /usr/local/bin/zsh
 cle=agent ; eval $(ssh-agent)
 cle=liste ; ssh-add -l
 cle=ssh-local ; ssh-add ~/racine/config/cmdline/ssh/$HOST/id_rsa
@@ -27,19 +28,23 @@ doas /etc/rc.d/sysctl reload
 doas adduser
 doas bastille bootstrap 13.2-RELEASE update
 doas bastille cmd ALL ps aux
+doas bastille cmd temple sockstat -4
 doas bastille console tower
 doas bastille create -B tower-dhcp 14.0-RELEASE 0.0.0.0 bridge0
+doas bastille create temple 14.3-RELEASE 192.168.1.250/24
 doas bastille create tower 13.2-RELEASE 192.168.1.250 wlan0
 doas bastille list
 doas bastille list release
+doas bastille service temple sshd start
 doas bastille start tower
 doas bastille stop tower
+doas bastille sysrc temple sshd_enable=YES
 doas bastille update 13.2-RELEASE
 doas bastille verify 13.2-RELEASE
 doas beadm create new-snapshot
 doas beadm destroy old-snapshot
 doas beadm list
-doas bectl list
+doas bectl activate vanilla
 doas bectl mount vanilla /mnt
 doas bsdconfig
 doas bsdinstall auto
@@ -50,6 +55,7 @@ doas chmod 0600 /usr/local/etc/ssl/keys
 doas chmod 0600 /usr/local/etc/ssl/keys/poudriere.key
 doas chroot /compat/ubuntu /bin/bash
 doas debootstrap focal /compat/ubuntu
+doas echo 'FreeBSD: { url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest" }' > /usr/local/etc/pkg/repos/FreeBSD.conf
 doas ezjail-admin create yinyang.antra 'lo1|127.0.1.1,fxp0|192.168.1.100'
 doas ezjail-admin install
 doas ezjail-admin start yinyang.antra
@@ -59,6 +65,8 @@ doas freebsd-update fetch
 doas freebsd-update install
 doas git clone https://git.freebsd.org/ports.git --branch main /usr/ports
 doas gitup ports
+doas gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 ada0 # legacy bios ???
+doas gpart bootcode -p /boot/boot1.efi -i 1 ada0 # efi ???
 doas ifconfig wlan0 create wlandevice iwn0
 doas ifconfig wlan0 list scan
 doas ifconfig wlan0 scan
@@ -71,17 +79,24 @@ doas kldload ipmi
 doas kldload vboxguest
 doas mdconfig -a -t vnode -f swapfile -u 0
 doas mdconfig -l -v
+doas mkdir -p /usr/local/etc/pkg/repos
 doas mkdir -p /usr/local/etc/ssl/{certs,keys}
+doas mount_msdosfs /dev/da0s1 /media
 doas mount_vboxvfs -w virtualbox-share /mnt
 doas networkmgr
+doas ntpdate -v -b in.pool.ntp.org
+doas ntpq -pn
 doas openssl genrsa -out /usr/local/etc/ssl/keys/poudriere.key 4096
 doas openssl rsa -in /usr/local/etc/ssl/keys/poudriere.key -pubout -out /usr/local/etc/ssl/certs/poudriere.cert
 doas pfctl -d
 doas pkg bootstrap
 doas pkg bootstrap -f
+doas pkg install -r custom-repo some-package
 doas pkg install -y bastille
+doas pkg install -y pkg-provides pkg-rmleaf
 doas pkg install -y poudriere nginx memcached portmaster groff
 doas pkg install -y vim
+doas pkg install avahi-app nss_mdns
 doas pkg install debootstrap
 doas pkg install lightdm lightdm-gtk-greeter
 doas pkg install linux-browser-installer
@@ -110,9 +125,20 @@ doas service automount restart
 doas service automount start
 doas service automountd start
 doas service autounmountd start
+doas service avahi-daemon enable
 doas service avahi-daemon restart
+doas service bastille enable
+doas service dbus enable
+doas service dbus onestart
 doas service dbus restart
+doas service dbus start
+doas service devd restart
+doas service devfs restart
 doas service dhclient restart fxp0
+doas service ezjail restart
+doas service netif cloneup
+doas service netif restart
+doas service nginx enable  #doas
 doas service virtual_oss enable
 doas shutdown -h now
 doas swapinfo -h
@@ -123,14 +149,18 @@ doas sysctl debug.acpi.suspend_bounce=1  # before testing suspend
 doas sysctl dev.pcm.0.play.vchans=4
 doas sysctl dev.pcm.0.rec.vchans=4
 doas sysctl hw.snd.maxautovchans=4
+doas sysctl vfs.usermount=1
 doas sysrc bastille_enable=YES
-doas sysrc cloned_interfaces="lo1"
+doas sysrc cloned_interfaces+=lo1
 doas sysrc ezjail_enable="YES"
+doas sysrc ifconfig_lo1_name="bastille0"
 doas sysrc ifconfig_wlan0="WPA DHCP"
 doas sysrc keymap="us.kbd"
 doas sysrc powerd_enable=YES
 doas sysrc wlans_ath0="wlan0"
 doas truncate -s 8G swapfile
+doas usbconfig
+doas vim /usr/local/etc/bastille/bastille.conf
 doas zfs create -o canmount=noauto -o mountpoint=/ zroot/ROOT/vanilla
 doas zfs create -o mountpoint=/usr/local/poudriere zroot/poudriere
 doas zfs create cle-usb/compressed
@@ -154,12 +184,11 @@ find ~/photo -type f -printf '%n %p\n' | awk '$1 > 1 {$1="";print}'
 find ~/photo -type f \! -links 1 L
 fondecran=1 ; pkill fond-ecran.zsh ; sleep 1 ; fond-ecran.zsh 12 84 ~/graphix/list/wallpaper.gen >>! ~/log/fond-ecran.log &!
 freebsd-version
+freebsd-version -k ; uname -r
 gem install --user-install neovim
 getfacl fichier
 gmirror label -v gm0 /dev/da0 /dev/da1
 gmirror load
-gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 ada0 # legacy bios ???
-gpart bootcode -p /boot/boot1.efi -i 1 ada0 # efi ???
 gpart show
 jls
 kbdmap # console virtuelle, root
@@ -170,6 +199,7 @@ make search name=xzgv L
 mixer vol 70
 mixertui
 mkdir=run-media ; doas mkdir -p /run/media/user_name
+monte=cleusb ; mount -t msdosfs -o -m=644,-M=755 /dev/da0s1 ~/usbkey
 monte=cleusb ; mount -t msdosfs /dev/da0s1 /media/da0s1
 monte=cleusb ; udevil mount /dev/sdb1 /media/cleusb
 monte=diskext-sdb1 ; udevil mount /dev/sdb1 /run/media/user_name/sdb1
@@ -189,8 +219,6 @@ pgrep -lf vim
 pip3 install --user --upgrade neovim
 pip3 install --user --upgrade pip
 pkg info -l devel/ruby-gems G /usr/local/bin
-pkg install -r custom-repo some-package
-pkg install -y pkg-provides pkg-rmleaf
 pkg plugins
 pkg provides /usr/local/bin/zsh
 pkg search cssc
@@ -207,9 +235,6 @@ restic restore -r /media/da0s1/restic latest --target ~ --include ~/racine/self
 sade
 seatd-launch hyprland
 service -e
-service ezjail restart
-service netif restart
-service nginx enable  #doas
 sockstat
 sockstat -l4
 ssh-copy-id -i ~/.ssh/id_rsa.pub tixu.local
@@ -225,6 +250,7 @@ sysctl -a G 'cpu.*temperature'
 sysctl dev.cpu.0.freq=800
 sysctl dev.cpu.0.freq_levels
 sysctl net.wlan.devices
+sysctl vfs.usermount
 systat
 umount ~/tremplin/usbdrive
 usbconfig
