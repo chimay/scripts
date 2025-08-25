@@ -23,6 +23,7 @@ dbus-launch waybar
 demonte=cleusb ; umount /media/da0s1
 devinfo -rv
 dmesg
+dmesg | grep CPU:
 doas -s
 doas /etc/rc.d/sysctl reload
 doas adduser
@@ -101,6 +102,7 @@ doas pkg install debootstrap
 doas pkg install lightdm lightdm-gtk-greeter
 doas pkg install linux-browser-installer
 doas pkg install networkmgr
+doas pkg install xorg xf86-video-intel
 doas pkg lock -l
 doas pkg provides -u
 doas pkg update
@@ -131,6 +133,7 @@ doas service bastille enable
 doas service dbus enable
 doas service dbus onestart
 doas service dbus restart
+doas service dbus onerestart
 doas service dbus start
 doas service devd restart
 doas service devfs restart
@@ -193,7 +196,9 @@ gpart show
 jls
 kbdmap # console virtuelle, root
 kldstat
+kldstat -v
 ls -l `find ~/photo -type f -links +1` L
+ls /boot/kernel | grep -v kernel
 lsblk
 make search name=xzgv L
 mixer vol 70
