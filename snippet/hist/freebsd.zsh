@@ -24,163 +24,6 @@ demonte=cleusb ; umount /media/da0s1
 devinfo -rv
 dmesg
 dmesg | grep CPU:
-doas -s
-doas /etc/rc.d/sysctl reload
-doas adduser
-doas bastille bootstrap 13.2-RELEASE update
-doas bastille cmd ALL ps aux
-doas bastille cmd temple sockstat -4
-doas bastille console tower
-doas bastille create -B tower-dhcp 14.0-RELEASE 0.0.0.0 bridge0
-doas bastille create temple 14.3-RELEASE 192.168.1.250/24
-doas bastille create tower 13.2-RELEASE 192.168.1.250 wlan0
-doas bastille list
-doas bastille list release
-doas bastille service temple sshd start
-doas bastille start tower
-doas bastille stop tower
-doas bastille sysrc temple sshd_enable=YES
-doas bastille update 13.2-RELEASE
-doas bastille verify 13.2-RELEASE
-doas beadm create new-snapshot
-doas beadm destroy old-snapshot
-doas beadm list
-doas bectl activate vanilla
-doas bectl mount vanilla /mnt
-doas bsdconfig
-doas bsdinstall auto
-doas bsdinstall netconfig
-doas cap_mkdb /etc/login.conf
-doas cd /usr/ports/multimedia/vlc && make install-missing-packages
-doas chmod 0600 /usr/local/etc/ssl/keys
-doas chmod 0600 /usr/local/etc/ssl/keys/poudriere.key
-doas chroot /compat/ubuntu /bin/bash
-doas debootstrap focal /compat/ubuntu
-doas echo 'FreeBSD: { url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest" }' > /usr/local/etc/pkg/repos/FreeBSD.conf
-doas ezjail-admin create yinyang.antra 'lo1|127.0.1.1,fxp0|192.168.1.100'
-doas ezjail-admin install
-doas ezjail-admin start yinyang.antra
-doas ezjail-admin stop yinyang.antra
-doas freebsd-update -r 13.0-RELEASE upgrade
-doas freebsd-update fetch
-doas freebsd-update install
-doas git clone https://git.freebsd.org/ports.git --branch main /usr/ports
-doas gitup ports
-doas gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 ada0 # legacy bios ???
-doas gpart bootcode -p /boot/boot1.efi -i 1 ada0 # efi ???
-doas ifconfig wlan0 create wlandevice iwn0
-doas ifconfig wlan0 list scan
-doas ifconfig wlan0 scan
-doas ifconfig wlan0 up
-doas jexec j-name /bin/sh
-doas jexec tower df -h
-doas kldload coretemp
-doas kldload ext2fs
-doas kldload ipmi
-doas kldload vboxguest
-doas mdconfig -a -t vnode -f swapfile -u 0
-doas mdconfig -l -v
-doas mkdir -p /usr/local/etc/pkg/repos
-doas mkdir -p /usr/local/etc/ssl/{certs,keys}
-doas mount_msdosfs /dev/da0s1 /media
-doas mount_vboxvfs -w virtualbox-share /mnt
-doas networkmgr
-doas ntpdate -v -b in.pool.ntp.org
-doas ntpq -pn
-doas openssl genrsa -out /usr/local/etc/ssl/keys/poudriere.key 4096
-doas openssl rsa -in /usr/local/etc/ssl/keys/poudriere.key -pubout -out /usr/local/etc/ssl/certs/poudriere.cert
-doas pfctl -d
-doas pkg bootstrap
-doas pkg bootstrap -f
-doas pkg install -r custom-repo some-package
-doas pkg install -y bastille
-doas pkg install -y pkg-provides pkg-rmleaf
-doas pkg install -y poudriere nginx memcached portmaster groff
-doas pkg install -y vim
-doas pkg install avahi-app nss_mdns
-doas pkg install debootstrap
-doas pkg install lightdm lightdm-gtk-greeter
-doas pkg install linux-browser-installer
-doas pkg install networkmgr
-doas pkg install xorg xf86-video-intel
-doas pkg lock -l
-doas pkg provides -u
-doas pkg update
-doas pkg update -f
-doas pkg upgrade
-doas portsnap extract
-doas portsnap fetch
-doas portsnap update
-doas poudriere bulk -j 13-2-R-amd64 -f /usr/local/etc/poudriere.d/liste-de-paquets -p HEAD
-doas poudriere jail -c -j 13-2-R-amd64 -v 13.2-RELEASE
-doas poudriere jail -u -j 13-2-R-amd64
-doas poudriere options -c -j 13-2-R-amd64 -f /usr/local/etc/poudriere.d/liste-de-paquets
-doas poudriere ports -c -m git+https -B main -p HEAD
-doas poudriere ports -u
-doas pw groupmod audio -m user_name
-doas pw groupmod operator -m user_name
-doas pw groupmod video -m user_name
-doas pw groupmod wheel -m user_name
-doas pw usermod toor -u 0
-doas pw usermod user_name -G wheel,operator,video,audio
-doas service automount restart
-doas service automount start
-doas service automountd start
-doas service autounmountd start
-doas service avahi-daemon enable
-doas service avahi-daemon restart
-doas service bastille enable
-doas service dbus enable
-doas service dbus onestart
-doas service dbus restart
-doas service dbus onerestart
-doas service dbus start
-doas service devd restart
-doas service devfs restart
-doas service dhclient restart fxp0
-doas service ezjail restart
-doas service netif cloneup
-doas service netif restart
-doas service nginx enable  #doas
-doas service virtual_oss enable
-doas shutdown -h now
-doas swapinfo -h
-doas swapinfo -k
-doas swapon -aL
-doas swapon /dev/md0
-doas sysctl debug.acpi.suspend_bounce=1  # before testing suspend
-doas sysctl dev.pcm.0.play.vchans=4
-doas sysctl dev.pcm.0.rec.vchans=4
-doas sysctl hw.snd.maxautovchans=4
-doas sysctl vfs.usermount=1
-doas sysrc bastille_enable=YES
-doas sysrc cloned_interfaces+=lo1
-doas sysrc ezjail_enable="YES"
-doas sysrc ifconfig_lo1_name="bastille0"
-doas sysrc ifconfig_wlan0="WPA DHCP"
-doas sysrc keymap="us.kbd"
-doas sysrc powerd_enable=YES
-doas sysrc wlans_ath0="wlan0"
-doas truncate -s 8G swapfile
-doas usbconfig
-doas vim /usr/local/etc/bastille/bastille.conf
-doas zfs create -o canmount=noauto -o mountpoint=/ zroot/ROOT/vanilla
-doas zfs create -o mountpoint=/usr/local/poudriere zroot/poudriere
-doas zfs create cle-usb/compressed
-doas zfs diff cle-usb/compressed@initial
-doas zfs list -rt all
-doas zfs set compression=gzip cle-usb/compressed
-doas zfs snapshot cle-usb/compressed@initial
-doas zfs unmount cle-usb
-doas zfs unmount cle-usb/compressed
-doas zpool create cle-usb /dev/da4
-doas zpool create zmirror /dev/da0 /dev/da1
-doas zpool resilver zroot
-doas zpool scrub -s zroot
-doas zpool scrub -w zroot
-doas zpool scrub zroot
-doas zpool upgrade -a
-doas zpool upgrade pool-name
 ext4fuse /dev/da4s1 ~/tremplin/usbdrive
 find ~/photo -type f -links +1 L
 find ~/photo -type f -printf '%n %p\n' | awk '$1 > 1 {$1="";print}'
@@ -241,6 +84,7 @@ sade
 seatd-launch hyprland
 service -e
 sockstat
+sockstat -4 -l
 sockstat -l4
 ssh-copy-id -i ~/.ssh/id_rsa.pub tixu.local
 ssh-keygen -t rsa -b 4096
@@ -250,6 +94,175 @@ sshfs=monte ; sshfs shari.local:$HOME ~/tremplin/sshfs
 sshfs=quigonjinn ; sshfs quigonjinn.local:$HOME ~/tremplin/sshfs
 sshfs=shari ; sshfs shari.local:$HOME ~/tremplin/sshfs
 sshfs=tixu ; sshfs tixu.local:$HOME ~/tremplin/sshfs
+sudo -s
+sudo /etc/rc.d/sysctl reload
+sudo adduser
+sudo bastille bootstrap 13.2-RELEASE update
+sudo bastille cmd ALL ps aux
+sudo bastille cmd temple sockstat -4
+sudo bastille console tower
+sudo bastille create -B tower-dhcp 14.0-RELEASE 0.0.0.0 bridge0
+sudo bastille create temple 14.3-RELEASE 192.168.1.250/24
+sudo bastille create tower 13.2-RELEASE 192.168.1.250 wlan0
+sudo bastille list
+sudo bastille list release
+sudo bastille rdr temple clear
+sudo bastille rdr temple list
+sudo bastille rdr temple tcp 2001 22
+sudo bastille service temple sshd start
+sudo bastille start tower
+sudo bastille stop tower
+sudo bastille sysrc temple sshd_enable=YES
+sudo bastille update 13.2-RELEASE
+sudo bastille verify 13.2-RELEASE
+sudo beadm create new-snapshot
+sudo beadm destroy old-snapshot
+sudo beadm list
+sudo bectl activate vanilla
+sudo bectl mount vanilla /mnt
+sudo bsdconfig
+sudo bsdinstall auto
+sudo bsdinstall netconfig
+sudo cap_mkdb /etc/login.conf
+sudo cd /usr/ports/multimedia/vlc && make install-missing-packages
+sudo chmod 0600 /usr/local/etc/ssl/keys
+sudo chmod 0600 /usr/local/etc/ssl/keys/poudriere.key
+sudo chroot /compat/ubuntu /bin/bash
+sudo debootstrap focal /compat/ubuntu
+sudo echo 'FreeBSD: { url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest" }' > /usr/local/etc/pkg/repos/FreeBSD.conf
+sudo ezjail-admin create yinyang.antra 'lo1|127.0.1.1,fxp0|192.168.1.100'
+sudo ezjail-admin install
+sudo ezjail-admin start yinyang.antra
+sudo ezjail-admin stop yinyang.antra
+sudo freebsd-update -r 13.0-RELEASE upgrade
+sudo freebsd-update fetch
+sudo freebsd-update install
+sudo git clone https://git.freebsd.org/ports.git --branch main /usr/ports
+sudo gitup ports
+sudo gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 ada0 # legacy bios ???
+sudo gpart bootcode -p /boot/boot1.efi -i 1 ada0 # efi ???
+sudo ifconfig wlan0 create wlandevice iwn0
+sudo ifconfig wlan0 list scan
+sudo ifconfig wlan0 scan
+sudo ifconfig wlan0 up
+sudo jexec j-name /bin/sh
+sudo jexec tower df -h
+sudo kldload coretemp
+sudo kldload ext2fs
+sudo kldload ipmi
+sudo kldload vboxguest
+sudo mdconfig -a -t vnode -f swapfile -u 0
+sudo mdconfig -l -v
+sudo mkdir -p /usr/local/etc/pkg/repos
+sudo mkdir -p /usr/local/etc/ssl/{certs,keys}
+sudo mount_msdosfs /dev/da0s1 /media
+sudo mount_vboxvfs -w virtualbox-share /mnt
+sudo networkmgr
+sudo ntpdate -v -b in.pool.ntp.org
+sudo ntpq -pn
+sudo openssl genrsa -out /usr/local/etc/ssl/keys/poudriere.key 4096
+sudo openssl rsa -in /usr/local/etc/ssl/keys/poudriere.key -pubout -out /usr/local/etc/ssl/certs/poudriere.cert
+sudo pfctl -T show -t jails
+sudo pfctl -d
+sudo pfctl -e
+sudo pfctl -f /etc/pf.conf
+sudo pfctl -s rules
+sudo pfctl -sr
+sudo pkg bootstrap
+sudo pkg bootstrap -f
+sudo pkg install -r custom-repo some-package
+sudo pkg install -y bastille
+sudo pkg install -y pkg-provides pkg-rmleaf
+sudo pkg install -y poudriere nginx memcached portmaster groff
+sudo pkg install -y vim
+sudo pkg install avahi-app nss_mdns
+sudo pkg install debootstrap
+sudo pkg install lightdm lightdm-gtk-greeter
+sudo pkg install linux-browser-installer
+sudo pkg install networkmgr
+sudo pkg install xorg xf86-video-intel
+sudo pkg lock -l
+sudo pkg provides -u
+sudo pkg update
+sudo pkg update -f
+sudo pkg upgrade
+sudo portsnap extract
+sudo portsnap fetch
+sudo portsnap update
+sudo poudriere bulk -j 13-2-R-amd64 -f /usr/local/etc/poudriere.d/liste-de-paquets -p HEAD
+sudo poudriere jail -c -j 13-2-R-amd64 -v 13.2-RELEASE
+sudo poudriere jail -u -j 13-2-R-amd64
+sudo poudriere options -c -j 13-2-R-amd64 -f /usr/local/etc/poudriere.d/liste-de-paquets
+sudo poudriere ports -c -m git+https -B main -p HEAD
+sudo poudriere ports -u
+sudo pw groupmod audio -m user_name
+sudo pw groupmod operator -m user_name
+sudo pw groupmod video -m user_name
+sudo pw groupmod wheel -m user_name
+sudo pw usermod toor -u 0
+sudo pw usermod user_name -G wheel,operator,video,audio
+sudo service automount restart
+sudo service automount start
+sudo service automountd start
+sudo service autounmountd start
+sudo service avahi-daemon enable
+sudo service avahi-daemon restart
+sudo service bastille enable
+sudo service dbus enable
+sudo service dbus onerestart
+sudo service dbus onestart
+sudo service dbus restart
+sudo service dbus start
+sudo service devd restart
+sudo service devfs restart
+sudo service dhclient restart fxp0
+sudo service ezjail restart
+sudo service netif cloneup
+sudo service netif restart
+sudo service nginx enable  #doas
+sudo service pf enable
+sudo service pf start
+sudo service pflog enable
+sudo service pflog start
+sudo service virtual_oss enable
+sudo shutdown -h now
+sudo swapinfo -h
+sudo swapinfo -k
+sudo swapon -aL
+sudo swapon /dev/md0
+sudo sysctl debug.acpi.suspend_bounce=1  # before testing suspend
+sudo sysctl dev.pcm.0.play.vchans=4
+sudo sysctl dev.pcm.0.rec.vchans=4
+sudo sysctl hw.snd.maxautovchans=4
+sudo sysctl vfs.usermount=1
+sudo sysrc bastille_enable=YES
+sudo sysrc cloned_interfaces+=lo1
+sudo sysrc ezjail_enable="YES"
+sudo sysrc ifconfig_lo1_name="bastille0"
+sudo sysrc ifconfig_wlan0="WPA DHCP"
+sudo sysrc keymap="us.kbd"
+sudo sysrc powerd_enable=YES
+sudo sysrc wlans_ath0="wlan0"
+sudo truncate -s 8G swapfile
+sudo usbconfig
+sudo vim /usr/local/etc/bastille/bastille.conf
+sudo zfs create -o canmount=noauto -o mountpoint=/ zroot/ROOT/vanilla
+sudo zfs create -o mountpoint=/usr/local/poudriere zroot/poudriere
+sudo zfs create cle-usb/compressed
+sudo zfs diff cle-usb/compressed@initial
+sudo zfs list -rt all
+sudo zfs set compression=gzip cle-usb/compressed
+sudo zfs snapshot cle-usb/compressed@initial
+sudo zfs unmount cle-usb
+sudo zfs unmount cle-usb/compressed
+sudo zpool create cle-usb /dev/da4
+sudo zpool create zmirror /dev/da0 /dev/da1
+sudo zpool resilver zroot
+sudo zpool scrub -s zroot
+sudo zpool scrub -w zroot
+sudo zpool scrub zroot
+sudo zpool upgrade -a
+sudo zpool upgrade pool-name
 sync=shari-auto ; unison remote $HOME ssh://user_name@shari.local//$HOME -ui text
 sysctl -a G 'cpu.*temperature'
 sysctl dev.cpu.0.freq=800

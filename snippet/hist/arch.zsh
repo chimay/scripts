@@ -103,6 +103,8 @@ fossil status
 fossil timeline
 fscheck=ext4 ; sudo fsck.ext4 -fvy /dev/sdc1
 fzf=pipe ; var=$(e * | fzf -m --reverse --cycle --color=bw)
+gem install neocities
+gem update
 git=checkout ; git checkout adc060c dirs-quigonjinn
 git=clone-using-ssh ; git clone 'ssh://git@github.com/user_name/nb'
 git=commit ; git add -A ; git commit
@@ -112,11 +114,13 @@ git=filtre-fichier ; git filter-branch --index-filter 'git rm --cached --ignore-
 git=push ; git push -u origin master
 git=push-u ; git push -u origin master
 git=rebase ; git rebase -i HEAD~4
+git=remote-add-codeberg ; git remote add codeberg ssh://git@codeberg.org/user_name/pages.git
 git=remote-add-github ; git remote add origin git@github.com:user_name/configuration.git
 git=remote-add-gitlab git remote add origin git@gitlab.com:user_name/equa6on.git
-git=remote-show-url ; git remote get-url origin
 git=remote-show ; git remote show origin
+git=remote-show-url ; git remote get-url origin
 git=reset ; git fetch --all && git reset --hard origin/master
+git=set-default-remote-codeberg ; git push -u codeberg --all
 git_rm_file=file ; git filter-repo --path-match $git_rm_file --invert-paths
 gopher=1 ; lynx gopher://gopher.floodgap.com/1/world/
 gpg --edit-key user_name@mail_server.com
@@ -337,6 +341,7 @@ systemd=timesync ; sudo systemctl status systemd-timesyncd
 systemd=user-active-tmux ; systemctl --user enable tmux
 systemd=user-services-persistants ; sudo loginctl enable-linger user_name
 t context delete important
+telnet taijitu.local 22
 term=info ; infocmp
 timedatectl list-timezones
 timedatectl set-ntp true

@@ -22,10 +22,11 @@ packages=(
 	borg restic
 	avahi nss-mdns
 	zsh tmux fzf
+	calc bc
 	git lazygit
 	trash-cli
 	xterm rxvt-unicode kitty alacritty
-	vim gvim neovim neovim-qt emacs
+	gvim neovim neovim-qt emacs
 	vifm yazi
 	tree ncdu dfc socat
 	dialog
@@ -40,6 +41,7 @@ packages=(
 	neomutt
 	qutebrowser firefox
 	alsa-utils pipewire wireplumber
+	pulsemixer pamixer ncpamixer
 	mpv mplayer
 	lilypond timidity fluidsynth soundfont-fluid
 	acpi cpupower
@@ -81,7 +83,7 @@ case $distribution in
 			avahi nss_mdns
 			rsync unison
 			py311-borgbackup restic
-			zsh tmux fzf perl5
+			zsh tmux fzf ripgrep perl5
 			git lazygit
 			py311-trash-cli
 			xterm rxvt-unicode kitty alacritty
@@ -95,6 +97,7 @@ case $distribution in
 			rofi dmenu zenity
 			dunst picom xdotool wmctrl-fork xclip xsel-conrad
 			feh nsxiv
+			pulseaudio gtk-mixer
 			neomutt
 			qutebrowser firefox
 			lilypond timidity fluidsynth fluid-soundfont
