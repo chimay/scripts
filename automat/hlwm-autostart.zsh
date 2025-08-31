@@ -2,6 +2,10 @@
 
 # vim: set fdm=marker :
 
+# On freebsd :
+# - disable remind-server : cpu 100%
+# - disable alarm-memory : not reliable
+
 # Chemins d’accès {{{1
 
 source ~/racine/config/cmdline/zsh/zprofile

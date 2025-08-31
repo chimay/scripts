@@ -29,6 +29,7 @@ borgmatic create --verbosity 1 --list --stats
 borgmatic init --encryption repokey
 borgmatic mount --repository usb-key --archive latest --mount-point ~/backup/mnt
 borgmatic umount --mount-point ~/backup/mnt
+cat /dev/sda | ssh remote-host 'cat > /dev/sda'
 chanson=local && mpc -f "%file%"
 chattr +i /etc/resolv.conf
 cle=agent ; eval $(ssh-agent)
@@ -52,6 +53,7 @@ curl 'http://www.central-fixation.com/perfect-sight-without-glasses/chapter-[1-3
 dbus-run-session
 dconf=dump ; dconf dump /com/gexperts/Tilix/ > ~config/terminal/tilix.dconf
 dconf=load ; dconf load /com/gexperts/Tilix/ < ~config/terminal/tilix.dconf
+dd status=progress if=/dev/sda | ssh remote-host 'dd of=/dev/sda'
 demonte=cleusb ; udevil umount /dev/sdb1
 demonte=diskext-sdb1 ; udevil umount /dev/sdb1
 demonte=liseuse ; udevil umount /dev/sdb
@@ -79,7 +81,7 @@ efibootmgr -c -d /dev/sda -p 1 -L "Gentoo" -l '\efi\boot\bootx64.efi' # sudo, cr
 efibootmgr -v
 emacs=byte-comp-dir ; emacs --batch --eval '(byte-recompile-directory "~/racine/plugin/manager/el-get/mtorus-user_name")'
 faillock --user user_name --reset
-fallocate -l 8G swapfile # sudo
+fallocate -l 1G example.txt
 feh=wallpaper ; feh --bg-max ~wallpaper/artisan/A-intoTheVoid.jpg
 file --mime-type Bonhomme_hiver_2018.docx
 find ~/photo -type f -links +1 L
@@ -111,6 +113,7 @@ git=commit ; git add -A ; git commit
 git=compresse ; git gc
 git=doc ; m ~infoman/unix/version/progit.txt
 git=filtre-fichier ; git filter-branch --index-filter 'git rm --cached --ignore-unmatch redshift.conf'
+git=link-remote-branch ; git push --set-upstream codeberg master
 git=push ; git push -u origin master
 git=push-u ; git push -u origin master
 git=rebase ; git rebase -i HEAD~4
@@ -120,6 +123,7 @@ git=remote-add-gitlab git remote add origin git@gitlab.com:user_name/equa6on.git
 git=remote-show ; git remote show origin
 git=remote-show-url ; git remote get-url origin
 git=reset ; git fetch --all && git reset --hard origin/master
+git=set-default-remote ; git push --set-upstream codeberg master
 git=set-default-remote-codeberg ; git push -u codeberg --all
 git_rm_file=file ; git filter-repo --path-match $git_rm_file --invert-paths
 gopher=1 ; lynx gopher://gopher.floodgap.com/1/world/
@@ -249,6 +253,7 @@ pssh -vi -H quigonjinn.local -H shari.local date
 pssh -vi -h ~config/cmdline/ssh/hotes date
 pulseaudio=start ; pulseaudio --start
 pulseaudio=stop ; pulseaudio -k
+pv /dev/sda | ssh remote-host 'cat > /dev/sda'
 pynvim -f Monospace 11
 qemu-img create -f qcow2 ~/virtual/archlinux.img 64G
 qemu-img create -f qcow2 ~/virtual/freebsd.img 32G
@@ -315,6 +320,7 @@ sudo -e /etc/fstab
 sudo -s
 sudo -sE xterm
 sudo blkid /dev/sda1
+sudo fallocate -l 8G swapfile
 sudo locale-gen
 sudo vim /etc/locale.gen
 sudo=unlock ; faillock --user david --reset

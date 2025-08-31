@@ -29,6 +29,7 @@ packages=(
 	gvim neovim neovim-qt emacs
 	vifm yazi
 	tree ncdu dfc socat
+	atools zip unzip
 	dialog
 	pass
 	xorg lightdm lightdm-gtk-greeter
@@ -36,8 +37,8 @@ packages=(
 	polybar
 	rofi dmenu zenity
 	dunst picom xdotool wmctrl xclip xsel
+	feh sxiv vimiv i3lock
 	xfce4
-	feh sxiv vimiv
 	neomutt
 	qutebrowser firefox
 	alsa-utils pipewire wireplumber
@@ -56,9 +57,10 @@ case $distribution in
 			networkmanager
 			pacman-contrib
 			pacutils pkgfile expac
-			ttf-dejavu ttf-dejavu-nerd
+			ttf-dejavu ttf-nerd-fonts-symbol
 			pipewire-pulse
 			freepats-general-midi
+			arch-wiki-docs arch-wiki-lite
 		)
 		sudo pacman -Syy
 		sudo pacman -S --needed $=packages
@@ -83,7 +85,7 @@ case $distribution in
 			avahi nss_mdns
 			rsync unison
 			py311-borgbackup restic
-			zsh tmux fzf ripgrep perl5
+			zsh tmux fd-find ripgrep fzf perl5
 			git lazygit
 			py311-trash-cli
 			xterm rxvt-unicode kitty alacritty
@@ -101,7 +103,9 @@ case $distribution in
 			neomutt
 			qutebrowser firefox
 			lilypond timidity fluidsynth fluid-soundfont
+			pftop
 			bastille
+			vm-bhyve grub2-bhyve bhyve-firmware
 		)
 		sudo pkg install $=packages
 		;;

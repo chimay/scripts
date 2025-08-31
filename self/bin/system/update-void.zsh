@@ -55,3 +55,7 @@ sudo xbps-remove -o
 # update files db {{{1
 
 xlocate -S
+
+# reset keyboard to custom layout {{{1
+
+xmodmap ~/racine/config/windenv/xmodmap/belge-meta-super-hyper

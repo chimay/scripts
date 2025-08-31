@@ -95,7 +95,7 @@ echo
 echo "wget $fanions -- $adresse" > $temporaire
 echo
 
-vim $temporaire
+vim -u ~/racine/config/edit/vim-lite/vimrc $temporaire
 
 code=$?
 

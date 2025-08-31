@@ -2,7 +2,18 @@
 
 # Variables {{{1
 
-sound=/usr/share/soundfonts/FluidR3_GM.sf2
+operasys=$(uname -s)
+
+if [ $operasys = Linux ]
+then
+	sound=/usr/share/soundfonts/FluidR3_GM.sf2
+elif [ $operasys = FreeBSD ]
+then
+	sound=/usr/local/share/sounds/sf2/FluidR3_GM.sf2
+else
+	sound=/usr/share/soundfonts/FluidR3_GM.sf2
+fi
+
 #sound=/usr/share/soundfonts/freepats-general-midi.sf2
 #sound=~/racine/musica/soundfont/Unison.sf2
 
