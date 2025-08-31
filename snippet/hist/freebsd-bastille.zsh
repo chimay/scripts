@@ -1,8 +1,6 @@
 cd /usr/local/share/bastille
 jls
 less /usr/local/bastille/jails/temple/rdr.conf
-sudo sysrc bastille_list="temple tower"
-sudoedit  /usr/local/bastille/jails/temple/jail.conf
 sudo bastille bootstrap 13.2-RELEASE update
 sudo bastille cmd ALL ps aux
 sudo bastille cmd temple sockstat -4
@@ -11,6 +9,7 @@ sudo bastille create -B tower-dhcp 14.0-RELEASE 0.0.0.0 bridge0
 sudo bastille create temple 14.3-RELEASE 192.168.1.250/24
 sudo bastille create tower 13.2-RELEASE 192.168.1.250 wlan0
 sudo bastille edit temple rdr.conf
+sudo bastille edit ubuntu fstab
 sudo bastille list
 sudo bastille list release
 sudo bastille rdr temple clear
@@ -26,6 +25,8 @@ sudo pkg install -y bastille
 sudo service bastille enable
 sudo service netif cloneup
 sudo sysrc bastille_enable=YES
+sudo sysrc bastille_list="temple tower"
 sudo sysrc cloned_interfaces+=lo1
 sudo sysrc ifconfig_lo1_name="bastille0"
 sudo vim /usr/local/etc/bastille/bastille.conf
+sudoedit  /usr/local/bastille/jails/temple/jail.conf

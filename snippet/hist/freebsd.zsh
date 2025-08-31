@@ -2,15 +2,13 @@
 # bootcfg 1. boot0cfg -B ada0 # install boot0 sur le MBR
 # bootcfg 2. boot0cfg -s 1 ada0 # définit la slice 1 par défaut
 # bootcfg 3. boot0cfg -t 1200 ada0 # règle le timeout en ticks (~ 18e de seconde)
-# uefi 1. bootx64.efi # à lancer dans le shell efi pour lancer l’installation si pas automatique
-# uefi loader 1. download minimal image (or boot the iso / img you downloaded)
-# uefi loader 2. Go to to the emergency shell (or just boot single user).
-# uefi loader 3. mount -t msdos /dev/da0pX /mnt pX is the ESP (where da0 is your root disk)
-# uefi loader 4. cp /boot/loader.efi /mnt/efi/boot/bootx86.efi
-# uefi loader 5. cp /boot/loader.efi /mnt/efi/freebsd/loader.efi
-# uefi loader 6. reboot
-# zram similar 1. mdconfig -a -t malloc -o compress -o reserve -s 50m -u 7
-# zram similar 2. swapon /dev/md7
+# ext2 1. kldload ext2fs
+# ext2 2. mount -t ext2fs <device> <mount_point>
+# linux compat 1. ls -l /compat/linux/
+# linux compat 2. sudo service linux start
+# linux compat 3. sudo sysrc linux_enable="YES"
+# linux compat 4. sudo pkg install debootstrap
+# linux compat 5. sudo debootstrap jammy /compat/ubuntu
 # loop mount 0. dd if=/dev/zero of=partfile.dd bs=1M count=1100
 # loop mount 1. mdconfig -l
 # loop mount 2. mdconfig -a -t vnode -f partfile.dd -u 7
@@ -21,8 +19,15 @@
 # loop mount 7. umount /media
 # loop mount 8. mdconfig -d -u 7
 # loop mount 9. rm partfile.dd
-# ext2 1. kldload ext2fs
-# ext2 2. mount -t ext2fs <device> <mount_point>
+# uefi 1. bootx64.efi # à lancer dans le shell efi pour lancer l’installation si pas automatique
+# uefi loader 1. download minimal image (or boot the iso / img you downloaded)
+# uefi loader 2. Go to to the emergency shell (or just boot single user).
+# uefi loader 3. mount -t msdos /dev/da0pX /mnt pX is the ESP (where da0 is your root disk)
+# uefi loader 4. cp /boot/loader.efi /mnt/efi/boot/bootx86.efi
+# uefi loader 5. cp /boot/loader.efi /mnt/efi/freebsd/loader.efi
+# uefi loader 6. reboot
+# zram similar 1. mdconfig -a -t malloc -o compress -o reserve -s 50m -u 7
+# zram similar 2. swapon /dev/md7
 VBoxClient --display
 VBoxClient-all
 acpiconf -i 0
@@ -53,7 +58,6 @@ getfacl fichier
 gmirror label -v gm0 /dev/da0 /dev/da1
 gmirror load
 gpart show
-jls
 kbdmap # console virtuelle, root
 kldstat
 kldstat -v
