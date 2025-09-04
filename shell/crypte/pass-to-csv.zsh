@@ -29,6 +29,9 @@ cd $store
 
 rm -i $output
 
+record="\"group\",\"title\",\"username\",\"password\",\"url\",\"tags\",\"notes\",\"totp\",\"icon\",\"last_modified\",\"created\""
+echo $record >>| $output
+
 for file in **/*.gpg(.)
 do
 	fields=(${(@s:/:)file})

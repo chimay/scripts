@@ -158,6 +158,9 @@ image=tri ; img-triParDate.zsh ~/photo/import ~/photo/numerique/archives
 ionice -c 2 -n 7 ls
 ionice -c 3 ls
 ip addr
+ip link set wlan0 up
+rfkill unblock wifi
+connmanctl
 joue=random-U ; y $(e ~aclassique/**/[P-Z]-* | shuf | head -n 1)
 kitty=fonts ; kitty list-fonts
 lesskey -o ~/racine/built/less/key-natif.out ~/racine/config/visu/less/key-natif

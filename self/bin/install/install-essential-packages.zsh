@@ -31,7 +31,7 @@ packages=(
 	tree ncdu dfc socat
 	atools zip unzip
 	dialog
-	pass
+	pass keepassxc
 	xorg lightdm lightdm-gtk-greeter
 	herbstluftwm
 	polybar
@@ -45,12 +45,12 @@ packages=(
 	pulsemixer pamixer ncpamixer
 	mpv mplayer
 	lilypond timidity fluidsynth soundfont-fluid
-	acpi cpupower
+	acpi cpupower turbostat thermald
 )
 
 case $distribution in
-	ar|arch|artix|pm|pacman)
-		echo "pacman"
+	arch|archlinux)
+		echo "arch"
 		echo
 		packages+=(
 			linux-zen
@@ -65,20 +65,43 @@ case $distribution in
 		sudo pacman -Syy
 		sudo pacman -S --needed $=packages
 		;;
-	void|xbps|xpbs-install)
-		echo "xbps"
+	artix)
+		echo "artix"
+		echo
+		# prevents login with lightdm
+			# pam_rundir
+		# dinit-user-spawn or turnstile turnstile-dinit
+		packages+=(
+			linux-zen
+			networkmanager
+			pacman-contrib
+			pacutils pkgfile expac
+			ttf-dejavu ttf-nerd-fonts-symbol
+			dinit-user-spawn
+			pipewire-pulse
+			freepats-general-midi
+			arch-wiki-docs arch-wiki-lite
+			zramen zramen-dinit
+			thermald-dinit
+		)
+		sudo pacman -Syy
+		sudo pacman -S --needed $=packages
+		;;
+	void|voidlinux)
+		echo "void"
 		echo
 		packages+=(
 			base-system linux-base
 			NetworkManager
 			xtools
+			pam_rundir
 			alsa-pipewire
 			freepats
 		)
 		sudo xbps-install $=packages
 		;;
-	freebsd|freeb|pkgng)
-		echo "pkg"
+	freebsd)
+		echo "freebsd"
 		echo
 		packages=(
 			networkmgr
@@ -102,9 +125,10 @@ case $distribution in
 			pulseaudio gtk-mixer
 			neomutt
 			qutebrowser firefox
+			alsa-utils alsa-seq-server
 			lilypond timidity fluidsynth fluid-soundfont
 			pftop
-			bastille
+			bastille debootstrap
 			vm-bhyve grub2-bhyve bhyve-firmware
 		)
 		sudo pkg install $=packages

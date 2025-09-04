@@ -18,7 +18,7 @@ player () {
 
 # clean cache {{{1
 
-sudo pacman -Scc
+sudo pacman -Scc --noconfirm
 
 # check site {{{1
 

@@ -11,12 +11,27 @@ local temps=10
 
 local volume=100
 
-# }}}1
+# Functions {{{1
+
+cpu-save () {
+	# userspace has a low frequency range
+	# see ~/.config/cpupower_gui/cpg-userspace.profile
+	which cpupower-gui >& /dev/null && cpupower-gui profile userspace
+}
+
+player () {
+	local fu_volume=$1
+	local fu_fichier=$2
+	[[ $fu_fichier[1] != / ]] && {
+		fu_fichier=~/audio/bell/$fu_fichier
+	}
+	mpv-socket.bash replace $fu_fichier
+	mpv-socket.bash volume $fu_volume
+}
 
 # Aide {{{1
 
 [ $# -eq 0 ] && {
-
 	echo Usage : ${0##*/} +chaud ++tres_chaud -temps volume
 	echo
 	echo "Par défaut :"
@@ -25,12 +40,10 @@ local volume=100
 	echo Très chaud : $tres_chaud
 	echo Temps : $temps
 	echo Volume : $volume
-
 	exit
 }
 
 [ $# -gt 0 ] && [ $1 = help -o $1 = -h -o $1 = --help ] && {
-
 	echo Usage : ${0##*/} +chaud ++tres_chaud -temps volume
 	echo
 	echo "Par défaut :"
@@ -39,13 +52,10 @@ local volume=100
 	echo Très chaud : $tres_chaud
 	echo Temps : $temps
 	echo Volume : $volume
-
 	exit
 }
 
-# }}}1
-
-# {{{ Arguments
+# Arguments {{{1
 
 while true
 do
@@ -75,8 +85,6 @@ do
 	esac
 done
 
-# }}}
-
 # Affichage {{{1
 
 print Chaud : $chaud
@@ -88,33 +96,12 @@ print
 print Volume : $volume
 print
 
-# }}}1
-
-# {{{ Fonctions
-
-player () {
-
-	local fu_volume=$1
-	local fu_fichier=$2
-
-	[[ $fu_fichier[1] != / ]] && {
-
-		fu_fichier=~/audio/bell/$fu_fichier
-	}
-
-	mpv-socket.bash replace $fu_fichier
-	mpv-socket.bash volume $fu_volume
-}
-
-# }}}
-
 # Boucle {{{1
 
 while true
 do
 	echo "== $(date +%T) =="
-
-	print
+	echo
 
 # 	senseurs=($(sensors | \
 # 		grep -E '(temp|Core)[^(]+°C' | \
@@ -138,40 +125,31 @@ do
 	#print
 
 	maximum=0
-
 	for elt in $senseurs
 	do
 		(( elt > maximum )) && maximum=$elt
 	done
 
-	print "  " $maximum
-	print
+	echo maximum temperature : $maximum
+	echo
 
 	(( maximum >= tres_chaud )) && {
-
+		cpu-save
 		echo "player $volume ~/audio/bell/notification/cpu-tres-chaud.ogg"
 		echo
-
 		player $volume ~/audio/bell/notification/cpu-tres-chaud.ogg
-
 		sleep 3
-
 		continue
 	}
 
 	(( maximum >= chaud )) && {
-
+		cpu-save
 		echo "player $volume ~/audio/bell/notification/cpu-chaud.ogg"
 		echo
-
 		player $volume ~/audio/bell/notification/cpu-chaud.ogg
-
 		sleep 3
-
 		continue
 	}
 
 	sleep $temps
 done
-
-# }}}1

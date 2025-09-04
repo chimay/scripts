@@ -1,4 +1,3 @@
-# ??? sxhkd -m 1
 # bootcfg 1. boot0cfg -B ada0 # install boot0 sur le MBR
 # bootcfg 2. boot0cfg -s 1 ada0 # définit la slice 1 par défaut
 # bootcfg 3. boot0cfg -t 1200 ada0 # règle le timeout en ticks (~ 18e de seconde)
@@ -250,9 +249,14 @@ sudo sysrc wlans_ath0="wlan0"
 sudo truncate -s 8G swapfile
 sudo usbconfig
 sudoedit /etc/devfs.conf
+sxhkd -m 1 # why ?
 sync=shari-auto ; unison remote $HOME ssh://user_name@shari.local//$HOME -ui text
-sysctl -a G 'cpu.*temperature'
+synth just-build audio/fluidsynth
+synth status
+sysctl -a | grep 'cpu.*temperature'
+sysctl dev.cpu.0.freq
 sysctl dev.cpu.0.freq_levels
+sysctl dev.cpu.0.temperature
 sysctl net.wlan.devices
 sysctl vfs.usermount
 systat
