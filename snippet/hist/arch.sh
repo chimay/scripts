@@ -216,11 +216,6 @@ mpliste=Detente ; droits-audio.zsh ; mpc --wait update ; mpc crop ; mpc load $mp
 mpliste=Meditation ; droits-audio.zsh ; mpc --wait update ; mpc crop ; mpc load $mpliste ; mpc play
 mpliste=Tout ; genere-liste-melangee.py 7 1 0 ~/racine/musica/list/$mpliste.gen ; mpc --wait update ; mpc crop ; mpc load $mpliste ; mpc play
 mpv=fifo ; mpv --idle --input-file=~/racine/run/fifo/mpv &!
-ssh -L local_addr:local_port:remote_addr:remote_port user@sshd_addr
-ssh -L 8080:localhost:80 user@server
-ssh -L localhost:8080:localhost:80 user@server
-ssh -R remote_addr:remote_port:local_addr:local_port user@gateway_addr
-ssh -R localhost:8080:localhost:80 user@server
 mv orgmode.tar.xz ~archive/eclats2vers-`date +%Y-%m-%d`.tar.xz
 nf ~pack/aged/* ; echo ; nf /media/cleusb/archive/*
 nf ~pack/aged/* ; echo ; nf /media/cleusb/archive/*
@@ -306,6 +301,14 @@ smbpasswd user_name # sudo
 sn ~syncron/cleusb/ /media/cleusb/syncron
 sox carillon-23-00{,-fade}.ogg fade h 0 -0 1.7
 sql=qute-history ; sqlite3 -line ~/.local/share/qutebrowser/history.sqlite 'select * from history' >>! ~archive/qutebrowser.history
+ssh=tunnel ; ssh -L 8080:localhost:80 user@server
+ssh=tunnel ; ssh -L local_addr:local_port:remote_addr:remote_port user@sshd_addr
+ssh=tunnel ; ssh -L local_port:remote_addr:remote_port user@sshd_addr
+ssh=tunnel ; ssh -L localhost:8080:localhost:80 user@server
+ssh=tunnel ; ssh -R 0.0.0.0:8080:localhost:80 user@server
+ssh=tunnel ; ssh -R 8080:localhost:80 user@server
+ssh=tunnel ; ssh -R remote_addr:remote_port:local_addr:local_port user@gateway_addr
+ssh=tunnel ; ssh -R remote_port:local_addr:local_port user@gateway_addr
 ssh -p 3022 user_name@localhost
 ssh-copy-id -i ~/.ssh/id_rsa.pub tixu.local
 ssh=bitbucket-info ; ssh git@bitbucket.org host_key_info
