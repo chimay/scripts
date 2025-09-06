@@ -41,9 +41,14 @@ cle=liste ; ssh-add -l
 cle=ssh-local ; ssh-add ~/racine/config/cmdline/ssh/$HOST/id_rsa
 clocher=0 ; echo $clocher >! ~run/clock/clocher.etat ; cat ~run/clock/clocher.etat
 clone=tmux-tpm ; git clone https://github.com/tmux-plugins/tpm
+connmanctl
 convert *paques*.png p2a-paques.pdf
 coredumpctl info nvim
 cp=derniers ; cp **/*(.m-7) /media/cleusb/syncron
+cpu=ls-modules ; ls /usr/lib/modules/$(uname -r)/kernel/drivers/cpufreq/
+cpu=max-freq ; sudo cpupower frequency-set -u 1300MHz
+cpu_epb=12 ; sudo cpupower set -b $cpu_epb
+cpu_epb=12 ; sudo echo $cpu_epb | sudo tee /sys/devices/system/cpu/cpu*/power/energy_perf_bias
 cups=accept ; cupsaccept Officejet_5740
 cups=add-printer ; lpadmin -E -p Officejet_5740 -v 'usb://HP/Officejet%205740%20series?serial=TH55U4Y0B905ZF&interface=1' -m 'drv:///hp/hpcups.drv/hp-officejet_5740_series.ppd'
 cups=connected ; lpinfo -v
@@ -115,6 +120,8 @@ git=doc ; m ~infoman/unix/version/progit.txt
 git=filtre-fichier ; git filter-branch --index-filter 'git rm --cached --ignore-unmatch redshift.conf'
 git=link-remote-branch ; git push --set-upstream codeberg master
 git=push ; git push -u origin master
+git=push-force ; git push --force codeberg
+git=push-force-with-lease ; git push --force-with-lease codeberg
 git=push-u ; git push -u origin master
 git=rebase ; git rebase -i HEAD~4
 git=remote-add-codeberg ; git remote add codeberg ssh://git@codeberg.org/user_name/pages.git
@@ -159,8 +166,6 @@ ionice -c 2 -n 7 ls
 ionice -c 3 ls
 ip addr
 ip link set wlan0 up
-rfkill unblock wifi
-connmanctl
 joue=random-U ; y $(e ~aclassique/**/[P-Z]-* | shuf | head -n 1)
 kitty=fonts ; kitty list-fonts
 lesskey -o ~/racine/built/less/key-natif.out ~/racine/config/visu/less/key-natif
@@ -211,6 +216,11 @@ mpliste=Detente ; droits-audio.zsh ; mpc --wait update ; mpc crop ; mpc load $mp
 mpliste=Meditation ; droits-audio.zsh ; mpc --wait update ; mpc crop ; mpc load $mpliste ; mpc play
 mpliste=Tout ; genere-liste-melangee.py 7 1 0 ~/racine/musica/list/$mpliste.gen ; mpc --wait update ; mpc crop ; mpc load $mpliste ; mpc play
 mpv=fifo ; mpv --idle --input-file=~/racine/run/fifo/mpv &!
+ssh -L local_addr:local_port:remote_addr:remote_port user@sshd_addr
+ssh -L 8080:localhost:80 user@server
+ssh -L localhost:8080:localhost:80 user@server
+ssh -R remote_addr:remote_port:local_addr:local_port user@gateway_addr
+ssh -R localhost:8080:localhost:80 user@server
 mv orgmode.tar.xz ~archive/eclats2vers-`date +%Y-%m-%d`.tar.xz
 nf ~pack/aged/* ; echo ; nf /media/cleusb/archive/*
 nf ~pack/aged/* ; echo ; nf /media/cleusb/archive/*
@@ -280,6 +290,7 @@ restic restore -r /media/da0s1/restic latest --target ~ --include ~/racine/self
 restic snapshots -r /media/da0s1/restic -c
 restic-backup.sh /media/cleusb/restic
 restic-backup.sh sftp:user_name@shari.local:$HOME/backup/restic
+rfkill unblock wifi
 rm=yt ; rm -f *.(m4a|webm|mp4|flv|aif|opus)
 rs ~/audio /media/cleusb
 rs ~pack/aged/ /media/cleusb/archive

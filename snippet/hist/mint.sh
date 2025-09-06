@@ -7,6 +7,8 @@ apt install snapd # sudo
 apt-file search notify-send
 apt-file update # sudo
 clavier=1 ; onboard&!
+dpkg=list-packages-by-size ; dpkg-query -Wf '${Installed-size}\t${Package}\n' | column -t | sort -n -k1
+dpkg=purge-uninstalled-packages ; dpkg --list |grep "^rc" | cut -d " " -f 3 | xargs sudo dpkg --purge
 install=unison ; sudo cp ./src/unison /usr/local/bin
 mintupgrade check
 mintupgrade download

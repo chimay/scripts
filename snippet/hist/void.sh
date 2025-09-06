@@ -11,6 +11,7 @@ sudo echo "echo hello" >> /etc/rc.conf.local
 sudo ln -s /etc/sv/sshd /etc/runit/runsvdir/default
 sudo ln -s /etc/sv/sshd /var/service
 sudo vim /etc/default/libc-locales
+sudo vkpurge rm all
 sudo xbps-install -S octoxbps
 sudo xbps-install -S void-repo-multilib
 sudo xbps-install -S void-repo-multilib-nonfree

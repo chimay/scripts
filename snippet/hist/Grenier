@@ -1,0 +1,27 @@
+
+doas svn co https://svn.FreeBSD.org/base/head /usr/src
+doas svn co https://svn.FreeBSD.org/doc/head /usr/doc
+git=set-default-remove ; git push -u codeberg --all
+zfs snapshot -r zroot/ROOT/vanilla@tarballs
+
+# @backup 01. ---- First time
+# @backup 02. sudo zfs snapshot -r zroot/ROOT/default@backup
+# @backup 03. sudo gpart modify -i 1 -t freebsd-zfs da0 # gpt partition table
+# @backup 04. sudo gpart modify -i 1 -t freebsd da0 # dos mbr partition table
+# @backup 05. sudo zpool create -o altroot=/mnt/diskextpool -O compression=zstd -O atime=off diskextpool da0s1
+# @backup 06. sudo zfs send -R zroot/ROOT/default@backup | sudo zfs receive -vF diskextpool
+# @backup 07. ---- Incremental
+# @backup 08. sudo zfs rename -r zroot/ROOT/default@backup{,-old}
+# @backup 09. sudo zfs snapshot -r zroot/ROOT/default@backup
+# @backup 10. sudo zpool import -R /mnt/diskextpool diskextpool
+# @backup 11. sudo zfs send -Ri zroot/ROOT/default@backup-old zroot/ROOT/default@backup | sudo zfs receive -vF diskextpool
+# @backup 12. sudo zfs destroy -r zroot/ROOT/default@backup-old
+# @backup 13. sudo zfs umount diskextpool
+# @backup 14. sudo zpool export diskextpool
+sudo sysrc ezjail_enable="YES"
+chflags -v noschg /usr/jails/yinyang.antra/var/empty
+sudo ezjail-admin create yinyang.antra 'lo1|127.0.1.1,fxp0|192.168.1.100'
+sudo ezjail-admin install
+sudo ezjail-admin start yinyang.antra
+sudo ezjail-admin stop yinyang.antra
+sudo service ezjail restart
