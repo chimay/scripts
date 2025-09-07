@@ -301,14 +301,6 @@ smbpasswd user_name # sudo
 sn ~syncron/cleusb/ /media/cleusb/syncron
 sox carillon-23-00{,-fade}.ogg fade h 0 -0 1.7
 sql=qute-history ; sqlite3 -line ~/.local/share/qutebrowser/history.sqlite 'select * from history' >>! ~archive/qutebrowser.history
-ssh=tunnel ; ssh -L 8080:localhost:80 user@server
-ssh=tunnel ; ssh -L local_addr:local_port:remote_addr:remote_port user@sshd_addr
-ssh=tunnel ; ssh -L local_port:remote_addr:remote_port user@sshd_addr
-ssh=tunnel ; ssh -L localhost:8080:localhost:80 user@server
-ssh=tunnel ; ssh -R 0.0.0.0:8080:localhost:80 user@server
-ssh=tunnel ; ssh -R 8080:localhost:80 user@server
-ssh=tunnel ; ssh -R remote_addr:remote_port:local_addr:local_port user@gateway_addr
-ssh=tunnel ; ssh -R remote_port:local_addr:local_port user@gateway_addr
 ssh -p 3022 user_name@localhost
 ssh-copy-id -i ~/.ssh/id_rsa.pub tixu.local
 ssh=bitbucket-info ; ssh git@bitbucket.org host_key_info
@@ -319,8 +311,16 @@ ssh=fingerprint_all ; for f in ~config/crypte/ssh/**/*.pub; do ssh-keygen -lf $f
 ssh=laozu-efi ; rm ~/.ssh/known_hosts ; ssh -p 2223 user_name@localhost
 ssh=livingcomputers ; ssh menu@tty.livingcomputers.org
 ssh=new_comment ; ssh-keygen -c -f ~config/crypte/ssh/ctrl-c.club/id_rsa
+ssh=reverse-tunnel ; ssh -R 0.0.0.0:8080:localhost:80 user@server
+ssh=reverse-tunnel ; ssh -R 8080:localhost:80 user@server
+ssh=reverse-tunnel ; ssh -R remote_addr:remote_port:local_addr:local_port user@gateway_addr
+ssh=reverse-tunnel ; ssh -R remote_port:local_addr:local_port user@gateway_addr
 ssh=tilde.club ; ssh user_name@tilde.club
 ssh=tilde.institute ; ssh user_name@tilde.institute
+ssh=tunnel ; ssh -L 8080:localhost:80 user@server
+ssh=tunnel ; ssh -L local_addr:local_port:remote_addr:remote_port user@sshd_addr
+ssh=tunnel ; ssh -L local_port:remote_addr:remote_port user@sshd_addr
+ssh=tunnel ; ssh -L localhost:8080:localhost:80 user@server
 ssh=virtual ; rm -f ~/.ssh/known_hosts ; ssh -p 3022 user_name@localhost
 ssh=virtual-root ; rm -f ~/.ssh/known_hosts ; ssh -p 3022 root@localhost
 sshfs=demonte ; fusermount -u ~/mount/import/sshfs
