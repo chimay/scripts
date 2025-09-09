@@ -1,6 +1,5 @@
 #sudo mount -t vfat -o loop ~filesys/fuse/Partition1 ~/image.iso/mnt
 #vdfuse -f ~/image.iso/ghostbsd-efi.vdi ~filesys/fuse
-./install --all --key-bindings --completion --update-rc
 CC=/usr/bin/gcc pip install --user --upgrade pip
 GTK_THEME=Adwaita:dark yad --about
 MANPAGER="nvim -c 'set ft=man' -u NORC -" h man
@@ -10,7 +9,7 @@ VBoxManage startvm freebsd-efi
 adig archlinux.org
 alacritty -e bash -c "cat ~/log/clock.log ; read -p 'press enter to continue ...'"
 alarm-sensor.zsh +75 ++82 -30 7
-alias G '^[a-z]=' L
+alias | grep '^[a-z]=' | less
 archlinux-java fix
 archlinux-java help
 archlinux-java set java-8-openjdk # sudo
@@ -45,15 +44,13 @@ connmanctl
 convert *paques*.png p2a-paques.pdf
 coredumpctl info nvim
 cp=derniers ; cp **/*(.m-7) /media/cleusb/syncron
+cpu=cur_freq ; watch cat /sys/devices/system/cpu/cpu[0-9]*/cpufreq/scaling_cur_freq
 cpu=ls-modules ; ls /usr/lib/modules/$(uname -r)/kernel/drivers/cpufreq/
-cpu=max-freq ; sudo cpupower frequency-set -u 1300MHz
+cpu=max_freq ; sudo cpupower frequency-set -u 1300MHz
+cpu=max_perf_percent ; echo "50" | sudo tee /sys/devices/system/cpu/intel_pstate/max_perf_pct
+cpu=one_freq ; sudo cpupower frequency-set -g performance ; sudo cpupower frequency-set -u 1200MHz
 cpu_epb=12 ; sudo cpupower set -b $cpu_epb
 cpu_epb=12 ; sudo echo $cpu_epb | sudo tee /sys/devices/system/cpu/cpu*/power/energy_perf_bias
-cups=accept ; cupsaccept Officejet_5740
-cups=add-printer ; lpadmin -E -p Officejet_5740 -v 'usb://HP/Officejet%205740%20series?serial=TH55U4Y0B905ZF&interface=1' -m 'drv:///hp/hpcups.drv/hp-officejet_5740_series.ppd'
-cups=connected ; lpinfo -v
-cups=enable ; cupsenable Officejet_5740
-cups=modeles ; lpinfo -m L
 curl 'http://www.central-fixation.com/perfect-sight-without-glasses/chapter-[1-32].php' -o 'chapter-#1.php'
 dbus-run-session
 dconf=dump ; dconf dump /com/gexperts/Tilix/ > ~config/terminal/tilix.dconf
@@ -257,6 +254,11 @@ pip=upgrade-venv ; python -m venv --upgrade ~/.pip
 pk + virtualbox{,-host-modules-arch} net-tools vde2
 pk rm gnome-{perl,vfs-perl} gnomecanvas-perl perl-{gnome2-wnck,goo-canvas,gtk2-imageview,gtk2-unique} shutter
 pk rm plasma-workspace kuiserver plasma-nm plasma-vault powerdevil kdeplasma-addons khotkeys plasma-meta plasma-pa kmenuedit plasma-desktop
+print=accept ; cupsaccept Officejet_5740
+print=add-printer ; lpadmin -E -p Officejet_5740 -v 'usb://HP/Officejet%205740%20series?serial=TH55U4Y0B905ZF&interface=1' -m 'drv:///hp/hpcups.drv/hp-officejet_5740_series.ppd'
+print=connected ; lpinfo -v
+print=enable ; cupsenable Officejet_5740
+print=modeles ; lpinfo -m L
 pssh -vi -H quigonjinn.local -H shari.local date
 pssh -vi -h ~config/cmdline/ssh/hotes date
 pulseaudio=start ; pulseaudio --start
@@ -280,9 +282,9 @@ restic find -r /media/cleusb/restic -s latest unison
 restic init -r sftp:user_name@shari.local:$HOME/backup/restic
 restic init -r ~/backup/restic
 restic mount ~/backup/mnt
-restic restore -r /media/da0s1/restic latest --target ~
-restic restore -r /media/da0s1/restic latest --target ~ --include ~/racine/self
-restic snapshots -r /media/da0s1/restic -c
+restic restore -r /media/cleusb/restic latest --target ~
+restic restore -r /media/cleusb/restic latest --target ~ --include ~/racine/self
+restic snapshots -r /media/cleusb/restic -c
 restic-backup.sh /media/cleusb/restic
 restic-backup.sh sftp:user_name@shari.local:$HOME/backup/restic
 rfkill unblock wifi

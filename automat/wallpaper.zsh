@@ -113,15 +113,13 @@ write-status-file () {
 update-current-in-status-file () {
 	echo "updating current in status file"
 	echo
-	{ echo 'g/^current/s/= .*$/= '$current'/' ; echo w } | ed $statusfile
-	echo
+	{ echo 'g/^current/s/= .*$/= '$current'/' ; echo w } | ed $statusfile &> ~/log/ed.log
 }
 
 update-reload-in-status-file () {
 	echo "updating reload in status file"
 	echo
-	{ echo 'g/^reload/s/= .*$/= '$reload'/' ; echo w } | ed $statusfile
-	echo
+	{ echo 'g/^reload/s/= .*$/= '$reload'/' ; echo w } | ed $statusfile &> ~/log/ed.log
 }
 
 read-status-file () {

@@ -102,6 +102,7 @@ python3 -m ensurepip --user
 rcorder /etc/rc.d/* /usr/local/etc/rc.d/*
 restic restore -r /media/da0s1/restic latest --target ~
 restic restore -r /media/da0s1/restic latest --target ~ --include ~/racine/self
+restic snapshots -r /media/da0s1/restic -c
 sade
 seatd-launch hyprland
 service -e

@@ -33,16 +33,18 @@ psgrep wallpaper.zsh || wallpaper.zsh ~/racine/run/wall/wallpaper.status >>! ~/l
 
 #psgrep xscreensaver || xscreensaver -nosplash &
 
+# Configuration {{{1
+
+# Juste pour être sûr
+
+xrdb -load ~/.Xresources
+
 #  Matériel {{{1
 # Écran {{{2
 
 #xbacklight -set 100
 
 xset dpms 0 0 420
-
-psgrep redshift-gtk || run-redshift.sh &
-
-flameshot &
 
 #  Clavier {{{2
 
@@ -85,8 +87,6 @@ xcape -e $chaine
 
 # Souris {{{2
 
-psgrep unclutter || unclutter -display :0.0 -root -jitter 7 -idle 5 &
-
 if [ $HOST = taijitu ]
 then
 	synclient TapButton1=1
@@ -115,9 +115,39 @@ then
 	xinput set-prop 17 289 1
 fi
 
+# Services {{{1
+
+# Écran {{{2
+
+psgrep redshift-gtk || run-redshift.sh &
+
+# Clavier {{{2
+
+# Bindings clavier & souris
+
+if psgrep sxhkd
+then
+	pkill -10 sxhkd
+else
+	sxhkd -c ~/racine/config/windenv/sxhkd/hlwm-sxhkdrc >>! ~/log/sxhkd.log 2>&1  &
+fi
+
+#psgrep keynav || keynav daemonize
+
+# Souris {{{2
+
+psgrep unclutter || unclutter -display :0.0 -root -jitter 7 -idle 5 &
+
 # Stockage {{{2
 
 # udiskie --no-automount --notify --tray >>! ~/log/udiskie.log 2>&1 &
+
+# Eviter le parquage excessif du disque
+
+if [ $HOST != mandala ]
+then
+	psgrep load_cycle_fix || load_cycle_fix.sh >>! ~/log/load_cycle_fix.log 2>&1 &
+fi
 
 #  Batterie {{{2
 
@@ -147,12 +177,21 @@ then
 	psgrep alarm-sensor.zsh || alarm-sensor.zsh +82 ++87 -30 >>! ~/log/alarm-sensor.log 2>&1 &
 fi
 
-# Eviter le parquage excessif du disque {{{2
+# D-Bus : message bus system {{{2
 
-if [ $HOST != mandala ]
+if [ $HOST = mandala ]
 then
-	psgrep load_cycle_fix || load_cycle_fix.sh >>! ~/log/load_cycle_fix.log 2>&1 &
+	dbus-update-activation-environment DISPLAY XAUTHORITY
 fi
+
+
+# Identification {{{2
+
+psgrep polkit-gnome-authentication-agent || \
+	/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+
+psgrep gnome-keyring-daemon || \
+	eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
 
 #  Réseau {{{2
 
@@ -172,43 +211,6 @@ fi
 # Bluetooth {{{2
 
 psgrep blueman-applet || blueman-applet &
-
-# Configuration {{{1
-
-# Juste pour être sûr
-
-xrdb -load ~/.Xresources
-
-# Services {{{1
-# Bindings clavier & souris {{{2
-
-if psgrep sxhkd
-then
-	pkill -10 sxhkd
-else
-	sxhkd -c ~/racine/config/windenv/sxhkd/hlwm-sxhkdrc >>! ~/log/sxhkd.log 2>&1  &
-fi
-
-#psgrep keynav || keynav daemonize
-
-# Compositor {{{2
-
-psgrep picom || picom >>! ~/log/picom.log 2>&1 &
-
-# Identification {{{2
-
-psgrep polkit-gnome-authentication-agent || \
-	/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-
-psgrep gnome-keyring-daemon || \
-	eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
-
-# D-Bus : message bus system {{{2
-
-if [ $HOST = mandala ]
-then
-	dbus-update-activation-environment DISPLAY XAUTHORITY
-fi
 
 # Terminal {{{2
 
@@ -238,6 +240,10 @@ log-notifications.bash ~/log/notifications.log &
 psgrep remind-server || {
 	remind-server.zsh ~/racine/config/organizer/remind/reminders 5 >>! ~/log/remind.log 2>&1 &
 }
+
+# Compositor {{{2
+
+psgrep picom || picom >>! ~/log/picom.log 2>&1 &
 
 # Musique {{{2
 
@@ -287,6 +293,10 @@ fi
 #  Téléphone {{{2
 
 psgrep kdeconnect || kdeconnect-indicator &
+
+# Capture d’écran {{{2
+
+#flameshot &
 
 # Message d’accueil {{{1
 

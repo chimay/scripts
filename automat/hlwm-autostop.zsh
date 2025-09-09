@@ -15,7 +15,7 @@ HOST=`hostname -s`
 pkill -f redshift-gtk &
 pkill -f redshift &
 pkill -f xcape &
-pkill -f flameshot &
+#pkill -f flameshot &
 pkill -f unclutter &
 pkill -f udiskie &
 pkill -f alarm-battery.zsh &

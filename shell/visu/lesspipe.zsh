@@ -81,10 +81,10 @@ type_fichier=$(file -L -z $fichier) || type_fichier=$(file -L $fichier)
 
 [[ -d $fichier ]] && {
 
-	echo "exec tree -C -A $fichier"
+	echo "exec tree -C $fichier"
 	echo
 
-	exec tree -C -A $fichier
+	exec tree -C $fichier
 }
 
 
