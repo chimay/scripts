@@ -14,4 +14,9 @@ pgrep 'emacs.*daemon' > ~/log/psgrep.log 2>&1 && {
 	exit 0
 } >> ~/log/emacs-server.log 2>&1
 
-exec emacs --daemon >> ~/log/emacs-server.log 2>&1
+initdir=~/racine/dotdir/emacs.d
+
+echo Init directory :  $initdir
+echo
+
+exec emacs --init-directory $initdir --daemon >> ~/log/emacs-server.log 2>&1

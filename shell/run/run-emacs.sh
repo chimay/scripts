@@ -2,6 +2,9 @@
 
 xdotool search --name "emacs@$HOST" windowactivate && exit 0
 
-source ~/racine/config/shell/utils/profile
+initdir=~/racine/dotdir/emacs.d
 
-exec emacs "$@"
+echo Init directory :  $initdir
+echo
+
+exec emacs --init-directory $initdir "$@" >> ~/log/emacs.log 2>&1
