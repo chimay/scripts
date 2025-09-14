@@ -15,7 +15,6 @@ HOST=`hostname -s`
 pkill -f redshift-gtk &
 pkill -f redshift &
 pkill -f xcape &
-#pkill -f flameshot &
 pkill -f unclutter &
 pkill -f udiskie &
 pkill -f alarm-battery.zsh &
@@ -43,11 +42,10 @@ pkill -f transmission-daemon &
 pkill -f syncthing.sh &
 dad -d ~/racine/gate/download stop &
 #pkill -f hexchat &
-pkill -f quasselcore &
-pkill -f quasselclient &
+#pkill -f quasselcore &
+#pkill -f quasselclient &
 pkill -f element-desktop &
 pkill -f kdeconnect &
-pkill -f bspwm-subscribe.zsh &
 
 if [ $HOST = mandala ]
 then

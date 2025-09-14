@@ -62,29 +62,6 @@ then
 	numlockx on &
 fi
 
-# Shift_L = #
-# Control_L = *
-# Super_L = @
-# Alt_L = |
-# Alt Gr = \
-# Super_R = °
-# Hyper_R = Menu = .
-# Control_R = /
-# Shift_R = ?
-
-chaine=''
-chaine+='Shift_L=ISO_Level3_Shift|numbersign;'
-chaine+='Control_L=Shift_L|asterisk;'
-chaine+='Super_L=ISO_Level3_Shift|at;'
-chaine+='Alt_L=ISO_Level3_Shift|bar;'
-chaine+='ISO_Level3_Shift=ISO_Level3_Shift|backslash;'
-chaine+='Super_R=Shift_L|degree;'
-chaine+='Hyper_R=Shift_L|period;'
-chaine+='Control_R=Shift_R|slash;'
-chaine+='Shift_R=Shift_L|question'
-
-xcape -e $chaine
-
 # Souris {{{2
 
 if [ $HOST = taijitu ]
@@ -133,6 +110,29 @@ else
 fi
 
 #psgrep keynav || keynav daemonize
+
+# Shift_L = #
+# Control_L = *
+# Super_L = @
+# Alt_L = |
+# Alt Gr = \
+# Super_R = °
+# Hyper_R = Menu = .
+# Control_R = /
+# Shift_R = ?
+
+chaine=''
+chaine+='Shift_L=ISO_Level3_Shift|numbersign;'
+chaine+='Control_L=Shift_L|asterisk;'
+chaine+='Super_L=ISO_Level3_Shift|at;'
+chaine+='Alt_L=ISO_Level3_Shift|bar;'
+chaine+='ISO_Level3_Shift=ISO_Level3_Shift|backslash;'
+chaine+='Super_R=Shift_L|degree;'
+chaine+='Hyper_R=Shift_L|period;'
+chaine+='Control_R=Shift_R|slash;'
+chaine+='Shift_R=Shift_L|question'
+
+xcape -e $chaine
 
 # Souris {{{2
 
@@ -293,10 +293,6 @@ fi
 #  Téléphone {{{2
 
 psgrep kdeconnect || kdeconnect-indicator &
-
-# Capture d’écran {{{2
-
-#flameshot &
 
 # Message d’accueil {{{1
 

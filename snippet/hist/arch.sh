@@ -6,6 +6,10 @@ MANPAGER="nvim -c 'set ft=man' -u NORC -" h man
 VBoxManage controlvm freebsd-efi acpipowerbutton
 VBoxManage controlvm freebsd-efi poweroff
 VBoxManage startvm freebsd-efi
+acl=get ; getfacl README.org
+acl=restore ; setfacl -restore=acl.db
+acl=save ; getfacl -R --skip-base . > acl.db
+acl=set ; setfacl -m u:user_name:rw file
 adig archlinux.org
 alacritty -e bash -c "cat ~/log/clock.log ; read -p 'press enter to continue ...'"
 alarm-sensor.zsh +75 ++82 -30 7
@@ -16,6 +20,8 @@ archlinux-java set java-8-openjdk # sudo
 archlinux-java status
 aria2c -x 2 some-url
 aria2c mirrors-urls
+attr=list ; lsattr /etc/resolv.conf
+attre=change ; chattr +a ~/log/bidule.log
 avahi-browse --all --ignore-local --resolve --terminate
 avahi-discover
 avahi-resolve-host-name mandala.local
@@ -29,6 +35,10 @@ borgmatic init --encryption repokey
 borgmatic mount --repository usb-key --archive latest --mount-point ~/backup/mnt
 borgmatic umount --mount-point ~/backup/mnt
 cat /dev/sda | ssh remote-host 'cat > /dev/sda'
+cgroup=command ; sudo cgexec -g cpu:cpulimited COMMAND_1
+cgroup=create ; sudo cgcreate -g cpu:/cpulimited
+cgroup=set ; sudo cgset -r cpu.shares=512 cpulimited
+cgroups=top ; systemd-cgtop
 chanson=local && mpc -f "%file%"
 chattr +i /etc/resolv.conf
 cle=agent ; eval $(ssh-agent)
@@ -38,6 +48,8 @@ cle=gen ; ssh-keygen -t rsa -b 4096 -f ~/racine/config/cmdline/ssh/github/id_rsa
 cle=github ; ssh-add ~config/cmdline/ssh/github/id_rsa_github
 cle=liste ; ssh-add -l
 cle=ssh-local ; ssh-add ~/racine/config/cmdline/ssh/$HOST/id_rsa
+clipctl disable
+clipctl enable
 clocher=0 ; echo $clocher >! ~run/clock/clocher.etat ; cat ~run/clock/clocher.etat
 clone=tmux-tpm ; git clone https://github.com/tmux-plugins/tpm
 connmanctl
@@ -163,16 +175,18 @@ ionice -c 2 -n 7 ls
 ionice -c 3 ls
 ip addr
 ip link set wlan0 up
-joue=random-U ; y $(e ~aclassique/**/[P-Z]-* | shuf | head -n 1)
+joue=random-U ; y $(echo ~classique/**/[P-Z]-* | shuf | head -n 1)
 kitty=fonts ; kitty list-fonts
 lesskey -o ~/racine/built/less/key-natif.out ~/racine/config/visu/less/key-natif
 lignes=1 ; { date ; echo ; wc -l ~eclats2vers/grimoire/*.org ; echo ; wc -l ~site/backup/grimoire/*.org ; echo } >> lignes.log
 linux=command_line ; cat /proc/cmdline
 liste=infegalP-classique ; e ~/audio/Artistes/Classique/**/[P-Z]-*.* | shuf >! ~/racine/musica/list/infegal-P.m3u
+ln -snf target link
 log=firmware ; journalctl -kg 'loaded f'
 log=grep ; sudo journalctl -g sleep
 log=important ; sudo journalctl -r -b -0 -p 0..4
 log=kernel ; journalctl -k
+log=kernel-grep ; sudo journalctl -kg 'secure boot'
 log=syslog ; journalctl SYSLOG_FACILITY=1
 loginctl show-session
 loginctl terminate-user 1000
@@ -204,7 +218,6 @@ monte=diskext-sdb1 ; udevil mount /dev/sdb1 /media/diskext-sdb1
 monte=liseuse ; udevil mount /dev/sdb /media/liseuse
 monte=photo ; udevil mount /dev/sdb1 /media/photo
 monte=sdb1 ; udevil mount /dev/sdb1 /run/media/user_name/sdb1
-mount -t cifs //shari/export ~/mount/import/samba
 mount -t vboxsf -o uid=1000,gid=100 virtualbox-share /mnt # guest virtualbox, sudo
 mpd=start ; pgrep mpd || { rm -f ~/racine/music/mpd/pid ; mpd ~/racine/config/music/mpd.conf }
 mplayer=album ; mplayer $(print -l * | sort -t - -k 2)
@@ -239,7 +252,6 @@ pass otp totp/github.com/user_name
 pass otp uri -q totp/github.com/user_name
 pass show -c repository/gitter
 pass show artisan/soundcloud
-pdbedit -L -v
 pdftotext -layout *.pdf
 perl=var-tube ; perl -e '$a=qx(cat tags | grep spir) ; print $a'
 pgrep -af vim
@@ -261,6 +273,7 @@ print=enable ; cupsenable Officejet_5740
 print=modeles ; lpinfo -m L
 pssh -vi -H quigonjinn.local -H shari.local date
 pssh -vi -h ~config/cmdline/ssh/hotes date
+pstree
 pulseaudio=start ; pulseaudio --start
 pulseaudio=stop ; pulseaudio -k
 pv /dev/sda | ssh remote-host 'cat > /dev/sda'
@@ -277,7 +290,7 @@ qemu-system-x86_64 -m 2G -boot menu=on -usb -hdb /media/virtual/image.iso/TrueOS
 qrencode -o toto.jpg coucou
 qute=reddit ; gv $qute ~dotdir/qutebrowser/$HOST
 reflector --latest 12 --sort rate --save /etc/pacman.d/mirrorlist # arch, sudo
-renice -n 12 -p process_id
+renice -n 19 -p process_id
 restic find -r /media/cleusb/restic -s latest unison
 restic init -r sftp:user_name@shari.local:$HOME/backup/restic
 restic init -r ~/backup/restic
@@ -291,16 +304,17 @@ rfkill unblock wifi
 rm=yt ; rm -f *.(m4a|webm|mp4|flv|aif|opus)
 rs ~/audio /media/cleusb
 rs ~pack/aged/ /media/cleusb/archive
+samba=client ; smbclient //shari/user_name
+samba=list-users ; sudo pdbedit -L -v
+samba=liste-client ; smbclient -L shari
+samba=mount ; mount -t cifs //shari/export ~/mount/import/samba
+samba=password ; sudo smbpasswd user_name
+samba=password-add ; sudo smbpasswd -a user_name
 scp=tilde.institute ; scp book* Makefile user_name@tilde.institute:~
 senseurs=1 && sudo sensors && sudo hddtemp /dev/sda
 services=sockets ; sudo ss -tulpn | less
 signal=i3blocks-mpd ; k -36 $(pid i3blocks)
 signal=i3blocks-volume ; k -35 $(pid i3blocks)
-smbclient -L shari
-smbclient //shari/user_name
-smbpasswd -a user_name # sudo
-smbpasswd user_name # sudo
-sn ~syncron/cleusb/ /media/cleusb/syncron
 sox carillon-23-00{,-fade}.ogg fade h 0 -0 1.7
 sql=qute-history ; sqlite3 -line ~/.local/share/qutebrowser/history.sqlite 'select * from history' >>! ~archive/qutebrowser.history
 ssh -p 3022 user_name@localhost
@@ -308,11 +322,11 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub tixu.local
 ssh=bitbucket-info ; ssh git@bitbucket.org host_key_info
 ssh=ctrl-c.club ; ssh user_name@ctrl-c.club
 ssh=dao-efi ; ssh -p 2223 user_name@localhost
-ssh=fingerprint ; ssh-keygen -lf ~/racine/config/crypte/ssh/taijitu/id_rsa
-ssh=fingerprint_all ; for f in ~config/crypte/ssh/**/*.pub; do ssh-keygen -lf $f; done
+ssh=key-fingerprint ; ssh-keygen -lf ~/racine/config/crypte/ssh/taijitu/id_rsa
+ssh=key-fingerprint-all ; for f in ~config/crypte/ssh/**/*.pub; do ssh-keygen -lf $f; done
 ssh=laozu-efi ; rm ~/.ssh/known_hosts ; ssh -p 2223 user_name@localhost
 ssh=livingcomputers ; ssh menu@tty.livingcomputers.org
-ssh=new_comment ; ssh-keygen -c -f ~config/crypte/ssh/ctrl-c.club/id_rsa
+ssh=new-comment ; ssh-keygen -c -f ~config/crypte/ssh/ctrl-c.club/id_rsa
 ssh=reverse-tunnel ; ssh -R 0.0.0.0:8080:localhost:80 user@server
 ssh=reverse-tunnel ; ssh -R 8080:localhost:80 user@server
 ssh=reverse-tunnel ; ssh -R remote_addr:remote_port:local_addr:local_port user@gateway_addr
@@ -341,6 +355,9 @@ sudo -sE xterm
 sudo blkid /dev/sda1
 sudo fallocate -l 8G swapfile
 sudo locale-gen
+sudo systemctl enable nmb.service --now
+sudo systemctl enable smb.service --now
+sudo systemctl enable wsdd.service --now
 sudo vim /etc/locale.gen
 sudo=unlock ; faillock --user david --reset
 sync=cleusb ; sn ~syncron/cleusb/ /media/cleusb/syncron
@@ -353,12 +370,11 @@ sync=pack-essentiel ; sn -n ~pack/aged/*(/om[1]) /media/cleusb/archive
 sync=quigonjinn-auto ; unison remote $HOME ssh://user_name@quigonjinn.local//$HOME
 sync=tixu-auto ; unison remote $HOME ssh://user_name@tixu.local//$HOME
 systemctl --user import-environment DISPLAY
-systemctl enable nmb.service --now # sudo
-systemctl enable smb.service --now # sudo
-systemctl enable wsdd.service --now # sudo
 systemctl list-timers
 systemctl list-unit-filesys | grep enabled
 systemctl status org.cups.cupsd.service
+systemd-run --user --scope -p CPUQuota="20%" firefox
+systemd-run --user --slice=firefox.slice
 systemd=ntp-restart ; sudo systemctl stop ntpd.service ; sudo systemctl start ntpdate.service ; sudo systemctl start ntpd.service
 systemd=pulseaudio-restart ; pulseaudio=restart ; systemctl --user restart pulseaudio
 systemd=timer-mask ; sudo systemctl mask updatedb.timer

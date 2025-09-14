@@ -1,3 +1,6 @@
 #! /usr/bin/env sh
 
-clipmenud
+# see <url:~/racine/config/shell/zsh/zshenv#tn=CM_>
+# for configuration
+
+exec clipmenud

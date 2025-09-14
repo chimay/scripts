@@ -10,6 +10,7 @@ cpu_epb=12 ; sudo echo $cpu_epb | sudo tee /sys/devices/system/cpu/cpu*/power/en
 dbus=list ; busctl list
 sudo dinitctl enable avahi-daemon
 sudo dinitctl enable sshd
+sudo dinitctl restart dinit-user-spawn
 sudo pacman -S artix-archlinux-support
 sudo pacman -S avahi avahi-dinit nss-mdns
 sudo pacman -S pacman-contrib

@@ -1,8 +1,10 @@
 #! /usr/bin/env zsh
 
+# unmodified since N days
+
 delai_tres_court=${1:-7}
 delai_court=${2:-30}
-delai=${3:-100}
+delai=${3:-60}
 delai_long=${4:-120}
 delai_tres_long=${5:-360}
 
@@ -28,7 +30,7 @@ echo
 echo corbeille
 echo "____________________________________________________________"
 echo
-echo "trash-empty -f $delai_long"
+echo "trash-empty -f $delai_tres_court"
 echo
 
 trash-empty -f $delai_long
@@ -190,6 +192,56 @@ echo
 dusty=()
 
 dusty+=(mutt/**/*(.m+$delai))
+
+(( $#dusty > 0 )) && {
+	ls -l $dusty
+	echo
+	for element in $dusty
+	do
+		echo "trash-put $element"
+		trash-put $element
+	done
+}
+
+echo
+
+# clipmenu {{{1
+
+cd ~/racine/hist/clipmenu
+
+echo
+pwd
+echo "____________________________________________________________"
+echo
+
+dusty=()
+
+dusty+=(**/*(.m+$delai))
+
+(( $#dusty > 0 )) && {
+	ls -l $dusty
+	echo
+	for element in $dusty
+	do
+		echo "trash-put $element"
+		trash-put $element
+	done
+}
+
+echo
+
+# emacs native compilation cache {{{1
+
+cd ~/racine/dotdir/emacs.d/eln-cache
+
+echo
+pwd
+echo "____________________________________________________________"
+echo
+
+dusty=()
+
+dusty+=(**/*(.m+$delai_tres_long))
 
 (( $#dusty > 0 )) && {
 	ls -l $dusty
