@@ -43,10 +43,11 @@ chanson=local && mpc -f "%file%"
 chattr +i /etc/resolv.conf
 cle=agent ; eval $(ssh-agent)
 cle=change-pass ; ssh-keygen -p -f ~config/crypte/ssh/github/id_rsa_github
-cle=decharge ; ssh-add -d ~config/cmdline/ssh/github/id_rsa_github
+cle=clear ; ssh-add -D
+cle=clear-key ; ssh-add -d ~config/cmdline/ssh/github/id_rsa_github
 cle=gen ; ssh-keygen -t rsa -b 4096 -f ~/racine/config/cmdline/ssh/github/id_rsa_github_configuration
 cle=github ; ssh-add ~config/cmdline/ssh/github/id_rsa_github
-cle=liste ; ssh-add -l
+cle=list ; ssh-add -l
 cle=ssh-local ; ssh-add ~/racine/config/cmdline/ssh/$HOST/id_rsa
 clipctl disable
 clipctl enable
