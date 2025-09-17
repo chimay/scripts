@@ -41,20 +41,13 @@ cgroup=set ; sudo cgset -r cpu.shares=512 cpulimited
 cgroups=top ; systemd-cgtop
 chanson=local && mpc -f "%file%"
 chattr +i /etc/resolv.conf
-cle=agent ; eval $(ssh-agent)
-cle=change-pass ; ssh-keygen -p -f ~config/crypte/ssh/github/id_rsa_github
-cle=clear ; ssh-add -D
-cle=clear-key ; ssh-add -d ~config/cmdline/ssh/github/id_rsa_github
-cle=gen ; ssh-keygen -t rsa -b 4096 -f ~/racine/config/cmdline/ssh/github/id_rsa_github_configuration
-cle=github ; ssh-add ~config/cmdline/ssh/github/id_rsa_github
-cle=list ; ssh-add -l
-cle=ssh-local ; ssh-add ~/racine/config/cmdline/ssh/$HOST/id_rsa
 clipctl disable
 clipctl enable
 clocher=0 ; echo $clocher >! ~run/clock/clocher.etat ; cat ~run/clock/clocher.etat
 clone=tmux-tpm ; git clone https://github.com/tmux-plugins/tpm
 connmanctl
 convert *paques*.png p2a-paques.pdf
+copytree=find-cpio ; find ~/racine/plain | cpio -pmud ~/Downloads/plain
 coredumpctl info nvim
 cp=derniers ; cp **/*(.m-7) /media/cleusb/syncron
 cpu=cur_freq ; watch cat /sys/devices/system/cpu/cpu[0-9]*/cpufreq/scaling_cur_freq
@@ -102,6 +95,8 @@ file --mime-type Bonhomme_hiver_2018.docx
 find ~/photo -type f -links +1 L
 find ~/photo -type f -printf '%n %p\n' | awk '$1 > 1 {$1="";print}'
 find ~/photo -type f \! -links 1 L
+find=fd-glob ; fd -g '*' ~/racine/plain
+find=fd-glob-full-path ; fd -gp '**' ~/racine/plain
 firmware=dmesg ; sudo dmesg | grep -i firmware
 fondecran=1 ; killall fond-ecran.zsh ; sleep 1 ; fond-ecran.zsh 12 120 ~/graphix/list/wallpaper.gen >>! ~/log/fond-ecran.log &!
 fondecran=1 ; pkill fond-ecran.zsh ; sleep 1 ; fond-ecran.zsh 12 84 ~/graphix/list/wallpaper.gen >>! ~/log/fond-ecran.log &!
@@ -144,7 +139,8 @@ git=set-default-remote ; git push --set-upstream codeberg master
 git=set-default-remote-codeberg ; git push -u codeberg --all
 git_rm_file=file ; git filter-repo --path-match $git_rm_file --invert-paths
 gopher=1 ; lynx gopher://gopher.floodgap.com/1/world/
-gpg --edit-key user_name@mail_server.com
+gpg --edit-key name_or_mail
+gpg --full-generate-key
 gpg --list-keys
 gpg --list-secret-keys
 gpg --list-sigs
@@ -340,6 +336,15 @@ ssh=tunnel ; ssh -L local_port:remote_addr:remote_port user@sshd_addr
 ssh=tunnel ; ssh -L localhost:8080:localhost:80 user@server
 ssh=virtual ; rm -f ~/.ssh/known_hosts ; ssh -p 3022 user_name@localhost
 ssh=virtual-root ; rm -f ~/.ssh/known_hosts ; ssh -p 3022 root@localhost
+ssh_key=agent ; eval $(ssh-agent)
+ssh_key=change-pass ; ssh-keygen -p -f ~config/crypte/ssh/github/id_rsa_github
+ssh_key=clear ; ssh-add -D
+ssh_key=clear-key ; ssh-add -d ~config/cmdline/ssh/github/id_rsa_github
+ssh_key=gen ; ssh-keygen -t ed25519 -C user@machine -a 30 -f ~/.ssh/id_ed25519
+ssh_key=github ; ssh-add ~config/cmdline/ssh/github/id_rsa_github
+ssh_key=list ; ssh-add -l
+ssh_key=ssh-local ; ssh-add ~/racine/config/cmdline/ssh/$HOST/id_rsa
+ssh_key=unauthorize ; sed -i.bak '/REGEX_MATCHING_KEY/d' ~/.ssh/authorized_keys
 sshfs=demonte ; fusermount -u ~/mount/import/sshfs
 sshfs=laozu ; sshfs laozu.local:$HOME ~/mount/import/sshfs
 sshfs=monte ; sshfs shari.local:$HOME ~/mount/import/sshfs

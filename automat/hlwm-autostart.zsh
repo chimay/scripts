@@ -136,7 +136,7 @@ xcape -e $chaine
 
 # Souris {{{2
 
-psgrep unclutter || unclutter -display :0.0 -root -jitter 7 -idle 5 &
+psgrep unclutter || unclutter --display :0.0 --root --jitter 7 --timeout 5 &
 
 # Stockage {{{2
 
