@@ -143,7 +143,7 @@ do
 	}
 
 	(( maximum >= chaud )) && {
-		cpu-save
+		#cpu-save
 		echo "player $volume ~/audio/bell/notification/cpu-chaud.ogg"
 		echo
 		player $volume ~/audio/bell/notification/cpu-chaud.ogg

@@ -2,7 +2,7 @@
 
 # vim: set filetype=zsh:
 
-# {{{ Options
+# Options {{{1
 
 emulate -R zsh
 
@@ -19,8 +19,6 @@ unsetopt case_glob
 
 #zmodload zsh/regex
 
-# }}}
-
 # Fonctions {{{1
 
 echoerr () {
@@ -30,8 +28,6 @@ echoerr () {
 echoerr-lignes () {
 	print -l "$@" >&2
 }
-
-# }}}1
 
 # Initialisation {{{1
 
@@ -43,16 +39,12 @@ prereper=$PWD
 
 filtre='(.)'
 
-# }}}1
-
 # Affichage {{{1
 
 echoerr "=========================================="
 echoerr " " $(date +"%H : %M %A %d %B %Y")
 echoerr "=========================================="
 echoerr
-
-# }}}1
 
 # Scores {{{1
 
@@ -95,9 +87,7 @@ done
 # done
 # echoerr
 
-# }}}1
-
-# {{{ Arguments
+# Arguments {{{1
 
 numarg=$#
 
@@ -134,8 +124,6 @@ done
 
 (( $#nombres > 0 )) && dispersion=$nombres[1]
 (( $#autres > 0 )) && principal=$autres[1]
-
-# }}}
 
 # Aide {{{1
 
@@ -195,8 +183,6 @@ done
 	echo "The more you raise the dispersion, the more shuffled priorities will be."
 	exit 0
 }
-
-# }}}1
 
 # Lecture meta {{{1
 
@@ -370,8 +356,6 @@ echoerr
 echoerr-lignes $force
 echoerr
 
-# }}}1
-
 # Conversion glob -> fichiers {{{1
 
 echoerr Glob pattern conversion
@@ -422,16 +406,12 @@ liste=(${(ou)liste})
 # echoerr-lignes $liste
 # echoerr
 
-# }}}1
-
 # Nombres aléatoires {{{1
 
 echoerr Random numbers generation
 echoerr
 
 alea=($(random.zsh 0.0 $dispersion $#liste))
-
-# }}}1
 
 # Tri de la liste {{{1
 
@@ -471,5 +451,3 @@ do
 done | sort -k 1,1 -gr > $complet
 
 cut -d ' ' -f 2 $complet > $genere
-
-# }}}1

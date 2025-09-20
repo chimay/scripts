@@ -17,7 +17,7 @@ echo
 packages=(
 	linux linux-lts linux-firmware
 	acpi acpid
-	network-manager-applet openssh
+	network-manager-applet openssh sshfs
 	rsync rclone unison syncthing kdeconnect
 	borg restic
 	avahi nss-mdns

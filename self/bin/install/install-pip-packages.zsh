@@ -26,6 +26,8 @@ packages=(
 	readability
 	wptranslate
 	eg
+	zxcvbn pyaml
+	mausoleum
 )
 
 echo "pip install --upgrade $=packages"

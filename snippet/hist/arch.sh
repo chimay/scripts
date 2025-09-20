@@ -3,6 +3,9 @@
 CC=/usr/bin/gcc pip install --user --upgrade pip
 GTK_THEME=Adwaita:dark yad --about
 MANPAGER="nvim -c 'set ft=man' -u NORC -" h man
+pass=tomb-create ; pass tomb -vf my_key_id
+pass=open ; pass open -vf -t 4h
+pass=close ; pass open -v
 VBoxManage controlvm freebsd-efi acpipowerbutton
 VBoxManage controlvm freebsd-efi poweroff
 VBoxManage startvm freebsd-efi
@@ -22,6 +25,7 @@ aria2c -x 2 some-url
 aria2c mirrors-urls
 attr=list ; lsattr /etc/resolv.conf
 attre=change ; chattr +a ~/log/bidule.log
+aur=clone ; git clone https://aur.archlinux.org/yay.git
 avahi-browse --all --ignore-local --resolve --terminate
 avahi-discover
 avahi-resolve-host-name mandala.local
@@ -249,6 +253,7 @@ pass otp totp/github.com/user_name
 pass otp uri -q totp/github.com/user_name
 pass show -c repository/gitter
 pass show artisan/soundcloud
+pass=export-keepassxc ; pimport keepassxc password-store
 pdftotext -layout *.pdf
 perl=var-tube ; perl -e '$a=qx(cat tags | grep spir) ; print $a'
 pgrep -af vim
