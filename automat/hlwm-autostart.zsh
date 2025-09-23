@@ -14,6 +14,16 @@ source ~/racine/config/cmdline/zsh/zprofile
 
 HOST=$(hostname -s) || HOST=$(hostname)
 
+UID=$(id -u)
+rundir=/run/user/$UID
+
+if [ -d $rundir ]
+then
+	mpv_socket=$rundir/mpv-socket
+else
+	mpv_socket=~/racine/run/socket/mpv
+fi
+
 # Alias {{{1
 
 alias psgrep='ps auxww | grep -v grep | grep --color=never'
@@ -94,11 +104,11 @@ fi
 
 # Services {{{1
 
-# Écran {{{2
+# Screen {{{2
 
 psgrep redshift-gtk || run-redshift.sh &
 
-# Clavier {{{2
+# Keybord {{{2
 
 # Bindings clavier & souris
 
@@ -134,11 +144,11 @@ chaine+='Shift_R=Shift_L|question'
 
 xcape -e $chaine
 
-# Souris {{{2
+# Mouse {{{2
 
 psgrep unclutter || unclutter --display :0.0 --root --jitter 7 --timeout 5 &
 
-# Stockage {{{2
+# Storage {{{2
 
 # udiskie --no-automount --notify --tray >>! ~/log/udiskie.log 2>&1 &
 
@@ -149,7 +159,7 @@ then
 	psgrep load_cycle_fix || load_cycle_fix.sh >>! ~/log/load_cycle_fix.log 2>&1 &
 fi
 
-#  Batterie {{{2
+#  Battery {{{2
 
 if [ $HOST = quigonjinn ]
 then
@@ -157,7 +167,7 @@ else
 	psgrep alarm-battery.zsh || alarm-battery.zsh 30 15 5 60 >>! ~/log/alarm-battery.log 2>&1 &
 fi
 
-# Mémoire {{{2
+# Mémory {{{2
 
 psgrep alarm-memory.zsh || alarm-memory.zsh 7 >>! ~/log/alarm-memory.log 2>&1 &
 
@@ -193,7 +203,7 @@ psgrep polkit-gnome-authentication-agent || \
 psgrep gnome-keyring-daemon || \
 	eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
 
-#  Réseau {{{2
+#  Network {{{2
 
 psgrep nm-applet || nm-applet &
 
@@ -224,7 +234,7 @@ psgrep urxvtd || urxvtd -q -o -f
 # psgrep nvim || run-neovim-server.sh &
 # psgrep kak || run-kak-server.sh &
 
-# Presse-papier {{{2
+# Clipboard {{{2
 
 psgrep clipmenud || run-clipmenud.sh &
 
@@ -235,7 +245,7 @@ psgrep clipmenud || run-clipmenud.sh &
 
 log-notifications.bash ~/log/notifications.log &
 
-# Rappels {{{2
+# Reminder {{{2
 
 psgrep remind-server || {
 	remind-server.zsh ~/racine/config/organizer/remind/reminders 5 >>! ~/log/remind.log 2>&1 &
@@ -245,32 +255,32 @@ psgrep remind-server || {
 
 psgrep picom || picom >>! ~/log/picom.log 2>&1 &
 
-# Musique {{{2
+# Music {{{2
 
-[ -S ~/racine/run/socket/mpv ] || rm -f ~/racine/run/socket/mpv
+[ -S $mpv_socket ] || rm -f $mpv_socket
 
 psgrep 'mpv --idle --input-ipc-server' || \
 	mpv \
 	--idle \
-	--input-ipc-server=$HOME/racine/run/socket/mpv \
+	--input-ipc-server=$mpv_socket \
 	>>! ~/log/mpv-socket.log 2>&1 &!
 
 psgrep mpd || { rm -f ~/racine/run/mpd/pid ; mpd ~/racine/config/multimedia/mpd.conf }
 
 psgrep timidity || run-timidity-server.sh
 
-#  Horloge {{{2
+#  Clock {{{2
 
 if [ $HOST = taijitu -o $HOST = mandala  ]
 then
 	psgrep clock || clock.zsh ~/racine/run/clock/clock.status >>! ~/log/clock.log 2>&1 &
 fi
 
-# Synchronisation {{{2
+# Synchronization {{{2
 
 psgrep syncthing || syncthing.sh &
 
-# Téléchargements {{{2
+# Downloads {{{2
 
 # dad runs :
 # aria2c --daemon --enable-rpc --continue --dir ~/racine/gate/download --input-file ~/.local/share/diana.session --save-session ~/.local/share/diana.session

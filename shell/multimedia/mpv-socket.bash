@@ -17,9 +17,17 @@
 # You can start an mpv server in the autostart script of your
 # X environment with a line like this :
 #
-# mpv --idle --input-ipc-server=$HOME/racine/run/socket/mpv &> ~/log/mpv-socket.log &
+# mpv --idle --input-ipc-server=/run/user/$UID/mpv-socket &> ~/log/mpv-socket.log &
 
-socket="$HOME/racine/run/socket/mpv"
+UID=$(id -u)
+rundir=/run/user/$UID
+
+if [ -d $rundir ]
+then
+	socket=$rundir/mpv-socket
+else
+	socket=~/racine/run/socket/mpv
+fi
 
 mpv-msg() {
     # JSON preamble.

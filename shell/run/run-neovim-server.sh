@@ -1,5 +1,15 @@
 #! /usr/bin/env sh
 
+UID=$(id -u)
+rundir=/run/user/$UID
+
+if [ -d $rundir ]
+then
+	socket=$rundir/neovim-socket
+else
+	socket=~/racine/run/socket/neovim
+fi
+
 pgrep nvim > ~/log/psgrep.log 2>&1 && {
 	echo 'neovim is already started'
 	echo
@@ -21,4 +31,4 @@ pgrep nvim > ~/log/psgrep.log 2>&1 && {
 	echo
 } >> ~/log/neovim-server.log 2>&1
 
-exec nvim --listen ~/racine/run/socket/neovim --headless >> ~/log/neovim-server.log 2>&1
+exec nvim --listen $socket --headless >> ~/log/neovim-server.log 2>&1

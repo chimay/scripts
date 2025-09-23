@@ -31,11 +31,11 @@ sudo pacman -Syy
 
 # new keys {{{1
 
-sudo pacman -S artix-keyring archlinux-keyring
+sudo pacman -S --needed artix-keyring archlinux-keyring
 
 # update {{{1
 
-sudo pacman -Syyu
+sudo pacman -Su
 
 # playing {{{1
 

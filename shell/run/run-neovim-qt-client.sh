@@ -2,17 +2,27 @@
 
 xdotool search --class nvim-qt windowactivate && exit 0
 
+UID=$(id -u)
+rundir=/run/user/$UID
+
+if [ -d $rundir ]
+then
+	socket=$rundir/neovim-socket
+else
+	socket=~/racine/run/socket/neovim
+fi
+
 #	--no-ext-tabline \
 #	--geometry 1200x700 \
 
 # exec nvim-qt \
 # 	--nofork \
-# 	--server ~/racine/run/socket/neovim \
+# 	--server $socket \
 # 	-- \
 # 	"$@" >> ~/log/neovim-qt-client.log 2>&1
 
 nvim-qt \
-	--server ~/racine/run/socket/neovim \
+	--server $socket \
 	-- \
 	"$@" >> ~/log/neovim-qt-client.log 2>&1
 

@@ -3,9 +3,6 @@
 CC=/usr/bin/gcc pip install --user --upgrade pip
 GTK_THEME=Adwaita:dark yad --about
 MANPAGER="nvim -c 'set ft=man' -u NORC -" h man
-pass=tomb-create ; pass tomb -vf my_key_id
-pass=open ; pass open -vf -t 4h
-pass=close ; pass open -v
 VBoxManage controlvm freebsd-efi acpipowerbutton
 VBoxManage controlvm freebsd-efi poweroff
 VBoxManage startvm freebsd-efi
@@ -253,7 +250,10 @@ pass otp totp/github.com/user_name
 pass otp uri -q totp/github.com/user_name
 pass show -c repository/gitter
 pass show artisan/soundcloud
+pass=close ; pass open -v
 pass=export-keepassxc ; pimport keepassxc password-store
+pass=open ; pass open -vf -t 4h
+pass=tomb-create ; pass tomb -vf my_key_id
 pdftotext -layout *.pdf
 perl=var-tube ; perl -e '$a=qx(cat tags | grep spir) ; print $a'
 pgrep -af vim
@@ -369,6 +369,11 @@ sudo locale-gen
 sudo systemctl enable nmb.service --now
 sudo systemctl enable smb.service --now
 sudo systemctl enable wsdd.service --now
+sudo timeshift --create --comments "comment"
+sudo timeshift --delete --snapshot "snapshot"
+sudo timeshift --delete
+sudo timeshift --list
+sudo timeshift --restore --snapshot "snapshot"
 sudo vim /etc/locale.gen
 sudo=unlock ; faillock --user david --reset
 sync=cleusb ; sn ~syncron/cleusb/ /media/cleusb/syncron
@@ -399,7 +404,6 @@ timedatectl list-timezones
 timedatectl set-ntp true
 timedatectl show-timesync --all
 timedatectl timesync-status
-timeshift --list # sudo
 tmux kill-session -t 0
 tmux=start ; systemctl --user start tmux
 tmux=stop ; systemctl --user start tmux

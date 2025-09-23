@@ -38,11 +38,11 @@ sudo pacman -Syy
 
 # new keys {{{1
 
-sudo pacman -S archlinux-keyring
+sudo pacman -S --needed archlinux-keyring
 
 # update {{{1
 
-sudo pacman -Syyu
+sudo pacman -Su
 
 # playing {{{1
 

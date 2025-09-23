@@ -19,7 +19,7 @@ packages=(
 	acpi acpid
 	network-manager-applet openssh sshfs
 	rsync rclone unison syncthing kdeconnect
-	borg restic
+	borg python-pyfuse3 restic fuse2
 	avahi nss-mdns
 	zsh tmux fzf
 	calc bc

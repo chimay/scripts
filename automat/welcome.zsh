@@ -2,7 +2,7 @@
 
 # vim: set filetype=zsh:
 
-while ! [ -S ~/racine/run/socket/mpv ]
+while ! [ -S /run/user/$(id -u)/mpv-socket ]
 do
 	echo "Accueil : waiting"
 	echo
