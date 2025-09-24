@@ -37,7 +37,7 @@ packages=(
 	polybar
 	rofi dmenu zenity
 	dunst picom xdotool wmctrl xclip xsel
-	feh sxiv vimiv i3lock
+	feh sxiv vimiv exiv2 i3lock
 	xfce4
 	neomutt
 	qutebrowser firefox
