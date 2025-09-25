@@ -4,6 +4,8 @@
 # contains paths relative to home directory
 cd || exit 0
 
+# see also <url:~/racine/config/shell/zsh/zshenv#tn=RESTIC_PASSWORD_COMMAND>
+
 repo=${1:-$RESTIC_REPOSITORY}
 
 [ $# -gt 0 ] && shift
