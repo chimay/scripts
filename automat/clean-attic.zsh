@@ -27,7 +27,7 @@ echo
 
 # trash bin {{{1
 
-echo corbeille
+echo trash
 echo "____________________________________________________________"
 echo
 echo "trash-empty -f $delai_tres_court"
@@ -189,19 +189,13 @@ pwd
 echo "____________________________________________________________"
 echo
 
-dusty=()
-
-dusty+=(mutt/**/*(.m+$delai))
-
-(( $#dusty > 0 )) && {
-	ls -l $dusty
+for element in **/*(.m+$delai_court)
+do
+	ls -l $element
 	echo
-	for element in $dusty
-	do
-		echo "trash-put $element"
-		trash-put $element
-	done
-}
+	echo "trash-put $element"
+	trash-put $element
+done
 
 echo
 

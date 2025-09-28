@@ -27,7 +27,7 @@ do
 
 	echo "vim -u NONE +'helptags doc' +q"
 	echo
-	vim +'helptags doc' +q
+	vim -u NONE +'helptags doc' +q
 
 	cd -
 done

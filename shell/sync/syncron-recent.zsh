@@ -31,12 +31,27 @@ unsetopt null_glob
 delai=${1:-91}
 recent=${2:-~/racine/syncron/recent}
 
-alias syncron='rsync --verbose --progress --human-readable --itemize-changes \
-	--rsh=ssh \
-	--recursive --delete-during \
-	--owner --group --times --perms --links \
-	--exclude-from=$HOME/racine/common/sync/rsync-exclude \
-	--update'
+syncron () {
+	rsync \
+		--verbose \
+		--progress \
+		--stats \
+		--human-readable \
+		--itemize-changes \
+		--log-file="$HOME/log/rsync.log" \
+		--rsh=ssh \
+		--recursive \
+		--delete-during \
+		--modify-window=1 \
+		--owner \
+		--group \
+		--times \
+		--perms \
+		--links \
+		--exclude-from=$HOME/racine/common/sync/rsync-exclude \
+		--update \
+		"$@"
+}
 
 cd ~/racine
 
