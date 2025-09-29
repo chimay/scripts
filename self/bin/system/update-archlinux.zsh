@@ -66,4 +66,5 @@ sudo pacman -Fy
 
 # reset keyboard to custom layout {{{1
 
+setxkbmap be
 xmodmap ~/racine/config/windenv/xmodmap/belge-meta-super-hyper

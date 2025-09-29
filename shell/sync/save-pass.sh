@@ -51,6 +51,10 @@ tomb list || {
 	pass open -vf || exit 1
 }
 
+# crypte directory {{{1
+
+cd ~/racine/config/crypte
+
 # backup password-store {{{1
 
 syncron ~/.password-store/ password-store-tomb
@@ -60,8 +64,6 @@ syncron ~/.password-store/ password-store-tomb
 pass close -v || exit 1
 
 # backup tomb and key {{{1
-
-cd ~/racine/config/crypte
 
 copyforce password.tomb password.tomb.bak
 copyforce password.tomb.key password.tomb.key.bak
