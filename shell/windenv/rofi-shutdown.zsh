@@ -25,6 +25,10 @@ sync -f $HOME
 
 [[ $choix = Veille ]] && {
 	certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
+	pgrep -f freetube >! ~/log/pgrep.log 2>&1 && {
+		zenity --info --no-wrap --text "freetube is running, please stop it first"
+		exit 1
+	}
 	[[ $certain = Oui ]] && {
 		echo "$powerctl suspend"
 		echo

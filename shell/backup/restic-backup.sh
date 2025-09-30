@@ -17,7 +17,7 @@ echo
 restic \
 	-r "$repo" \
 	backup \
-	--verbose=1 \
+	--verbose=2 \
 	--files-from ~/racine/index/backup/restic/include \
 	--exclude-file ~/racine/index/backup/restic/exclude \
 	"$@" | tee -a ~/log/restic.log
