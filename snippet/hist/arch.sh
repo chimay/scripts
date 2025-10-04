@@ -186,6 +186,7 @@ log=important ; sudo journalctl -r -b -0 -p 0..4
 log=kernel ; journalctl -k
 log=kernel-grep ; sudo journalctl -kg 'secure boot'
 log=syslog ; journalctl SYSLOG_FACILITY=1
+loginctl session-status
 loginctl show-session
 loginctl terminate-user 1000
 lp=duplex-paysage ; lp -o number-up=2 -o Duplex=DuplexTumble
@@ -339,6 +340,7 @@ ssh=tunnel ; ssh -L 8080:localhost:80 user@server
 ssh=tunnel ; ssh -L local_addr:local_port:remote_addr:remote_port user@sshd_addr
 ssh=tunnel ; ssh -L local_port:remote_addr:remote_port user@sshd_addr
 ssh=tunnel ; ssh -L localhost:8080:localhost:80 user@server
+ssh=tunnel-syncthing ; command ssh -L "8385:localhost:8384" taijitu.local
 ssh=virtual ; rm -f ~/.ssh/known_hosts ; ssh -p 3022 user_name@localhost
 ssh=virtual-root ; rm -f ~/.ssh/known_hosts ; ssh -p 3022 root@localhost
 ssh_key=agent ; eval $(ssh-agent)
@@ -370,8 +372,8 @@ sudo systemctl enable nmb.service --now
 sudo systemctl enable smb.service --now
 sudo systemctl enable wsdd.service --now
 sudo timeshift --create --comments "comment"
-sudo timeshift --delete --snapshot "snapshot"
 sudo timeshift --delete
+sudo timeshift --delete --snapshot "snapshot"
 sudo timeshift --list
 sudo timeshift --restore --snapshot "snapshot"
 sudo vim /etc/locale.gen

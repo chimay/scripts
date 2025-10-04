@@ -16,18 +16,23 @@ echo
 
 packages=(
 	linux linux-lts linux-firmware
+	coreutils
 	acpi acpid
 	network-manager-applet openssh sshfs
+	ttf-dejavu
 	rsync rclone unison syncthing kdeconnect
 	borg python-pyfuse3 restic fuse2 fuse3
 	avahi nss-mdns
 	zsh tmux fzf
+	xterm rxvt-unicode kitty alacritty xfce4-terminal
+	less most bat
 	calc bc
 	git lazygit
 	trash-cli
-	xterm rxvt-unicode kitty alacritty
 	gvim neovim neovim-qt emacs
-	vifm yazi
+	vifm yazi gvfs
+	thunar thunar-volman thunar-vcs-plugin
+	thunar-archive-plugin thunar-media-tags-plugin
 	tree ncdu dfc socat
 	atools zip unzip
 	dialog
@@ -37,12 +42,12 @@ packages=(
 	polybar
 	rofi dmenu zenity
 	dunst picom xdotool wmctrl xclip xsel
-	feh sxiv vimiv exiv2 i3lock
+	feh sxiv vimiv exiv2 libwebp-utils i3lock
 	xfce4
 	neomutt
 	qutebrowser firefox
 	alsa-utils pipewire wireplumber
-	pulsemixer pamixer ncpamixer
+	pulsemixer pamixer
 	mpv mplayer
 	lilypond timidity fluidsynth soundfont-fluid
 	acpi cpupower turbostat thermald
@@ -57,7 +62,6 @@ case $distribution in
 			networkmanager
 			pacman-contrib
 			pacutils pkgfile expac
-			ttf-dejavu ttf-nerd-fonts-symbol
 			pipewire-pulse
 			freepats-general-midi
 			arch-wiki-docs arch-wiki-lite
@@ -76,11 +80,10 @@ case $distribution in
 			networkmanager
 			pacman-contrib
 			pacutils pkgfile expac
-			ttf-dejavu ttf-nerd-fonts-symbol
-			dinit-user-spawn
 			pipewire-pulse
 			freepats-general-midi
 			arch-wiki-docs arch-wiki-lite
+			dinit-user-spawn
 			zramen zramen-dinit
 			thermald-dinit
 		)
@@ -111,7 +114,6 @@ case $distribution in
 			zsh tmux fd-find ripgrep fzf perl5
 			git lazygit
 			py311-trash-cli
-			xterm rxvt-unicode kitty alacritty
 			vim vim-gtk3 neovim neovim-qt
 			vifm yazi
 			tree ncdu dfc socat
