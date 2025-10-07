@@ -2,7 +2,7 @@
 
 # vim: set filetype=zsh:
 
-# {{{ Options
+# Options {{{1
 
 emulate -R zsh
 
@@ -18,8 +18,6 @@ zmodload -i zsh/mathfunc
 
 #zmodload zsh/regex
 
-# }}}
-
 # Initialisation {{{1
 
 facteur=1.224
@@ -28,9 +26,7 @@ float moyenne=0.0
 float ecart=$facteur
 integer taille=1
 
-# }}}1
-
-# {{{ Arguments
+# Arguments {{{1
 
 numarg=$#
 
@@ -74,8 +70,6 @@ done
 (( $#nombres > 1 )) && (( ecart = facteur * nombres[2] ))
 (( $#nombres > 2 )) && taille=$nombres[3]
 
-# }}}
-
 # Aide {{{1
 
 [ $numarg -eq 0 -o $aide -eq 1 ] && {
@@ -90,8 +84,6 @@ done
 	exit 0
 }
 
-# }}}1
-
 # Fractions {{{1
 
 float ind frac
@@ -105,8 +97,6 @@ do
 	fractions+=$frac
 	complemen+=$(( 1 - $frac ))
 done
-
-# }}}1
 
 # Fonctions {{{1
 
@@ -133,8 +123,6 @@ lineaire () {
 
 functions -M lineaire 0 2
 
-# }}}2
-
 # Puissances de 2 {{{2
 
 exponen () {
@@ -158,8 +146,6 @@ exponen () {
 
 functions -M exponen 0 2
 
-# }}}2
-
 # Moyenne & Écart-type observés {{{2
 
 moyenne-ecart () {
@@ -180,8 +166,6 @@ moyenne-ecart () {
 	echo "Deviation : $dev"
 	echo
 }
-
-# }}}2
 
 # Histogramme {{{2
 
@@ -217,9 +201,6 @@ histogramme () {
 	done
 }
 
-# }}}2
-
-# }}}1
 
 # Échantillon {{{1
 
@@ -231,8 +212,6 @@ do
 	echantillon+=$((exponen(moyenne, ecart)))
 done
 
-# }}}1
-
 # Résumé & Histogramme {{{1
 
 if [ $summary -gt 0 ]
@@ -243,4 +222,3 @@ else
 	print -l $echantillon
 fi
 
-# }}}1
