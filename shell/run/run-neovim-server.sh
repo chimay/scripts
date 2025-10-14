@@ -1,7 +1,9 @@
 #! /usr/bin/env sh
 
-UID=$(id -u)
-rundir=/run/user/$UID
+#UID=$(id -u)
+#rundir=/run/user/$UID
+
+rundir=$XDG_RUNTIME_DIR
 
 if [ -d $rundir ]
 then

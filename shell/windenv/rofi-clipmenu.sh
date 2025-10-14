@@ -5,7 +5,7 @@
 # for configuration
 
 #export CM_DIR=~/racine/hist/clipmenu
-export CM_DIR=~/clipmenu
+export CM_DIR=~/run/clipmenu
 
 export CM_HISTLENGTH=17
 export CM_LAUNCHER=rofi

@@ -1,5 +1,20 @@
 #! /usr/bin/env zsh
 
+pgrep -f freetube >! ~/log/pgrep.log 2>&1 && {
+	zenity --info --no-wrap --text "freetube is running, please stop it first"
+	exit 1
+}
+
+pgrep -f helium >! ~/log/pgrep.log 2>&1 && {
+	zenity --info --no-wrap --text "helium is running, please stop it first"
+	exit 1
+}
+
+pgrep -f waterfox >! ~/log/pgrep.log 2>&1 && {
+	zenity --info --no-wrap --text "waterfox is running, please stop it first"
+	exit 1
+}
+
 menu=(Annuler Veille Hiberner Éteindre)
 
 confirmation=(
@@ -25,10 +40,6 @@ sync -f $HOME
 
 [[ $choix = Veille ]] && {
 	certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
-	pgrep -f freetube >! ~/log/pgrep.log 2>&1 && {
-		zenity --info --no-wrap --text "freetube is running, please stop it first"
-		exit 1
-	}
 	[[ $certain = Oui ]] && {
 		echo "$powerctl suspend"
 		echo

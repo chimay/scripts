@@ -2,8 +2,10 @@
 
 xdotool search --class nvim-qt windowactivate && exit 0
 
-UID=$(id -u)
-rundir=/run/user/$UID
+#UID=$(id -u)
+#rundir=/run/user/$UID
+
+rundir=$XDG_RUNTIME_DIR
 
 if [ -d $rundir ]
 then

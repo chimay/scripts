@@ -5,7 +5,7 @@
 # for configuration
 
 #export CM_DIR=~/racine/hist/clipmenu
-export CM_DIR=~/clipmenu
+export CM_DIR=~/run/clipmenu
 
 export CM_MAX_CLIPS=3000
 export CM_SELECTIONS="clipboard primary secondary"

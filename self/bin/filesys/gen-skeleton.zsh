@@ -29,6 +29,9 @@ echo "#!/usr/bin/env zsh" >| $script
 	echo "[ -d ~/log ] || echo mkdir ~/log"
 	echo "[ -d ~/log ] || mkdir ~/log"
 	echo
+	echo "[ -d ~/run ] || echo mkdir ~/run"
+	echo "[ -d ~/run ] || mkdir ~/run"
+	echo
 	echo "[ -d ~/racine ] || echo mkdir ~/racine"
 	echo "[ -d ~/racine ] || mkdir ~/racine"
 	echo
@@ -101,6 +104,31 @@ echo "#!/usr/bin/env zsh" >| $script
 
 {
 	cd ~/log
+
+	for dossier in **/*(/)
+	do
+		[[ $dossier =~ ' ' ]] && continue
+		echo "[ -d $dossier ] || echo mkdir $dossier"
+		echo "[ -d $dossier ] || mkdir $dossier"
+	done
+
+	echo
+
+} >> $script
+
+# Vers run {{{1
+
+{
+	echo "echo cd ~/run"
+	echo "cd ~/run"
+	echo
+
+} >> $script
+
+# Dossiers dans run {{{1
+
+{
+	cd ~/run
 
 	for dossier in **/*(/)
 	do

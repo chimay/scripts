@@ -21,7 +21,7 @@ if [ -d $rundir ]
 then
 	mpv_socket=$rundir/mpv-socket
 else
-	mpv_socket=~/racine/run/socket/mpv
+	mpv_socket=~/run/socket/mpv
 fi
 
 # Alias {{{1
@@ -32,7 +32,7 @@ alias psgrep='ps auxww | grep -v grep | grep --color=never'
 
 #  Fond d’écran {{{2
 
-psgrep wallpaper.zsh || wallpaper.zsh ~/racine/run/wall/wallpaper.status >>! ~/log/wallpaper.log 2>&1 &
+psgrep wallpaper.zsh || wallpaper.zsh ~/run/wall/wallpaper.status >>! ~/log/wallpaper.log 2>&1 &
 
 #  Dock {{{2
 
@@ -273,7 +273,7 @@ psgrep timidity || run-timidity-server.sh
 
 if [ $HOST = taijitu -o $HOST = mandala  ]
 then
-	psgrep clock || clock.zsh ~/racine/run/clock/clock.status >>! ~/log/clock.log 2>&1 &
+	psgrep clock || clock.zsh ~/run/clock/clock.status >>! ~/log/clock.log 2>&1 &
 fi
 
 # Synchronization {{{2
