@@ -143,7 +143,7 @@ sudo freebsd-update install
 sudo git clone https://git.freebsd.org/ports.git --branch main /usr/ports
 sudo gitup ports
 sudo gpart bootcode -b /mnt/boot/pmbr -p /mnt/boot/gptzfsboot -i 1 ada0 # legacy bios ???
-sudo gpart bootcode -p /mnt/boot/boot1.efi -i 1 ada0 # efi ???
+sudo gpart bootcode -p /mnt/boot/boot1.efi -i 1 ada0 # efi
 sudo ifconfig wlan0 create wlandevice iwn0
 sudo ifconfig wlan0 list scan
 sudo ifconfig wlan0 scan
