@@ -1,5 +1,5 @@
 #!/bin/bash
-# Like hc's move command, but the moved window is replaced
+# Like hc's move command, but the moved window is replaced by a swap
 
 # credit: https://github.com/everett1992/herbstluftwm/blob/master/swap
 
@@ -15,6 +15,7 @@ function unlock() {
 }
 
 direction=$1
+focus=${2:-focus}
 
 echo direction : $direction
 echo
@@ -71,6 +72,6 @@ echo
 
 hc load "$new_layout"
 
-hc focus $reverse
+[ $focus = stay ] || hc focus $reverse
 
 #unlock
