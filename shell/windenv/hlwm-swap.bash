@@ -15,7 +15,7 @@ function unlock() {
 }
 
 direction=$1
-focus=${2:-focus}
+follow=${2:-dont-follow}
 
 echo direction : $direction
 echo
@@ -72,6 +72,6 @@ echo
 
 hc load "$new_layout"
 
-[ $focus = stay ] || hc focus $reverse
+[ $follow = follow ] || hc focus $reverse
 
 #unlock
