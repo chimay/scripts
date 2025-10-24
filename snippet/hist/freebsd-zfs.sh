@@ -25,6 +25,9 @@
 # restore 7. # Restore all saved pools
 # restore 8. cat /tmp/mydata/zdata1/filename | zfs recv -vF zroot
 # restore 9. # Clean up
+# zfs upgrade 1. sudo zpool upgrade
+# zfs upgrade 2. sudo zpool upgrade zroot
+# zfs upgrade 3. see freebsd.sh efi loader
 cd /etc/mail ; sudo make aliases
 gpart backup laptop-disk | gpart restore -F usb-disk
 root@source:~# zfs send sourcepool/dataset | ssh target zfs receive targetpool/dataset

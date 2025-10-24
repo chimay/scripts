@@ -19,12 +19,13 @@
 # loop mount 8. mdconfig -d -u 7
 # loop mount 9. rm partfile.dd
 # uefi 1. bootx64.efi # à lancer dans le shell efi pour lancer l’installation si pas automatique
-# uefi loader 1. download minimal image (or boot the iso / img you downloaded)
-# uefi loader 2. Go to to the emergency shell (or just boot single user).
+# uefi loader 1. download minimal image (or boot the iso / img you downloaded) and create a boot usb stick
+# uefi loader 2. boot from usb stick and go to to the emergency shell (or just boot single user).
 # uefi loader 3. mount -t msdos /dev/da0pX /mnt pX is the ESP (where da0 is your root disk)
-# uefi loader 4. cp /boot/loader.efi /mnt/efi/boot/bootx86.efi
+# uefi loader 4. cp /boot/boot1.efi /mnt/efi/boot/bootx86.efi
 # uefi loader 5. cp /boot/loader.efi /mnt/efi/freebsd/loader.efi
 # uefi loader 6. reboot
+# uefi loader 7. dont do this from main disc : sudo gpart bootcode -p /mnt/boot/boot1.efi -i 1 ada0 # efi
 # zram similar 1. mdconfig -a -t malloc -o compress -o reserve -s 50m -u 7
 # zram similar 2. swapon /dev/md7
 VBoxClient --display
@@ -143,7 +144,6 @@ sudo freebsd-update install
 sudo git clone https://git.freebsd.org/ports.git --branch main /usr/ports
 sudo gitup ports
 sudo gpart bootcode -b /mnt/boot/pmbr -p /mnt/boot/gptzfsboot -i 1 ada0 # legacy bios ???
-sudo gpart bootcode -p /mnt/boot/boot1.efi -i 1 ada0 # efi
 sudo ifconfig wlan0 create wlandevice iwn0
 sudo ifconfig wlan0 list scan
 sudo ifconfig wlan0 scan
