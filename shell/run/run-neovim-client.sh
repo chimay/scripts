@@ -1,7 +1,12 @@
 #! /usr/bin/env sh
 
-#exec nvim --server ~/racine/run/socket/neovim --remote-ui "$@"
+rundir=$XDG_RUNTIME_DIR
 
-which nvr && ( sleep 1 ; nvr --remote-send '<cmd>call biblio#equal_windows()<cr>' ) &
+if [ -d $rundir ]
+then
+	socket=$rundir/neovim-socket
+else
+	socket=~/racine/run/socket/neovim
+fi
 
-nvim --server ~/racine/run/socket/neovim --remote-ui "$@"
+exec nvim --server $socket --remote-ui "$@"

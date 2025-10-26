@@ -1,7 +1,17 @@
 #! /usr/bin/env sh
 
-#UID=$(id -u)
-#rundir=/run/user/$UID
+# ---- log and err files
+logfile=~/log/neovim-server.log
+errfile=~/log/neovim-server.err
+# ---- save old channels
+exec 3>&1
+exec 4>&2
+# ---- ensure log and err files exist
+[ -e $logfile ] || touch $logfile
+[ -e $errfile ] || touch $errfile
+# ---- redirect to log and err files
+exec 1>> $logfile
+exec 2>> $errfile
 
 rundir=$XDG_RUNTIME_DIR
 
@@ -12,25 +22,21 @@ else
 	socket=~/racine/run/socket/neovim
 fi
 
-pgrep nvim > ~/log/psgrep.log 2>&1 && {
+if [ -S $socket -o -e $socket ]
+then
 	echo 'neovim is already started'
 	echo
 	exit 0
-}
+fi
 
-# if ! [ -z "$(ls -A ~/racine/varia/autosave/neovim)" ]
-# then
-# 	echo -n "There are autosave files. Continue ?"
-# 	read answer
-# 	[ $answer = y ] || [ $answer = yes ] || exit 0
-# fi
+echo
+echo "------------------------------------------------------------"
+echo
+date +" [=] %A %d %B %Y  (o) %H : %M : %S  | %:z | "
+echo
 
-{
-	echo
-	echo "------------------------------------------------------------"
-	echo
-	date +" [=] %A %d %B %Y  (o) %H : %M : %S  | %:z | "
-	echo
-} >> ~/log/neovim-server.log 2>&1
+# ---- restore old channels
+exec 1>&3
+exec 2>&4
 
-exec nvim --listen $socket --headless >> ~/log/neovim-server.log 2>&1
+exec nvim --listen $socket --headless >> $logfile 2>&1
