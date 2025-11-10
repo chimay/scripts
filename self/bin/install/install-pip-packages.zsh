@@ -29,6 +29,7 @@ packages=(
 	zxcvbn pyaml
 	mausoleum
 	py3exiv2 piexif
+	yt-dlp
 )
 
 echo "pip install --upgrade $=packages"
