@@ -43,19 +43,19 @@ sync -f $HOME
 	[[ $certain = Oui ]] && {
 		echo "$powerctl suspend"
 		echo
+		sleep 1
 		$powerctl suspend
 		autowake.zsh &>>! ~/log/autowake.log
 	}
 }
 
 [[ $choix = Hiberner ]] && {
-	if [[ $powerctl = systemctl ]]
+	if [[ $HOST = taijitu ]]
 	then
-		echo "Not implemented"
+		echo "Not supported"
 		echo
 		zenity --info --no-wrap --text "Il fait trop chaud pour hiberner."
-	elif [[ $powerctl = loginctl ]]
-	then
+	else
 		certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
 		[[ $certain = Oui ]] && {
 			echo "$powerctl hibernate"

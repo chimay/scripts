@@ -58,14 +58,8 @@ xset dpms 0 0 420
 
 #  Clavier {{{2
 
-if [ $HOST = tixu ]
-then
-	setxkbmap fr & sleep 1
-	xmodmap ~/racine/config/windenv/xmodmap/francais-meta-super-hyper >>! ~/log/xmodmap.log 2>&1 &
-else
-	setxkbmap be & sleep 1
-	xmodmap ~/racine/config/windenv/xmodmap/belge-meta-super-hyper >>! ~/log/xmodmap.log 2>&1 &
-fi
+setxkbmap be & sleep 1
+xmodmap ~/racine/config/windenv/xmodmap/belge-meta-super-hyper >>! ~/log/xmodmap.log 2>&1 &
 
 if [ $HOST != mandala ]
 then
@@ -74,19 +68,18 @@ fi
 
 # Souris {{{2
 
-if [ $HOST = taijitu ]
+if [ $HOST = galaxy ]
 then
 	synclient TapButton1=1
 	# L’id change à chaque démarrage
 	#iden=$(xinput list | grep SynPS | cut -d '=' -f 2 | awk '{print $1}')
 	#xinput set-prop $iden 'libinput Tapping Enabled' 1
-elif [ $HOST = shari ]
+elif [ $HOST = taijitu ]
 then
 	synclient TapButton1=1
-	#synclient VertEdgeScroll=1
-	synclient HorizEdgeScroll=1
-	synclient LBCornerButton=2
-	synclient RBCornerButton=3
+	# L’id change à chaque démarrage
+	#iden=$(xinput list | grep SynPS | cut -d '=' -f 2 | awk '{print $1}')
+	#xinput set-prop $iden 'libinput Tapping Enabled' 1
 elif [ $HOST = mandala ]
 then
 	synclient TapButton1=1
@@ -154,18 +147,14 @@ psgrep unclutter || unclutter --display :0.0 --root --jitter 7 --timeout 5 &
 
 # Eviter le parquage excessif du disque
 
-if [ $HOST != mandala ]
+if [ $HOST = taijitu ]
 then
 	psgrep load_cycle_fix || load_cycle_fix.sh >>! ~/log/load_cycle_fix.log 2>&1 &
 fi
 
 #  Battery {{{2
 
-if [ $HOST = quigonjinn ]
-then
-else
-	psgrep alarm-battery.zsh || alarm-battery.zsh 30 15 5 60 >>! ~/log/alarm-battery.log 2>&1 &
-fi
+psgrep alarm-battery.zsh || alarm-battery.zsh 30 15 5 60 >>! ~/log/alarm-battery.log 2>&1 &
 
 # Mémory {{{2
 
@@ -173,15 +162,15 @@ psgrep alarm-memory.zsh || alarm-memory.zsh 7 >>! ~/log/alarm-memory.log 2>&1 &
 
 # Température {{{2
 
-if [ $HOST = shari ]
+if [ $HOST = galaxy ]
 then
-	psgrep alarm-sensor.zsh || alarm-sensor.zsh +91 ++94 -30 >>! ~/log/alarm-sensor.log 2>&1 &
-elif [ $HOST = mandala ]
-then
-	psgrep alarm-sensor.zsh || alarm-sensor.zsh +80 ++85 -30 >>! ~/log/alarm-sensor.log 2>&1 &
+	psgrep alarm-sensor.zsh || alarm-sensor.zsh +80 ++90 -30 >>! ~/log/alarm-sensor.log 2>&1 &
 elif [ $HOST = taijitu ]
 then
 	psgrep alarm-sensor.zsh || alarm-sensor.zsh +82 ++87 -30 >>! ~/log/alarm-sensor.log 2>&1 &
+elif [ $HOST = mandala ]
+then
+	psgrep alarm-sensor.zsh || alarm-sensor.zsh +80 ++85 -30 >>! ~/log/alarm-sensor.log 2>&1 &
 elif [ $HOST = tixu ]
 then
 	psgrep alarm-sensor.zsh || alarm-sensor.zsh +82 ++87 -30 >>! ~/log/alarm-sensor.log 2>&1 &
@@ -193,7 +182,6 @@ if [ $HOST = mandala ]
 then
 	dbus-update-activation-environment DISPLAY XAUTHORITY
 fi
-
 
 # Identification {{{2
 
@@ -207,10 +195,10 @@ psgrep gnome-keyring-daemon || \
 
 psgrep nm-applet || nm-applet &
 
-if [ $HOST = taijitu ]
+if [ $HOST = galaxy ]
 then
 	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
-elif [ $HOST = shari ]
+elif [ $HOST = taijitu ]
 then
 	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
 elif [ $HOST = mandala ]
@@ -271,10 +259,7 @@ psgrep timidity || run-timidity-server.sh
 
 #  Clock {{{2
 
-if [ $HOST = taijitu -o $HOST = mandala  ]
-then
-	psgrep clock || clock.zsh ~/run/clock/clock.status >>! ~/log/clock.log 2>&1 &
-fi
+psgrep clock || clock.zsh ~/run/clock/clock.status >>! ~/log/clock.log 2>&1 &
 
 # Synchronization {{{2
 
@@ -293,7 +278,7 @@ psgrep transmission || transmission-daemon
 
 # Social {{{2
 
-if [ $HOST = taijitu ]
+if [ $HOST = none ]
 then
 	#hexchat --minimize=2 -a &
 	#run-quassel.sh &

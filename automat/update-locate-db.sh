@@ -17,7 +17,7 @@ updatedb -v -l 0 -U ~/racine -o "$DB_DIR/racine.db" \
 	$RACINE/pack/aged
 	$RACINE/plugin/manager
 	$RACINE/system/conf
-	$RACINE/source
+	$RACINE/source/software
 	$RACINE/test
 	$RACINE/trash
 	$RACINE/varia

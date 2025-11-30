@@ -10,7 +10,7 @@ cd $directory
 
 # Git {{{1
 
-for folder in */.git(:h)
+for folder in */.git(:h) */*/.git(:h)
 do
 	echo ""
 	echo "------------------------------------"
@@ -29,7 +29,7 @@ done
 
 # Mercurial {{{1
 
-for folder in */.hg(:h)
+for folder in */.hg(:h) */*/.hg(:h)
 do
 	echo ""
 	echo "------------------------------------"
@@ -46,9 +46,9 @@ do
 	cd -
 done
 
-# Bazaar {{{1
+# Breezy {{{1
 
-for folder in */.bzr(:h)
+for folder in */.brz(:h) */*/.bzr(:h)
 do
 	echo ""
 	echo "------------------------------------"

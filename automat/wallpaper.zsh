@@ -65,7 +65,7 @@ init-empty-vars () {
 	[ -z $stamp ]      && stamp=~/racine/run/wall/wallpaper.stamp
 	[ -z $meta ]       && meta=~/racine/index/pictura/wallpaper.meta
 	[ -z $logfile ]    && logfile=~/log/gen-random-list.log
-	[ -z $dispersion ] && dispersion=0
+	[ -z $dispersion ] && dispersion=7
 	[ -z $minutes ]    && minutes=30
 	[ -z $seconds ]    && seconds=0
 	[ -z $current ]    && current=1

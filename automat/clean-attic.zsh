@@ -30,10 +30,10 @@ echo
 echo trash
 echo "____________________________________________________________"
 echo
-echo "trash-empty -f $delai_tres_court"
+echo "trash-empty -f $delai_court"
 echo
 
-trash-empty -f $delai_long
+trash-empty -f $delai_court
 
 # vifm trash {{{1
 

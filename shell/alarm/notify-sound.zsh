@@ -38,9 +38,6 @@ $mpvsocket add $soundfile
 if [ "$HOST" = taijitu ]
 then
 	$mpvsocket volume 96
-elif [ "$HOST" = shari ]
-then
-	$mpvsocket volume 72
 else
 	$mpvsocket volume 84
 fi

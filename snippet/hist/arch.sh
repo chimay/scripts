@@ -175,6 +175,10 @@ ip addr
 ip link set wlan0 up
 joue=random-U ; y $(echo ~classique/**/[P-Z]-* | shuf | head -n 1)
 kitty=fonts ; kitty list-fonts
+latex=find-package-file ; kpsewhich amsmath.sty
+latex=hash ; texhash ~/texmf
+latex=package-home-folder ; kpsewhich -var-value=TEXMFHOME
+latex=paths ; kpsepath tex
 lesskey -o ~/racine/built/less/key-natif.out ~/racine/config/visu/less/key-natif
 lignes=1 ; { date ; echo ; wc -l ~eclats2vers/grimoire/*.org ; echo ; wc -l ~site/backup/grimoire/*.org ; echo } >> lignes.log
 linux=command_line ; cat /proc/cmdline

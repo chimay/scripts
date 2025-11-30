@@ -23,6 +23,7 @@ which am &> /dev/null || {
 packages=(
 	helium
 	freetube
+	localsend
 )
 
 am install $=packages

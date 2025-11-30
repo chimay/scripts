@@ -13,9 +13,12 @@ echo
 # aur :
 #
 # abook
+# task-spooler-cpu
+# cpupower-gui
+# nodejs-readability
+# udevil
 
 packages=(
-	linux linux-lts linux-firmware
 	coreutils
 	acpi acpid
 	network-manager-applet openssh sshfs
@@ -23,32 +26,47 @@ packages=(
 	rsync rclone unison syncthing kdeconnect
 	borg python-pyfuse3 restic fuse2 fuse3
 	avahi nss-mdns
-	zsh tmux fzf
+	zsh tmux fzf zoxide
 	xterm rxvt-unicode kitty alacritty xfce4-terminal
 	less most bat
 	calc bc
 	git lazygit
 	trash-cli
 	gvim neovim neovim-qt emacs
-	vifm yazi gvfs
+	vifm yazi xplr gvfs
 	thunar thunar-volman thunar-vcs-plugin
 	thunar-archive-plugin thunar-media-tags-plugin
 	tree ncdu dfc socat
 	atools zip unzip
 	dialog
+	make gcc patch automake autoconf fakeroot pkgconf debugedit
 	pass keepassxc
-	xorg lightdm lightdm-gtk-greeter
-	herbstluftwm
+	xorg xf86-input-synaptics
+	lightdm lightdm-gtk-greeter
+	herbstluftwm sxhkd
 	polybar
 	rofi dmenu zenity
-	dunst picom xdotool wmctrl xclip xsel
+	dunst picom xdotool wmctrl xclip xsel xorg-xprop
 	feh sxiv vimiv exiv2 libwebp-utils i3lock
+	redshift
 	xfce4
-	neomutt
-	qutebrowser firefox
+	isync opensmtpd
+	s-nail
+	neomutt aerc
+	zathura zathura-pdf-mupdf zathura-ps
+	w3m qutebrowser firefox
+	lighttpd
+	tor torsocks nyx torbrowser-launcher proton-vpn-gtk-app
+	samba
+	translate-shell
+	jq
+	texlive-meta
+	pdf2svg
 	alsa-utils pipewire wireplumber
 	pulsemixer pamixer
 	mpv mplayer
+	mpd mpc ncmpcpp
+	sox
 	lilypond timidity fluidsynth soundfont-fluid
 	acpi cpupower turbostat thermald
 )
@@ -58,13 +76,32 @@ case $distribution in
 		echo "arch"
 		echo
 		packages+=(
-			linux-zen
+			linux linux-lts linux-firmware linux-zen
 			networkmanager
 			pacman-contrib
 			pacutils pkgfile expac
 			pipewire-pulse
 			freepats-general-midi
 			arch-wiki-docs arch-wiki-lite
+		)
+		sudo pacman -Syy
+		sudo pacman -S --needed $=packages
+		;;
+	manjaro)
+		echo "manjaro"
+		echo
+		packages+=(
+			linux-meta
+			linux-r8168-meta
+			linux-lts-r8168-meta
+			networkmanager
+			pacman-contrib
+			pacutils pkgfile expac
+			ueberzugpp
+			pipewire-pulse
+			freepats-general-midi
+			arch-wiki-docs arch-wiki-lite
+			hplip
 		)
 		sudo pacman -Syy
 		sudo pacman -S --needed $=packages
@@ -115,15 +152,14 @@ case $distribution in
 			git lazygit
 			py311-trash-cli
 			vim vim-gtk3 neovim neovim-qt
-			vifm yazi
 			tree ncdu dfc socat
 			password-store
 			xorg lightdm lightdm-gtk-greeter
-			herbstluftwm
 			polybar
 			rofi dmenu zenity
 			dunst picom xdotool wmctrl-fork xclip xsel-conrad
 			feh nsxiv
+			clipmenu
 			pulseaudio gtk-mixer
 			neomutt
 			qutebrowser firefox
