@@ -17,6 +17,7 @@ echo
 pip install --upgrade pip
 
 packages=(
+	pikaur
 	tldextract    # for qute-pass
 	getmail
 	edir

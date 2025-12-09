@@ -14,5 +14,5 @@ echo Fichier de configuration : $fichier
 echo
 
 exec logrotate --verbose \
-	--state ~/racine/run/logrotate/status \
+	--state ~/run/logrotate/status \
 	~/racine/config/auto/logrotate/$fichier

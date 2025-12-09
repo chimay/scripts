@@ -17,6 +17,11 @@ echo
 # cpupower-gui
 # nodejs-readability
 # udevil
+# vieb-bin
+# floorp-bin
+# mullvad-browser-bin
+# zen-browser-bin
+# helium-browser-bin
 
 packages=(
 	coreutils
@@ -26,8 +31,9 @@ packages=(
 	rsync rclone unison syncthing kdeconnect
 	borg python-pyfuse3 restic fuse2 fuse3
 	avahi nss-mdns
-	zsh tmux fzf zoxide
+	zsh tmux fzf fzy zoxide
 	xterm rxvt-unicode kitty alacritty xfce4-terminal
+	htop btop procs
 	less most bat
 	calc bc
 	git lazygit
@@ -46,7 +52,9 @@ packages=(
 	herbstluftwm sxhkd
 	polybar
 	rofi dmenu zenity
-	dunst picom xdotool wmctrl xclip xsel xorg-xprop
+	dunst remind picom
+	xdotool wmctrl xclip xsel xorg-xprop
+	unclutter
 	feh sxiv vimiv exiv2 libwebp-utils i3lock
 	redshift
 	xfce4
@@ -54,16 +62,18 @@ packages=(
 	s-nail
 	neomutt aerc
 	zathura zathura-pdf-mupdf zathura-ps
-	w3m qutebrowser firefox
+	w3m qutebrowser palemoon firefox
 	lighttpd
 	tor torsocks nyx torbrowser-launcher proton-vpn-gtk-app
 	samba
 	translate-shell
-	jq
+	pandoc jq
 	texlive-meta
 	pdf2svg
+	rubygems
+	octave
 	alsa-utils pipewire wireplumber
-	pulsemixer pamixer
+	pulsemixer pamixer pavucontrol pavucontrol-qt
 	mpv mplayer
 	mpd mpc ncmpcpp
 	sox
@@ -97,6 +107,7 @@ case $distribution in
 			networkmanager
 			pacman-contrib
 			pacutils pkgfile expac
+			yay
 			ueberzugpp
 			pipewire-pulse
 			freepats-general-midi

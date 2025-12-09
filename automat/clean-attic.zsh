@@ -210,7 +210,7 @@ echo
 
 dusty=()
 
-dusty+=(**/*(.m+$delai))
+dusty+=(**/*(.m+$delai_long))
 
 (( $#dusty > 0 )) && {
 	ls -l $dusty

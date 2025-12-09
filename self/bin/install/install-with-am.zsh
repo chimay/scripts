@@ -20,9 +20,19 @@ which am &> /dev/null || {
 	$am_installer
 }
 
+# -- does not work
+#
+# viper-browser
+#
+# -- autres
+#
+# dezor
+# promethium
+
 packages=(
-	helium
 	freetube
+	xnviewmp
+	rclone-browser
 	localsend
 )
 
