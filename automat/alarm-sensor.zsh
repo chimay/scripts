@@ -14,9 +14,7 @@ local volume=100
 # Functions {{{1
 
 cpu-save () {
-	# userspace has a low frequency range
-	# see ~/.config/cpupower_gui/cpg-userspace.profile
-	which cpupower-gui >& /dev/null && cpupower-gui profile userspace
+	cpupower.sh powersave
 }
 
 player () {

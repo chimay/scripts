@@ -12,16 +12,23 @@ echo
 
 # aur :
 #
-# abook
+# abook procmail urlview
 # task-spooler-cpu
-# cpupower-gui
+# mp3splt-bin mp3wrap-bin
+# pico2wave-shell pico-tts
 # nodejs-readability
-# udevil
+# udevil-git
+# steghide stegseek
+#
 # vieb-bin
 # floorp-bin
 # mullvad-browser-bin
 # zen-browser-bin
 # helium-browser-bin
+# tradingview
+#
+# sc-im
+# cssc
 
 packages=(
 	coreutils
@@ -76,9 +83,10 @@ packages=(
 	pulsemixer pamixer pavucontrol pavucontrol-qt
 	mpv mplayer
 	mpd mpc ncmpcpp
-	sox
+	sox libttspico-utils
 	lilypond timidity fluidsynth soundfont-fluid
 	acpi cpupower turbostat thermald
+	android-tools androit-file-transfer
 )
 
 case $distribution in

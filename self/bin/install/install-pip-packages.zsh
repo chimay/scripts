@@ -18,6 +18,7 @@ pip install --upgrade pip
 
 packages=(
 	pikaur
+	dbus-python
 	tldextract    # for qute-pass
 	getmail
 	edir
