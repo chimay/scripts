@@ -38,7 +38,9 @@ packages=(
 	rsync rclone unison syncthing kdeconnect
 	borg python-pyfuse3 restic fuse2 fuse3
 	avahi nss-mdns
-	zsh tmux fzf fzy zoxide
+	zsh tmux
+	fzf fzy zoxide
+	ripgrep ripgrep-all repgrep
 	xterm rxvt-unicode kitty alacritty xfce4-terminal
 	htop btop procs
 	less most bat
@@ -52,9 +54,9 @@ packages=(
 	thunar-archive-plugin thunar-media-tags-plugin
 	tree ncdu dfc socat
 	atools zip unzip
-	dialog
 	make gcc patch automake autoconf byacc
 	fakeroot pkgconf debugedit
+	dialog
 	pass keepassxc
 	xorg xf86-input-synaptics
 	lightdm lightdm-gtk-greeter
@@ -170,7 +172,7 @@ case $distribution in
 			avahi nss_mdns
 			rsync unison
 			py311-borgbackup restic
-			zsh tmux fd-find ripgrep fzf perl5
+			zsh tmux fd-find ripgrep perl5
 			git lazygit
 			py311-trash-cli
 			vim vim-gtk3 neovim neovim-qt

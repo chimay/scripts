@@ -1,5 +1,14 @@
 #!/usr/bin/env zsh
 
+# usage {{{1
+
+[ $# -eq 0 ] && {
+	echo Usage : ${0##*/} '+source_extension [+source_extension ...] -target_extension [-target_extension ...]'
+	echo
+	echo A target is to be removed it any of the sources extensions is absent
+	exit 0
+}
+
 # arguments {{{1
 
 sources_list=()
