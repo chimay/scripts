@@ -31,15 +31,15 @@ do
 	esac
 done
 
-echo
-echo sources_list :
-echo
-print -l $sources_list
-echo
-echo targets_list :
-echo
-print -l $targets_list
-echo
+# echo
+# echo sources_list :
+# echo
+# print -l $sources_list
+# echo
+# echo targets_list :
+# echo
+# print -l $targets_list
+# echo
 
 # loop {{{1
 
@@ -48,7 +48,7 @@ toberemoved=()
 for target_ext in $targets_list
 do
 	echo '----> ' analyzing target extension : $target_ext
-	echo
+	#echo
 	for target in *.$target_ext
 	do
 		rootname=${target%.*}
