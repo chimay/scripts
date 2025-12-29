@@ -42,6 +42,7 @@ packages=(
 	xterm rxvt-unicode kitty alacritty xfce4-terminal
 	htop btop procs
 	less most bat
+	detox
 	calc bc
 	git lazygit
 	trash-cli
@@ -52,14 +53,16 @@ packages=(
 	tree ncdu dfc socat
 	atools zip unzip
 	dialog
-	make gcc patch automake autoconf fakeroot pkgconf debugedit
+	make gcc patch automake autoconf byacc
+	fakeroot pkgconf debugedit
 	pass keepassxc
 	xorg xf86-input-synaptics
 	lightdm lightdm-gtk-greeter
 	herbstluftwm sxhkd
 	polybar
 	rofi dmenu zenity
-	dunst remind picom
+	dunst picom
+	cronie at remind
 	xdotool wmctrl xclip xsel xorg-xprop
 	unclutter
 	feh sxiv vimiv exiv2 libwebp-utils i3lock
@@ -86,7 +89,7 @@ packages=(
 	sox libttspico-utils
 	lilypond timidity fluidsynth soundfont-fluid
 	acpi cpupower turbostat thermald
-	android-tools androit-file-transfer
+	android-tools android-file-transfer
 )
 
 case $distribution in
