@@ -40,7 +40,8 @@ packages=(
 	avahi nss-mdns
 	zsh tmux
 	fzf fzy zoxide
-	ripgrep ripgrep-all repgrep
+	fd
+	ripgrep ripgrep-all repgrep ugrep
 	xterm rxvt-unicode kitty alacritty xfce4-terminal
 	htop btop procs
 	less most bat
@@ -48,7 +49,9 @@ packages=(
 	calc bc
 	git lazygit
 	trash-cli
-	gvim neovim neovim-qt emacs
+	gvim
+	neovim neovim-qt python-pynvim
+	emacs
 	vifm yazi xplr gvfs
 	thunar thunar-volman thunar-vcs-plugin
 	thunar-archive-plugin thunar-media-tags-plugin
@@ -68,13 +71,15 @@ packages=(
 	xdotool wmctrl xclip xsel xorg-xprop
 	unclutter
 	feh sxiv vimiv exiv2 libwebp-utils i3lock
+	scrot
 	redshift
 	xfce4
 	isync opensmtpd
 	s-nail
 	neomutt aerc
-	zathura zathura-pdf-mupdf zathura-ps
-	w3m qutebrowser palemoon firefox
+	w3m links elinks
+	qutebrowser palemoon firefox
+	weechat irssi
 	lighttpd
 	tor torsocks nyx torbrowser-launcher proton-vpn-gtk-app
 	samba
@@ -82,11 +87,14 @@ packages=(
 	pandoc jq
 	texlive-meta
 	pdf2svg
+	zathura zathura-pdf-mupdf zathura-ps
+	libreoffice-fresh
+	system-config-printer hplip
 	rubygems
 	octave
 	alsa-utils pipewire wireplumber
 	pulsemixer pamixer pavucontrol pavucontrol-qt
-	mpv mplayer
+	mpv mplayer vlc vlc-plugins-all vlc-cli vlc-gui-ncurses
 	mpd mpc ncmpcpp
 	sox libttspico-utils
 	lilypond timidity fluidsynth soundfont-fluid
@@ -172,7 +180,7 @@ case $distribution in
 			avahi nss_mdns
 			rsync unison
 			py311-borgbackup restic
-			zsh tmux fd-find ripgrep perl5
+			zsh tmux fd-find perl5
 			git lazygit
 			py311-trash-cli
 			vim vim-gtk3 neovim neovim-qt

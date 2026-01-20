@@ -26,14 +26,19 @@ which am &> /dev/null || {
 #
 # -- autres
 #
+# rclone-browser
+# localsend
 # dezor
 # promethium
 
 packages=(
 	freetube
+	vieb
+	floorp
+	zen-browser
+	mullvad-browser
+	helium-browser
 	xnviewmp
-	rclone-browser
-	localsend
 )
 
 am install $=packages
