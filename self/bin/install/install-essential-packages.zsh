@@ -16,7 +16,7 @@ echo
 # task-spooler-cpu
 # mp3splt-bin mp3wrap-bin
 # pico2wave-shell pico-tts
-# nodejs-readability
+# nodejs-readability-cli
 # udevil-git
 # steghide stegseek
 #
