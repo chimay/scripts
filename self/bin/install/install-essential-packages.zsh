@@ -85,8 +85,8 @@ packages=(
 	samba
 	translate-shell
 	pandoc jq
-	texlive-meta
-	pdf2svg
+	texlive-meta # latex and stuff
+	pdf2svg inkscape
 	zathura zathura-pdf-mupdf zathura-ps
 	libreoffice-fresh
 	system-config-printer hplip
