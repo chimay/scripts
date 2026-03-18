@@ -22,7 +22,7 @@ sudo pacman -Scc --noconfirm
 
 # check site {{{1
 
-w3m https://archlinux.org
+w3m https://archlinux.org https://forum.manjaro.org/c/announcements/stable-updates/
 
 # update mirrors {{{1
 
@@ -37,6 +37,8 @@ sudo pacman -Syy
 
 # the manjaro pacman should to it by itself
 #sudo pacman -S --needed manjaro-keyring
+
+sudo pacman -S --needed archlinux-keyring
 
 # update {{{1
 

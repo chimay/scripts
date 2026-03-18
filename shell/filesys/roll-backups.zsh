@@ -5,11 +5,13 @@ local suffix next
 
 [[ -e $file ]] || {
 	echo file $file does not exist
+	echo
 	return 1
 }
 
 [[ -e $file.7 ]] && {
 	echo trash-put $file.7
+	echo
 	trash-put $file.7
 }
 
@@ -18,11 +20,13 @@ do
 	(( next = suffix + 1 ))
 	[[ -e $file.$suffix ]] && {
 		echo mv $file.$suffix $file.$next
+		echo
 		mv $file.$suffix $file.$next
 	}
 done
 
 echo command cp $file $file.1
+echo
 command cp $file $file.1
-return 0
-}
+
+exit 0

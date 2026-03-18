@@ -22,8 +22,10 @@ sudo pacman -Scc --noconfirm
 
 # check site {{{1
 
-w3m https://artixlinux.org
-w3m https://archlinux.org
+#w3m https://artixlinux.org
+#w3m https://archlinux.org
+
+w3m https://artixlinux.org https://archlinux.org
 
 # refresh {{{1
 

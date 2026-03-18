@@ -30,7 +30,8 @@ packages=(
 	eg
 	zxcvbn pyaml
 	mausoleum
-	py3exiv2 piexif
+	# py3exiv2
+	piexif
 	yt-dlp
 )
 

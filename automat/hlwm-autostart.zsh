@@ -195,16 +195,16 @@ psgrep gnome-keyring-daemon || \
 
 psgrep nm-applet || nm-applet &
 
-if [ $HOST = galaxy ]
-then
-	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
-elif [ $HOST = taijitu ]
-then
-	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
-elif [ $HOST = mandala ]
-then
-	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
-fi
+# if [ $HOST = galaxy ]
+# then
+# 	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
+# elif [ $HOST = taijitu ]
+# then
+# 	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
+# elif [ $HOST = mandala ]
+# then
+# 	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
+# fi
 
 # Bluetooth {{{2
 
