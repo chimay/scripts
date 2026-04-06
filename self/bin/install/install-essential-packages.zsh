@@ -89,7 +89,7 @@ packages=(
 	pdf2svg inkscape
 	zathura zathura-pdf-mupdf zathura-ps
 	libreoffice-fresh
-	system-config-printer hplip
+	system-config-printer hplip simple-scan
 	rubygems
 	octave
 	alsa-utils pipewire wireplumber
