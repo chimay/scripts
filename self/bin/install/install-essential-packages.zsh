@@ -183,7 +183,7 @@ case $distribution in
 			zsh tmux fd-find perl5
 			git lazygit
 			py311-trash-cli
-			vim vim-gtk3 neovim neovim-qt
+			ed vim vim-gtk3 neovim neovim-qt
 			tree ncdu dfc socat
 			password-store
 			xorg lightdm lightdm-gtk-greeter

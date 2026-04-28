@@ -1,17 +1,19 @@
 #! /usr/bin/env zsh
 
-# {{{ Options
+# options {{{1
 
 setopt null_glob
 setopt extended_glob
 
-# }}}
+# functions {{{1
 
-# Functions {{{1
+# echoerr {{{2
 
 echoerr () {
 	print "$@" >&2
 }
+
+# help {{{2
 
 help () {
 	echoerr "$(basename $0) : Dynamic wallpaper from random list & priorities."
@@ -43,15 +45,7 @@ help () {
 	exit 0
 }
 
-await () {
-	local delay=$1
-	echo "waiting $delay seconds"
-	echo
-	# so as not to delay traps interception
-	sleep $delay &
-	waitpid=$!
-	wait $waitpid
-}
+# stop-wait {{{2
 
 stop-wait () {
 	echo "stop waiting"
@@ -59,6 +53,8 @@ stop-wait () {
 	[ -z $waitpid ] || kill $waitpid
 	waitpid=
 }
+
+# init-empty-vars {{{2
 
 init-empty-vars () {
 	[ -z $statusfile ] && statusfile=~/racine/run/wall/wallpaper.status
@@ -79,7 +75,10 @@ init-empty-vars () {
 	(( delay = minutes * 60 + seconds ))
 }
 
+# echo-status-vars {{{2
+
 echo-status-vars () {
+	echo statusfile  : $statusfile
 	echo meta        : $meta
 	echo logfile     : $logfile
 	echo dispersion  : $dispersion
@@ -91,6 +90,8 @@ echo-status-vars () {
 	echo stop        : $stop
 	echo
 }
+
+# write-status-file {{{2
 
 write-status-file () {
 	local statusfile=$1
@@ -110,17 +111,23 @@ write-status-file () {
 	touch $stamp
 }
 
+# update-current-in-status-file {{{2
+
 update-current-in-status-file () {
 	echo "updating current in status file"
 	echo
 	{ echo 'g/^current/s/= .*$/= '$current'/' ; echo w } | ed $statusfile &> ~/log/ed.log
 }
 
+# update-reload-in-status-file {{{2
+
 update-reload-in-status-file () {
 	echo "updating reload in status file"
 	echo
 	{ echo 'g/^reload/s/= .*$/= '$reload'/' ; echo w } | ed $statusfile &> ~/log/ed.log
 }
+
+# read-status-file {{{2
 
 read-status-file () {
 	local statusfile=$1
@@ -138,32 +145,39 @@ read-status-file () {
 	echo-status-vars
 }
 
+# choose-wallpaper {{{2
+
 choose-wallpaper () {
 	while [ ! -e $images[$current] -a $current -lt $Nimages ]
 	do
-		echo file $images[$current] does not exist : skipping
+		echo choose-wallpaper : file $images[$current] does not exist, skipping
 		echo
+		echo choose-wallpaper : incremeting current
 		(( current ++ ))
 	done
 	if (( current < Nimages ))
 	then
 		poster=$images[$current]
 	else
+		echo "choose-wallpaper : reload -> 1"
+		echo
 		reload=1
 	fi
 }
+
+# gen-image-list {{{2
 
 gen-image-list () {
 	local reload=$1
 	random_list=${meta/.?*/.m3u}
 	if [ ! -f $random_list ]
 	then
-		echo "wallpaper list does not exist"
+		echo "gen-image-list : wallpaper list does not exist"
 		echo
 	fi
 	if [ $reload -eq 1 -o ! -f $random_list ]
 	then
-		echo "generating new wallpaper list"
+		echo "gen-image-list : generating new wallpaper list"
 		echo
 		gen-random-list.zsh $dispersion $meta &>>! $logfile
 		images=($(< $random_list))
@@ -175,7 +189,7 @@ gen-image-list () {
 	fi
 	if [ -z $Nimages ]
 	then
-		echo "assigning image list"
+		echo "gen-image-list : assigning image list"
 		echo
 		images=($(< $random_list))
 		Nimages=${#images}
@@ -183,10 +197,14 @@ gen-image-list () {
 	fi
 	if [ $reload -eq 1 ]
 	then
+		echo "gen-image-list : resetting reload to 0"
+		echo
 		reload=0
 		update-reload-in-status-file
 	fi
 }
+
+# horodate {{{2
 
 horodate () {
 	date_hour=`date +"%a %d %b %Y, %H:%M"`
@@ -194,9 +212,13 @@ horodate () {
 	echo
 }
 
+# change-wallpaper {{{2
+
 change-wallpaper () {
 	feh --bg-max --no-fehbg $poster
 }
+
+# symlink {{{2
 
 symlink () {
 	# Pour i3lock
@@ -209,12 +231,32 @@ symlink () {
 	ln -s $poster $link
 }
 
-# }}}1
+# await {{{2
 
-# Traps {{{1
+await () {
+	local delay=$1
+	echo "waiting $delay seconds"
+	echo
+	# so as not to delay traps interception
+	sleep $delay &
+	waitpid=$!
+	wait $waitpid
+}
+
+# increment {{{2
+
+increment () {
+	echo incrementing current
+	echo
+	(( current ++ ))
+}
+
+# traps {{{1
 
 signal-next () {
 	echo "switching to next wallpaper"
+	echo
+	echo signal-next : incrementing current
 	echo
 	(( current ++ ))
 	update-current-in-status-file
@@ -244,15 +286,9 @@ trap signal-next  SIGUSR2
 
 trap signal-stop    HUP INT TERM
 
-# }}}1
+# arguments {{{1
 
-# Initialization {{{1
-
-statusfile=~/racine/run/wall/wallpaper.status
-
-# }}}1
-
-# Arguments {{{1
+statusfile=
 
 numarg=$#
 
@@ -275,17 +311,7 @@ do
 	esac
 done
 
-# }}}1
-
-# Status file {{{1
-
-stamp=${statusfile/.?*/.stamp}
-
-[[ $statusfile = $stamp ]] && stamp=${stamp}.stamp
-
-touch $statusfile
-
-# }}}1
+# initialization {{{1
 
 [ $numarg -eq 0 -o $aide -eq 1 ] && help
 
@@ -310,21 +336,27 @@ echo
 echo "wallpaper is launched"
 echo
 
-# {{{ Loop
+# status file {{{1
+
+stamp=${statusfile/.?*/.stamp}
+
+[[ $statusfile = $stamp ]] && stamp=${stamp}.stamp
+
+touch $statusfile
+
+# loop {{{1
 
 while true
 do
 	read-status-file $statusfile $stamp
 	(( stop > 0 )) && signal-stop
-	(( current >= Nimages )) && reload=1
 	choose-wallpaper
 	gen-image-list $reload
 	horodate
 	change-wallpaper
 	symlink
 	await $delay
-	# increment
-	(( current ++ ))
+	increment
 done
 
 # }}}
