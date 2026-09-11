@@ -13,6 +13,7 @@ echo
 # aur :
 #
 # abook procmail urlview
+# udevil
 # task-spooler-cpu
 # mp3splt-bin mp3wrap-bin
 # pico2wave-shell pico-tts
@@ -36,41 +37,46 @@ packages=(
 	network-manager-applet openssh sshfs
 	ttf-dejavu
 	rsync rclone unison syncthing kdeconnect
-	borg python-pyfuse3 restic fuse2 fuse3
+	borg borgmatic python-pyfuse3 restic fuse2 fuse3
 	avahi nss-mdns
 	zsh tmux
 	fzf fzy zoxide
 	fd
 	ripgrep ripgrep-all repgrep ugrep
+	gnupg gpg-tui age
 	xterm rxvt-unicode kitty alacritty xfce4-terminal
 	htop btop procs
 	less most bat
 	detox
 	calc bc
-	git lazygit
+	git lazygit tig
 	trash-cli
-	gvim
+	ed gvim
 	neovim neovim-qt python-pynvim
 	emacs
+	kakoune helix
+	renameutils
 	vifm yazi xplr gvfs
-	thunar thunar-volman thunar-vcs-plugin
+	thunar thunar-volman thunar-vcs-plugin gigolo
 	thunar-archive-plugin thunar-media-tags-plugin
 	tree ncdu dfc socat
 	atools zip unzip
 	make gcc patch automake autoconf byacc
 	fakeroot pkgconf debugedit
 	dialog
+	mise bob
 	pass keepassxc
-	xorg xf86-input-synaptics
+	xorg xf86-input-synaptics brightnessctl
 	lightdm lightdm-gtk-greeter
 	herbstluftwm sxhkd
 	polybar
 	rofi dmenu zenity
+	clipmenu
 	dunst picom
 	cronie at remind
 	xdotool wmctrl xclip xsel xorg-xprop
 	unclutter
-	feh sxiv vimiv exiv2 libwebp-utils i3lock
+	feh sxiv nsxiv viu vimiv exiv2 libwebp-utils i3lock
 	scrot
 	redshift
 	xfce4
@@ -89,7 +95,8 @@ packages=(
 	pdf2svg inkscape
 	zathura zathura-pdf-mupdf zathura-ps
 	libreoffice-fresh
-	system-config-printer hplip simple-scan
+	system-config-printer cups sane
+	hplip simple-scan python-pillow python-reportlab python-pyqt5 libusb rpcbind
 	rubygems
 	octave
 	alsa-utils pipewire wireplumber
@@ -152,7 +159,7 @@ case $distribution in
 			pipewire-pulse
 			freepats-general-midi
 			arch-wiki-docs arch-wiki-lite
-			dinit-user-spawn
+			userspawn-dinit
 			zramen zramen-dinit
 			thermald-dinit
 		)
@@ -191,7 +198,6 @@ case $distribution in
 			rofi dmenu zenity
 			dunst picom xdotool wmctrl-fork xclip xsel-conrad
 			feh nsxiv
-			clipmenu
 			pulseaudio gtk-mixer
 			neomutt
 			qutebrowser firefox

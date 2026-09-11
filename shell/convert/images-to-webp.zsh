@@ -6,7 +6,7 @@ folder=${1:-.}
 
 cd $folder
 
-for image in **/*.(jpg|JPG)
+for image in **/*.(jpg|JPG|jpeg) **/*.(png|PNG)
 do
 	webpfile=${image%.*}.webp
 	[ -f $webpfile ] && {

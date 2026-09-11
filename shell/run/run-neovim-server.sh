@@ -1,5 +1,7 @@
 #! /usr/bin/env sh
 
+export PATH=~/.local/share/mise/installs/neovim/nightly/bin:$PATH
+
 # ---- log and err files
 logfile=~/log/neovim-server.log
 errfile=~/log/neovim-server.err

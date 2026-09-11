@@ -153,6 +153,7 @@ choose-wallpaper () {
 		echo choose-wallpaper : file $images[$current] does not exist, skipping
 		echo
 		echo choose-wallpaper : incremeting current
+		echo
 		(( current ++ ))
 	done
 	if (( current < Nimages ))

@@ -68,7 +68,10 @@ fi
 
 # Souris {{{2
 
-if [ $HOST = galaxy ]
+if [ $HOST = universe ]
+then
+	synclient TapButton1=1
+elif [ $HOST = galaxy ]
 then
 	synclient TapButton1=1
 	# L’id change à chaque démarrage

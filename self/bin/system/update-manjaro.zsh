@@ -22,7 +22,7 @@ sudo pacman -Scc --noconfirm
 
 # check site {{{1
 
-w3m https://archlinux.org https://forum.manjaro.org/c/announcements/stable-updates/
+w3m -R https://archlinux.org https://forum.manjaro.org/c/announcements/stable-updates/
 
 # update mirrors {{{1
 
