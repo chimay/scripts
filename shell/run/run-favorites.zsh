@@ -6,17 +6,28 @@ hc() {
     herbstclient "$@"
 }
 
-
-tmux_sessions=$(tmux list-sessions)
-
-echo $#tmux_sessions
-
-exit 0
-
 echo Launching neovim server
+echo
 run-neovim-server.sh &
+
 #echo Launching emacs server
 #run-emacs-server.sh &
+
+tmux_sessions=( $(tmux list-sessions -F "#{session_name}") )
+
+(( $#tmux_sessions == 1 )) && {
+	echo Only one tmux session : renaming it to principal
+	echo
+	tmux rename-session principal
+
+	echo Creating tmux session simple
+	echo
+	tmux new-session -t simple -d
+
+	echo Creating tmux session ssh
+	echo
+	tmux new-session -t ssh -d
+}
 
 echo Going to first workspace
 echo
@@ -24,7 +35,7 @@ hc use_index 0
 
 echo Launching kitty
 echo
-kitty --single-instance tmux new-session -t principal &
+kitty --single-instance tmux attach-session -t principal &
 sleep 1
 
 echo Splitting
@@ -32,12 +43,18 @@ echo
 hc split bottom 0.618
 hc focus down
 
-echo Launching kitty
-echo
-kitty --single-instance &
-sleep 1
+# echo Launching kitty
+# echo
+# kitty --single-instance &
+# sleep 1
 
-echo Going to second workspace
+echo Launching vifm
+echo
+run-vifm.zsh &
+sleep 2
+hc focus up
+
+echo Going to third workspace
 echo
 hc use_index 2
 
@@ -54,8 +71,8 @@ hc set_layout horizontal
 
 echo Launching kitty
 echo
-kitty --single-instance tmux new-session -t light &
-sleep 1
+kitty --single-instance tmux attach-session -t simple &
+sleep 2
 hc focus up
 
 echo Going to fifth workspace

@@ -20,6 +20,7 @@ echo
 # nodejs-readability-cli
 # udevil-git
 # steghide stegseek
+# archivemount
 #
 # vieb-bin
 # floorp-bin
@@ -51,12 +52,16 @@ packages=(
 	calc bc
 	git lazygit tig
 	trash-cli
+	rlwrap
 	ed gvim
 	neovim neovim-qt python-pynvim
 	emacs
 	kakoune helix
+	retext marker apostrophe ghostwriter
+	ctags
 	renameutils
 	vifm yazi xplr gvfs
+	python-piexif fuse-zip
 	thunar thunar-volman thunar-vcs-plugin gigolo
 	thunar-archive-plugin thunar-media-tags-plugin
 	tree ncdu dfc socat
@@ -76,8 +81,9 @@ packages=(
 	cronie at remind
 	xdotool wmctrl xclip xsel xorg-xprop
 	unclutter
-	feh sxiv nsxiv viu vimiv exiv2 libwebp-utils i3lock
-	scrot
+	graphicsmagick imagemagick
+	feh sxiv nsxiv vimiv viu exiv2 libwebp-utils i3lock
+	gwenview scrot
 	redshift
 	xfce4
 	isync opensmtpd
@@ -92,6 +98,7 @@ packages=(
 	translate-shell
 	pandoc jq
 	texlive-meta # latex and stuff
+	texlive-langfrench
 	pdf2svg inkscape
 	zathura zathura-pdf-mupdf zathura-ps
 	libreoffice-fresh
@@ -107,6 +114,7 @@ packages=(
 	lilypond timidity fluidsynth soundfont-fluid
 	acpi cpupower turbostat thermald
 	android-tools android-file-transfer
+	man-db # or mandoc
 )
 
 case $distribution in

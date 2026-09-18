@@ -25,7 +25,7 @@ packages=(
 	neovim-remote
 	vimiv
 	'aria2p[tui]'
-	readability
+	trafilatura   # cli tool for readable
 	wptranslate
 	eg
 	zxcvbn pyaml

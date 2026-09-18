@@ -1,5 +1,31 @@
-#! /usr/bin/env zsh
+#! /usr/bin/env sh
 
 xdotool search --class nvim-qt windowactivate && exit 0
 
-exec nvim-qt "$@" >> ~/log/nvim-qt.log 2>&1
+# ---- we need neovim-remote to equalize windows
+which nvr || {
+	echo Please install neovim-remote with pip first
+	exit 0
+}
+
+# ---- log and err files
+logfile=~/log/neovim-server.log
+errfile=~/log/neovim-server.err
+# ---- save old channels
+exec 3>&1
+exec 4>&2
+# ---- ensure log and err files exist
+[ -e $logfile ] || touch $logfile
+[ -e $errfile ] || touch $errfile
+# ---- redirect to log and err files
+exec 1>> $logfile
+exec 2>> $errfile
+
+nvim-qt -- "$@"
+
+# ---- restore old channels
+exec 1>&3
+exec 2>&4
+
+sleep 1
+nvr --remote-expr 'library#equal_windows()'

@@ -4,7 +4,7 @@ setopt null_glob
 
 date +" [=] %A %d %B %Y  (o) %H:%M  | %:z | "
 
-# Dossiers à archiver {{{1
+# Dossiers à versionner {{{1
 
 if (( $# > 0 ))
 then

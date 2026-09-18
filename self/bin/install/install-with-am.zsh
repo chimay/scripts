@@ -30,6 +30,7 @@ which am &> /dev/null || {
 # localsend
 # dezor
 # promethium
+# replaced by gwenview : xnviewmp
 
 packages=(
 	freetube
@@ -38,7 +39,6 @@ packages=(
 	zen-browser
 	mullvad-browser
 	helium-browser
-	xnviewmp
 )
 
 am install $=packages

@@ -1,5 +1,7 @@
 #! /usr/bin/env sh
 
+xdotool search --class nvim-qt windowactivate && exit 0
+
 export PATH=~/.local/share/mise/installs/neovim/nightly/bin:$PATH
 
 # ---- log and err files
