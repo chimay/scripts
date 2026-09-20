@@ -55,13 +55,15 @@ packages=(
 	rlwrap
 	ed gvim
 	neovim neovim-qt python-pynvim
+	tree-sitter-cli
 	emacs
 	kakoune helix
 	retext marker apostrophe ghostwriter
 	ctags
 	renameutils
 	vifm yazi xplr gvfs
-	python-piexif fuse-zip
+	atool fuse-zip
+	python-piexif
 	thunar thunar-volman thunar-vcs-plugin gigolo
 	thunar-archive-plugin thunar-media-tags-plugin
 	tree ncdu dfc socat
@@ -90,6 +92,7 @@ packages=(
 	s-nail
 	neomutt aerc
 	w3m links elinks
+	wget curl
 	qutebrowser palemoon firefox
 	weechat irssi
 	lighttpd
@@ -115,6 +118,8 @@ packages=(
 	acpi cpupower turbostat thermald
 	android-tools android-file-transfer
 	man-db # or mandoc
+	pcsclite p11-kit pcsc-tools ccid acsccid pinentry opensc
+	gtk3 libassuan openssl libxml2 libproxy
 )
 
 case $distribution in
