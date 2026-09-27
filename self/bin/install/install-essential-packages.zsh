@@ -12,6 +12,7 @@ echo
 
 # aur :
 #
+# sioyek
 # abook procmail urlview
 # udevil
 # task-spooler-cpu
@@ -22,14 +23,16 @@ echo
 # steghide stegseek
 # archivemount
 #
+# sc-im
+# tradingview
+#
 # vieb-bin
 # floorp-bin
 # mullvad-browser-bin
 # zen-browser-bin
 # helium-browser-bin
-# tradingview
+# curlmirror crawley-bin
 #
-# sc-im
 # cssc
 
 packages=(
@@ -40,7 +43,7 @@ packages=(
 	rsync rclone unison syncthing kdeconnect
 	borg borgmatic python-pyfuse3 restic fuse2 fuse3
 	avahi nss-mdns
-	zsh tmux
+	zsh fish elvish xonsh tmux
 	fzf fzy zoxide
 	fd
 	ripgrep ripgrep-all repgrep ugrep
@@ -56,6 +59,7 @@ packages=(
 	ed gvim
 	neovim neovim-qt python-pynvim
 	tree-sitter-cli
+	pyright python-debugpy
 	emacs
 	kakoune helix
 	retext marker apostrophe ghostwriter
@@ -72,7 +76,7 @@ packages=(
 	fakeroot pkgconf debugedit
 	dialog
 	mise bob
-	pass keepassxc
+	pass pass-otp keepassxc
 	xorg xf86-input-synaptics brightnessctl
 	lightdm lightdm-gtk-greeter
 	herbstluftwm sxhkd
@@ -109,6 +113,7 @@ packages=(
 	hplip simple-scan python-pillow python-reportlab python-pyqt5 libusb rpcbind
 	rubygems
 	octave
+	ipython python-numpy python-matplotlib
 	alsa-utils pipewire wireplumber
 	pulsemixer pamixer pavucontrol pavucontrol-qt
 	mpv mplayer vlc vlc-plugins-all vlc-cli vlc-gui-ncurses
@@ -118,7 +123,7 @@ packages=(
 	acpi cpupower turbostat thermald
 	android-tools android-file-transfer
 	man-db # or mandoc
-	pcsclite p11-kit pcsc-tools ccid acsccid pinentry opensc
+	pcsclite p11-kit pcsc-tools ccid acsccid pinentry opensc # eid stuff
 	gtk3 libassuan openssl libxml2 libproxy
 )
 

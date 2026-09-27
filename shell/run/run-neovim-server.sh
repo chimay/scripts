@@ -4,6 +4,8 @@ xdotool search --class nvim-qt windowactivate && exit 0
 
 export PATH=~/.local/share/mise/installs/neovim/nightly/bin:$PATH
 
+rundir=$XDG_RUNTIME_DIR
+
 # ---- log and err files
 logfile=~/log/neovim-server.log
 errfile=~/log/neovim-server.err
@@ -17,13 +19,11 @@ exec 4>&2
 exec 1>> $logfile
 exec 2>> $errfile
 
-rundir=$XDG_RUNTIME_DIR
-
-if [ -d $rundir ]
+if [ ! -z $rundir -a -d $rundir ]
 then
 	socket=$rundir/neovim-socket
 else
-	socket=~/racine/run/socket/neovim
+	socket=~/run/socket/neovim
 fi
 
 if [ -S $socket -o -e $socket ]

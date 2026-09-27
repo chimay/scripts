@@ -16,21 +16,26 @@ echo "pip install --upgrade pip"
 echo
 pip install --upgrade pip
 
+# ---- builtin in neovim now
+# neovim-remote
+# ---- miscellaneous
+# py3exiv2
+
 packages=(
-	pikaur
-	dbus-python
+	edir          # vidir improved
+	vimiv         # vim-like image viewer
+	trafilatura   # cli tool for readable
 	tldextract    # for qute-pass
 	getmail
-	edir
-	neovim-remote
-	vimiv
-	'aria2p[tui]'
-	trafilatura   # cli tool for readable
-	wptranslate
+	dbus-python
+	pyright       # python syntax in neovim
+	debugpy       # python debug in neovim
 	eg
+	pikaur
+	'aria2p[tui]'
+	wptranslate
 	zxcvbn pyaml
 	mausoleum
-	# py3exiv2
 	piexif
 	yt-dlp
 )

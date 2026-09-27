@@ -304,10 +304,10 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 
 [[ $commande = install ]] && {
 
-	echo "sudo pacman -S $=argumen"
+	echo "sudo pacman -S --needed $=argumen"
 	echo
 
-	sudo pacman -S $=argumen
+	sudo pacman -S --needed $=argumen
 }
 
 

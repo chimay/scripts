@@ -31,6 +31,7 @@ which am &> /dev/null || {
 # dezor
 # promethium
 # replaced by gwenview : xnviewmp
+# sioyek : better with aur to be configured
 
 packages=(
 	freetube

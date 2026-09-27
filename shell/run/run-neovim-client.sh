@@ -6,7 +6,7 @@ if [ -d $rundir ]
 then
 	socket=$rundir/neovim-socket
 else
-	socket=~/racine/run/socket/neovim
+	socket=~/run/socket/neovim
 fi
 
 exec nvim --server $socket --remote-ui "$@"

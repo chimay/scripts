@@ -2,11 +2,7 @@
 
 xdotool search --class nvim-qt windowactivate && exit 0
 
-# ---- we need neovim-remote to equalize windows
-which nvr || {
-	echo Please install neovim-remote with pip first
-	exit 0
-}
+rundir=$XDG_RUNTIME_DIR
 
 # ---- log and err files
 logfile=~/log/neovim-server.log
@@ -21,20 +17,32 @@ exec 4>&2
 exec 1>> $logfile
 exec 2>> $errfile
 
-rundir=$XDG_RUNTIME_DIR
-
-if [ -d $rundir ]
+if [ ! -z $rundir -a -d $rundir ]
 then
 	socket=$rundir/neovim-socket
 else
-	socket=~/racine/run/socket/neovim
+	socket=~/run/socket/neovim
 fi
 
-nvim-qt --server $socket -- "$@"
+echo neovim qt client socket : $socket
+echo
+
+if [ -S $socket ]
+then
+	nvim-qt --server $socket -- "$@"
+else
+	nvim-qt -- "$@"
+fi
 
 # ---- restore old channels
 exec 1>&3
 exec 2>&4
 
 sleep 1
-nvr --remote-expr 'library#equal_windows()'
+
+if [ -S $socket ]
+then
+	nvim --server $socket --remote-expr 'library#equal_windows()'
+else
+	nvim --remote-expr 'library#equal_windows()'
+fi
