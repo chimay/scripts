@@ -111,9 +111,9 @@ packages=(
 	libreoffice-fresh
 	system-config-printer cups sane
 	hplip simple-scan python-pillow python-reportlab python-pyqt5 libusb rpcbind
-	rubygems
+	python ipython python-numpy python-matplotlib python-scipy
+	rubygems npm
 	octave
-	ipython python-numpy python-matplotlib
 	alsa-utils pipewire wireplumber
 	pulsemixer pamixer pavucontrol pavucontrol-qt
 	mpv mplayer vlc vlc-plugins-all vlc-cli vlc-gui-ncurses

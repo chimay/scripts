@@ -451,11 +451,11 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 
 	pkgfile $=argumen
 
-	echo
-	echo "pacman -Qo $=argumen"
-	echo
+# 	echo
+# 	echo "pacman -Qo $=argumen"
+# 	echo
 
-	pacman -Qo $=argumen
+# 	pacman -Qo $=argumen
 
 	echo
 	echo "pacman -F $=argumen"

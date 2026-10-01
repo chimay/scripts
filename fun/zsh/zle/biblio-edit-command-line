@@ -21,7 +21,9 @@
     (*vim*)
       integer byteoffset=$(( $#PREBUFFER + $#LBUFFER + 1 ))
       #"${(@)editor}" -c "normal! ${byteoffset}go" -- $1;;
-      $=editor -c "normal! ${byteoffset}go" -- $1;;
+      #$=editor -u ~/racine/config/edit/vim-lite/vimrc -c "normal! ${byteoffset}go" -- $1;;
+      #vim-lite.sh -c "normal! ${byteoffset}go" -- $1;;
+      neovim-lite.sh -c "normal! ${byteoffset}go" -- $1;;
     (*emacs*)
       local lines=( "${(@f):-"$PREBUFFER$LBUFFER"}" )
       "${(@)editor}" +${#lines}:$((${#lines[-1]} + 1)) $1;;

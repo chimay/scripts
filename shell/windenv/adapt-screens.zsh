@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-if [ $HOST = taijitu ]
+if [ $HOST = taijitu -o $HOST = mandala ]
 then
 	connected=$(xrandr --query | grep -w connected | grep 'HDMI-1')
 	hdmi=$?
@@ -17,7 +17,7 @@ if [[ $hdmi -eq 0 ]]
 then
 	echo "HDMI connected"
 	# -- xrandr
-	if [ $HOST = taijitu ]
+	if [ $HOST = taijitu -o $HOST = mandala ]
 	then
 		xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 1920x0 --rotate normal --output DP-1 --off
 	else
