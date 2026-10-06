@@ -8,6 +8,9 @@ choix=$(print -l $menu | rofi -dmenu -p "Déconnexion ? " -i)
 
 winman=$(wmctrl -m | head -n 1 | cut -d ' ' -f 2)
 
+echo winman : $winman
+echo
+
 if [ $winman = i3 ]
 then
 	i3-msg exit
@@ -19,4 +22,8 @@ elif [ $winman = herbstluftwm ]
 then
 	hlwm-autostop.zsh &>>! ~/log/autostop.log
 	herbstclient quit
+elif [ $winman = "Hyprland" ]
+then
+	hypr-autostop.zsh &>>! ~/log/autostop.log
+	hyprshutdown
 fi

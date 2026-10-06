@@ -22,6 +22,7 @@ echo
 # udevil-git
 # steghide stegseek
 # archivemount
+# swhkd-bin histui
 #
 # sc-im
 # tradingview
@@ -77,16 +78,47 @@ packages=(
 	dialog
 	mise bob
 	pass pass-otp keepassxc
-	xorg xf86-input-synaptics brightnessctl
-	lightdm lightdm-gtk-greeter
-	herbstluftwm sxhkd
+	xorg xf86-input-synaptics
+	xorg-xwininfo xorg-xprop xorg-xrandr xorg-xdpyinfo
+	brightnessctl
+	xdotool wmctrl xclip xsel
+	libxkbcommon xorg-xmodmap sxhkd keyd xmod-xev
+	xorg-xrdb
+	x11vnc tigervnc
 	polybar
+	lightdm lightdm-gtk-greeter sddm
+	greetd greetd-regreet greetd-tuigreet greetd-gtkgreet nwg-hello
 	rofi dmenu zenity
 	clipmenu
 	dunst picom
 	cronie at remind
-	xdotool wmctrl xclip xsel xorg-xprop
 	unclutter
+	herbstluftwm
+	gnome-keyring polkit-gnome
+	xorg-xwayland xwayland-satellite
+	nwg-displays
+	wev
+	wl-clipboard cliphist nwg-clipman copyq
+	wlsunset gammastep
+	wf-recorder
+	wayvnc
+	foot
+	fuzzel wmenu wofi
+	swaync fnott mako
+	grim slurp
+	xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-gtk
+	waybar noctalia dms-shell dms-shell-hyprland dms-shell-niri
+	wtype
+	uwsm
+	sway swaybg swayidle swaylock
+	hyprland hyprshutdown
+	hyprlang hyprlauncher hyprpaper hyprlock
+	hyprcursor
+	hyprgraphics hyprland-guiutils hyprland-protocols hyprwire
+	xdg-desktop-portal-hyprland hyprland-qt-support
+    hypridle hyprpolkitagent hyprpwcenter hyprsunset dms-shell-hyprland
+	niri dms-shell-niri
+	river-classic
 	graphicsmagick imagemagick
 	feh sxiv nsxiv vimiv viu exiv2 libwebp-utils i3lock
 	gwenview scrot
@@ -97,7 +129,7 @@ packages=(
 	neomutt aerc
 	w3m links elinks
 	wget curl
-	qutebrowser palemoon firefox
+	qutebrowser firefox
 	weechat irssi
 	lighttpd
 	tor torsocks nyx torbrowser-launcher proton-vpn-gtk-app
@@ -114,11 +146,12 @@ packages=(
 	python ipython python-numpy python-matplotlib python-scipy
 	rubygems npm
 	octave
-	alsa-utils pipewire wireplumber
+	alsa-utils
+	#pipewire wireplumber
 	pulsemixer pamixer pavucontrol pavucontrol-qt
 	mpv mplayer vlc vlc-plugins-all vlc-cli vlc-gui-ncurses
 	mpd mpc ncmpcpp
-	sox libttspico-utils
+	sox
 	lilypond timidity fluidsynth soundfont-fluid
 	acpi cpupower turbostat thermald
 	android-tools android-file-transfer
@@ -155,7 +188,7 @@ case $distribution in
 			pacutils pkgfile expac
 			yay
 			ueberzugpp
-			pipewire-pulse
+			#pipewire-pulse
 			freepats-general-midi
 			arch-wiki-docs arch-wiki-lite
 			hplip
@@ -168,7 +201,7 @@ case $distribution in
 		echo
 		# prevents login with lightdm
 			# pam_rundir
-		# dinit-user-spawn or turnstile turnstile-dinit
+		# userspawn-dinit or turnstile turnstile-dinit
 		packages+=(
 			linux-zen
 			networkmanager
