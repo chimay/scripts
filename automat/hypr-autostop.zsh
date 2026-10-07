@@ -21,7 +21,8 @@ pkill -f protonvpn-app &
 pkill -f blueman-applet &
 pkill -f wallpaper.zsh &
 pkill -f gammastep &
-pkill -f swhkd &
+pkill -f swhks &
+pkexec pkill -f swhkd &
 pkill -f /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 pkill -f dunst &
 pkill -f log-notifications.bash &

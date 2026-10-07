@@ -61,11 +61,17 @@ gammastep-indicator &
 
 # keyboard and mouse
 
-if psgrep swhkd
+# sudo pkill -USR1 swhkd — Pause key checking
+# sudo pkill -USR2 swhkd — Resume key checking
+# sudo pkill -HUP swhkd — Reload config file
+
+if psgrep swhks || psgrep swhkd
 then
+	pkill -10 swhks
 	pkill -10 swhkd
 else
-	swhkd -c ~/racine/config/wayland/swhkd/hypr-swhkdrc >>! ~/log/swhkd.log 2>&1  &
+	swhks &
+	pkexec swhkd -c ~/racine/config/wayland/swhkd/hypr-swhkdrc >>! ~/log/swhkd.log 2>&1  &
 fi
 
 #psgrep keynav || keynav daemonize

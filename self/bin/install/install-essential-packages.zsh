@@ -82,12 +82,13 @@ packages=(
 	xorg-xwininfo xorg-xprop xorg-xrandr xorg-xdpyinfo
 	brightnessctl
 	xdotool wmctrl xclip xsel
-	libxkbcommon xorg-xmodmap sxhkd keyd xmod-xev
+	libxkbcommon xorg-xmodmap sxhkd keyd xorg-xev
 	xorg-xrdb
 	x11vnc tigervnc
 	polybar
 	lightdm lightdm-gtk-greeter sddm
 	greetd greetd-regreet greetd-tuigreet greetd-gtkgreet nwg-hello
+	ly lemurs emptty
 	rofi dmenu zenity
 	clipmenu
 	dunst picom
