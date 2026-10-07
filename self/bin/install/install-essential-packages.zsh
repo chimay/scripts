@@ -146,6 +146,7 @@ packages=(
 	hplip simple-scan python-pillow python-reportlab python-pyqt5 libusb rpcbind
 	python ipython python-numpy python-matplotlib python-scipy
 	rubygems npm
+	rust cargo cargo-binstall
 	octave
 	alsa-utils
 	#pipewire wireplumber
