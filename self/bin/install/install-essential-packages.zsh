@@ -10,7 +10,7 @@ echo
 # linux linux-lts linux-firmware
 # networkmanager
 
-# aur :
+# ---- aur
 #
 # sioyek
 # abook procmail urlview
@@ -22,7 +22,7 @@ echo
 # udevil-git
 # steghide stegseek
 # archivemount
-# swhkd-bin histui
+# hyprshell
 #
 # sc-im
 # tradingview
@@ -35,6 +35,10 @@ echo
 # curlmirror crawley-bin
 #
 # cssc
+
+# ---- interferes with dms shell notification
+#
+# swaync fnott mako
 
 packages=(
 	coreutils
@@ -51,6 +55,7 @@ packages=(
 	gnupg gpg-tui age
 	xterm rxvt-unicode kitty alacritty xfce4-terminal
 	htop btop procs
+	eza
 	less most bat
 	detox
 	calc bc
@@ -73,8 +78,9 @@ packages=(
 	thunar-archive-plugin thunar-media-tags-plugin
 	tree ncdu dfc socat
 	atools zip unzip
-	make gcc patch automake autoconf byacc
+	make cmake gcc patch automake autoconf byacc
 	fakeroot pkgconf debugedit
+	cpio
 	dialog
 	mise bob
 	pass pass-otp keepassxc
@@ -82,7 +88,7 @@ packages=(
 	xorg-xwininfo xorg-xprop xorg-xrandr xorg-xdpyinfo
 	brightnessctl
 	xdotool wmctrl xclip xsel
-	libxkbcommon xorg-xmodmap sxhkd keyd xorg-xev
+	libxkbcommon xorg-xkbcomp xorg-xmodmap sxhkd keyd xorg-xev
 	xorg-xrdb
 	x11vnc tigervnc
 	polybar
@@ -101,11 +107,11 @@ packages=(
 	wev
 	wl-clipboard cliphist nwg-clipman copyq
 	wlsunset gammastep
+	awww
 	wf-recorder
 	wayvnc
 	foot
 	fuzzel wmenu wofi
-	swaync fnott mako
 	grim slurp
 	xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-gtk
 	waybar noctalia dms-shell dms-shell-hyprland dms-shell-niri
@@ -130,7 +136,8 @@ packages=(
 	neomutt aerc
 	w3m links elinks
 	wget curl
-	qutebrowser firefox
+	qutebrowser python-tldextract
+	firefox
 	weechat irssi
 	lighttpd
 	tor torsocks nyx torbrowser-launcher proton-vpn-gtk-app
@@ -153,8 +160,10 @@ packages=(
 	pulsemixer pamixer pavucontrol pavucontrol-qt
 	mpv mplayer vlc vlc-plugins-all vlc-cli vlc-gui-ncurses
 	mpd mpc ncmpcpp
+	playerctl
 	sox
 	lilypond timidity fluidsynth soundfont-fluid
+	frescobaldi musescore
 	acpi cpupower turbostat thermald
 	android-tools android-file-transfer
 	man-db # or mandoc

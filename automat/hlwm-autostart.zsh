@@ -61,6 +61,8 @@ xset dpms 0 0 420
 setxkbmap be & sleep 1
 xmodmap ~/racine/config/windenv/xmodmap/belge-meta-super-hyper >>! ~/log/xmodmap.log 2>&1 &
 
+# xkbcomp ~/racine/config/windenv/xkb/symbols/hlwm-belge-meta-super-hyper $DISPLAY
+
 if [ $HOST != mandala ]
 then
 	numlockx on &
@@ -104,7 +106,7 @@ fi
 
 psgrep redshift-gtk || run-redshift.sh &
 
-# Keybord {{{2
+# Keyboard {{{2
 
 # Bindings clavier & souris
 

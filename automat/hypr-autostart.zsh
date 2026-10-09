@@ -35,6 +35,8 @@ alias psgrep='ps auxww | grep -v grep | grep --color=never'
 
 # wallpaper {{{2
 
+psgrep awww-daemon || awww-daemon &
+
 psgrep wallpaper.zsh || wallpaper.zsh ~/run/wall/wallpaper.status >>! ~/log/wallpaper.log 2>&1 &
 
 # gui shell : bar, dock, systray, login, power {{{2
@@ -44,60 +46,36 @@ psgrep wallpaper.zsh || wallpaper.zsh ~/run/wall/wallpaper.status >>! ~/log/wall
 
 # hardware {{{1
 
-# screen {{{2
-
-brightnessctl set 100%
-
 # services {{{1
 
 # screen {{{2
 
-psgrep gammastep || gammastep -l 50.85:4.35 -t 6000:4000 &
-gammastep-indicator &
+brightnessctl set 100%
+
+# -- warning : zero outputs support gamma adjustment
+# psgrep gammastep || gammastep -l 50.85:4.35 -t 6000:4000 &
+# gammastep-indicator &
 
 #psgrep wlsunset || wlsunset -l 50.85 -L 4.35 -T 6000 -t 4000 &
 
 # Keyboard {{{2
 
-# keyboard and mouse
+#chaine=''
+#chaine+='Shift_L=ISO_Level3_Shift|numbersign;'
+#chaine+='Control_L=Shift_L|asterisk;'
+#chaine+='Super_L=ISO_Level3_Shift|at;'
+#chaine+='Alt_L=ISO_Level3_Shift|bar;'
+#chaine+='ISO_Level3_Shift=ISO_Level3_Shift|backslash;'
+#chaine+='Super_R=Shift_L|degree;'
+#chaine+='Hyper_R=Shift_L|period;'
+#chaine+='Control_R=Shift_R|slash;'
+#chaine+='Shift_R=Shift_L|question'
 
-# sudo pkill -USR1 swhkd — Pause key checking
-# sudo pkill -USR2 swhkd — Resume key checking
-# sudo pkill -HUP swhkd — Reload config file
+#xcape -e $chaine
 
-if psgrep swhks || psgrep swhkd
-then
-	pkill -10 swhks
-	pkill -10 swhkd
-else
-	swhks &
-	pkexec swhkd -c ~/racine/config/wayland/swhkd/hypr-swhkdrc >>! ~/log/swhkd.log 2>&1  &
-fi
+# ---- not perfect
 
-#psgrep keynav || keynav daemonize
-
-# Shift_L = #
-# Control_L = *
-# Super_L = @
-# Alt_L = |
-# Alt Gr = \
-# Super_R = °
-# Hyper_R = Menu = .
-# Control_R = /
-# Shift_R = ?
-
-chaine=''
-chaine+='Shift_L=ISO_Level3_Shift|numbersign;'
-chaine+='Control_L=Shift_L|asterisk;'
-chaine+='Super_L=ISO_Level3_Shift|at;'
-chaine+='Alt_L=ISO_Level3_Shift|bar;'
-chaine+='ISO_Level3_Shift=ISO_Level3_Shift|backslash;'
-chaine+='Super_R=Shift_L|degree;'
-chaine+='Hyper_R=Shift_L|period;'
-chaine+='Control_R=Shift_R|slash;'
-chaine+='Shift_R=Shift_L|question'
-
-xcape -e $chaine
+# xremap ~/racine/config/windenv/xremap/modifiers.yml
 
 # storage {{{2
 
@@ -113,18 +91,15 @@ psgrep alarm-memory.zsh || alarm-memory.zsh 7 >>! ~/log/alarm-memory.log 2>&1 &
 
 # temperature {{{2
 
-if [ $HOST = galaxy ]
+if [ $HOST = universe ]
+then
+	psgrep alarm-sensor.zsh || alarm-sensor.zsh +90 ++100 -30 >>! ~/log/alarm-sensor.log 2>&1 &
+elif [ $HOST = galaxy ]
 then
 	psgrep alarm-sensor.zsh || alarm-sensor.zsh +80 ++90 -30 >>! ~/log/alarm-sensor.log 2>&1 &
-elif [ $HOST = taijitu ]
-then
-	psgrep alarm-sensor.zsh || alarm-sensor.zsh +85 ++90 -30 >>! ~/log/alarm-sensor.log 2>&1 &
 elif [ $HOST = mandala ]
 then
 	psgrep alarm-sensor.zsh || alarm-sensor.zsh +80 ++85 -30 >>! ~/log/alarm-sensor.log 2>&1 &
-elif [ $HOST = tixu ]
-then
-	psgrep alarm-sensor.zsh || alarm-sensor.zsh +82 ++87 -30 >>! ~/log/alarm-sensor.log 2>&1 &
 fi
 
 # D-Bus : message bus system {{{2
@@ -161,16 +136,23 @@ psgrep nm-applet || nm-applet &
 
 psgrep blueman-applet || blueman-applet &
 
+# terminal {{{2
+
+psgrep urxvtd || urxvtd -q -o -f
+
 # clipboard {{{2
 
-psgrep clipmenud || run-clipmenud.sh &
+psgrep wl-paste || {
+	wl-paste --type text --watch cliphist store &
+	#wl-paste --type image --watch cliphist store
+}
 
 # notifications {{{2
 
 # Dunst est lancé par
 # ~/.local/share/dbus-1/services/org.freedesktop.Notifications.service
 
-log-notifications.bash ~/log/notifications.log &
+#log-notifications.bash ~/log/notifications.log &
 
 # reminder {{{2
 

@@ -19,10 +19,12 @@ pkill -f alarm-sensor.zsh &
 pkill -f nm-applet &
 pkill -f protonvpn-app &
 pkill -f blueman-applet &
+pkill -f urxvtd &
+pkill -f wl-paste &
 pkill -f wallpaper.zsh &
+pkill -f swaybg &
 pkill -f gammastep &
-pkill -f swhks &
-pkexec pkill -f swhkd &
+pkill -f xremap &
 pkill -f /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 pkill -f dunst &
 pkill -f log-notifications.bash &
