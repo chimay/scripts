@@ -216,11 +216,12 @@ horodate () {
 # change-wallpaper {{{2
 
 change-wallpaper () {
-	if [ -n "$WAYLAND_DISPLAY" ]; then
-		#swaybg -m fit -i $poster &
-		# -- awww supports fading
+	if [ -n "$WAYLAND_DISPLAY" ]
+	then
+		# -- needs awww-daemon
 		awww img --resize fit $poster
-	elif [ -n "$DISPLAY" ]; then
+	elif [ -n "$DISPLAY" ]
+	then
 		feh --bg-max --no-fehbg $poster
 	fi
 }

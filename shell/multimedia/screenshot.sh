@@ -1,6 +1,16 @@
 #!/bin/sh
 
-delay=$1
-shift
+file=screenshot-$(date +"%Y-%m-%d-%H-%M-%S")
 
-scrot -d $delay -c -s "$@"
+echo file : $file
+echo
+
+if [ -n "$WAYLAND_DISPLAY" ]
+then
+	hyprshot -m window -o ~/racine/pictura/screenshot/hyprshot -f $file
+elif [ -n "$DISPLAY" ]
+then
+	delay=$1
+	shift
+	scrot -d $delay -c -s "$@"
+fi

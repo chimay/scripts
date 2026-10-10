@@ -120,7 +120,7 @@ packages=(
 	sway swaybg swayidle swaylock
 	hyprland hyprshutdown
 	hyprlang hyprlauncher hyprpaper hyprlock
-	hyprcursor
+	hyprcursor hyprshot
 	hyprgraphics hyprland-guiutils hyprland-protocols hyprwire
 	xdg-desktop-portal-hyprland hyprland-qt-support
     hypridle hyprpolkitagent hyprpwcenter hyprsunset dms-shell-hyprland
