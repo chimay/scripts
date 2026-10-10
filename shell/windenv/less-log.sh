@@ -2,4 +2,4 @@
 
 # vim: set filetype=sh:
 
-urxvtc -name journal -e less -f -r +G $@
+urxvtc -name journal -title journal -e less -f -r +G $@

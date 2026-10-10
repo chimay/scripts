@@ -60,22 +60,9 @@ brightnessctl set 100%
 
 # Keyboard {{{2
 
-#chaine=''
-#chaine+='Shift_L=ISO_Level3_Shift|numbersign;'
-#chaine+='Control_L=Shift_L|asterisk;'
-#chaine+='Super_L=ISO_Level3_Shift|at;'
-#chaine+='Alt_L=ISO_Level3_Shift|bar;'
-#chaine+='ISO_Level3_Shift=ISO_Level3_Shift|backslash;'
-#chaine+='Super_R=Shift_L|degree;'
-#chaine+='Hyper_R=Shift_L|period;'
-#chaine+='Control_R=Shift_R|slash;'
-#chaine+='Shift_R=Shift_L|question'
+# ---- conflicts with super+ctrl, super+F<1-12> kays
 
-#xcape -e $chaine
-
-# ---- not perfect
-
-# xremap ~/racine/config/windenv/xremap/modifiers.yml
+xremap ~/racine/config/windenv/xremap/modifiers.yml &
 
 # storage {{{2
 

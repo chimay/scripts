@@ -36,6 +36,9 @@ echo
 #
 # cssc
 
+# ---- cargio
+# alttabway
+
 # ---- interferes with dms shell notification
 #
 # swaync fnott mako
