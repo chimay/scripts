@@ -36,9 +36,6 @@ echo
 #
 # cssc
 
-# ---- cargio
-# alttabway
-
 # ---- interferes with dms shell notification
 #
 # swaync fnott mako
@@ -46,6 +43,7 @@ echo
 packages=(
 	coreutils
 	acpi acpid
+	procps-ng psmisc
 	network-manager-applet openssh sshfs
 	ttf-dejavu
 	rsync rclone unison syncthing kdeconnect
