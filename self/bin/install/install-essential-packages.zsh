@@ -51,7 +51,7 @@ packages=(
 	avahi nss-mdns
 	zsh fish elvish xonsh tmux
 	fzf fzy zoxide
-	fd
+	fd plocate
 	ripgrep ripgrep-all repgrep ugrep
 	gnupg gpg-tui age
 	xterm rxvt-unicode kitty alacritty xfce4-terminal
@@ -72,7 +72,8 @@ packages=(
 	retext marker apostrophe ghostwriter
 	ctags
 	renameutils
-	vifm yazi xplr gvfs
+	vifm openslide
+	yazi xplr gvfs
 	atool fuse-zip
 	python-piexif
 	thunar thunar-volman thunar-vcs-plugin gigolo
@@ -152,9 +153,9 @@ packages=(
 	libreoffice-fresh
 	system-config-printer cups sane
 	hplip simple-scan python-pillow python-reportlab python-pyqt5 libusb rpcbind
+	rust cargo cargo-binstall
 	python ipython python-numpy python-matplotlib python-scipy
 	rubygems npm
-	rust cargo cargo-binstall
 	octave
 	alsa-utils
 	#pipewire wireplumber
@@ -250,7 +251,8 @@ case $distribution in
 			avahi nss_mdns
 			rsync unison
 			py311-borgbackup restic
-			zsh tmux fd-find perl5
+			zsh tmux fd-find
+			perl5
 			git lazygit
 			py311-trash-cli
 			ed vim vim-gtk3 neovim neovim-qt

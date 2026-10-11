@@ -52,11 +52,7 @@ psgrep wallpaper.zsh || wallpaper.zsh ~/run/wall/wallpaper.status >>! ~/log/wall
 
 brightnessctl set 100%
 
-# -- warning : zero outputs support gamma adjustment
-# psgrep gammastep || gammastep -l 50.85:4.35 -t 6000:4000 &
-# gammastep-indicator &
-
-#psgrep wlsunset || wlsunset -l 50.85 -L 4.35 -T 6000 -t 4000 &
+# ---- redshift controlled by dms ipc call night toggle
 
 # Keyboard {{{2
 

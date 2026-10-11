@@ -1,0 +1,31 @@
+#!/bin/sh
+
+if ! command -v vifm >/dev/null 2>&1; then
+    printf "vifm isn't installed on your system!\n"
+    exit 1
+elif ! command -v ueberzug >/dev/null 2>&1; then
+    exec vifm "$@"
+fi
+
+mkdir -p "$HOME/.cache/vifm"
+export FIFO_UEBERZUG="$HOME/.cache/vifm/ueberzug-$$"
+mkfifo "$FIFO_UEBERZUG" || exit 1
+
+cleanup() {
+    vifmimg clear 2>/dev/null
+    exec 3>&-
+    kill "$UEBERZUG_PID" 2>/dev/null
+    wait "$UEBERZUG_PID" 2>/dev/null
+    rm -f "$FIFO_UEBERZUG"
+}
+
+# ueberzug layer -s -o wayland <"$FIFO_UEBERZUG" &
+# ueberzug layer -o wayland <"$FIFO_UEBERZUG" &
+# ueberzug layer -o sixel <"$FIFO_UEBERZUG" &
+ueberzug layer -o kitty <"$FIFO_UEBERZUG" &
+UEBERZUG_PID=$!
+
+exec 3>"$FIFO_UEBERZUG"
+trap cleanup EXIT HUP INT TERM
+
+vifm "$@" 3>&-
