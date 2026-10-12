@@ -40,9 +40,13 @@ dad -d ~/racine/gate/download stop &
 pkill -f element-desktop &
 pkill -f kdeconnect &
 
+# host specific {{{1
+
 if [ $HOST = mandala ]
 then
 	# ...
 fi
+
+# sleep {{{1
 
 sleep 2
