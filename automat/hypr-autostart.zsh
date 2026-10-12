@@ -52,6 +52,8 @@ psgrep wallpaper.zsh || wallpaper.zsh ~/run/wall/wallpaper.status >>! ~/log/wall
 
 brightnessctl set 100%
 
+hypridle &
+
 # ---- redshift controlled by dms ipc call night toggle
 
 # Keyboard {{{2

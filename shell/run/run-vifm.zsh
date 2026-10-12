@@ -6,7 +6,7 @@ local cache=(~/.cache/ueberzugpp/*)
 # -- use ueberzugpp kitty backend to avoid flicker loop in wayland
 kitty --single-instance vifmrun-fix
 
-cd ~/racine/config/fileman/vifm
-vifm-clean-matchers.sh vifminfo.json
-cd sessions
-vifm-clean-matchers.sh *.json
+# cd ~/racine/config/fileman/vifm
+# vifm-clean-matchers.sh vifminfo.json
+# cd sessions
+# vifm-clean-matchers.sh *.json

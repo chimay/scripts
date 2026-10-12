@@ -342,10 +342,10 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 #
 # 	trizen -S $=argumen
 
-	echo "yay $=argumen"
+	echo "pikaur $=argumen"
 	echo
 
-	yay $=argumen
+	pikaur $=argumen
 }
 
 
@@ -386,15 +386,10 @@ echo 'pack list-group-members|list-group|lsgrp|lg|group|g <package> : list conte
 
 [[ $commande = bin-src-update ]] && {
 
-# 	echo "yaourt -Syua --devel"
-# 	echo
-#
-# 	yaourt -Syua --devel
-
-	echo "trizen -Syyu"
+	echo "pikaur -Syyu"
 	echo
 
-	trizen -Syyu
+	pikaur -Syyu
 }
 
 
