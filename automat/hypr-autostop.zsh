@@ -44,3 +44,5 @@ if [ $HOST = mandala ]
 then
 	# ...
 fi
+
+sleep 2
