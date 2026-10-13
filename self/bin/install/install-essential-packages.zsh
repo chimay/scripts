@@ -111,6 +111,7 @@ packages=(
 	wl-clipboard cliphist nwg-clipman copyq
 	wlsunset gammastep
 	awww
+	mako
 	wf-recorder
 	wayvnc
 	foot

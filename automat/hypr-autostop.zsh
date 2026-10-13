@@ -36,6 +36,7 @@ pkill -f element-desktop &
 pkill -f gammastep &
 pkill -f kdeconnect &
 pkill -f log-notifications.bash &
+pkill -f mako &
 pkill -f mpd &
 pkill -f nm-applet &
 pkill -f protonvpn-app &

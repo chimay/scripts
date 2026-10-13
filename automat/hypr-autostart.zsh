@@ -41,19 +41,6 @@ cd ~/run/clock
 
 command cp -f clock.status.bak clock.status
 
-# desktop environment {{{1
-
-# wallpaper {{{2
-
-psgrep awww-daemon || awww-daemon &
-
-psgrep wallpaper.zsh || wallpaper.zsh ~/run/wall/wallpaper.status >>! ~/log/wallpaper.log 2>&1 &
-
-# gui shell : bar, dock, systray, login, power {{{2
-
-# -- needed in hyprland conf
-#dms run
-
 # hardware {{{1
 
 # services {{{1
@@ -144,8 +131,12 @@ psgrep wl-paste || {
 
 # notifications {{{2
 
-# Dunst est lancé par
-# ~/.local/share/dbus-1/services/org.freedesktop.Notifications.service
+# ---- mako history is not persistent
+
+#mako &
+
+# ---- dunst est lancé par
+# ---- ~/.local/share/dbus-1/services/org.freedesktop.Notifications.service
 
 #log-notifications.bash ~/log/notifications.log &
 
@@ -200,6 +191,20 @@ fi
 #  Téléphone {{{2
 
 psgrep kdeconnect || kdeconnect-indicator &
+
+# desktop environment {{{1
+
+# wallpaper {{{2
+
+psgrep awww-daemon || awww-daemon &
+
+psgrep wallpaper.zsh || wallpaper.zsh ~/run/wall/wallpaper.status >>! ~/log/wallpaper.log 2>&1 &
+
+# gui shell : bar, dock, systray, login, power {{{2
+
+dms run
+
+#noctalia &
 
 # Message d’accueil {{{1
 
