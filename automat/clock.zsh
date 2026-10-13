@@ -2,7 +2,7 @@
 
 setopt extended_glob
 
-# {{{ Functions
+# functions {{{1
 
 help () {
 	echo "$(basename $0) : configurable clock."
@@ -217,9 +217,7 @@ ring-bell () {
 	}
 }
 
-# }}}
-
-# Traps {{{1
+# traps {{{1
 
 signal-stop-wait () {
 	echo
@@ -255,9 +253,7 @@ trap signal-toggle		SIGUSR2
 
 trap signal-stop	HUP INT TERM
 
-# }}}1
-
-#  {{{ Already running ?
+# already running ? {{{1
 
 grep="/bin/grep --color=never"
 
@@ -267,11 +263,9 @@ ps auxww | $=grep -v grep | $=grep -v $$ | $=grep clock.zsh && {
 	exit 0
 }
 
-#  }}}
+# initialization {{{1
 
-#  {{{ Initialization
-
-statusfile=~/racine/run/clock/clock.status
+statusfile=~/run/clock/clock.status
 
 integer interval=15
 integer phase=0
@@ -291,9 +285,7 @@ rewind=$audiodir/rewind.ogg
 tictac=$audiodir/tictac.ogg
 simple_chime=$audiodir/coucou-1.ogg
 
-#  }}}
-
-# {{{ Arguments
+# arguments {{{1
 
 numarg=$#
 
@@ -316,17 +308,13 @@ do
 	esac
 done
 
-# }}}
-
-# Status file {{{1
+# status file {{{1
 
 stamp=${statusfile/.?*/.stamp}
 
 [[ $statusfile = $stamp ]] && stamp=${stamp}.stamp
 
 touch $statusfile
-
-# }}}1
 
 [ $numarg -eq 0 -o $aide -eq 1 ] && help
 
@@ -346,7 +334,7 @@ echo
 
 wait-until-next-minute
 
-#  {{{ Loop
+# loop {{{1
 
 while true
 do
@@ -361,5 +349,3 @@ do
 	ring-bell
 	wait-until-next-minute
 done
-
-#  }}}

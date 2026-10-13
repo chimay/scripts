@@ -31,6 +31,16 @@ fi
 
 alias psgrep='ps auxww | grep -v grep | grep --color=never'
 
+# restore backups {{{1
+
+cd ~/run/wall
+
+command cp -f wallpaper.status.bak wallpaper.status
+
+cd ~/run/clock
+
+command cp -f clock.status.bak clock.status
+
 # desktop environment {{{1
 
 # wallpaper {{{2

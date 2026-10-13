@@ -99,7 +99,8 @@ packages=(
 	ly lemurs emptty
 	rofi dmenu zenity
 	clipmenu
-	dunst picom
+	dunst
+	picom
 	cronie at remind
 	unclutter
 	herbstluftwm

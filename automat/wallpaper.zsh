@@ -57,8 +57,8 @@ stop-wait () {
 # init-empty-vars {{{2
 
 init-empty-vars () {
-	[ -z $statusfile ] && statusfile=~/racine/run/wall/wallpaper.status
-	[ -z $stamp ]      && stamp=~/racine/run/wall/wallpaper.stamp
+	[ -z $statusfile ] && statusfile=~/run/wall/wallpaper.status
+	[ -z $stamp ]      && stamp=~/run/wall/wallpaper.stamp
 	[ -z $meta ]       && meta=~/racine/index/pictura/wallpaper.meta
 	[ -z $logfile ]    && logfile=~/log/gen-random-list.log
 	[ -z $dispersion ] && dispersion=7
