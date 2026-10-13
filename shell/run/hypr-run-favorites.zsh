@@ -13,9 +13,9 @@ tmux_sessions=( $(tmux list-sessions -F "#{session_name}") )
 	echo
 	tmux rename-session principal
 
-	echo Creating tmux session simple
-	echo
-	tmux new-session -t simple -d
+# 	echo Creating tmux session simple
+# 	echo
+# 	tmux new-session -t simple -d
 
 	echo Creating tmux session ssh
 	echo
@@ -49,7 +49,7 @@ sleep 1
 
 echo Launching kitty
 echo
-kitty --single-instance tmux attach-session -t simple &
+kitty --single-instance &
 
 echo Launching neovim client
 echo
