@@ -38,7 +38,12 @@ echo
 
 # ---- interferes with dms shell notification
 #
+# dunst
 # swaync fnott mako
+#
+# utiliser :
+#
+# systemctl --user mask --now <notif-service>.service
 
 packages=(
 	coreutils
@@ -50,9 +55,23 @@ packages=(
 	borg borgmatic python-pyfuse3 restic fuse2 fuse3
 	avahi nss-mdns
 	zsh fish elvish xonsh tmux
+	gcc make cmake automake autoconf
+	patch fakeroot pkgconf debugedit
+	byacc bison
+	rust cargo cargo-binstall
+	zig
+	perl cpanminus perl-cpanplus
+	ruby rubygems
+	python python-pip ipython
+	python-numpy python-matplotlib python-scipy
+	octave
+	ocaml opam
+	lua luarocks
+	mujs npm mathjax
 	fzf fzy zoxide
 	fd plocate
 	ripgrep ripgrep-all repgrep ugrep
+	grex
 	gnupg gpg-tui age
 	xterm rxvt-unicode kitty alacritty xfce4-terminal
 	htop btop procs
@@ -80,8 +99,6 @@ packages=(
 	thunar-archive-plugin thunar-media-tags-plugin
 	tree ncdu dfc socat
 	atools zip unzip
-	make cmake gcc patch automake autoconf byacc
-	fakeroot pkgconf debugedit
 	cpio
 	dialog
 	mise bob
@@ -118,7 +135,10 @@ packages=(
 	fuzzel wmenu wofi
 	grim slurp
 	xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-gtk
-	waybar noctalia dms-shell dms-shell-hyprland dms-shell-niri
+	waybar
+	quickshell
+	dms-shell dms-shell-hyprland dms-shell-niri
+	noctalia
 	wtype
 	uwsm
 	sway swaybg swayidle swaylock
@@ -127,7 +147,7 @@ packages=(
 	hyprcursor hyprshot
 	hyprgraphics hyprland-guiutils hyprland-protocols hyprwire
 	xdg-desktop-portal-hyprland hyprland-qt-support
-    hypridle hyprpolkitagent hyprpwcenter hyprsunset dms-shell-hyprland
+    hypridle hyprpolkitagent hyprpwcenter hyprsunset
 	niri dms-shell-niri
 	river-classic
 	graphicsmagick imagemagick
@@ -155,10 +175,6 @@ packages=(
 	libreoffice-fresh
 	system-config-printer cups sane
 	hplip simple-scan python-pillow python-reportlab python-pyqt5 libusb rpcbind
-	rust cargo cargo-binstall
-	python ipython python-numpy python-matplotlib python-scipy
-	rubygems npm
-	octave
 	alsa-utils
 	#pipewire wireplumber
 	pulsemixer pamixer pavucontrol pavucontrol-qt
