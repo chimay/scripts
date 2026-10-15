@@ -28,9 +28,9 @@ fi
 
 if [ -S $socket -o -e $socket ]
 then
-	echo 'neovim is already started'
+	echo 'removing old socket'
 	echo
-	exit 0
+	rm -rf $socket
 fi
 
 echo
