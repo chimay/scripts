@@ -79,7 +79,7 @@ packages=(
 	less most bat
 	detox
 	calc bc
-	git lazygit tig
+	git git-delta lazygit tig
 	trash-cli
 	rlwrap
 	ed gvim
@@ -125,6 +125,7 @@ packages=(
 	xorg-xwayland xwayland-satellite
 	nwg-displays
 	wev
+	wtype ydotool
 	wl-clipboard cliphist nwg-clipman copyq
 	wlsunset gammastep
 	awww
