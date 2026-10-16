@@ -12,6 +12,8 @@ numarg=$#
 time_change=$1
 directory=$2
 
+echo "cd $directory"
+echo
 cd $directory
 
 images=( $(print -l **/*(.) | shuf ) )
@@ -33,7 +35,8 @@ do
 		awww img --resize fit $current
 	elif [ -n "$DISPLAY" ]
 	then
-		feh --bg-max --no-fehbg $current
+		#feh --bg-max --no-fehbg $current
+		xwallpaper --zoom  $current
 	fi
 	sleep $time_change
 done
