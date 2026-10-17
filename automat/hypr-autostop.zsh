@@ -22,13 +22,13 @@ command cp -f clock.status clock.status.bak
 
 # clean up {{{1
 
+awww kill &
 dad -d ~/racine/gate/download stop &
 pkill -f /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 pkill -f alarm-battery.zsh &
 pkill -f alarm-memory.zsh &
 pkill -f alarm-sensor.zsh &
 pkill -f aria2c &
-pkill -f awww-daemon &
 pkill -f blueman-applet &
 pkill -f clock.zsh &
 pkill -f dunst &
@@ -51,6 +51,8 @@ pkill -f urxvtd &
 pkill -f wallpaper.zsh &
 pkill -f wl-paste &
 pkill -f xremap &
+
+pkill -f awww-daemon &
 
 # host specific {{{1
 

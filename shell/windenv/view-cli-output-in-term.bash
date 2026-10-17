@@ -9,4 +9,6 @@
 
 command="$@"
 
-alacritty -e bash -c "$command ; tput setaf 1 ; read -p 'Press any key to continue.' -s -n 1"
+#alacritty -e bash -c "$command ; tput setaf 1 ; read -p 'Press any key to continue.' -s -n 1"
+
+kitty --single-instance --title floating-term -e bash -c "$command ; tput setaf 1 ; read -p 'Press any key to continue.' -s -n 1"

@@ -4,4 +4,6 @@
 
 #urxvtc -name journal -title journal -e less -f -r +G $@
 
-kitty --single-instance --title journal less -f -r +G $@
+#kitty --single-instance --title journal less -f -r +G $@
+
+kitty --single-instance --title journal less --force --raw-control-chars $@

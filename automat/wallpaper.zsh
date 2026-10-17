@@ -219,7 +219,7 @@ change-wallpaper () {
 	if [ -n "$WAYLAND_DISPLAY" ]
 	then
 		# -- needs awww-daemon
-		awww img --resize fit $poster
+		awww img --resize fit --transition-type none $poster
 	elif [ -n "$DISPLAY" ]
 	then
 		feh --bg-max --no-fehbg $poster

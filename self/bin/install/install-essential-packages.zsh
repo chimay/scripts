@@ -12,6 +12,8 @@ echo
 
 # ---- aur
 #
+# yay aura
+#
 # sioyek
 # abook procmail urlview
 # udevil
@@ -25,6 +27,7 @@ echo
 # hyprshell
 #
 # sc-im
+# vscodium-bin
 # tradingview
 #
 # vieb-bin

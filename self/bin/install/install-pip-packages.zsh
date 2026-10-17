@@ -28,6 +28,7 @@ packages=(
 	tldextract    # for qute-pass
 	getmail
 	dbus-python
+	pywal
 	pyright       # python syntax in neovim
 	debugpy       # python debug in neovim
 	eg
