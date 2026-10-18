@@ -58,6 +58,7 @@ packages=(
 	borg borgmatic python-pyfuse3 restic fuse2 fuse3
 	avahi nss-mdns
 	zsh fish elvish xonsh tmux
+	sudo opendoas polkit
 	gcc make cmake automake autoconf
 	patch fakeroot pkgconf debugedit
 	byacc bison
