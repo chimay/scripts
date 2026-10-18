@@ -24,6 +24,8 @@ command cp -f clock.status clock.status.bak
 
 awww kill &
 dad -d ~/racine/gate/download stop &
+systemctl --user stop hyprpolkitagent
+
 pkill -f /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 pkill -f alarm-battery.zsh &
 pkill -f alarm-memory.zsh &
@@ -34,6 +36,7 @@ pkill -f clock.zsh &
 pkill -f dunst &
 pkill -f element-desktop &
 pkill -f gammastep &
+pkill -f gnome-keyring-daemon &
 pkill -f kdeconnect &
 pkill -f log-notifications.bash &
 pkill -f mako &

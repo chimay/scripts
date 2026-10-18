@@ -93,11 +93,13 @@ fi
 
 # identification {{{2
 
-psgrep polkit-gnome-authentication-agent || \
-	/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+systemctl --user start hyprpolkitagent
 
-psgrep gnome-keyring-daemon || \
-	eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
+# psgrep polkit-gnome-authentication-agent || \
+# 	/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+
+# psgrep gnome-keyring-daemon || \
+# 	eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
 
 # network {{{2
 

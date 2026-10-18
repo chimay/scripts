@@ -29,5 +29,7 @@
 export ZDOTDIR=$HOME/racine/config/shell/zsh/zshrunterm
 export RACINE_ZSH=$HOME/racine/config/shell/zsh
 
-urxvtc -name zshrunterm -title zshrunterm -geometry 84x7+200+200 \
-	-e zsh -t -i -d
+# urxvtc -name zshrunterm -title zshrunterm -geometry 84x7+200+200 \
+# 	-e zsh -t -i -d
+
+kitty --single-instance --title zshrunterm zsh -t -i -d

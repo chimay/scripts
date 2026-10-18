@@ -146,12 +146,14 @@ packages=(
 	wtype
 	uwsm
 	sway swaybg swayidle swaylock
-	hyprland hyprshutdown
-	hyprlang hyprlauncher hyprpaper hyprlock
-	hyprcursor hyprshot
-	hyprgraphics hyprland-guiutils hyprland-protocols hyprwire
+	hyprland hyprtoolkit hyprutils hyprwire hyprlang
+	hyprland-guiutils hyprland-protocols hyprcursor
+	hyprlauncher hyprshutdown
+	hyprpaper hyprsunset
+    hypridle hyprlock hyprpolkitagent
+	hyprshot hyprgraphics
+	hyprpwcenter
 	xdg-desktop-portal-hyprland hyprland-qt-support
-    hypridle hyprpolkitagent hyprpwcenter hyprsunset
 	niri dms-shell-niri
 	river-classic
 	graphicsmagick imagemagick
@@ -180,7 +182,7 @@ packages=(
 	system-config-printer cups sane
 	hplip simple-scan python-pillow python-reportlab python-pyqt5 libusb rpcbind
 	alsa-utils
-	#pipewire wireplumber
+	pipewire pipewire-alsa pipewire-pulse pipewire-sesssion-manager wireplumber
 	pulsemixer pamixer pavucontrol pavucontrol-qt
 	mpv mplayer vlc vlc-plugins-all vlc-cli vlc-gui-ncurses
 	mpd mpc ncmpcpp
