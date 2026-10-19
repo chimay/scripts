@@ -5,42 +5,15 @@ distribution=${1:-arch}
 echo Distribution : $distribution
 echo
 
-# during install :
-#
+# during install {{{1
+
 # linux linux-lts linux-firmware
 # networkmanager
 
-# ---- aur
-#
-# yay aura
-#
-# sioyek
-# abook procmail urlview
-# udevil
-# task-spooler-cpu
-# mp3splt-bin mp3wrap-bin
-# pico2wave-shell pico-tts
-# nodejs-readability-cli
-# udevil-git
-# steghide stegseek
-# archivemount
-# hyprshell
-#
-# sc-im
-# vscodium-bin
-# tradingview
-#
-# vieb-bin
-# floorp-bin
-# mullvad-browser-bin
-# zen-browser-bin
-# helium-browser-bin
-# curlmirror crawley-bin
-#
-# cssc
+# issues {{{1
 
-# ---- interferes with dms shell notification
-#
+# interferes with dms shell notification {{{2
+
 # dunst
 # swaync fnott mako
 #
@@ -48,17 +21,95 @@ echo
 #
 # systemctl --user mask --now <notif-service>.service
 
-packages=(
+# init {{{1
+
+packages=()
+packages_aur=()
+
+# generic packages {{{1
+
+# base {{{2
+
+packages+=(
+	linux-firmware
 	coreutils
 	acpi acpid
 	procps-ng psmisc
-	network-manager-applet openssh sshfs
-	ttf-dejavu
-	rsync rclone unison syncthing kdeconnect
-	borg borgmatic python-pyfuse3 restic fuse2 fuse3
-	avahi nss-mdns
+)
+
+# package managers {{{2
+
+packages+=(
+	pacman-contrib
+	pacutils pkgfile expac
+)
+
+# file systems {{{2
+
+packages+=(
+	python-pyfuse3 fuse2 fuse3
+)
+
+# terminal {{{2
+
+packages+=(
+	kitty alacritty ghostty
+	xterm rxvt-unicode xfce4-terminal
+)
+
+# shell {{{2
+
+packages+=(
 	zsh fish elvish xonsh tmux
 	sudo opendoas polkit
+)
+
+# network {{{2
+
+packages+=(
+	networkmanager network-manager-applet
+	avahi nss-mdns
+	openssh sshfs
+)
+
+# archives {{{2
+
+packages+=(
+	atools zip unzip
+	cpio
+)
+
+# backup {{{2
+
+packages+=(
+	borg borgmatic
+	restic
+)
+
+# synchronization {{{2
+
+packages+=(
+	rsync
+	rclone
+	unison
+	syncthing kdeconnect
+)
+
+# utils {{{2
+
+packages+=(
+	eza tree ncdu dfc socat
+	htop btop procs
+	detox
+	calc bc
+	trash-cli
+	dialog
+)
+
+# development {{{2
+
+packages+=(
+	git git-delta lazygit tig
 	gcc make cmake automake autoconf
 	patch fakeroot pkgconf debugedit
 	byacc bison
@@ -72,19 +123,27 @@ packages=(
 	ocaml opam
 	lua luarocks
 	mujs npm mathjax
+	mise bob
+)
+
+# search {{{2
+
+packages+=(
 	fzf fzy zoxide
 	fd plocate
 	ripgrep ripgrep-all repgrep ugrep
 	grex
-	gnupg gpg-tui age
-	xterm rxvt-unicode kitty alacritty xfce4-terminal
-	htop btop procs
-	eza
+)
+
+# view {{{2
+
+packages+=(
 	less most bat
-	detox
-	calc bc
-	git git-delta lazygit tig
-	trash-cli
+)
+
+# edit {{{2
+
+packages+=(
 	rlwrap
 	ed gvim
 	neovim neovim-qt python-pynvim
@@ -94,19 +153,55 @@ packages=(
 	kakoune helix
 	retext marker apostrophe ghostwriter
 	ctags
-	renameutils
-	vifm openslide
-	yazi xplr gvfs
-	atool fuse-zip
-	python-piexif
+	# -- conflict with imv
+	#renameutils
+)
+
+# file managers {{{2
+
+packages+=(
+	vifm
+	yazi xplr
+	gvfs openslide atool fuse-zip python-piexif
 	thunar thunar-volman thunar-vcs-plugin gigolo
 	thunar-archive-plugin thunar-media-tags-plugin
-	tree ncdu dfc socat
-	atools zip unzip
-	cpio
-	dialog
-	mise bob
+)
+
+# organize {{{2
+
+packages+=(
+	cronie at remind
+)
+
+# keys {{{2
+
+packages+=(
+	gnupg gpg-tui age
 	pass pass-otp keepassxc
+)
+
+# fonts {{{2
+
+packages+=(
+	ttf-dejavu ttf-droid ttf-inconsolata
+	adwaita-fonts
+	noto-fonts
+	ttf-jetbrains-mono-nerd
+)
+
+# display managers {{{2
+
+packages+=(
+	ly lemurs emptty
+	lightdm lightdm-gtk-greeter
+	sddm
+	gdm
+	greetd greetd-regreet greetd-tuigreet greetd-gtkgreet nwg-hello
+)
+
+# xorg {{{2
+
+packages+=(
 	xorg xf86-input-synaptics
 	xorg-xwininfo xorg-xprop xorg-xrandr xorg-xdpyinfo
 	brightnessctl
@@ -115,18 +210,23 @@ packages=(
 	xorg-xrdb
 	x11vnc tigervnc
 	polybar
-	lightdm lightdm-gtk-greeter sddm
-	greetd greetd-regreet greetd-tuigreet greetd-gtkgreet nwg-hello
-	ly lemurs emptty
 	rofi dmenu zenity
 	clipmenu
 	dunst
 	picom
-	cronie at remind
 	unclutter
-	herbstluftwm
+	redshift
+	i3lock
 	gnome-keyring polkit-gnome
+	xfce4 herbstluftwm
+)
+
+# wayland {{{2
+
+packages+=(
 	xorg-xwayland xwayland-satellite
+	qt6-wayland qt5-wayland
+	uwsm
 	nwg-displays
 	wev
 	wtype ydotool
@@ -145,7 +245,6 @@ packages=(
 	dms-shell dms-shell-hyprland dms-shell-niri
 	noctalia
 	wtype
-	uwsm
 	sway swaybg swayidle swaylock
 	hyprland hyprtoolkit hyprutils hyprwire hyprlang
 	hyprland-guiutils hyprland-protocols hyprcursor
@@ -157,150 +256,240 @@ packages=(
 	xdg-desktop-portal-hyprland hyprland-qt-support
 	niri dms-shell-niri
 	river-classic
-	graphicsmagick imagemagick
-	feh sxiv nsxiv vimiv viu exiv2 libwebp-utils i3lock
-	gwenview scrot
-	redshift
-	xfce4
-	isync opensmtpd
-	s-nail
-	neomutt aerc
+)
+
+# browser {{{2
+
+packages+=(
 	w3m links elinks
 	wget curl
 	qutebrowser python-tldextract
 	firefox
-	weechat irssi
 	lighttpd
 	tor torsocks nyx torbrowser-launcher proton-vpn-gtk-app
+)
+
+# mail {{{2
+
+packages+=(
+	isync opensmtpd
+	s-nail
+	neomutt aerc
+
+)
+
+# social {{{2
+
+packages+=(
+	weechat irssi
+)
+
+# sharing {{{2
+
+packages+=(
 	samba
-	translate-shell
-	pandoc jq
+)
+
+# document {{{2
+
+packages+=(
 	texlive-meta # latex and stuff
 	texlive-langfrench
-	pdf2svg inkscape
+	pandoc jq
 	zathura zathura-pdf-mupdf zathura-ps
+	pdf2svg inkscape
+)
+
+# office {{{2
+
+packages+=(
 	libreoffice-fresh
 	system-config-printer cups sane
-	hplip simple-scan python-pillow python-reportlab python-pyqt5 libusb rpcbind
+	hplip
+	simple-scan
+)
+
+# images {{{2
+
+packages+=(
+	graphicsmagick imagemagick
+	feh sxiv nsxiv imv
+	vimiv viu
+	exiv2 libwebp-utils
+	gwenview scrot
+)
+
+# audio {{{2
+
+packages+=(
 	alsa-utils
-	pipewire pipewire-alsa pipewire-pulse pipewire-sesssion-manager wireplumber
+	pipewire pipewire-alsa pipewire-pulse
+	pipewire-session-manager wireplumber
+	wiremix
+	helvum
 	pulsemixer pamixer pavucontrol pavucontrol-qt
-	mpv mplayer vlc vlc-plugins-all vlc-cli vlc-gui-ncurses
-	mpd mpc ncmpcpp
-	playerctl
 	sox
-	lilypond timidity fluidsynth soundfont-fluid
-	frescobaldi musescore
+)
+
+# music {{{2
+
+packages+=(
+	mpd mpc ncmpcpp
+	timidity fluidsynth
+	freepats-general-midi soundfont-fluid
+	lilypond frescobaldi musescore
+)
+
+# multimedia {{{2
+
+packages+=(
+	mpv mplayer
+	playerctl
+	vlc vlc-plugins-all vlc-cli vlc-gui-ncurses
+)
+
+# documentation {{{2
+
+packages+=(
+	man-db # or mandoc
+	arch-wiki-docs arch-wiki-lite
+)
+
+# others {{{2
+
+packages+=(
+	translate-shell
+	python-pillow python-reportlab python-pyqt5 libusb rpcbind
 	acpi cpupower turbostat thermald
 	android-tools android-file-transfer
-	man-db # or mandoc
 	pcsclite p11-kit pcsc-tools ccid acsccid pinentry opensc # eid stuff
 	gtk3 libassuan openssl libxml2 libproxy
 )
 
-case $distribution in
-	arch|archlinux)
-		echo "arch"
-		echo
-		packages+=(
-			linux linux-lts linux-firmware linux-zen
-			networkmanager
-			pacman-contrib
-			pacutils pkgfile expac
-			pipewire-pulse
-			freepats-general-midi
-			arch-wiki-docs arch-wiki-lite
-		)
-		sudo pacman -Syy
-		sudo pacman -S --needed $=packages
-		;;
-	manjaro)
-		echo "manjaro"
-		echo
-		packages+=(
-			linux-meta
-			linux-r8168-meta
-			linux-lts-r8168-meta
-			networkmanager
-			pacman-contrib
-			pacutils pkgfile expac
-			yay
-			ueberzugpp
-			#pipewire-pulse
-			freepats-general-midi
-			arch-wiki-docs arch-wiki-lite
-			hplip
-		)
-		sudo pacman -Syy
-		sudo pacman -S --needed $=packages
-		;;
-	artix)
-		echo "artix"
-		echo
-		# prevents login with lightdm
-			# pam_rundir
-		# userspawn-dinit or turnstile turnstile-dinit
-		packages+=(
-			linux-zen
-			networkmanager
-			pacman-contrib
-			pacutils pkgfile expac
-			pipewire-pulse
-			freepats-general-midi
-			arch-wiki-docs arch-wiki-lite
-			userspawn-dinit
-			zramen zramen-dinit
-			thermald-dinit
-		)
-		sudo pacman -Syy
-		sudo pacman -S --needed $=packages
-		;;
-	void|voidlinux)
-		echo "void"
-		echo
-		packages+=(
-			base-system linux-base
-			NetworkManager
-			xtools
-			pam_rundir
-			alsa-pipewire
-			freepats
-		)
-		sudo xbps-install $=packages
-		;;
-	freebsd)
-		echo "freebsd"
-		echo
-		packages=(
-			networkmgr
-			avahi nss_mdns
-			rsync unison
-			py311-borgbackup restic
-			zsh tmux fd-find
-			perl5
-			git lazygit
-			py311-trash-cli
-			ed vim vim-gtk3 neovim neovim-qt
-			tree ncdu dfc socat
-			password-store
-			xorg lightdm lightdm-gtk-greeter
-			polybar
-			rofi dmenu zenity
-			dunst picom xdotool wmctrl-fork xclip xsel-conrad
-			feh nsxiv
-			pulseaudio gtk-mixer
-			neomutt
-			qutebrowser firefox
-			alsa-utils alsa-seq-server
-			lilypond timidity fluidsynth fluid-soundfont
-			pftop
-			bastille debootstrap
-			vm-bhyve grub2-bhyve bhyve-firmware
-		)
-		sudo pkg install $=packages
-		;;
-	*)
-		echo Distribution : $distribution
-		echo
-		;;
-esac
+#print -l $packages
+
+# manjaro {{{1
+
+if [ $distribution = manjaro ]
+then
+	echo "manjaro"
+	echo
+	packages+=(
+		linux-meta
+		linux-r8168-meta
+		linux-lts-r8168-meta
+		yay
+		ueberzugpp
+	)
+	echo "sudo pacman -Syy"
+	echo "sudo pacman -S --needed $=packages"
+	echo
+	sudo pacman -Syy
+	sudo pacman -S --needed $=packages
+fi
+
+# archlinux {{{1
+
+if [ $distribution = archlinux ]
+then
+	echo "arch"
+	echo
+	packages+=(
+		linux linux-lts linux-zen
+	)
+	echo "sudo pacman -Syy"
+	echo "sudo pacman -S --needed $=packages"
+	echo
+	sudo pacman -Syy
+	sudo pacman -S --needed $=packages
+fi
+
+# aur : arch user repository {{{1
+
+# helpers {{{2
+
+packages_aur+=(
+	yay aura-bin
+)
+
+# pluggable devices {{{2
+
+packages_aur+=(
+	udevil
+)
+
+# archives {{{2
+
+packages_aur+=(
+	archivemount
+)
+
+# development {{{2
+
+packages_aur+=(
+	#cssc
+	vscodium-bin
+)
+
+# keys {{{2
+
+packages_aur+=(
+	#steghide stegseek
+)
+
+# wayland {{{2
+
+packages_aur+=(
+	#hyprshell
+)
+
+# browser {{{2
+
+packages_aur+=(
+	#nodejs-readability-cli
+	#curlmirror crawley-bin
+)
+
+# mail {{{2
+
+packages_aur+=(
+	abook procmail
+	#urlview
+)
+
+# music {{{2
+
+packages_aur+=(
+	#mp3splt-bin mp3wrap-bin
+)
+
+# vocal synthesis {{{2
+
+packages_aur+=(
+	pico2wave-shell pico-tts
+)
+
+# document {{{2
+
+packages_aur+=(
+	sioyek-git
+)
+
+# office {{{2
+
+packages_aur+=(
+	sc-im
+	tradingview
+)
+
+# others {{{2
+
+packages_aur+=(
+	task-spooler-cpu
+)
+
+# apply pikaur {{{2
+
+echo "pikaur -S --needed $=packages_aur"
+echo
+pikaur -S --needed $=packages_aur

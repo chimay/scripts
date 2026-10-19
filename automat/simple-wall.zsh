@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+export PATH=$PATH:~/script
+
 numarg=$#
 
 [ $numarg -eq 0 ] && {
@@ -24,7 +26,12 @@ counter=1
 
 while true
 do
-	[ $counter -gt $num_images ] && counter=1
+	if [ $counter -gt $num_images ]
+	then
+		images=( $(print -l **/*(.) | shuf ) )
+		num_images=$#images
+		counter=1
+	fi
 	current=$images[$counter]
 	echo counter : $counter
 	echo current : $current
@@ -35,8 +42,15 @@ do
 		awww img --resize fit $current
 	elif [ -n "$DISPLAY" ]
 	then
-		#feh --bg-max --no-fehbg $current
-		xwallpaper --zoom  $current
+		echo ""
+		echo
+		xfce-change-wall-all-workspaces.bash $current
+		# echo "feh --bg-max --no-fehbg $current"
+		# echo
+		# feh --bg-max --no-fehbg $current
+		# echo "xwallpaper --zoom  $current"
+		# echo
+		# xwallpaper --zoom  $current
 	fi
 	sleep $time_change
 done

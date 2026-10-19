@@ -16,11 +16,6 @@ echo "pip install --upgrade pip"
 echo
 pip install --upgrade pip
 
-# ---- builtin in neovim now
-# neovim-remote
-# ---- miscellaneous
-# py3exiv2
-
 packages=(
 	edir          # vidir improved
 	vimiv         # vim-like image viewer
