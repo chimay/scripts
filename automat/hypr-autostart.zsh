@@ -33,13 +33,13 @@ alias psgrep='ps auxww | grep -v grep | grep --color=never'
 
 # restore backups {{{1
 
-cd ~/run/wall
+# cd ~/run/wall
 
-command cp -f wallpaper.status.bak wallpaper.status
+# command cp -f wallpaper.status.bak wallpaper.status
 
-cd ~/run/clock
+# cd ~/run/clock
 
-command cp -f clock.status.bak clock.status
+# command cp -f clock.status.bak clock.status
 
 # hardware {{{1
 
@@ -49,7 +49,7 @@ command cp -f clock.status.bak clock.status
 
 brightnessctl set 100%
 
-hypridle &
+hypridle >>! ~/log/hypridle.log 2>&1 &
 
 # ---- redshift controlled by dms ipc call night toggle
 

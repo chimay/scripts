@@ -12,13 +12,13 @@ HOST=`hostname -s`
 
 # backups {{{1
 
-cd ~/run/wall
+# cd ~/run/wall
 
-command cp -f wallpaper.status wallpaper.status.bak
+# command cp -f wallpaper.status wallpaper.status.bak
 
-cd ~/run/clock
+# cd ~/run/clock
 
-command cp -f clock.status clock.status.bak
+# command cp -f clock.status clock.status.bak
 
 # clean up {{{1
 

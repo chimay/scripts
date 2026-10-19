@@ -248,10 +248,10 @@ signal-stop () {
 	exit 128
 }
 
-trap signal-stop-wait	SIGUSR1
-trap signal-toggle		SIGUSR2
+trap signal-stop-wait  SIGUSR1
+trap signal-toggle     SIGUSR2
 
-trap signal-stop	HUP INT TERM
+trap signal-stop       HUP INT TERM
 
 # already running ? {{{1
 

@@ -289,8 +289,8 @@ signal-stop () {
 	exit 128
 }
 
-trap signal-reload SIGUSR1
-trap signal-next  SIGUSR2
+trap signal-reload  SIGUSR1
+trap signal-next    SIGUSR2
 
 trap signal-stop    HUP INT TERM
 
