@@ -199,6 +199,13 @@ packages+=(
 	greetd greetd-regreet greetd-tuigreet greetd-gtkgreet nwg-hello
 )
 
+# graphic libraries themes {{{2
+
+packages+=(
+	nwg-look
+	qt6ct
+)
+
 # xorg {{{2
 
 packages+=(
@@ -224,6 +231,7 @@ packages+=(
 # wayland {{{2
 
 packages+=(
+	wayland wayland-utils
 	xorg-xwayland xwayland-satellite
 	qt6-wayland qt5-wayland
 	uwsm
@@ -245,11 +253,13 @@ packages+=(
 	dms-shell dms-shell-hyprland dms-shell-niri
 	noctalia
 	wtype
+	wayfire wcm wf-config
+	waypipe waylock
 	sway swaybg swayidle swaylock
 	hyprland hyprtoolkit hyprutils hyprwire hyprlang
 	hyprland-guiutils hyprland-protocols hyprcursor
 	hyprlauncher hyprshutdown
-	hyprpaper hyprsunset
+	hyprpaper hyprsunset hyprpicker
     hypridle hyprlock hyprpolkitagent
 	hyprshot hyprgraphics
 	hyprpwcenter
@@ -344,8 +354,8 @@ packages+=(
 
 packages+=(
 	mpv mplayer
-	playerctl
 	vlc vlc-plugins-all vlc-cli vlc-gui-ncurses
+	playerctl
 )
 
 # documentation {{{2
