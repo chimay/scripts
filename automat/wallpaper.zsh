@@ -222,7 +222,7 @@ change-wallpaper () {
 		#awww img --resize fit --transition-type none $poster
 		# -- turn a page
 		awww img $poster \
-			--resize fit
+			--resize fit \
 			--transition-type wipe \
 			--transition-angle 45 \
 			--transition-duration 1.0

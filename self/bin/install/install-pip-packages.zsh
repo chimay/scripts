@@ -17,6 +17,7 @@ echo
 pip install --upgrade pip
 
 packages=(
+	ipython
 	edir          # vidir improved
 	vimiv         # vim-like image viewer
 	trafilatura   # cli tool for readable
