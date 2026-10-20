@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 distribution=${1:-arch}
+supplement=${2:-none}
 
 echo Distribution : $distribution
 echo
@@ -333,7 +334,7 @@ packages+=(
 
 packages+=(
 	alsa-utils
-	pipewire pipewire-alsa pipewire-pulse
+	pipewire pipewire-alsa pipewire-pulse pipewire-jack
 	pipewire-session-manager wireplumber
 	wiremix
 	helvum
@@ -415,6 +416,8 @@ then
 fi
 
 # aur : arch user repository {{{1
+
+[ $supplement = aur ] || exit 0
 
 # helpers {{{2
 
