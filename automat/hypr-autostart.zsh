@@ -75,7 +75,7 @@ psgrep alarm-memory.zsh || alarm-memory.zsh 7 >>! ~/log/alarm-memory.log 2>&1 &
 
 if [ $HOST = universe ]
 then
-	psgrep alarm-sensor.zsh || alarm-sensor.zsh +90 ++100 -30 >>! ~/log/alarm-sensor.log 2>&1 &
+	psgrep alarm-sensor.zsh || alarm-sensor.zsh +80 ++90 -30 >>! ~/log/alarm-sensor.log 2>&1 &
 elif [ $HOST = galaxy ]
 then
 	psgrep alarm-sensor.zsh || alarm-sensor.zsh +80 ++90 -30 >>! ~/log/alarm-sensor.log 2>&1 &
