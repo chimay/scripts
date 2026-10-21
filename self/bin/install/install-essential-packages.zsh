@@ -345,7 +345,7 @@ packages+=(
 # music {{{2
 
 packages+=(
-	mpd mpc ncmpcpp
+	mpd mpc ncmpcpp mpd-mpris
 	timidity fluidsynth
 	freepats-general-midi soundfont-fluid
 	lilypond frescobaldi musescore

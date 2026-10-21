@@ -1,5 +1,10 @@
 #!/usr/bin/env zsh
 
+pgrep -f freetube && {
+	notify-send "freetube is running" "please stop it before suspending"
+	exit 0
+}
+
 confirmation=(
 	Non
 	"Faut voir"

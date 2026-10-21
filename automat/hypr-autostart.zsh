@@ -160,6 +160,8 @@ psgrep 'mpv --idle --input-ipc-server' || \
 
 psgrep mpd || { rm -f ~/racine/run/mpd/pid ; mpd ~/racine/config/multimedia/mpd.conf }
 
+psgrep mpd-mpris || mpd-mpris &
+
 psgrep timidity || run-timidity-server.sh
 
 # clock {{{2
@@ -204,7 +206,14 @@ psgrep wallpaper.zsh || wallpaper.zsh ~/run/wall/wallpaper.status >>! ~/log/wall
 
 # gui shell : bar, dock, systray, login, power {{{2
 
-dms run
+# -- replace universe by none to choose dms instead of noctalia
+
+if [ $HOST = universe -o $HOST = mandala ]
+then
+	noctalia --daemon
+else
+	dms run
+fi
 
 #noctalia &
 
