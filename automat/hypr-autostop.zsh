@@ -26,6 +26,8 @@ awww kill &
 dad -d ~/racine/gate/download stop &
 systemctl --user stop hyprpolkitagent
 
+pkill -f mpd-mpris &
+
 pkill -f /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 pkill -f alarm-battery.zsh &
 pkill -f alarm-memory.zsh &
@@ -54,8 +56,6 @@ pkill -f urxvtd &
 pkill -f wallpaper.zsh &
 pkill -f wl-paste &
 pkill -f xremap &
-
-pkill -f awww-daemon &
 
 # host specific {{{1
 
