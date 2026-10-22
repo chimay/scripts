@@ -65,12 +65,19 @@ packages+=(
 	sudo opendoas polkit
 )
 
+# remote shell {{{2
+
+packages+=(
+	openssh sshfs
+	ttyd
+	croc magic-wormhole
+)
+
 # network {{{2
 
 packages+=(
 	networkmanager network-manager-applet
 	avahi nss-mdns
-	openssh sshfs
 )
 
 # archives {{{2
