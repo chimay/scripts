@@ -179,6 +179,7 @@ packages+=(
 packages+=(
 	gnupg gpg-tui age
 	pass pass-otp keepassxc
+	gnome-keyring
 )
 
 # fonts {{{2
@@ -225,7 +226,7 @@ packages+=(
 	unclutter
 	redshift
 	i3lock
-	gnome-keyring polkit-gnome
+	polkit-gnome
 	xfce4 herbstluftwm
 )
 
