@@ -54,8 +54,10 @@ packages+=(
 # terminal {{{2
 
 packages+=(
-	kitty alacritty ghostty
-	xterm rxvt-unicode xfce4-terminal
+	kitty ghostty
+	alacritty
+	xterm rxvt-unicode
+	xfce4-terminal
 )
 
 # terminal multiplexer {{{2
