@@ -107,7 +107,9 @@ packages+=(
 
 packages+=(
 	eza tree ncdu dfc socat
-	htop btop procs
+	htop btop bottom glances
+	procs
+	resources
 	detox
 	calc bc
 	trash-cli
@@ -168,8 +170,7 @@ packages+=(
 # file managers {{{2
 
 packages+=(
-	vifm
-	yazi xplr
+	vifm yazi xplr ranger superfile
 	gvfs openslide atool fuse-zip python-piexif
 	thunar thunar-volman thunar-vcs-plugin gigolo
 	thunar-archive-plugin thunar-media-tags-plugin

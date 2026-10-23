@@ -43,6 +43,10 @@ alias psgrep='ps auxww | grep -v grep | grep --color=never'
 
 # hardware {{{1
 
+# microphone {{{2
+
+wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 1
+
 # services {{{1
 
 # screen {{{2
@@ -105,16 +109,7 @@ systemctl --user start hyprpolkitagent
 
 psgrep nm-applet || nm-applet &
 
-# if [ $HOST = galaxy ]
-# then
-# 	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
-# elif [ $HOST = taijitu ]
-# then
-# 	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
-# elif [ $HOST = mandala ]
-# then
-# 	psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
-# fi
+psgrep protonvpn-app || protonvpn-app >>! ~/log/protonvpn-app.log 2>&1 &
 
 # bluetooth {{{2
 
@@ -204,7 +199,9 @@ psgrep awww-daemon || awww-daemon &
 
 psgrep wallpaper.zsh || wallpaper.zsh ~/run/wall/wallpaper.status >>! ~/log/wallpaper.log 2>&1 &
 
-# gui shell : bar, dock, systray, login, power {{{2
+# gui shell {{{2
+
+# -- bar, dock, systray, login, power
 
 # -- replace universe by none to choose dms instead of noctalia
 
@@ -214,8 +211,6 @@ then
 else
 	dms run
 fi
-
-#noctalia &
 
 # Message d’accueil {{{1
 
