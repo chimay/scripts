@@ -109,9 +109,9 @@ packages+=(
 	eza tree ncdu dfc socat
 	htop btop bottom glances
 	procs
-	resources
 	detox
 	calc bc
+	logrotate
 	trash-cli
 	dialog
 )
