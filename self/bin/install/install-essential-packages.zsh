@@ -58,10 +58,16 @@ packages+=(
 	xterm rxvt-unicode xfce4-terminal
 )
 
+# terminal multiplexer {{{2
+
+packages+=(
+	tmux
+)
+
 # shell {{{2
 
 packages+=(
-	zsh fish elvish xonsh tmux
+	zsh fish elvish xonsh
 	sudo opendoas polkit
 )
 
@@ -329,6 +335,12 @@ packages+=(
 	simple-scan
 )
 
+# colors {{{2
+
+packages+=(
+	pastel
+)
+
 # images {{{2
 
 packages+=(
@@ -432,6 +444,18 @@ fi
 
 packages_aur+=(
 	yay aura-bin
+)
+
+# terminal multiplexer {{{2
+
+packages+=(
+	#herdr-bin
+)
+
+# synchronization {{{2
+
+packages_aur+=(
+	lazyrsync-bin
 )
 
 # pluggable devices {{{2
