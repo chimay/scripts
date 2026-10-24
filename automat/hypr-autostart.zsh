@@ -117,6 +117,7 @@ psgrep blueman-applet || blueman-applet &
 
 # terminal {{{2
 
+psgrep foot || foot -s &
 psgrep urxvtd || urxvtd -q -o -f
 
 # clipboard {{{2

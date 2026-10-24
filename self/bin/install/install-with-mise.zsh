@@ -1,4 +1,18 @@
 #!/usr/bin/env zsh
 
-mise use -g herdr
-mise use -g neovim@nightly
+packages=()
+
+packages+=(
+	herdr@latest
+	neovim@nightly
+)
+
+
+mise upgrade
+
+echo
+
+for pack in $=packages
+do
+	mise install $pack
+done
