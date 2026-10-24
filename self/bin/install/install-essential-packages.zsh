@@ -148,6 +148,7 @@ packages+=(
 
 packages+=(
 	fzf fzy zoxide
+	#atuin
 	fd plocate
 	ripgrep ripgrep-all repgrep ugrep
 	grex
