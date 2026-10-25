@@ -16,24 +16,83 @@ echo "pip install --upgrade pip"
 echo
 pip install --upgrade pip
 
-packages=(
-	ipython
-	edir          # vidir improved
-	vimiv         # vim-like image viewer
-	trafilatura   # cli tool for readable
+
+# packages {{{1
+
+packages=()
+
+# libraries {{{1
+
+packages+=(
 	tldextract    # for qute-pass
-	getmail
-	dbus-python
-	pywal
+)
+
+# package managers {{{1
+
+packages+=(
+	pikaur
+)
+
+# interpreters {{{1
+
+packages+=(
+	ipython
+)
+
+# multiplexers {{{1
+
+packages+=(
+	cmux
+)
+
+# network {{{1
+
+packages+=(
+	'aria2p[tui]'
+)
+
+# edit {{{1
+
+packages+=(
 	pyright       # python syntax in neovim
 	debugpy       # python debug in neovim
-	eg
-	pikaur
-	'aria2p[tui]'
+)
+
+# utils {{{1
+
+packages+=(
+	edir          # vidir improved
+	trafilatura   # cli tool for readable
 	wptranslate
-	zxcvbn pyaml
-	mausoleum
+)
+
+# image {{{1
+
+packages+=(
+	vimiv         # vim-like image viewer
 	piexif
+	pywal
+)
+
+# mail {{{1
+
+packages+=(
+	getmail
+)
+
+# documentation {{{1
+
+packages+=(
+	eg
+)
+
+# misc {{{1
+
+packages+=(
+	dbus-python
+	zxcvbn
+	pyaml
+	mausoleum
 	yt-dlp
 )
 

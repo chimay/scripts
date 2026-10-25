@@ -49,7 +49,7 @@ sleep 1
 
 echo Launching kitty
 echo
-kitty --single-instance &
+kitty --single-instance herdr &
 
 echo Launching neovim client
 echo

@@ -63,7 +63,7 @@ packages+=(
 # terminal multiplexer {{{2
 
 packages+=(
-	tmux
+	tmux zellij
 )
 
 # shell {{{2
