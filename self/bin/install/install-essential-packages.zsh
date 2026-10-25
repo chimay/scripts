@@ -369,7 +369,8 @@ packages+=(
 # music {{{2
 
 packages+=(
-	mpd mpc ncmpcpp mpd-mpris
+	mpd mpd-mpris
+	mpc ncmpcpp rmpc
 	timidity fluidsynth
 	freepats-general-midi soundfont-fluid
 	lilypond frescobaldi musescore
