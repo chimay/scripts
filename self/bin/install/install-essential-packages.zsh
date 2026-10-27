@@ -56,6 +56,7 @@ packages+=(
 packages+=(
 	kitty ghostty
 	alacritty
+	wezterm
 	xterm rxvt-unicode
 	xfce4-terminal
 )

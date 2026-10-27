@@ -1,6 +1,6 @@
+#CC=/usr/bin/gcc pip install --user --upgrade pip
 #sudo mount -t vfat -o loop ~filesys/fuse/Partition1 ~/image.iso/mnt
 #vdfuse -f ~/image.iso/ghostbsd-efi.vdi ~filesys/fuse
-CC=/usr/bin/gcc pip install --user --upgrade pip
 GTK_THEME=Adwaita:dark yad --about
 MANPAGER="nvim -c 'set ft=man' -u NORC -" h man
 VBoxManage controlvm freebsd-efi acpipowerbutton
@@ -14,6 +14,8 @@ adig archlinux.org
 alacritty -e bash -c "cat ~/log/clock.log ; read -p 'press enter to continue ...'"
 alarm-sensor.zsh +75 ++82 -30 7
 alias | grep '^[a-z]=' | less
+appimage=mounted ; mount G /tmp/.
+appimage=unmount ; umount /tmp/.?*
 archlinux-java fix
 archlinux-java help
 archlinux-java set java-8-openjdk # sudo
@@ -22,6 +24,7 @@ aria2c -x 2 some-url
 aria2c mirrors-urls
 attr=list ; lsattr /etc/resolv.conf
 attre=change ; chattr +a ~/log/bidule.log
+audio=pipewire-restart ; systemctl --user restart pipewire.socket
 aur=clone ; git clone https://aur.archlinux.org/yay.git
 avahi-browse --all --ignore-local --resolve --terminate
 avahi-discover
@@ -46,6 +49,8 @@ clipctl disable
 clipctl enable
 clocher=0 ; echo $clocher >! ~run/clock/clocher.etat ; cat ~run/clock/clocher.etat
 clone=tmux-tpm ; git clone https://github.com/tmux-plugins/tpm
+color=purple ; tput setaf 5 bold
+color=reset ; tput sgr0
 connmanctl
 convert *paques*.png p2a-paques.pdf
 copytree=find-cpio ; find ~/racine/plain | cpio -pmud ~/Downloads/plain
@@ -101,6 +106,7 @@ find=fd-glob-full-path ; fd -gp '**' ~/racine/plain
 firmware=dmesg ; sudo dmesg | grep -i firmware
 fondecran=1 ; killall fond-ecran.zsh ; sleep 1 ; fond-ecran.zsh 12 120 ~/graphix/list/wallpaper.gen >>! ~/log/fond-ecran.log &!
 fondecran=1 ; pkill fond-ecran.zsh ; sleep 1 ; fond-ecran.zsh 12 84 ~/graphix/list/wallpaper.gen >>! ~/log/fond-ecran.log &!
+font=list-family ; fc-list : family | sort -u | less
 fossil addremove
 fossil all
 fossil changes
@@ -238,11 +244,15 @@ nmcli device wifi connect Proximus-Home-6EB5
 nmcli device wifi list
 nmtui
 pacman -S --force ttf-dejavu # sudo
+pacman-mirrors --fasttrack # manjaro, sudo
+pacman=asexplicit ; sudo pacman -D --asexplicit meson ninja python-tqdm
 pacman=browse ; pacman -Slq | fzf --preview 'pacman -Si {}' --layout=reverse
 pacman=browse_installed ; pacman -Qq | fzf --preview 'pacman -Qil {}' --layout=reverse --bind 'enter:execute(pacman -Qil {} | less)'
+pacman=foreign-packages ; pacman -Qqm
 pacman=get-pkg ; pacman -Qqe > liste-paquets
 pacman=orphans ; pacman -Qtdq
 pacman=remove-orphans ; sudo pacman -Rns $(pacman -Qtdq)
+pacman=search-with-preview ; pacman -Slq | fzf --preview 'pacman -Si {}'
 pacman=set-pkg ; pacman -S --needed - < liste-paquets
 pactl list sinks short
 pactl set-sink-volume bluez_sink.00_1D_DF_81_D7_55 -10%
@@ -268,6 +278,8 @@ pip install --user --upgrade neovim-gui
 pip install --user --upgrade pip
 pip=requirements-install ; pip install -r ~index/pack/pip-requirements.txt
 pip=requirements-write ; pip freeze --local > ~index/pack/pip-requirements.txt
+pip=to-be-updated ; pip list --outdated
+pip=upgrade ; pip list --outdated | tail -n +3 | cut -d' ' -f 1 | xargs -n 1 pip install --upgrade
 pip=upgrade-packages ; pip-review --local --auto
 pip=upgrade-venv ; python -m venv --upgrade ~/.pip
 pk + virtualbox{,-host-modules-arch} net-tools vde2
@@ -297,6 +309,7 @@ qemu-system-x86_64 -m 2G -boot menu=on -usb -hdb /media/virtual/image.iso/TrueOS
 qrencode -o toto.jpg coucou
 qute=reddit ; gv $qute ~dotdir/qutebrowser/$HOST
 reflector --latest 12 --sort rate --save /etc/pacman.d/mirrorlist # arch, sudo
+rename=symlinks-targets ; rename --symlink /repos/ /sources/ **/*(-@)
 renice -n 19 -p process_id
 restic find -r /media/cleusb/restic -s latest unison
 restic init -r sftp:user_name@shari.local:$HOME/backup/restic
@@ -320,6 +333,7 @@ samba=password-add ; sudo smbpasswd -a user_name
 scp=tilde.institute ; scp book* Makefile user_name@tilde.institute:~
 senseurs=1 && sudo sensors && sudo hddtemp /dev/sda
 services=sockets ; sudo ss -tulpn | less
+session-unlock ; sudo loginctl unlock-sessions
 signal=i3blocks-mpd ; k -36 $(pid i3blocks)
 signal=i3blocks-volume ; k -35 $(pid i3blocks)
 sox carillon-23-00{,-fade}.ogg fade h 0 -0 1.7
@@ -406,6 +420,7 @@ systemd=user-services-persistants ; sudo loginctl enable-linger user_name
 t context delete important
 telnet taijitu.local 22
 term=info ; infocmp
+texlive=manager ; tlmgr help
 timedatectl list-timezones
 timedatectl set-ntp true
 timedatectl show-timesync --all
@@ -435,10 +450,13 @@ ts sleep 300
 unlock=gnome-keyring-daemon ; gnome-keyring-daemon --unlock
 unlock=gnome-secret-keyring ; unlock-gnome-keyring
 update=1 ; teste-connexion.zsh && pk cln && sync && sleep 3 && pk sf && sleep 3 && w https://archlinux.org && pk ++
+update=desktop-files ; update-desktop-database ~/.local/share/applications/
 usermod -aG wheel,adm,sys,log,network,video,audio,power,lp,autologin user_name # sudo
 uuid_part=/dev/sda2 ; sudo blkid -s UUID -o value $uuid_part
 var=( ${(f)"$(< fichier )"} )
 var=( ${(fu)"$(< fichier )"} )
+ventoy=list ; sudo ventoy -l /dev/sdc
+ventoy=update ; sudo ventoy -u /dev/sdc
 verifie=sdb1 ; sudo fsck /dev/$verifie
 vim=profile-as-arg ; vim +'profile start ~/log/vim-profile.log | profile func * | call wheel#disc#read_wheel () | profile stop'
 vim=profile-startup ; vim --startuptime ~/log/vim-startuptime.log ~shell/alarm/Grenier
