@@ -117,6 +117,7 @@ packages+=(
 	eza tree ncdu dfc socat
 	htop btop bottom glances
 	procs
+	fdupes jdupes
 	detox
 	calc bc
 	logrotate
