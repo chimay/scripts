@@ -4,12 +4,17 @@
 
 # ssh {{{1
 
-pgrep -ax ssh && exit 1
+pgrep -x ssh && exit 1
+
+# backup {{{1
+
+pgrep -x borg && exit 1
+pgrep -x restic && exit 1
 
 # multimedia {{{1
 
-pgrep -af vlc && exit 1
-pgrep -af freetube && exit 1
+pgrep -x vlc && exit 1
+pgrep -x freetube && exit 1
 
 mpc status | grep playing && exit 1
 
