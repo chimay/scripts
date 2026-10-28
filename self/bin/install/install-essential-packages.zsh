@@ -149,7 +149,8 @@ packages+=(
 # search {{{2
 
 packages+=(
-	fzf fzy zoxide
+	fzf fzy television
+	zoxide
 	#atuin
 	fd plocate
 	ripgrep ripgrep-all repgrep ugrep

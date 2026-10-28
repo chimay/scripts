@@ -14,5 +14,5 @@ echo
 
 for pack in $=packages
 do
-	mise install $pack
+	mise use $pack
 done
