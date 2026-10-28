@@ -1,7 +1,4 @@
-
 #!/usr/bin/env sh
-
-export PATH=$HOME/.local/share/mise/installs/tmux/latest:$PATH
 
 tmux="kitty --single-instance tmux"
 
