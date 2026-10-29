@@ -1,8 +1,11 @@
 #!/usr/bin/env zsh
 
-pgrep -f freetube && {
-	notify-send "freetube is running" "please stop it before suspending"
-	exit 0
+can_suspend=$(can-suspend.sh)
+code=$?
+
+[ $code -eq 0 ] || {
+	notify-send "Suspend is blocked" "$can_suspend"
+	exit $code
 }
 
 confirmation=(

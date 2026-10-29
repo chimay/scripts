@@ -314,6 +314,7 @@ packages+=(
 
 packages+=(
 	weechat irssi
+	#toot
 )
 
 # sharing {{{2
@@ -508,6 +509,11 @@ packages_aur+=(
 packages_aur+=(
 	abook procmail
 	#urlview
+)
+
+# social {{{2
+
+packages_aur+=(
 )
 
 # music {{{2

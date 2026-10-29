@@ -80,6 +80,12 @@ packages+=(
 	getmail
 )
 
+# social {{{1
+
+packages+=(
+	toot-tooi
+)
+
 # documentation {{{1
 
 packages+=(
