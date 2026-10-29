@@ -171,8 +171,8 @@ packages+=(
 	neovim neovim-qt python-pynvim
 	tree-sitter-cli
 	pyright python-debugpy
+	helix kakoune
 	emacs
-	kakoune helix
 	retext marker apostrophe ghostwriter
 	ctags
 	# -- conflict with imv
@@ -272,8 +272,8 @@ packages+=(
 	xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-gtk
 	waybar
 	quickshell
-	dms-shell dms-shell-hyprland dms-shell-niri
 	noctalia
+	dms-shell
 	wtype
 	wayfire wcm wf-config
 	waypipe waylock
@@ -286,7 +286,7 @@ packages+=(
 	hyprshot hyprgraphics
 	hyprpwcenter
 	xdg-desktop-portal-hyprland hyprland-qt-support
-	niri dms-shell-niri
+	niri
 	river-classic
 )
 

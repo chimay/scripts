@@ -32,12 +32,12 @@ echo
 hl dispatch 'hl.dsp.focus({ workspace = "1" })'
 sleep 1
 
-echo Launching vifm
+echo Launching zellij
 echo
-run-vifm.zsh &
+kitty --single-instance zellij attach principal &
 sleep 1
 
-echo Launching kitty
+echo Launching tmux
 echo
 kitty --single-instance tmux attach-session -t principal &
 sleep 1
@@ -47,7 +47,7 @@ echo
 hl dispatch 'hl.dsp.focus({ workspace = "3" })'
 sleep 1
 
-echo Launching kitty
+echo Launching herdr
 echo
 kitty --single-instance herdr &
 
