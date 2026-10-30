@@ -6,8 +6,8 @@
 
 setopt extended_glob
 
-alias notifie='notify-send -t 10000'
-alias notifie-long='notify-send -t 30000'
+alias notifie='notify-send.zsh -t 10000'
+alias notifie-long='notify-send.zsh -t 30000'
 alias psgrep='ps auxww | /bin/grep -v grep | /bin/grep --color=never'
 
 # Initial values
@@ -44,7 +44,7 @@ seconds=$duratab[3]
 
 # Run file
 
-rundir=~/racine/run/minuter
+rundir=~/run/minuter
 runfile=$rundir/minuters
 [ -d $rundir ] || mkdir -p $rundir
 [ -e $runfile ] || touch $runfile
@@ -133,31 +133,31 @@ trap clausule HUP INT TERM
 if (( hours > 0 && minutes > 0 && seconds > 0 ))
 then
 	echome="$hours hours $minutes minutes $seconds seconds =  $total seconds"
-	notify_msg="Minuter : $hours hours $minutes minutes $seconds seconds"
+	notify_msg="$hours hours $minutes minutes $seconds seconds"
 elif (( hours > 0 && minutes > 0 && seconds == 0 ))
 then
 	echome="$hours hours $minutes minutes =  $total seconds"
-	notify_msg="Minuter : $hours hours $minutes minutes"
+	notify_msg="$hours hours $minutes minutes"
 elif (( hours > 0 && minutes == 0 && seconds > 0 ))
 then
 	echome="$hours hours $seconds seconds =  $total seconds"
-	notify_msg="Minuter : $hours hours $seconds seconds"
+	notify_msg="$hours hours $seconds seconds"
 elif (( hours > 0 && minutes == 0 && seconds == 0 ))
 then
 	echome="$hours hours =  $total seconds"
-	notify_msg="Minuter : $hours hours"
+	notify_msg="$hours hours"
 elif (( hours == 0 && minutes > 0 && seconds > 0 ))
 then
 	echome="$minutes minutes $seconds seconds =  $total seconds"
-	notify_msg="Minuter : $minutes minutes $seconds seconds"
+	notify_msg="$minutes minutes $seconds seconds"
 elif (( hours == 0 && minutes > 0 && seconds == 0 ))
 then
 	echome="$minutes minutes =  $total seconds"
-	notify_msg="Minuter : $minutes minutes"
+	notify_msg="$minutes minutes"
 elif (( hours == 0 && minutes == 0 && seconds > 0 ))
 then
 	echome="$seconds seconds =  $total seconds"
-	notify_msg="Minuter : $seconds seconds"
+	notify_msg="$seconds seconds"
 else
 	echome="Instant minuter"
 	notify_msg="Instant minuter"
@@ -187,7 +187,7 @@ minuters=( ${(f)"$(< $runfile)"} )
 
 # Notify begin
 
-notifie $notify_msg &
+notifie "Minuter" $notify_msg &
 
 # Common log begin
 

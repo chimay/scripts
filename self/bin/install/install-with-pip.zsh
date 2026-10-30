@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+# bootstrap {{{1
+
 pipdir=${1:-~/.pip}
 
 if [ -e $pipdir ]
@@ -12,10 +14,11 @@ else
 	python -m venv $pipdir
 fi
 
+# upgrade pip {{{1
+
 echo "pip install --upgrade pip"
 echo
 pip install --upgrade pip
-
 
 # packages {{{1
 

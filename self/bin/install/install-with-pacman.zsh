@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-distribution=${1:-arch}
+distribution=${1:-manjaro}
 supplement=${2:-none}
 
 echo Distribution : $distribution

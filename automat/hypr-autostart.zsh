@@ -192,16 +192,13 @@ psgrep wallpaper.zsh || wallpaper.zsh ~/run/wall/wallpaper.status >>! ~/log/wall
 
 # gui shell {{{2
 
-# -- bar, dock, systray, login, power
+# ---- bar, dock, systray, login, power
 
-# -- replace universe by none to choose dms instead of noctalia
+# -- choose noctalia or dms
 
-if [ $HOST = universe -o $HOST = mandala ]
-then
-	noctalia --daemon
-else
-	dms run
-fi
+noctalia --daemon
+
+#dms run
 
 # Message d’accueil {{{1
 
