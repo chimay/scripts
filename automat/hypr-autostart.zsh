@@ -31,16 +31,6 @@ fi
 
 alias psgrep='ps auxww | grep -v grep | grep --color=never'
 
-# restore backups {{{1
-
-# cd ~/run/wall
-
-# command cp -f wallpaper.status.bak wallpaper.status
-
-# cd ~/run/clock
-
-# command cp -f clock.status.bak clock.status
-
 # hardware {{{1
 
 # microphone {{{2
@@ -51,7 +41,7 @@ wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 1
 
 # screen {{{2
 
-brightnessctl set 100%
+brightnessctl set 90%
 
 hypridle >>! ~/log/hypridle.log 2>&1 &
 
