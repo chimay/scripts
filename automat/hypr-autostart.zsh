@@ -112,6 +112,8 @@ psgrep urxvtd || urxvtd -q -o -f
 
 # clipboard {{{2
 
+copyq &
+
 psgrep wl-paste || {
 	wl-paste --type text --watch cliphist store &
 	#wl-paste --type image --watch cliphist store

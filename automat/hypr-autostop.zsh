@@ -16,6 +16,7 @@ systemctl --user stop hyprpolkitagent
 
 pgrep -f awww && awww kill &
 pgrep -f dad && dad -d ~/racine/gate/download stop &
+pgrep -f copyq && copyq exit
 
 pgrep -f mpd-mpris && pkill -f mpd-mpris &
 
