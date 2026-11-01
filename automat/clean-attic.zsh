@@ -27,6 +27,7 @@ echo
 
 # trash bin {{{1
 
+echo
 echo trash
 echo "____________________________________________________________"
 echo
@@ -39,6 +40,7 @@ trash-empty -f $delai_court
 
 cd ~/racine/trash/vifm
 
+echo
 echo
 pwd
 echo "____________________________________________________________"
@@ -62,6 +64,7 @@ dusty+=(**/*(.m+$delai))
 
 cd ~/racine/varia
 
+echo
 echo
 pwd
 echo "____________________________________________________________"
@@ -91,6 +94,7 @@ dusty+=(undo/**/*(.m+$delai_tres_long))
 cd ~/racine/config/webrowser/w3m
 
 echo
+echo
 pwd
 echo "____________________________________________________________"
 echo
@@ -115,6 +119,7 @@ dusty+=(w3mtmp*(.m+$delai_tres_court))
 cd ~/racine/local/state/mpv/watch_later
 
 echo
+echo
 pwd
 echo "____________________________________________________________"
 echo
@@ -138,6 +143,7 @@ dusty+=(*(.m+$delai_tres_long))
 cd ~/racine/syncron
 
 echo
+echo
 pwd
 echo "____________________________________________________________"
 echo
@@ -160,6 +166,7 @@ dusty+=(spool/**/*(.m+$delai))
 
 cd ~/log
 
+echo
 echo
 pwd
 echo "____________________________________________________________"
@@ -185,16 +192,19 @@ dusty+=(**/*(.m+$delai))
 cd ~/.cache
 
 echo
+echo
 pwd
 echo "____________________________________________________________"
 echo
 
-for element in **/*(.m+$delai_court)
+for element in **/*(.m+$delai_tres_court)
 do
 	ls -l $element
 	echo
-	echo "trash-put $element"
-	trash-put $element
+# 	echo "trash-put $element"
+# 	trash-put $element
+	echo "rm -f $element"
+	rm -f $element
 done
 
 echo
@@ -203,6 +213,7 @@ echo
 
 cd ~/racine/hist/clipmenu
 
+echo
 echo
 pwd
 echo "____________________________________________________________"
@@ -228,6 +239,7 @@ echo
 
 cd ~/racine/dotdir/emacs.d/eln-cache
 
+echo
 echo
 pwd
 echo "____________________________________________________________"
