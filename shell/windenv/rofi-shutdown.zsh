@@ -1,18 +1,11 @@
 #! /usr/bin/env zsh
 
-pgrep -f freetube >! ~/log/pgrep.log 2>&1 && {
-	zenity --info --no-wrap --text "freetube is running, please stop it first"
-	exit 1
-}
+can_suspend=$(can-suspend.sh)
+code=$?
 
-pgrep -f helium >! ~/log/pgrep.log 2>&1 && {
-	zenity --info --no-wrap --text "helium is running, please stop it first"
-	exit 1
-}
-
-pgrep -f waterfox >! ~/log/pgrep.log 2>&1 && {
-	zenity --info --no-wrap --text "waterfox is running, please stop it first"
-	exit 1
+[ $code -eq 0 ] || {
+	notify-send "Suspend is blocked" "$can_suspend"
+	exit $code
 }
 
 menu=(Annuler Veille Hiberner Éteindre)

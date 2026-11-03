@@ -26,6 +26,7 @@ which am &> /dev/null || {
 #
 # -- autres
 #
+# vieb
 # vimma
 # mullvad-browser
 # elixiroffice
@@ -42,9 +43,12 @@ packages=(
 	freetube
 	floorp
 	waterfox
-	vieb
+	helium
 	zen-browser
-	helium-browser
+	airclone
 )
+
+echo "am install $=packages"
+echo
 
 am install $=packages

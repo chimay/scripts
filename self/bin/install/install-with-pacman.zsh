@@ -1,10 +1,6 @@
 #!/usr/bin/env zsh
 
-distribution=${1:-manjaro}
-supplement=${2:-none}
-
-echo Distribution : $distribution
-echo
+supplement=${1:-none}
 
 # during install {{{1
 
@@ -32,6 +28,9 @@ packages_aur=()
 # base {{{2
 
 packages+=(
+	linux-meta
+	linux-r8168-meta
+	linux-lts-r8168-meta
 	linux-firmware
 	coreutils
 	acpi acpid
@@ -43,6 +42,7 @@ packages+=(
 packages+=(
 	pacman-contrib
 	pacutils pkgfile expac
+	yay
 )
 
 # file systems {{{2
@@ -356,6 +356,7 @@ packages+=(
 	vimiv viu
 	exiv2 libwebp-utils
 	gwenview scrot
+	ueberzugpp
 )
 
 # audio {{{2
@@ -408,41 +409,13 @@ packages+=(
 
 #print -l $packages
 
-# manjaro {{{1
+# apply pacman {{{1
 
-if [ $distribution = manjaro ]
-then
-	echo "manjaro"
-	echo
-	packages+=(
-		linux-meta
-		linux-r8168-meta
-		linux-lts-r8168-meta
-		yay
-		ueberzugpp
-	)
-	echo "sudo pacman -Syy"
-	echo "sudo pacman -S --needed $=packages"
-	echo
-	sudo pacman -Syy
-	sudo pacman -S --needed $=packages
-fi
-
-# archlinux {{{1
-
-if [ $distribution = archlinux ]
-then
-	echo "arch"
-	echo
-	packages+=(
-		linux linux-lts linux-zen
-	)
-	echo "sudo pacman -Syy"
-	echo "sudo pacman -S --needed $=packages"
-	echo
-	sudo pacman -Syy
-	sudo pacman -S --needed $=packages
-fi
+echo "sudo pacman -Syy"
+echo "sudo pacman -S --needed $=packages"
+echo
+sudo pacman -Syy
+sudo pacman -S --needed $=packages
 
 # aur : arch user repository {{{1
 
@@ -457,7 +430,6 @@ packages_aur+=(
 # terminal multiplexer {{{2
 
 packages+=(
-	#herdr-bin
 )
 
 # synchronization {{{2
@@ -547,7 +519,7 @@ packages_aur+=(
 	task-spooler-cpu
 )
 
-# apply pikaur {{{2
+# apply pikaur {{{1
 
 echo "pikaur -S --needed $=packages_aur"
 echo
