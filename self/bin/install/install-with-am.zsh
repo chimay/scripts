@@ -26,6 +26,10 @@ which am &> /dev/null || {
 #
 # -- autres
 #
+# vimma
+# mullvad-browser
+# elixiroffice
+#
 # rclone-browser
 # localsend
 # dezor
@@ -33,12 +37,13 @@ which am &> /dev/null || {
 # replaced by gwenview : xnviewmp
 # sioyek : better with aur to be configured
 
+
 packages=(
 	freetube
-	vieb
 	floorp
+	waterfox
+	vieb
 	zen-browser
-	mullvad-browser
 	helium-browser
 )
 
