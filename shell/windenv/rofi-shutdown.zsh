@@ -1,19 +1,11 @@
 #! /usr/bin/env zsh
 
-can_suspend=$(can-suspend.sh)
-code=$?
-
-[ $code -eq 0 ] || {
-	notify-send "Suspend is blocked" "$can_suspend"
-	exit $code
-}
-
-menu=(Annuler Veille Hiberner Éteindre)
+menu=(cancel suspend hibernate poweroff)
 
 confirmation=(
-	Non
-	"Faut voir"
-	Oui
+	no
+	"let me think"
+	yes
 )
 
 if which systemctl
@@ -23,15 +15,20 @@ else
 	powerctl=loginctl
 fi
 
-choix=$(print -l $menu | rofi -dmenu -p "que faire " -i)
+choix=$(print -l $menu | rofi -dmenu -p "choice " -i)
 
 echo choix : $choix
 echo
 
-sync -f /
-sync -f $HOME
+sync
 
-[[ $choix = Veille ]] && {
+[[ $choix = suspend ]] && {
+	can_suspend=$(can-suspend.sh)
+	code=$?
+	[ $code -eq 0 ] || {
+		notify-send "Suspend is blocked" "$can_suspend"
+		exit $code
+	}
 	certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
 	[[ $certain = Oui ]] && {
 		echo "$powerctl suspend"
@@ -42,12 +39,12 @@ sync -f $HOME
 	}
 }
 
-[[ $choix = Hiberner ]] && {
-	if [[ $HOST = taijitu ]]
+[[ $choix = hibernate ]] && {
+	if [[ $HOST = universe ]]
 	then
-		echo "Not supported"
+		echo "not supported"
 		echo
-		zenity --info --no-wrap --text "Il fait trop chaud pour hiberner."
+		zenity --info --no-wrap --text "too hot to hibernate"
 	else
 		certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
 		[[ $certain = Oui ]] && {
@@ -58,7 +55,7 @@ sync -f $HOME
 	fi
 }
 
-[[ $choix = Éteindre ]] && {
+[[ $choix = poweroff ]] && {
 	certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
 	[[ $certain = Oui ]] && {
 		echo "$powerctl poweroff"
