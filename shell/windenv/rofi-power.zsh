@@ -1,6 +1,6 @@
 #! /usr/bin/env zsh
 
-menu=(cancel suspend hibernate poweroff)
+menu=(cancel logout suspend hibernate poweroff)
 
 confirmation=(
 	no
@@ -22,6 +22,15 @@ echo
 
 sync
 
+[[ $choix = logout ]] && {
+	certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
+	[[ $certain = yes ]] && {
+		echo "hypr-logout.zsh"
+		echo
+		hypr-logout.zsh
+	}
+}
+
 [[ $choix = suspend ]] && {
 	can_suspend=$(can-suspend.sh)
 	code=$?
@@ -30,7 +39,7 @@ sync
 		exit $code
 	}
 	certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
-	[[ $certain = Oui ]] && {
+	[[ $certain = yes ]] && {
 		echo "$powerctl suspend"
 		echo
 		sleep 1
@@ -47,7 +56,7 @@ sync
 		zenity --info --no-wrap --text "too hot to hibernate"
 	else
 		certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
-		[[ $certain = Oui ]] && {
+		[[ $certain = yes ]] && {
 			echo "$powerctl hibernate"
 			echo
 			$powerctl hibernate
@@ -57,7 +66,7 @@ sync
 
 [[ $choix = poweroff ]] && {
 	certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
-	[[ $certain = Oui ]] && {
+	[[ $certain = yes ]] && {
 		echo "$powerctl poweroff"
 		echo
 		$powerctl poweroff

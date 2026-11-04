@@ -26,9 +26,9 @@ hypr-autostop.zsh
 sync
 
 uwsm stop
+code=$?
 
-# -- other solutions, not recommended
+[ $code -eq 0 ] || hyprctl dispatch 'hl.dsp.exit()'
+code=$?
 
-#hyprctl dispatch 'hl.dsp.exit()'
-
-#hyprshutdown
+[ $code -eq 0 ] || hyprshutdown
