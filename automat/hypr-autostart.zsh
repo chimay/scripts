@@ -80,10 +80,13 @@ fi
 
 # D-Bus : message bus system {{{2
 
-if [ $HOST = mandala ]
-then
-	dbus-update-activation-environment DISPLAY XAUTHORITY
-fi
+# -- not needed with desktop session file,
+# -- see ~/racine/system/artix/mandala/usr_share_wayland-sessions/hyprland-dbus.desktop
+#
+# if [ $HOST = mandala ]
+# then
+# 	dbus-update-activation-environment DISPLAY XAUTHORITY
+# fi
 
 # identification {{{2
 

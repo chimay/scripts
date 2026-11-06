@@ -8,10 +8,17 @@ code=$?
 	exit $code
 }
 
+if which systemctl
+then
+	powerctl=systemctl
+else
+	powerctl=loginctl
+fi
+
 confirmation=(
-	Non
-	"Faut voir"
-	Oui
+	no
+	"let me think"
+	yes
 )
 
 certain=$(print -l $confirmation | rofi -dmenu -i -p "really suspend ? ")
@@ -19,7 +26,7 @@ certain=$(print -l $confirmation | rofi -dmenu -i -p "really suspend ? ")
 echo certain : $certain
 echo
 
-[ $certain = Oui ] || {
+[ $certain = yes ] || {
 	echo Doing nothing
 	echo
 	exit 0
@@ -27,4 +34,6 @@ echo
 
 sync
 
-systemctl suspend
+$powerctl suspend
+
+autowake.zsh &>>! ~/log/autowake.log

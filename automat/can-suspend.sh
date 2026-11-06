@@ -20,6 +20,12 @@ pgrep -x ssh >/dev/null && {
 	code=1
 }
 
+pgrep -x sshd-session >/dev/null && {
+	echo sshd session is running
+	echo
+	code=1
+}
+
 # backup {{{1
 
 pgrep -x borg >/dev/null && {
