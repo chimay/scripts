@@ -5,14 +5,14 @@
 if pgrep -af noctalia
 then
 	confirmation=(
-		Non
-		"Faut voir"
-		Oui
+		no
+		"let me think"
+		yes
 	)
 	certain=$(print -l $confirmation | rofi -dmenu -i -p "really logout ? ")
 	echo certain : $certain
 	echo
-	[ $certain = Oui ] || {
+	[ $certain = yes ] || {
 		echo Doing nothing
 		echo
 		exit 0

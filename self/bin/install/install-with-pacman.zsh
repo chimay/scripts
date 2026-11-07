@@ -144,6 +144,7 @@ packages+=(
 	lua luarocks
 	mujs npm mathjax
 	mise bob
+	deno
 )
 
 # search {{{2
