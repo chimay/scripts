@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+# bootstrap {{{1
+
 # see : https://github.com/ivan-hc/AM
 
 # wget -q https://raw.githubusercontent.com/ivan-hc/AM/main/AM-INSTALLER
@@ -20,12 +22,8 @@ which am &> /dev/null || {
 	$am_installer
 }
 
-# -- does not work
-#
-# viper-browser
-#
-# -- autres
-#
+# ideas {{{1
+
 # vieb
 # vimma
 # mullvad-browser
@@ -38,15 +36,52 @@ which am &> /dev/null || {
 # replaced by gwenview : xnviewmp
 # sioyek : better with aur to be configured
 
+# issues {{{1
 
-packages=(
-	freetube
+# -- does not work
+#
+# viper-browser
+
+# init {{{1
+
+packages=()
+
+# syncron {{{1
+
+packages+=(
+	airclone
+)
+
+# browser {{{1
+
+packages+=(
 	floorp
 	waterfox
 	helium
 	zen-browser
-	airclone
 )
+
+# multimedia {{{1
+
+packages+=(
+	freetube
+)
+
+# sync {{{1
+
+echo "am sync"
+echo
+
+am sync
+
+# update {{{1
+
+echo "am update"
+echo
+
+am update
+
+# install {{{1
 
 echo "am install $=packages"
 echo

@@ -2,6 +2,7 @@
 
 # unmodified since N days
 
+delai_tres_tres_court=${1:-3}
 delai_tres_court=${1:-7}
 delai_court=${2:-30}
 delai=${3:-60}
