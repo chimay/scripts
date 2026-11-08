@@ -71,7 +71,7 @@ packages+=(
 
 packages+=(
 	zsh fish elvish xonsh
-	sudo opendoas polkit
+	sudo opendoas zensu polkit
 )
 
 # remote shell {{{2
@@ -240,7 +240,7 @@ packages+=(
 	xorg-xrdb
 	x11vnc tigervnc
 	polybar
-	rofi dmenu zenity
+	rofi dmenu zenity yad
 	clipmenu
 	dunst
 	picom
