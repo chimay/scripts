@@ -198,7 +198,7 @@ pwd
 echo "____________________________________________________________"
 echo
 
-for element in **/*(.m+$delai_tres_court)
+for element in **/*(.m+$delai_court)
 do
 	ls -l $element
 	echo

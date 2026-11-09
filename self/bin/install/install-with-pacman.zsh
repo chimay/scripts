@@ -35,6 +35,7 @@ packages+=(
 	coreutils
 	acpi acpid
 	procps-ng psmisc
+	quota-tools
 )
 
 # package managers {{{2

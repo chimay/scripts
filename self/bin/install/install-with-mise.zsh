@@ -18,6 +18,9 @@ packages+=(
 
 # upgrade {{{1
 
+echo "mise upgrade"
+echo
+
 mise upgrade
 
 echo
@@ -26,5 +29,8 @@ echo
 
 for pack in $=packages
 do
-	mise use $pack
+	echo "mise use --global $pack"
+	echo
+	mise use --global $pack
+	echo
 done
