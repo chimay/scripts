@@ -34,13 +34,11 @@ cd ~/.cache || {
 
 $application
 
-sleep 3
+sleep 5
 
 [ "$action" = delete ] && {
 	rm -rf "$ramdir"
 }
-
-sleep 2
 
 echo "unmount-appimage.zsh $application"
 echo

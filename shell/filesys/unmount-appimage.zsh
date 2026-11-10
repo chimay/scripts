@@ -9,27 +9,31 @@
 application=$1
 
 case $application in
-	 ladybird)
+	ladybird)
 		pattern=/tmp/.mount_lady*
 		;;
-	 waterfox)
+	waterfox)
 		pattern=/tmp/.mount_water*
 		;;
-	 floorp)
+	floorp)
 		pattern=/tmp/.mount_floor*
 		;;
-	 mullvad-browser)
+	mullvad-browser)
 		pattern=/tmp/.mount_mullv*
 		;;
-	 zen-browser)
+	zen-browser)
 		pattern=/tmp/.mount_zen*
 		;;
-	 helium)
+	helium)
 		pattern=
 		umount /tmp/.mount_helium*
 		;;
-	 airclone)
+	airclone)
 		pattern=/tmp/.mount_airclo*
+		;;
+	*)
+		echo application $application not supported
+		exit 0
 		;;
 esac
 

@@ -14,8 +14,6 @@ sleep 5
 #cp -f ~/.config/FreeTube/*.db ~/racine/feder/central/freetube/database
 cp -f ~/racine/config/social/freetube/*.db ~/racine/feder/central/freetube/database
 
-sleep 1
-
 echo "unmount-appimage.zsh freetube"
 echo
 unmount-appimage.zsh freetube
