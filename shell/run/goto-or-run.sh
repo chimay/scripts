@@ -15,6 +15,6 @@ fi
 
 sleep 5
 
-echo "unmount-appimage.sh $application"
+echo "unmount-appimage.zsh $application"
 echo
-unmount-appimage.sh "$application"
+unmount-appimage.zsh "$application"

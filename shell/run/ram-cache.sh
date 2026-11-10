@@ -4,6 +4,16 @@ application=$1
 action=${2:-none}
 
 ramdir=/tmp/dot-cache/$application
+cachedir=$application
+
+case $application in
+	ladybird)
+		cachedir=Ladybird
+		;;
+	zen-browser)
+		cachedir=zen
+		;;
+esac
 
 [ -e "$ramdir" ] || mkdir -p "$ramdir"
 
@@ -17,9 +27,9 @@ cd ~/.cache || {
 	exit 1
 }
 
-[ -L "$application" ] || {
-	mv "$application" "$application.bak"
-	ln -s "$ramdir" .
+[ -L "$cachedir" ] || {
+	[ -e "$cachedir" ] && mv "$cachedir" "$cachedir.bak"
+	ln -s "$ramdir" "$cachedir"
 }
 
 $application
@@ -32,6 +42,6 @@ sleep 3
 
 sleep 2
 
-echo "unmount-appimage.sh $application"
+echo "unmount-appimage.zsh $application"
 echo
-unmount-appimage.sh "$application"
+unmount-appimage.zsh "$application"

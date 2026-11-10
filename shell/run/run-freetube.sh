@@ -16,6 +16,6 @@ cp -f ~/racine/config/social/freetube/*.db ~/racine/feder/central/freetube/datab
 
 sleep 1
 
-echo "unmount-appimage.sh freetube"
+echo "unmount-appimage.zsh freetube"
 echo
-unmount-appimage.sh freetube
+unmount-appimage.zsh freetube
