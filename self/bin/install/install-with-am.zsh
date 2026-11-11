@@ -49,7 +49,7 @@ packages=()
 # syncron {{{1
 
 packages+=(
-	airclone
+	#airclone
 )
 
 # browser {{{1
@@ -57,8 +57,8 @@ packages+=(
 packages+=(
 	floorp
 	waterfox
-	helium
 	zen-browser
+	#helium
 )
 
 # multimedia {{{1
@@ -67,7 +67,13 @@ packages+=(
 	freetube
 )
 
-# sync {{{1
+# document {{{1
+
+packages+=(
+	sioyek
+)
+
+# am sync {{{1
 
 echo "am sync"
 echo

@@ -31,6 +31,9 @@ case $application in
 	airclone)
 		pattern=/tmp/.mount_airclo*
 		;;
+	sioyek)
+		pattern=/tmp/.mount_sioyek*
+		;;
 	*)
 		echo application $application not supported
 		exit 0

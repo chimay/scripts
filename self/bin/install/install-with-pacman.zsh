@@ -490,6 +490,12 @@ packages_aur+=(
 packages_aur+=(
 )
 
+# audio {{{2
+
+packages_aur+=(
+	pipemixer
+)
+
 # music {{{2
 
 packages_aur+=(
@@ -505,7 +511,7 @@ packages_aur+=(
 # document {{{2
 
 packages_aur+=(
-	sioyek-git
+	#sioyek-git
 )
 
 # office {{{2
