@@ -30,11 +30,11 @@ do
 	}
 	if ! ping -W 1 -c 1 192.168.1.1 > /dev/null 2>&1
 	then
-		echo " [$(date +%H:%M:%S)] Pas de connexion du tout"
+		echo " [$(date +%H:%M:%S)] No connection at all"
 		echo
 		lecteur $volume ~/audio/bell/notification/pas-de-connexion.ogg
 	else
-		echo " [$(date +%H:%M:%S)] Connexion au routeur"
+		echo " [$(date +%H:%M:%S)] Connection to router"
 		echo
 		lecteur $volume ~/audio/bell/notification/connexion-au-routeur.ogg
 	fi

@@ -28,11 +28,11 @@ case $application in
 		pattern=
 		umount /tmp/.mount_helium*
 		;;
-	airclone)
-		pattern=/tmp/.mount_airclo*
-		;;
 	sioyek)
 		pattern=/tmp/.mount_sioyek*
+		;;
+	airclone)
+		pattern=/tmp/.mount_airclo*
 		;;
 	*)
 		echo application $application not supported
