@@ -54,6 +54,11 @@ sync
 		echo "not supported"
 		echo
 		zenity --info --no-wrap --text "too hot to hibernate"
+	elif [[ $HOST = outerspace ]]
+	then
+		echo "not supported"
+		echo
+		zenity --info --no-wrap --text "too hot to hibernate"
 	else
 		certain=$(print -l $confirmation | rofi -dmenu -i -p "$choix ? ")
 		[[ $certain = yes ]] && {

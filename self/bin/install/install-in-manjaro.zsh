@@ -192,6 +192,7 @@ packages+=(
 packages+=(
 	vifm yazi xplr ranger superfile
 	gvfs openslide atool fuse-zip python-piexif
+	dolphin
 	thunar thunar-volman thunar-vcs-plugin gigolo
 	thunar-archive-plugin thunar-media-tags-plugin
 )
