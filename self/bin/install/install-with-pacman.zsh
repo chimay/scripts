@@ -38,6 +38,12 @@ packages+=(
 	quota-tools
 )
 
+# boot {{{2
+
+packages+=(
+	ventoy
+)
+
 # package managers {{{2
 
 packages+=(
