@@ -49,9 +49,15 @@ hypridle >>! ~/log/hypridle.log 2>&1 &
 
 # Keyboard {{{2
 
-# ---- conflicts with super+ctrl, super+F<1-12> kays
-
-xremap ~/racine/config/windenv/xremap/modifiers.yml &
+if [ $HOST != outerspace ]
+then
+	# -- xremap conflicts with separate layouts
+	# -- for internal and usb keyboards
+	# -- as outerspace is an external drive booted on a
+	# -- computer with possibly any internal keyboard layout,
+	# -- this can be annoying
+	xremap ~/racine/config/windenv/xremap/modifiers.yml &
+fi
 
 # storage {{{2
 
