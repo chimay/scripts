@@ -4,6 +4,16 @@
 
 code=0
 
+# host {{{1
+
+host=$(hostname -s) || host=$(hostname)
+
+[ $host = outerspace ] && {
+	echo suspend on an external drive is not recommended
+	echo
+	code=1
+}
+
 # package manager {{{1
 
 pgrep -x pacman >/dev/null && {

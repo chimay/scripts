@@ -82,6 +82,9 @@ then
 elif [ $HOST = mandala ]
 then
 	psgrep alarm-sensor.zsh || alarm-sensor.zsh +80 ++85 -30 >>! ~/log/alarm-sensor.log 2>&1 &
+elif [ $HOST = outerspace ]
+then
+	psgrep alarm-sensor.zsh || alarm-sensor.zsh +80 ++90 -30 >>! ~/log/alarm-sensor.log 2>&1 &
 fi
 
 # D-Bus : message bus system {{{2
