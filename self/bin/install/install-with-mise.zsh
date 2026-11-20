@@ -8,7 +8,7 @@ packages=()
 
 packages+=(
 	herdr@latest
-	aqua:Gaurav-Gosain/tuios
+	aqua:Gaurav-Gosain/tuios@latest
 )
 
 # edit {{{1

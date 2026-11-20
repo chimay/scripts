@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+export PATH=$HOME/.local/share/mise/installs/aqua-gaurav-gosain-tuios/latest:$PATH
+
 tuios="kitty --single-instance tuios"
 
 if ! pgrep -ax tuios
