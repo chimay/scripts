@@ -9,6 +9,7 @@ packages=()
 packages+=(
 	herdr@latest
 	aqua:Gaurav-Gosain/tuios@latest
+	workmux@latest
 )
 
 # edit {{{1
