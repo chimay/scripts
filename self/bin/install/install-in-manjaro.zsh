@@ -77,7 +77,7 @@ packages+=(
 # shell {{{2
 
 packages+=(
-	zsh fish elvish xonsh
+	zsh fish elvish xonsh nushell
 	sudo opendoas zensu polkit
 )
 
