@@ -37,10 +37,15 @@ echo
 kitty --single-instance zellij attach principal &
 sleep 1
 
-echo Launching tmux
+echo Launching tuios
 echo
-kitty --single-instance tmux attach-session -t principal &
+kitty --single-instance tuios &
 sleep 1
+
+# echo Launching tmux
+# echo
+# kitty --single-instance tmux attach-session -t principal &
+# sleep 1
 
 echo Going to third workspace
 echo
