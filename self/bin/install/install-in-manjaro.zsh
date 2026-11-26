@@ -61,11 +61,12 @@ packages+=(
 # terminal {{{2
 
 packages+=(
-	kitty ghostty
+	kitty
 	alacritty
 	wezterm
 	xterm rxvt-unicode
-	xfce4-terminal
+	xfce4-terminal konsole
+	foot
 )
 
 # terminal multiplexer {{{2
@@ -275,7 +276,6 @@ packages+=(
 	mako
 	wf-recorder
 	wayvnc
-	foot
 	fuzzel wmenu wofi
 	grim slurp
 	xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-gtk

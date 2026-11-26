@@ -6,6 +6,8 @@ hl() {
     hyprctl "$@"
 }
 
+# tmux sessions {{{1
+
 tmux_sessions=( $(tmux list-sessions -F "#{session_name}") )
 
 (( $#tmux_sessions == 1 )) && {
@@ -22,19 +24,28 @@ tmux_sessions=( $(tmux list-sessions -F "#{session_name}") )
 	tmux new-session -t ssh -d
 }
 
+# neovim server {{{1
+
 echo Launching neovim server
 echo
 run-neovim-server.sh &
 #sleep 1
+
+# workspace 1 {{{1
 
 echo Going to first workspace
 echo
 hl dispatch 'hl.dsp.focus({ workspace = "1" })'
 sleep 1
 
-echo Launching zellij
+# echo Launching zellij
+# echo
+# kitty --single-instance zellij attach principal &
+# sleep 1
+
+echo Launching tmux
 echo
-kitty --single-instance zellij attach principal &
+kitty --single-instance tmux attach-session -t principal &
 sleep 1
 
 echo Launching tuios
@@ -42,10 +53,7 @@ echo
 kitty --single-instance tuios &
 sleep 1
 
-# echo Launching tmux
-# echo
-# kitty --single-instance tmux attach-session -t principal &
-# sleep 1
+# workspace 3 {{{1
 
 echo Going to third workspace
 echo
@@ -55,7 +63,9 @@ sleep 1
 echo Launching herdr
 echo
 kitty --single-instance herdr &
+sleep 1
 
 echo Launching neovim client
 echo
 run-neovim-qt-client.sh &
+sleep 1

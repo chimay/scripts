@@ -24,13 +24,13 @@ pgrep -x pacman >/dev/null && {
 
 # ssh {{{1
 
-pgrep -x ssh >/dev/null && {
+pgrep -ax ssh | grep -v tuios >/dev/null && {
 	echo ssh connection is running
 	echo
 	code=1
 }
 
-pgrep -x sshd-session >/dev/null && {
+pgrep -ax sshd-session | grep pts >/dev/null && {
 	echo sshd session is running
 	echo
 	code=1

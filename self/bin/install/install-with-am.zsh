@@ -55,6 +55,7 @@ packages+=(
 # browser {{{1
 
 packages+=(
+	vieb
 	floorp
 	waterfox
 	zen-browser
@@ -70,7 +71,6 @@ packages+=(
 # document {{{1
 
 packages+=(
-	sioyek
 )
 
 # am sync {{{1

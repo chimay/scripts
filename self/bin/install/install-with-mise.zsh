@@ -7,9 +7,9 @@ packages=()
 # terminal multiplexer {{{1
 
 packages+=(
-	herdr@latest
 	aqua:Gaurav-Gosain/tuios@latest
-	workmux@latest
+	herdr@latest
+	#workmux@latest
 )
 
 # edit {{{1
