@@ -23,7 +23,7 @@ supplement=${1:-none}
 packages=()
 packages_aur=()
 
-# generic packages {{{1
+# official repositories packages {{{1
 
 # base {{{2
 
@@ -56,6 +56,7 @@ packages+=(
 
 packages+=(
 	python-pyfuse3 fuse2 fuse3
+	udisks2
 )
 
 # terminal {{{2
