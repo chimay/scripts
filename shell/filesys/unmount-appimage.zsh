@@ -31,6 +31,9 @@ case $application in
 	sioyek)
 		pattern=/tmp/.mount_sioyek*
 		;;
+	nomadys-pdf)
+		pattern=/tmp/.mount_nomady*
+		;;
 	airclone)
 		pattern=/tmp/.mount_airclo*
 		;;

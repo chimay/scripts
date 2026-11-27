@@ -38,11 +38,6 @@ echo
 hl dispatch 'hl.dsp.focus({ workspace = "1" })'
 sleep 1
 
-# echo Launching zellij
-# echo
-# kitty --single-instance zellij attach principal &
-# sleep 1
-
 echo Launching tmux
 echo
 kitty --single-instance tmux attach-session -t principal &
@@ -60,10 +55,15 @@ echo
 hl dispatch 'hl.dsp.focus({ workspace = "3" })'
 sleep 1
 
-echo Launching herdr
+echo Launching zellij
 echo
-kitty --single-instance herdr &
+kitty --single-instance zellij attach principal &
 sleep 1
+
+# echo Launching herdr
+# echo
+# kitty --single-instance herdr &
+# sleep 1
 
 echo Launching neovim client
 echo

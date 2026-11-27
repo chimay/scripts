@@ -59,6 +59,12 @@ packages+=(
 	udisks2
 )
 
+# libraries {{{2
+
+packages+=(
+	qt6-base
+)
+
 # terminal {{{2
 
 packages+=(
@@ -340,6 +346,7 @@ packages+=(
 	texlive-langfrench
 	pandoc jq
 	zathura zathura-pdf-mupdf zathura-ps
+	okular evince
 	pdf2svg inkscape
 )
 

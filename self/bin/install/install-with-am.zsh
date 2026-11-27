@@ -34,7 +34,7 @@ which am &> /dev/null || {
 # dezor
 # promethium
 # replaced by gwenview : xnviewmp
-# sioyek : better with aur to be configured
+# sioyek : unmaintained
 
 # issues {{{1
 
@@ -71,6 +71,7 @@ packages+=(
 # document {{{1
 
 packages+=(
+	nomadys-pdf
 )
 
 # am sync {{{1

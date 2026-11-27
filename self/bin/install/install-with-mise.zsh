@@ -18,6 +18,12 @@ packages+=(
 	neovim@nightly
 )
 
+# file managers {{{1
+
+packages+=(
+	superfile@latest
+)
+
 # upgrade {{{1
 
 echo "mise upgrade"
