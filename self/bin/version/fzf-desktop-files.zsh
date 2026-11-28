@@ -8,6 +8,8 @@ do
   [[ -f $f ]] && print -- $f
 done | fzf)
 
+echo -n $desktop_file | wl-copy
+
 echo $desktop_file
 echo
 

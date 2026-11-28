@@ -211,12 +211,13 @@ packages+=(
 	cronie at remind
 )
 
-# keys {{{2
+# encryption {{{2
 
 packages+=(
 	gnupg gpg-tui age
 	pass pass-otp keepassxc
 	gnome-keyring
+	qrencode zbar
 )
 
 # fonts {{{2
